@@ -1,0 +1,57 @@
+version: "3.3"
+services:
+  bd:
+    container_name: bd
+    image: postgres 
+    environment:
+      - POSTGRES_PASSWORD=painelfiocruz2023
+    volumes:
+      - ./painelsaude/DB/esus.sql:/esus.sql
+      - ./painelsaude/DB/pgdata:/var/lib/postgresql
+      - ./painelsaude/DB/restore.sh:/restore.sh
+    ports:
+      - 5432:5432
+    networks:
+      - painel-network
+  backend:
+    container_name: backend
+    image: painelsaudefiocruz/demo:backend
+    build: 
+      context: painelsaude/
+      dockerfile: Dockerfile
+    environment:
+      - HOST=bd
+      - DATABASE=esus
+      - USER=postgres
+      - PASSWORD=painelfiocruz2023
+      - PORT=5432
+      - CIDADE=SUSÓPOLIS
+      - ESTADO=FC
+      - ADMIN_USR=admin
+      - ADMIN_PASS=FCadmin23
+    ports:
+      - "5001:5001"
+    depends_on:
+      - bd
+    links:
+      - bd
+    networks:
+      - painel-network
+  front:
+    container_name: front
+    image: painelsaudefiocruz/demo:front
+    build:
+      context: paineis-v2-front
+      dockerfile: Dockerfile
+    depends_on:
+      - bd
+    links:
+      - backend
+    ports:
+      - 80:80
+    networks:
+      - painel-network
+    
+networks:
+    painel-network:
+      driver: bridge

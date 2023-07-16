@@ -1,0 +1,243 @@
+@import './exports.module';
+
+#page-painel {
+    width: 100%;
+    height: 100vh;
+
+    .contentWrapperLoading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: calc(100% - 25.2vh);
+        background: #ffffff;
+        color: var(--gray-800);
+    }
+
+    .contentWrapper {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        background: #ffffff;
+        flex: 1;
+        padding: 32px;
+
+        color: var(--gray-800);
+
+        .linha {
+            width: 49px;
+            height: 5px;
+            background-color: #343131;
+            opacity: 1;
+        }
+
+        .container-cards-principal {
+            display: flex;
+            margin-top: 74px;
+            justify-content: center;
+
+            .container-card {
+                min-height: 140px;
+                background-color: #343131;
+                color: #fff;
+                border-radius: 20px;
+                cursor: pointer;
+
+                transition: all 0.3s ease-out;
+                top: 0px;
+                position: relative;
+                z-index: 0;
+                overflow: hidden;
+
+                &:hover {
+                    transition: all 0.2s ease-out;
+                    box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
+                    top: -4px;
+                    background-color: #343131;
+                }
+
+                h4 {
+                    font-size: 1.2rem;
+                    font-weight: 500;
+                    color: #FFFFFF;
+                }
+
+                span {
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                    color: #2775b0;
+                }
+
+                p {
+                    font-size: 1rem;
+                    font-weight: 500;
+                }
+            }
+
+            .container-card-alt {
+                min-height: 140px;
+                background-color: #ffffff;
+                border: 2px solid #343131;
+                border-radius: 20px;
+                padding: 9px 16px;
+                color: #343131;
+                cursor: pointer;
+
+                .container-dados-zona {
+                    width: 175px;
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
+                }
+
+                transition: all 0.3s ease-out;
+                top: 0px;
+                position: relative;
+                z-index: 0;
+                overflow: hidden;
+
+                &:hover {
+                    transition: all 0.2s ease-out;
+                    box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
+                    top: -4px;
+                    border: 2px solid #343131;
+                    background-color: #ffffffe0;
+                }
+
+                h4 {
+                    font-size: 1rem;
+                    font-weight: 500;
+                    margin: 0;
+                }
+
+                span {
+                    font-size: 1.8rem;
+                    font-weight: 700;
+                }
+            }
+        }
+
+        .box-container-light {
+            width: 24px;
+            height: 21px;
+            background-color: #2775b0;
+        }
+
+        .box-container-dark {
+            width: 24px;
+            height: 21px;
+            background-color: #78b4d0;
+        }
+
+        h3 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #343131;
+        }
+
+        .graficoPiramide {
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .painel-demografico:after {
+            content: "";
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            border-left: 1px solid #343131;
+        }
+
+        .painel-demografico {
+            height: 296px;
+            position: relative;
+            text-align: center;
+        }
+
+        .container-cards-condicoes {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(236px, 1fr));
+
+            gap: 20px 36px;
+
+            color: #ffffff;
+
+            .card-condicao {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                height: 233px;
+                border-radius: 20px;
+                background-color: #343131;
+
+                cursor: pointer;
+                transition: all 0.3s ease-out;
+
+                top: 0px;
+                position: relative;
+                z-index: 0;
+                overflow: hidden;
+
+                &:hover {
+                    transition: all 0.2s ease-out;
+                    box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
+                    top: -4px;
+                    border: 1px solid #cccccc;
+                    background-color: #343131e5;
+                }
+
+                .nome-condicao {
+                    font-size: 1.125rem;
+                }
+
+                h4 {
+                    font-size: 2.5rem;
+                    font-weight: 700;
+                    color: #ffffff;
+                }
+            }
+        }
+
+        .container-areas {
+            h4 {
+                font-size: 1.25rem;
+                color: #343131;
+                margin: 0;
+            }
+        }
+
+        .btn-primary {
+            height: 38px;
+            background-color: #2775b0;
+            border-radius: 5px;
+            margin: 0;
+            padding: 0 32px;
+            border: none;
+
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #343131;
+        }
+
+        .combo-ubs {
+            width: 349px;
+            height: 38px;
+            background-color: #2775b0;
+            border: none;
+
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #343131;
+            text-align: left;
+        }
+    }
+}
