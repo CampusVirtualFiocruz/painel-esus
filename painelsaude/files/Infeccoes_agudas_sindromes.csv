@@ -1,0 +1,82 @@
+Variável,Codigo,Descricao,CIAP,Infecções
+CIAP ,A77, Dengue E Outras Doe,A76,Exantemática
+CIAP ,L18, Dores Musculares,L18,Inespecífica
+CIAP ,R96, Asma,R96,Respiratória
+CIAP ,R97, Rinite Alérgica,R97,Respiratória
+CID ,A90, Dengue [Dengue Cláss,A76,Exantemática
+CID ,J459, Asma Não Especifica,R96,Respiratória
+CIAP ,A03, Febre,A03,Inespecífica
+CIAP ,R05, Tosse,R05,Respiratória
+CIAP ,R07, Espirro/Congestão N,R07,Respiratória
+CIAP ,R08, Outros Sinais/Sinto,R08,Respiratória
+CIAP ,R74, Infecção Aguda Do A,R74,Respiratória
+CIAP ,R76, Amigdalite Aguda,R74,Respiratória
+CIAP ,R77, Laringite/Traqueíte,R74,Respiratória
+CIAP ,R80, Gripe,R80,Respiratória
+CIAP ,R83, Outra Infecção Resp,R82,Respiratória
+CID ,B342, Infecção Por Corona,R33,Respiratória
+CID ,B972," Coronavírus, Como C",R33,Respiratória
+CID ,J00, Nasofaringite Aguda ,R74,Respiratória
+CID ,J02, Faringite Aguda,R74,Respiratória
+CID ,J029, Faringite Aguda Não,R74,Respiratória
+CID ,J03, Amigdalite Aguda,R74,Respiratória
+CID ,J039, Amigdalite Aguda Nã,R74,Respiratória
+CID ,J04, Laringite E Traqueít,R74,Respiratória
+CID ,J06, Infecções Agudas Das,R74,Respiratória
+CID ,J09, Influenza [Gripe] De,R80,Respiratória
+CID ,J10, Influenza Devida A O,R74,Respiratória
+CID ,J11, Influenza [Gripe] De,R80,Respiratória
+CID ,J111, Influenza [Gripe] C,R80,Respiratória
+CID ,J118, Influenza [Gripe] C,R80,Respiratória
+CID ,R05, Tosse,R05,Respiratória
+CID ,R43, Distúrbios Do Olfato,R08,Respiratória
+CID ,R430, Anosmia,R08,Respiratória
+CID ,R431, Parosmia,R08,Respiratória
+CID ,R432, Parageusia,R08,Respiratória
+CID ,R438, Outros Distúrbios D,R08,Respiratória
+CID ,R50, Febre De Origem Desc,A03,Inespecífica
+CID ,R508, Outra Febre Especif,A03,Inespecífica
+CID ,R509, Febre Não Especific,A03,Inespecífica
+CID ,U071," - Covid-19, Vírus I",R33,Respiratória
+CID ,U072," - Covid-19, Vírus n",R33,Respiratória
+CIAP ,D01, Dor Abdominal Gener,D01,Gastrointestinal
+CIAP ,D06, Outras Dores Abdomi,D01,Gastrointestinal
+CIAP ,S02, Prurido,S02,Exantemática
+CIAP ,S29, Sinais/Sintomas Da ,S29,Exantemática
+CIAP ,S76, Outras Infecções Da,S76,Exantemática
+CID ,M255, Dor Articular,L20,Inespecífica
+CID ,R520, Dor Aguda,A01,Inespecífica
+CID ,R529, Dor Não Especificad,A01,Inespecífica
+CIAP ,R01, Dor Atribuída Ao Ap,R01,Respiratória
+CIAP ,R02, Dificuldade Respira,R02,Respiratória
+CIAP ,R81, Pneumonia,R81,Respiratória
+CID ,J100, Influenza Com Pneum,R81,Respiratória
+CID ,J12, Pneumonia Viral Não ,R81,Respiratória
+CID ,J13, Pneumonia Devida A S,R81,Respiratória
+CID ,J14, Pneumonia Devida A H,R81,Respiratória
+CID ,J15, Pneumonia Bacteriana,R81,Respiratória
+CID ,J158, Outras Pneumonias B,R81,Respiratória
+CID ,J159, Pneumonia Bacterian,R81,Respiratória
+CID ,J16, Pneumonia Devida A O,R81,Respiratória
+CID ,J17, Pneumonia Em Doenças,R81,Respiratória
+CID ,J18, Pneumonia Por Microo,R81,Respiratória
+CID ,J96, Insuficiência Respir,R02,Respiratória
+CID ,J960, Insuficiência Respi,R02,Respiratória
+CID ,J969, Insuficiência Respi,R02,Respiratória
+CID ,U04, Síndrome Respiratóri,R02,Respiratória
+CID ,U049, Síndrome Respiratór,R02,Respiratória
+CIAP ,A92, Alergia/Reação Alér,A92,Exantemática
+CIAP ,D10, Vomito,D09,Gastrointestinal
+CIAP ,D11, Diarreia,D11,Gastrointestinal
+CIAP ,R04, Outros Problemas Re,R04,Gastrointestinal
+CIAP ,R21, Sinais/Sintomas Da ,R21,Respiratória
+CID ,A08, Infecções Intestinai,D70,Gastrointestinal
+CID ,A084, Infecção Intestinal,D70,Gastrointestinal
+CID ,A09, Diarréia E Gastroent,D70,Gastrointestinal
+CID ,B34," Doenças Por Vírus, D",A77,Inespecífica
+CID ,B349, Infecção Viral Não ,A77,Inespecífica
+CID ,B97, Vírus Como Causa De ,A77,Inespecífica
+CID ,J399, Doença Não Especifi,R28,Respiratória
+CID ,M791, Mialgia,L18,Inespecífica
+CID ,R11, Náusea E Vômitos,D09,Gastrointestinal
+CID ,R53," Mal Estar, Fadiga",L18,Inespecífica
