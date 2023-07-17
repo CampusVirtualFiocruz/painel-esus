@@ -1,4 +1,4 @@
 #!/bin/bash
 
 sleep 10
-psql -U postgres < esus.sql
+psql -U postgres < esus.db

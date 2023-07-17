@@ -6,7 +6,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=painelfiocruz2023
     volumes:
-      - ./painelsaude/DB/esus.sql:/esus.sql
+      - ./painelsaude/DB/esus.db:/esus.db
       - ./painelsaude/DB/pgdata:/var/lib/postgresql
       - ./painelsaude/DB/restore.sh:/restore.sh
     ports:
