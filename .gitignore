@@ -28,7 +28,6 @@ config.py
 __pycache__/**
 **/__pycache__/**
 paineis/**
-files/**
 app/.env
 app/*.env
 **.http
