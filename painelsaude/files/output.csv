@@ -1,2 +1,0 @@
-co_fat_cidadao_pec,ds_tipo_localizacao,st_vacinacao_em_dia,st_hipertensao,st_diabetes,st_gestante,ds_sexo,dt_nascimento,nu_idade,ds_faixa_etaria,co_unidade_saude,ds_unidade_saude,co_municipio,no_municipio,co_ibge,no_uf,sg_uf,dt_atendimento,cad_filtro_cids,cad_filtro_ciaps,nu_idade_gestacional,nu_gestas_previas
-28756034180,Urbano,True,True,True,True,Feminino,1996-11-16,26,Faixa 4,"1,1,1,1,1",UNIDADE 1,"1,1,1,1,1",FIOCRUZLÂNDIA,1,FC,FC,"20221112,20230225,20220806,20221017,20230608","|I130|,||,||,||,||","||,|W81|,|K86|,|K86|,|K86|","0,0,0,0,0","0,0,0,0,0"
