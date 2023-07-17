@@ -36,7 +36,7 @@ painel/**
 export.md
 
 **/paineis/**
-**/files/**
+
 **/app/.env
 **/app/*.env
 **/**.http
