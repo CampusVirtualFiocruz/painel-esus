@@ -62,3 +62,73 @@ export function Donut({ data }: any) {
         </div>
     )
 }
+
+export interface TPieData{
+    value: number,
+    name: string
+}
+export class TDonutChart{
+    constructor(public nome:string, public dataGraphic: TPieData[], public colorActive: string = '#5cd2c8'){
+        this.nome = nome;
+        this.dataGraphic = dataGraphic;
+        this.colorActive = colorActive;
+    }
+}
+export function DonutChart({dataGraphic, nome, colorActive}: TDonutChart) {
+    const total = dataGraphic[0].value + dataGraphic[1].value;
+    const ativo = (dataGraphic[0].value / total)*100;
+    
+
+    const options = {
+        color: [colorActive,'#09406a'],
+        tooltip: {
+            trigger: "item",
+            formatter: "{b0}: {c0}({d}%)"
+        },
+        series: [
+            {
+                name: nome,
+                type: 'pie',
+                radius: ['30', '52'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: true,
+                    overflow: 'break',
+                    fontSize: '16',
+                    fontWeight: 'bold',
+                    width: 110
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '16',
+                        fontWeight: 'bold',
+                        
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: dataGraphic
+            }
+        ]
+    };
+
+    return (
+        <div className='donut'>
+            <ReactECharts
+                option={options}
+                style={{
+                    width: "100%",
+                    minWidth: "316px",
+                    height: '216px'
+                }}
+                opts={{ renderer: 'svg' }}
+            />
+            <div className='w-50 d-flex flex-column justify-content-center align-items-center'>
+                {/* <span className='porcentagem'>{formatAsPercent(ativo.toString())}</span> */}
+                {/* <span className='nomeGrafico'>{data[0]}</span> */}
+            </div>
+        </div>
+    )
+}

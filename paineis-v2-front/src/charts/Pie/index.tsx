@@ -70,7 +70,7 @@ export function PieChart({dataGraphic, nome, colorActive}: TPieChart) {
                 opts={{ renderer: 'svg' }}
             />
             <div className='data-info d-flex flex-column align-items-center'>
-                <span className='porcentagem'>{(total) + `(${formatAsPercent(ativo.toString())})`}</span>
+                {/* <span className='porcentagem'>{(total) + `(${formatAsPercent(ativo.toString())})`}</span> */}
             </div>
         </div>
     )
@@ -93,6 +93,11 @@ export function Pie({ data }: any) {
             trigger: "item",
             formatter: "({d}%)"
         },
+        legend: {
+            bottom: 10,
+            left: 'center',
+            data: ['CityA', 'CityB']
+          },
         series: [
             {
                 name: nome,
