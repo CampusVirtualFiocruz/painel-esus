@@ -111,7 +111,9 @@ Carolina Carvalho - cientista social, ICICT
 
 **Desenho e implantação do Painel de Síndromes Infecciosas Agudas**
 
-Mariangela Simão (Diretora Presidente) Mina Cintho Ozahata
+Mariangela Simão, Diretora Presidente
+
+Mina Cintho Ozahata, desenvolvedora
 
 Silvia Ronsom, gerente de projetos
 
