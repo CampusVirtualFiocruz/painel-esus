@@ -29,6 +29,7 @@ services:
       - ESTADO=FC
       - ADMIN_USR=admin
       - ADMIN_PASS=FCadmin23
+      - POPULATION=20000
     ports:
       - "5001:5001"
     depends_on:
