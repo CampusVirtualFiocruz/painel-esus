@@ -10,11 +10,14 @@ import { Api } from "../services/api";
 import "../styles/gestanteList.scss";
 import "../styles/hipertensosList.scss";
 type THipertenso = {
-    'Acidente Vascular Encefálico': boolean,
-    'Doença Cerebrovascular': boolean,
-    'Doença Coronariana': boolean,
-    'Doença renal': boolean,
-    'Infarto Agudo do Miocárdio': boolean,
+    'Aferição de PA': number[],
+    'Glicemia': number[],
+    'Creatinina': number[],
+    'EAS/EQU (urina rotina)': number[],
+    'Sódio e potássio': number[],
+    'Colesterol total': number[],
+    'Hemograma': number[],
+    'Eletrocardiograma': number[],
     'nome': string,
     'idade': number,
 }
@@ -40,6 +43,21 @@ export function HipertensosList() {
     }, {
         staleTime: 1000 * 60 * 10, //10 minutos
     });
+    function handleIcons( row: number[] ) {
+        console.log(row);
+
+        const icons = [<><small>Solicitado</small><AiFillCheckCircle className="green"/></>, <><small>Avaliado</small><AiFillCheckCircle className="green"/></>];
+        if ( !row) return icons;
+
+        if ( row[0] == 1 ) {
+            icons[0] = <><small>Solicitado</small><AiFillCloseCircle className="red"/></>
+        }
+        if ( row[1] == 1 ) {
+            icons[1] = <><small>Avaliado</small><AiFillCloseCircle className="red"/></>
+        }
+        return icons
+
+    }
     return (<div id="page-painel">
     <Header />
 
@@ -70,11 +88,14 @@ export function HipertensosList() {
                                         <tr style={{ backgroundColor: "#EEEEEE" }}>
                                             <th scope="col">Nome</th>
                                             <th scope="col">Idade</th>
-                                            <th scope="col" className="text-center align-middle">Infarto Agudo do Miocárdio</th>
-                                            <th scope="col" className="text-center">Doença renal</th>
-                                            <th scope="col" className="text-center">Doença Coronariana:</th>
-                                            <th scope="col" className="text-center">Doença Cerebrovascular</th>
-                                            <th scope="col" className="text-center"> Acidente Vascular Encefálico:</th>
+                                            <th scope="col" className="text-center">Aferição de PA</th>
+                                            <th scope="col" className="text-center">Glicemia</th>
+                                            <th scope="col" className="text-center">Creatinina</th>
+                                            <th scope="col" className="text-center">EAS/EQU (urina rotina)</th>
+                                            <th scope="col" className="text-center">Sódio e potássio</th>
+                                            <th scope="col" className="text-center">Colesterol total</th>
+                                            <th scope="col" className="text-center">Hemograma</th>
+                                            <th scope="col" className="text-center">Eletrocardiograma</th>
                                         </tr>
                                     </thead>
                                     <tbody className="tbody-gestantes">
@@ -85,11 +106,14 @@ export function HipertensosList() {
                                                         <span className="nomeGestante">{hipertenso.nome ?? 'NÃO CADASTRADO'}</span>
                                                     </th>
                                                     <td className="text-center">{hipertenso.idade ?? 'NÃO CADASTRADO'}</td>
-                                                    <td className="text-center">{hipertenso['Infarto Agudo do Miocárdio'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                                                    <td className="text-center">{hipertenso['Doença renal'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                                                    <td className="text-center">{hipertenso['Doença Coronariana'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                                                    <td className="text-center">{hipertenso['Doença Cerebrovascular'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                                                    <td className="text-center">{hipertenso['Acidente Vascular Encefálico'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
+                                                    <td className="text-center">{handleIcons(hipertenso['Aferição de PA']).map(i=>i)}</td>
+                                                    <td className="text-center">{handleIcons(hipertenso['Glicemia']).map(i=>i)}</td>
+                                                    <td className="text-center">{handleIcons(hipertenso['Creatinina']).map(i=>i)}</td>
+                                                    <td className="text-center">{handleIcons(hipertenso['EAS/EQU (urina rotina)']).map(i=>i)}</td>
+                                                    <td className="text-center">{handleIcons(hipertenso['Sódio e potássio']).map(i=>i)}</td>
+                                                    <td className="text-center">{handleIcons(hipertenso['Colesterol total']).map(i=>i)}</td>
+                                                    <td className="text-center">{handleIcons(hipertenso['Hemograma']).map(i=>i)}</td>
+                                                    <td className="text-center">{handleIcons(hipertenso['Eletrocardiograma']).map(i=>i)}</td>
                                                 </tr>
                                             )
                                         })}

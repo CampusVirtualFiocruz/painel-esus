@@ -202,12 +202,25 @@ def arterialHypertensionExamsByCnes(nu_cnes):
 @token_required
 def get_hypertensive_list():
     hypertension = ArterialHypertensionBase()
-    base = hypertension.getBase()
+    base = hypertension.findByCnes()
     try:
-        heartAttackDisease = HeartAttackSummaryModel(base.shape[0], base)
-        base.apply( lambda row: heartAttackDisease.pipelineFn(row), axis=1)
-        return jsonify({ 'message': 'successfully fetched', 'data': heartAttackDisease.result  })
+        examesList = ArterialHypertensionExamsList()
+        base.apply( lambda row: examesList.pipelineFnList(row), axis=1)
+        return jsonify({ 'message': 'successfully fetched', 'data': examesList.getResponselist()  })
     except Exception as e:
         logging.critical(e, exc_info=True)
-        return jsonify({ 'message': 'Error',  'data': 'Error on getting arterial hypertension list' }), 500 
+        return jsonify({ 'message': 'Error',  'data': 'Error on getting arterial hypertension professionals information' }), 500
     
+@app.route('/v1/get-hypertensive-list/<nu_cnes>', methods=['GET'])
+@token_required
+def get_hypertensive_list_nu_cnes(nu_cnes):
+    hypertension = ArterialHypertensionBase()
+    base = hypertension.findByCnes(nu_cnes)
+    try:
+        examesList = ArterialHypertensionExamsList()
+        base.apply( lambda row: examesList.pipelineFnList(row), axis=1)
+        return jsonify({ 'message': 'successfully fetched', 'data': examesList.getResponselist()  })
+    except Exception as e:
+        logging.critical(e, exc_info=True)
+        return jsonify({ 'message': 'Error',  'data': 'Error on getting arterial hypertension professionals information' }), 500
+        

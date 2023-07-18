@@ -1,5 +1,9 @@
 from .CheckPresense import CheckPresence, PipelineModel
 import re
+import traceback, sys
+from collections import OrderedDict
+from operator import getitem
+
 
 class ExamStatus:
   def __init__(self):
@@ -102,6 +106,7 @@ class GlycatedHemoglobin(ExamStatus):
     
 class ArterialHypertensionExamsList():
   def __init__(self):
+    self._res = []
     self.list = [
         BloodPressure(),
         BloodGlucose(),
@@ -123,9 +128,74 @@ class ArterialHypertensionExamsList():
       result.append( i.toJson() )
 
     return result
+  
+  def checkPresence(self,exams, row, res, idx):
+    
+    if len(exams) == 0:
+      return res
+    pattern = r'\W+'
+    evaluatedProcedures = set(re.split(pattern, row['ds_filtro_proced_avaliados']))
+    requestedProcedures = set(re.split(pattern, row['ds_filtro_proced_solicitados'])) 
+
+    evaluatedProceduresPresence = exams & evaluatedProcedures
+    # print(evaluatedProceduresPresence)
+    requestedProceduresPresence = exams & requestedProcedures
+    """
+    - se o código do exame não estiver nas colunas solicitado e avaliado, 
+    soma 1 solicitação pendente para o exame;
+    """
+    if len(requestedProceduresPresence) == 0 and len(evaluatedProceduresPresence) == 0:
+      res[idx][0] = 1
+    else:
+      """
+      - se o código do exame  estiver nas coluna solicitado, mas não na coluna avaliado,
+      conta pendente nos avaliados do exame; 
+      """
+      if len(requestedProceduresPresence) > 0 and len(evaluatedProceduresPresence) == 0:
+        res[idx][1] = 1
+    
+    return res
+
+  def pipelineFnList(self, row):
+    
+    res = {
+      "nome": row["nome"],
+      "idade": row["nu_idade"],
+      "Aferição de PA" : [0, 0],
+      "Glicemia": [0, 0],
+      "Creatinina": [0, 0],
+      "EAS/EQU (urina rotina)": [0, 0],
+      "Sódio e potássio": [0, 0],
+      "Colesterol total": [0, 0],
+      "Hemograma": [0, 0],
+      "Eletrocardiograma": [0, 0],
+    }
+    map_key ={
+      "0": "Aferição de PA" ,
+      "1": "Glicemia",
+      "2": "Creatinina",
+      "3": "EAS/EQU (urina rotina)",
+      "4": "Sódio e potássio",
+      "5": "Colesterol total",
+      "6": "Hemograma",
+      "7": "Eletrocardiograma",
+    }
+    try:
+      for idx, i in enumerate(self.list):
+        res = self.checkPresence( i.exams, row, res, map_key[str(idx)] )
+      
+      self._res.append(res)
+    except Exception as ex:
+      traceback.print_exc(file=sys.stdout)
+        
+  def getResponselist(self):
+    self._res = sorted(self._res, key=lambda x: x['nome'])
+    return self._res
+  
 
 class DiabetesExamsList():
   def __init__(self):
+    self._res = []
     self.list = [
       BloodGlucose(),
       GlycatedHemoglobin(),
@@ -148,3 +218,66 @@ class DiabetesExamsList():
       result.append( i.toJson() )
 
     return result
+  
+  def checkPresence(self,exams, row, res, idx):
+    
+    if len(exams) == 0:
+      return res
+    pattern = r'\W+'
+    evaluatedProcedures = set(re.split(pattern, row['ds_filtro_proced_avaliados']))
+    requestedProcedures = set(re.split(pattern, row['ds_filtro_proced_solicitados'])) 
+
+    evaluatedProceduresPresence = exams & evaluatedProcedures
+    # print(evaluatedProceduresPresence)
+    requestedProceduresPresence = exams & requestedProcedures
+    """
+    - se o código do exame não estiver nas colunas solicitado e avaliado, 
+    soma 1 solicitação pendente para o exame;
+    """
+    if len(requestedProceduresPresence) == 0 and len(evaluatedProceduresPresence) == 0:
+      res[idx][0] = 1
+    else:
+      """
+      - se o código do exame  estiver nas coluna solicitado, mas não na coluna avaliado,
+      conta pendente nos avaliados do exame; 
+      """
+      if len(requestedProceduresPresence) > 0 and len(evaluatedProceduresPresence) == 0:
+        res[idx][1] = 1
+    
+    return res
+
+  def pipelineFnList(self, row):
+      
+      res = {
+        "nome": row["nome"],
+        "idade": row["nu_idade"],
+        "Glicemia": [0, 0],
+        "Hemoglobina glicada":  [0, 0],
+        "Retinografia":  [0, 0],
+        "Creatinina":  [0, 0],
+        "EAS/EQU (urina rotina)": [0, 0],
+        "Hemograma":  [0, 0],
+        "Aferição de PA":  [0, 0],
+        "Colesterol total":  [0, 0],
+      }
+      map_key ={
+        "0": "Glicemia",
+        "1": "Hemoglobina glicada",
+        "2": "Retinografia",
+        "3": "Creatinina",
+        "4": "EAS/EQU (urina rotina)",
+        "5": "Hemograma",
+        "6": "Aferição de PA",
+        "7": "Colesterol total",
+      }
+      try:
+        for idx, i in enumerate(self.list):
+          res = self.checkPresence( i.exams, row, res, map_key[str(idx)] )
+        
+        self._res.append(res)
+      except Exception as ex:
+        traceback.print_exc(file=sys.stdout)
+          
+  def getResponselist(self):
+    self._res = sorted(self._res, key=lambda x: x['nome'])
+    return self._res

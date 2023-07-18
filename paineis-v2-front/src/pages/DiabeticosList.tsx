@@ -10,12 +10,15 @@ import { Api } from "../services/api";
 import "../styles/gestanteList.scss";
 import "../styles/hipertensosList.scss";
 type TDiabetico = {
-    'Retinopatia diabética': boolean,
-    'Doença renal': boolean,
-    'Doença Coronariana': boolean,
-    'Doença Cerebrovascular': boolean,
-    'Neuropatia': boolean,
-    'Doença Arterial Oclusiva': boolean,
+    "Glicemia": number[],
+    "Hemoglobina glicada": number[],
+    "Retinografia": number[],
+    "Creatinina": number[],
+    "EAS/EQU (urina rotina)": number[],
+    "Hemograma": number[],
+    "Aferição de PA": number[],
+    "Colesterol total": number[],
+    "Doença Arterial Oclusiva": number[],
     'nome': string,
     'idade': number,
 }
@@ -41,6 +44,22 @@ export function DiabeticosList() {
     }, {
         staleTime: 1000 * 60 * 10, //10 minutos
     });
+
+    function handleIcons( row: number[] ) {
+        console.log(row);
+
+        const icons = [<><small>Solicitado</small><AiFillCheckCircle className="green"/></>, <><small>Avaliado</small><AiFillCheckCircle className="green"/></>];
+        if ( !row) return icons;
+
+        if ( row[0] == 1 ) {
+            icons[0] = <><small>Solicitado</small><AiFillCloseCircle className="red"/></>
+        }
+        if ( row[1] == 1 ) {
+            icons[1] = <><small>Avaliado</small><AiFillCloseCircle className="red"/></>
+        }
+        return icons
+
+    }
     return (<div id="page-painel">
     <Header />
 
@@ -71,11 +90,14 @@ export function DiabeticosList() {
                                         <tr style={{ backgroundColor: "#EEEEEE" }}>
                                             <th scope="col">Nome</th>
                                             <th scope="col">Idade</th>
-                                            <th scope="col" className="text-center">Retinopatia diabética</th>
-                                            <th scope="col" className="text-center">Doença renal</th>
-                                            <th scope="col" className="text-center">Doença Coronariana</th>
-                                            <th scope="col" className="text-center">Doença Cerebrovascular</th>
-                                            <th scope="col" className="text-center">Neuropatia</th>
+                                            <th scope="col" className="text-center">Glicemia</th>
+                                            <th scope="col" className="text-center">Hemoglobina glicada</th>
+                                            <th scope="col" className="text-center">Retinografia</th>
+                                            <th scope="col" className="text-center">Creatinina</th>
+                                            <th scope="col" className="text-center">EAS/EQU (urina rotina)</th>
+                                            <th scope="col" className="text-center">Hemograma</th>
+                                            <th scope="col" className="text-center">Aferição de PA</th>
+                                            <th scope="col" className="text-center">Colesterol total</th>
                                             <th scope="col" className="text-center">Doença Arterial Oclusiva</th>
                                         </tr>
                                     </thead>
@@ -87,12 +109,15 @@ export function DiabeticosList() {
                                                         <span className="nomeGestante">{diabetico.nome ?? 'NÃO CADASTRADO'}</span>
                                                     </th>
                                                     <td className="text-center">{diabetico.idade ?? 'NÃO CADASTRADO'}</td>
-                                                    <td className="text-center">{diabetico['Retinopatia diabética'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                                                    <td className="text-center">{diabetico['Doença renal'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                                                    <td className="text-center">{diabetico['Doença Coronariana'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                                                    <td className="text-center">{diabetico['Doença Cerebrovascular'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                                                    <td className="text-center">{diabetico['Neuropatia'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                                                    <td className="text-center">{diabetico['Doença Arterial Oclusiva'] ? <AiFillCheckCircle className="green"/> : <AiFillCloseCircle className="red"/>}</td>
+                                                    <td className="text-center">{handleIcons(diabetico['Glicemia']).map( i => i) }</td>
+                                                    <td className="text-center">{handleIcons(diabetico['Hemoglobina glicada']).map( i => i) }</td>
+                                                    <td className="text-center">{handleIcons(diabetico['Retinografia']).map( i => i) }</td>
+                                                    <td className="text-center">{handleIcons(diabetico['Creatinina']).map( i => i) }</td>
+                                                    <td className="text-center">{handleIcons(diabetico['EAS/EQU (urina rotina)']).map( i => i) }</td>
+                                                    <td className="text-center">{handleIcons(diabetico['Hemograma']).map( i => i) }</td>
+                                                    <td className="text-center">{handleIcons(diabetico['Aferição de PA']).map( i => i) }</td>
+                                                    <td className="text-center">{handleIcons(diabetico['Colesterol total']).map( i => i) }</td>
+                                                    <td className="text-center">{handleIcons(diabetico['Doença Arterial Oclusiva']).map( i => i) }</td>
                                                 </tr>
                                             )
                                         })}

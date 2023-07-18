@@ -184,14 +184,29 @@ def diabetesExamsByCnes(nu_cnes):
     except:
         return jsonify({ 'message': 'Error',  'data': 'Error on getting arterial diabetes professionals information' }), 500
 
+
 @app.route('/v1/get-diabetes-list', methods=['GET'])
 @token_required
 def get_diabetes_list():
     diabetes = DiabetesBase()
-    base = diabetes.getBase()
+    base = diabetes.findByCnes()
     try:
-        diabetesModel = DiabeticDiseaseSummaryModel(base.shape[0], base)
-        base.apply( lambda row: diabetesModel.pipelineFn(row), axis=1)
-        return jsonify({ 'message': 'successfully fetched', 'data': diabetesModel.result  })
+        examesList = DiabetesExamsList()
+        base.apply( lambda row: examesList.pipelineFnList(row), axis=1)
+        return jsonify({ 'message': 'successfully fetched', 'data': examesList.getResponselist()  })
     except:
-        return jsonify({ 'message': 'Error',  'data': 'Error on getting Diabetes list' })
+        return jsonify({ 'message': 'Error',  'data': 'Error on getting  diabetes professionals information' }), 500
+
+
+@app.route('/v1/get-diabetes-list/<nu_cnes>', methods=['GET'])
+@token_required
+def get_diabetes_list_cnes(nu_cnes):
+    diabetes = DiabetesBase()
+    base = diabetes.findByCnes(nu_cnes)
+    try:
+        examesList = DiabetesExamsList()
+        base.apply( lambda row: examesList.pipelineFnList(row), axis=1)
+        return jsonify({ 'message': 'successfully fetched', 'data': examesList.getResponselist()  })
+    except:
+        return jsonify({ 'message': 'Error',  'data': 'Error on getting  diabetes professionals information' }), 500
+        
