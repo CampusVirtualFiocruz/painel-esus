@@ -165,11 +165,11 @@ export function Painel() {
         data.map( (item:TResponse) => {
             
             if (item.local == 'Rural') {
-                result[0].value+= 1;
+                result[0].value+= item.ds_filtro_cids;
             } else {
-                result[1].value+=1;
+                result[1].value+=item.ds_filtro_cids
             }
-            total+=1
+            total+=item.ds_filtro_cids
         })
         setInfecoesQtd(result)
         return data;

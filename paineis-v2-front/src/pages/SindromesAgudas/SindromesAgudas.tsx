@@ -92,15 +92,11 @@ export function SindromesAgudas() {
 
                 dataSet[resp.co_dim_tempo].push(resp)
             }
-            totalSindromeAgura.push(dataSet[resp.co_dim_tempo].length);
+            totalSindromeAgura.push(resp.ds_filtro_cids);
 
-            mapSindromes[resp.type] += 1;
-            
+            mapSindromes[resp.type] += resp.ds_filtro_cids;
+            mapSindromes['total'] += resp.ds_filtro_cids;
         }
-        mapSindromes['total'] = mapSindromes['infeccao_respiratorio'] +
-        mapSindromes['infeccao_intestinal'] +
-        mapSindromes['febre_exantematica'] +
-        mapSindromes['febre_inespecifica'] 
 
         let initZeros: number[] = [];
         labels.forEach(i => initZeros.push(0));
@@ -111,7 +107,6 @@ export function SindromesAgudas() {
             'febre_exantematica': Array.from(initZeros),
             'febre_inespecifica': Array.from(initZeros)
         };
-        
 
         const mapLabels: { [key: string]: string } = {
             'infeccao_respiratorio': 'Infecção Respiratoria',
@@ -129,7 +124,7 @@ export function SindromesAgudas() {
         for (const data of Array.from(labels)) {
             if (data in dataSet) {
                 for (const item of dataSet[data]) {
-                    mapSindromesData[item.type][idx] += 1
+                    mapSindromesData[item.type][idx] += item.ds_filtro_cids
                 }
             }
             idx++;
