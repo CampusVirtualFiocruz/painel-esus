@@ -14,7 +14,7 @@ export class TPieChart{
 }
 export function PieChart({dataGraphic, nome, colorActive}: TPieChart) {
 
-    const total = dataGraphic[0].value + dataGraphic[1].value;
+    const total = dataGraphic[1].value;
     const ativo = (dataGraphic[0].value / total)*100;
     
     const options = {
@@ -70,7 +70,7 @@ export function PieChart({dataGraphic, nome, colorActive}: TPieChart) {
                 opts={{ renderer: 'svg' }}
             />
             <div className='data-info d-flex flex-column align-items-center'>
-                <span className='porcentagem'>{(total) + `(${formatAsPercent(ativo.toString())})`}</span>
+                <span className='porcentagem'>{(dataGraphic[0].value) + `(${formatAsPercent(ativo.toString())})`}</span>
             </div>
         </div>
     )
