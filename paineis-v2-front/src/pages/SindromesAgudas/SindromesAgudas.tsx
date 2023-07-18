@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DonutChart, TDonutChart } from "../../charts/Donut";
+import { LineChart } from "../../charts/LineChart";
 import { PieChart, TPieChart } from "../../charts/Pie";
 import { StackedArea } from "../../charts/StackedArea";
 import { Footer } from "../../components/Footer";
@@ -31,13 +32,21 @@ type TStackData = {
     setRangeData: (args: string[]) => void
 }
 export function SindromesAgudas() {
+    let navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
+    const taxa_atendimento_agudo = 1.53;
     const [infecaoRespiratoriaState, setInfecaoRespiratoriaState] = useState<number>(0);
     const [infecaoIntestinalState, setInfecaoIntestinalState] = useState<number>(0);
     const [febreExantematicaState, setFebreExantematicaState] = useState<number>(0);
     const [febreInespecificaState, setFebreInespecificaState] = useState<number>(0);
     const [totalAtendimentosState, setTotalAtendimentosState] = useState<number>(0);
     const [stackData, setStackData] = useState<TStackData>({
+        labels: [],
+        data: [],
+        setRangeData: () => { }
+    });
+    const [lineData, setLineData] = useState<TStackData>({
         labels: [],
         data: [],
         setRangeData: () => { }
@@ -72,6 +81,8 @@ export function SindromesAgudas() {
         const labels: Set<string> = new Set([]);
         const dataSet: any = {}
 
+        const totalSindromeAgura: number[] = []
+
         for (const resp of response) {
             // console.log(resp)
             labels.add(resp.co_dim_tempo)
@@ -81,6 +92,7 @@ export function SindromesAgudas() {
 
                 dataSet[resp.co_dim_tempo].push(resp)
             }
+            totalSindromeAgura.push(resp.ds_filtro_cids);
 
             mapSindromes[resp.type] += resp.ds_filtro_cids;
             mapSindromes['total'] += resp.ds_filtro_cids;
@@ -136,6 +148,23 @@ export function SindromesAgudas() {
             data: restulStackData,
             setRangeData: setRangeData
         })
+        setLineData({
+            labels: Array.from(labels),
+            data: [
+                {
+                    name: 'Atendimentos gerais',
+                    type: 'atendimentos gerais',
+                    color: '#5cd2c8fc',
+                    data: totalSindromeAgura.map( (item: number) => Math.ceil(item * taxa_atendimento_agudo))
+                },
+            {
+                name: 'Atendimentos por síndromes agudas',
+                type: 'atendimentos por sindrome agudas',
+                color: '#09406a',
+                data: totalSindromeAgura
+            }],
+            setRangeData: setRangeData
+        })
 
     }
     function filterRange(start: string, end: string) {
@@ -155,6 +184,11 @@ export function SindromesAgudas() {
         }
         handleSindromeAgudaData(filteredData);
     }, [rangeData]);
+
+    function handleToHome() {
+        setLoading(true);
+        navigate('/painelx');
+    }
     return (
         <div id="page-painel">
             <Header />
@@ -172,8 +206,7 @@ export function SindromesAgudas() {
                         <div className="col-12 col-lg-5">
                             <div className="painel-lateral">
                                 <h4 className="my-5 text-center">Número de atendimentos por síndrome aguda</h4>
-                                <div className="row gx-5">
-
+                                <div className="row gx-5  d-flex-center">
                                     <div className="col-12 col-lg-5">
                                         <PieChart {...new TPieChart(
                                             'Infeccoes respiratórias',
@@ -218,14 +251,14 @@ export function SindromesAgudas() {
                             </div>
                         </div>
 
-                        <div className="col-12 col-lg-7">
+                        <div className="col-12 col-lg-7 ">
                             <div className="painel-lateral">
                                 <h4 className="my-5 text-center">Relação de atendimentos por síndrome aguda</h4>
                                 <StackedArea {...stackData} />
                             </div>
                         </div>
 
-                        <div className="col-12 col-lg-4 label-container">
+                        <div className="col-12 col-lg-4 label-container "  style={{marginTop: 30}}>
                             <div className="label">
                                 Número de atendimentos por síndromes agudas
                             </div>
@@ -254,17 +287,28 @@ export function SindromesAgudas() {
                             
                         </div>
 
-                        <div className="col-12 col-lg-7" style={{visibility: 'hidden'}}>
+                        <div className="col-12 col-lg-7" >
                             <div className="painel-lateral">
                                 <h4 className="my-5 text-center">Comparativo do volume de atendimentos gerais em relacao às síndromes  agudas</h4>
+                                <LineChart {...lineData} />
                             </div>
                         </div>
                         <div className="col-12 col-lg-4 label-container">
                                 <div className="label" style={{display: 'flex', 'justifyContent': 'center'}}>
                                     Total de atendimentos
                                 </div>
-                                <div className="label-value">{Math.ceil(totalAtendimentosState * 1.53)}</div>
+                                <div className="label-value">{Math.ceil(totalAtendimentosState * taxa_atendimento_agudo)}</div>
                             </div>
+                    </div>
+                    <div className="row gx-5">
+                        <div className="col-12 col-lg-12 d-flex-center">
+                            <button
+                                    type="button"
+                                    onClick={handleToHome}
+                                    className="btn btn-primary">
+                                    Voltar
+                                </button>
+                        </div>
                     </div>
                 </div>
 

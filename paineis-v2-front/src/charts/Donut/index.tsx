@@ -89,7 +89,7 @@ export function DonutChart({dataGraphic, nome, colorActive}: TDonutChart) {
             {
                 name: nome,
                 type: 'pie',
-                radius: ['30', '52'],
+                radius: ['60%', '90%'],
                 avoidLabelOverlap: false,
                 label: {
                     show: true,

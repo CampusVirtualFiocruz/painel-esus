@@ -15,7 +15,6 @@ type TStackData = {
   labels: string[];
   data: TStackDataValues[],
   setRangeData: (srgs: string[] )=>void
-  
 }
 
 type TareaStyle = {
