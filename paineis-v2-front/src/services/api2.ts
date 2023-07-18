@@ -3,7 +3,8 @@ import { getUserLocalStorage } from '../context/AuthProvider/util';
 
 export const Api = axios.create({
     // baseURL: "https://backend-ouropreto.painelsaude.info/v1/"
-    baseURL: "http://localhost:3000/"
+    // baseURL: "http://localhost:3000/"
+    baseURL: "http://20.226.64.157/"
 });
 
 // Request interceptor
