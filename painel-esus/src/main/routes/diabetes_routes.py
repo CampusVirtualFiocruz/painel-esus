@@ -1,9 +1,7 @@
 from flask import Blueprint, jsonify
-from ..server.decorators.token_required import token_required
 diabetes_bp = Blueprint("diabetes", __name__)
 
 @diabetes_bp.route('/total', methods=['GET'])
-@token_required
 def get_total():
     return jsonify('Not Implemented'), 200
 
