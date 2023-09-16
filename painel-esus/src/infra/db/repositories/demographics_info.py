@@ -102,7 +102,7 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             key = self.faixas_dict[str(row['faixas'])]
             gender = row['co_dim_sexo']
             location = row['co_dim_tipo_localizacao']
-            value = row['qtd']
+            value = int(row['qtd'])
             age_group[gender][key][location] = value
 
     def __parse_age_group(self, data_frame: DataFrame) -> tuple([DataFrame, DataFrame]):
@@ -190,21 +190,21 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             feminino_urbano_size = 0
 
         response = {
-            'total': data_frame.shape[0],
+            'total': int(data_frame.shape[0]),
             'ageGroups': age_groups,
             'locationArea': {
-                'rural': (
+                'rural': int(
                     masculino_rural_size +
                     feminino_rural_size
                 ),
-                'urbano': (
+                'urbano': int(
                     masculino_urbano_size +
                     feminino_urbano_size
                 ),
             },
             'gender': {
-                'feminino': feminino['qtd'].sum(),
-                'masculino': masculino['qtd'].sum()
+                'feminino': int(feminino['qtd'].sum()),
+                'masculino': int(masculino['qtd'].sum())
             },
             'indicators': self.indicators
         }
@@ -225,39 +225,39 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
 
         self.indicators = {
                 'diabetes': {
-                    'rural': len(
+                    'rural': int(len(
                         diabetes[diabetes['co_dim_tipo_localizacao'] ==
                                  self.tipo_localizacao['rural']
                                  ]['co_fat_cidadao_pec'].unique().tolist()
-                            ),
-                    'urbano':len(diabetes[diabetes['co_dim_tipo_localizacao'] ==
+                            )),
+                    'urbano':int(len(diabetes[diabetes['co_dim_tipo_localizacao'] ==
                                           self.tipo_localizacao['urbano']
                                           ]['co_fat_cidadao_pec'].unique().tolist()
-                                )
+                                ))
                 },
                 'gestantes': {
-                    'rural': len(
+                    'rural': int(len(
                         gestantes[gestantes['co_dim_tipo_localizacao'] ==
                                   self.tipo_localizacao['rural']
                                 ]['co_fat_cidadao_pec'].unique().tolist()
-                        ),
-                    'urbano': len(
+                        )),
+                    'urbano': int(len(
                         gestantes[gestantes['co_dim_tipo_localizacao'] ==
                                             self.tipo_localizacao['urbano']
                                 ]['co_fat_cidadao_pec'].unique().tolist()
-                                )
+                                ))
                 },
                 'hipertensao': {
-                    'rural': len(
+                    'rural': int(len(
                         hipertensao[hipertensao['co_dim_tipo_localizacao'] ==
                                     self.tipo_localizacao['rural']
                                     ]['co_fat_cidadao_pec'].unique().tolist()
-                        ),
-                    'urbano': len(
+                        )),
+                    'urbano': int(len(
                         hipertensao[hipertensao['co_dim_tipo_localizacao'] ==
                                     self.tipo_localizacao['urbano']
                                     ]['co_fat_cidadao_pec'].unique().tolist()
-                        )
+                        ))
                 }
         }
 
@@ -274,12 +274,12 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             max_date = str(max_date['max'].iloc[0])
             sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS
             if cnes:
-                sql += """
+                sql += f"""
                     where
                         atd.co_dim_unidade_saude = {cnes} AND dt_registro between '{max_date}'::DATE - interval '12 month' and '{max_date}';
                 """
             else:
-                sql += """
+                sql += f"""
                     where
                         dt_registro between '{max_date}'::DATE - interval '12 month' and '{max_date}';
                 """

@@ -4,7 +4,7 @@ from src.data.interfaces.demographics_info import DemographicsInfoRepository
 
 class DemographicsInfoRepositoryStub(DemographicsInfoRepository):
 
-    def get_demogrphics_info(self, cnes: int = None) -> Dict:
+    def get_demographics_info(self, cnes: int = None) -> Dict:
         return {
                     "total":12325,
                     "ageGroups":{
