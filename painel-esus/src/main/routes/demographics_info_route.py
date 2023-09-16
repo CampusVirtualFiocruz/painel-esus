@@ -9,11 +9,13 @@ demographics_info_bp = Blueprint("demographics_info", __name__)
 @demographics_info_bp.route("/", methods=["GET"])
 def get_demographics_info():
     http_response = None
-
+    response = None
     try:
         # user_finder_validator(request)
         http_response = request_adapter(request, demographics_info_composer())
+        response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
 
-    return jsonify(http_response.body), http_response.status_code
+    return response, http_response.status_code
