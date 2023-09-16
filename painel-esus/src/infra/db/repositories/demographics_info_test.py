@@ -232,15 +232,15 @@ def test_parse_indicators_with_invalid_arguments(atendimento_individual_df_only_
 @pytest.mark.skip(reason="Avoid hit on BD")
 def test_get_demographics_info():
     demographics = DemographicsInfoRepository()
-    response = demographics.get_demogrphics_info()
+    response = demographics.get_demographics_info()
     assert isinstance(response, Dict)
 
-    response = demographics.get_demogrphics_info(1)
+    response = demographics.get_demographics_info(1)
     assert isinstance(response, Dict)
 
 @pytest.mark.skip(reason="Avoid hit on BD")
 def test_get_demographics_info_invalid_argument():
     demographics = DemographicsInfoRepository()
     with pytest.raises(InvalidArgument) as exc:
-        demographics.get_demogrphics_info('1')
+        demographics.get_demographics_info('1')
         assert exc.message == 'CNES must be int'
