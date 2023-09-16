@@ -15,5 +15,5 @@ class DemographicsInfo(DemographicsInfoInterface):
     def get_demographics_info(self, cnes: int = None) -> Dict:
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument('CNES must be int')
-        response = self._repository.get_demogrphics_info(cnes)
+        response = self._repository.get_demographics_info(cnes)
         return response

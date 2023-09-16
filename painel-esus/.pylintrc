@@ -10,6 +10,7 @@ disable=
       R0801, # Duplicate-code
       C0115, # missing-class-docstring
       R0903, # too-few-public-methods
+      W0621, # redefined-outer-name
 
       
 # Analyse import fallback blocks. This can be used to support both Python 2 and
@@ -441,6 +442,7 @@ disable=raw-checker-failed,
         useless-suppression,
         deprecated-pragma,
         use-symbolic-message-instead
+
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option

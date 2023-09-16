@@ -262,7 +262,7 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         }
 
 
-    def get_demogrphics_info(self, cnes: int = None) -> Dict:
+    def get_demographics_info(self, cnes: int = None) -> Dict:
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument('CNES must be int')
         with DBConnectionHandler() as db_con:

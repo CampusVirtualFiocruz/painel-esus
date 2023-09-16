@@ -3,4 +3,4 @@ from typing import Dict
 
 class DemographicsInfoRepository(ABC):
     @abstractmethod
-    def get_demogrphics_info(self, cnes: int = None) -> Dict: pass
+    def get_demographics_info(self, cnes: int = None) -> Dict: pass
