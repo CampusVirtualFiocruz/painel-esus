@@ -20,7 +20,6 @@ class LoginBridgeRepository(LoginRepositoryInterface):
     def check_credentials(self, username: str, password: str) -> UserPayload:
         session = requests.Session()
         url = "https://dev.pec.bridge.ufsc.br/api/graphql"
-
         payload = "{\"query\":\"mutation mutation_login {\\n  login(input: {username: \\\""+username+"\\\", password: \\\""+password+"\\\", force: true}) {\\n    success\\n  }\\n}\",\"variables\":{}}"
         headers = {
         'Api-Consumer-Id': 'PAINEIS_FIOCRUZ',
