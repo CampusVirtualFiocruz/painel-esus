@@ -45,14 +45,16 @@ def check_token(_request: Request) -> HttpResponse:
         auth_token = auth_header.split(" ")[1]
         if not auth_token:
             raise HttpBadTokenError('Bad Token')
-        return jwt.decode(
+        return validate_token(auth_token)
+
+    raise HttpBadTokenError('Token is missing')
+
+def validate_token(auth_token:str):
+    return jwt.decode(
                 auth_token,
                 os.getenv('SECRET_TOKEN',SECRET_PASS),
                 algorithms=["HS256"]
             )
-
-    raise HttpBadTokenError('Token is missing')
-
 def generate_token(name: str, cns: str, uf: str, municipio: str, profiles: List[str]= None) -> str:
     return jwt.encode({
             'username': name,
