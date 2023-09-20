@@ -1,0 +1,16 @@
+image: node:14-alpine3.10
+
+deploy:
+  stage: deploy
+  script:
+    - yarn config set cache-folder .yarn
+    - echo "Building project"
+    - set NODE_OPTIONS="--openssl-legacy-provider"
+    - yarn
+    - yarn build
+    - ls
+    - echo "Deploying application..."
+    - echo $RSA_KEY | base64 -d > PainelEsusUSEast.pem
+    - chmod 600 PainelEsusUSEast.pem
+    - apk update && apk add openssh-server openssh-client
+    - scp -i "PainelEsusUSEast.pem" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r build/* ubuntu@ec2-18-215-224-186.compute-1.amazonaws.com:/var/www/ouro-preto
