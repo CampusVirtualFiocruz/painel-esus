@@ -6,7 +6,7 @@ from src.errors.error_handler import handle_errors
 demographics_info_bp = Blueprint("demographics_info", __name__)
 
 #v1/get-demographic-info
-@demographics_info_bp.route("/", methods=["GET"])
+@demographics_info_bp.route("", methods=["GET"])
 def get_demographics_info():
     http_response = None
     response = None

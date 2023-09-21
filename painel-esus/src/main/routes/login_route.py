@@ -5,7 +5,7 @@ from src.errors.error_handler import handle_errors
 login_bp = Blueprint("login", __name__)
 
 
-@login_bp.route('/', methods=['POST'])
+@login_bp.route('', methods=['POST'])
 def do_login():
     http_response = None
     response = None

@@ -17,7 +17,7 @@ repos:
     hooks:
       - id: requirements
         name: requirements
-        entry: bash -c 'venv/bin/pip3 freeze > painel-esus/requirements.txt; git add painel-esus/requirements.txt'
+        entry: bash -c 'painel-esus/venv/bin/pip3 freeze > painel-esus/requirements.txt; git add painel-esus/requirements.txt'
         language: system
         pass_filenames: false
         stages: [commit]
