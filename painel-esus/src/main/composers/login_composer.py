@@ -7,15 +7,16 @@ from src.infra.db.repositories.login_adm_repository import LoginAdmRepository
 from src.infra.db.repositories.login_repository import \
     LoginRepository as LoginUserRepository
 from src.main.server.decorators.token_required import generate_token
-from src.presentatios.http_types import HttpRequest, HttpResponse
+from src.presentations.http_types import HttpRequest, HttpResponse
 
 logging.basicConfig(level=logging.DEBUG)
 
-def login_composer(request:HttpRequest):
+
+def login_composer(request: HttpRequest):
     providers_repositories = [
         LoginBridgeRepository(),
         LoginAdmRepository(),
-        LoginUserRepository()
+        LoginUserRepository(),
     ]
     body = None
     if request.body:
@@ -38,11 +39,11 @@ def login_composer(request:HttpRequest):
                 )
                 return HttpResponse(
                     status_code=200,
-                    body={ 'data': token}
+                    body={'data': token}
                 )
         except Exception as exc:
             logging.exception(exc)
     return HttpResponse(
         status_code=401,
-        body={ 'data': 'Username or Password invalid.'}
+        body={'data': 'Username or Password invalid.'}
     )

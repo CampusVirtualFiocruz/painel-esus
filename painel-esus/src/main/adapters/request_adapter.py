@@ -1,11 +1,15 @@
 from typing import Callable
+
 from flask import request as FlaskRequest
-from src.presentatios.http_types import HttpRequest, HttpResponse
+
+from src.presentations.http_types import HttpRequest, HttpResponse
+
 
 def request_adapter(request: FlaskRequest, controller: Callable) -> HttpResponse:
 
     body = None
-    if request.data: body = request.json
+    if request.data:
+        body = request.json
 
     http_request = HttpRequest(
         body=body,
@@ -14,7 +18,6 @@ def request_adapter(request: FlaskRequest, controller: Callable) -> HttpResponse
         path_params=request.view_args,
         url=request.full_path
     )
-
 
     http_response = controller(http_request)
     return http_response

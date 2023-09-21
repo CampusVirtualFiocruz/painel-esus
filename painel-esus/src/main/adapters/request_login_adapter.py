@@ -1,10 +1,13 @@
 from flask import Request
-from src.presentatios.http_types import HttpRequest
+
+from src.presentations.http_types import HttpRequest
+
 
 def request_login_adapter(request: Request) -> HttpRequest:
 
     body = None
-    if request.data: body = request.json
+    if request.data:
+        body = request.json
 
     http_request = HttpRequest(
         body=body,
@@ -13,6 +16,5 @@ def request_login_adapter(request: Request) -> HttpRequest:
         path_params=request.view_args,
         url=request.full_path
     )
-
 
     return http_request

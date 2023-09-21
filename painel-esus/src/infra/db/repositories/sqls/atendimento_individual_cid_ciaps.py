@@ -4,6 +4,8 @@ with atd_individual_filtro_ciaps as (
             co_seq_fat_atd_ind,
             co_dim_tempo,
             nu_cns,
+            coalesce(nu_peso, 0 ) nu_peso,
+            coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
             co_dim_faixa_etaria,
             co_dim_sexo,
@@ -11,7 +13,8 @@ with atd_individual_filtro_ciaps as (
             co_fat_cidadao_pec,
             nu_cpf_cidadao,
             unnest(STRING_TO_ARRAY(rtrim(ltrim(ds_filtro_ciaps, '|'), '|'), '|')) as codigo,
-            'CIAPS' as tipo
+            'CIAPS' as tipo,
+            co_dim_cbo_1
     from
                 tb_fat_atendimento_individual
     group by
@@ -25,12 +28,14 @@ with atd_individual_filtro_ciaps as (
         8,
         9,
         10,
-        11
+        11, 12, 13
     union
     select
                         co_seq_fat_atd_ind,
             co_dim_tempo,
             nu_cns,
+            coalesce(nu_peso, 0 ) nu_peso,
+            coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
             co_dim_faixa_etaria,
             co_dim_sexo,
@@ -38,7 +43,8 @@ with atd_individual_filtro_ciaps as (
             co_fat_cidadao_pec,
             nu_cpf_cidadao,
             unnest(STRING_TO_ARRAY(rtrim(ltrim(ds_filtro_cids, '|'), '|'), '|')) as codigo,
-            'CID' as tipo
+            'CID' as tipo,
+            co_dim_cbo_1
     from
                 tb_fat_atendimento_individual
     group by
@@ -52,11 +58,12 @@ with atd_individual_filtro_ciaps as (
         8,
         9,
         10,
-        11
+        11, 12, 13
     )		
 select
 	atd.*,
-	tfcd.co_dim_tipo_localizacao
+	coalesce(tfcd.co_dim_tipo_localizacao, 1) co_dim_tipo_localizacao,
+    coalesce(tc.co_cbo_2002, '0') as cbo
 from
 		atd_individual_filtro_ciaps atd
 join tb_dim_tempo t on
@@ -65,4 +72,5 @@ join tb_fat_familia_territorio tfft on
 	tfft.co_fat_cidadao_pec = atd.co_fat_cidadao_pec
 join tb_fat_cad_domiciliar tfcd on
 	tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar
+join tb_cbo tc on atd.co_dim_cbo_1 = tc.co_cbo
  """

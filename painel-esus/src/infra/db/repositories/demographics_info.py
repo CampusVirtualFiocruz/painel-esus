@@ -1,34 +1,26 @@
-from typing import Dict
 from datetime import date
-from pandas import DataFrame, Series
-import pandas as pd
+from typing import Dict
 
-from src.infra.db.settings.connection import DBConnectionHandler
-from src.data.interfaces.demographics_info import (
+import pandas as pd
+from pandas import DataFrame, Series
+
+from src.data.interfaces.demographics_info import \
     DemographicsInfoRepository as DemographicsInfoRepositoryInterface
-)
-from src.errors import InvalidArgument
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
 from src.domain.entities.pregnancy import Pregnants
-from .sqls import (
-    MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL,
-    ATENDIMENTO_INDIVIDUAL_CID_CIAPS,
-    CIDADAO_PEC_VIVO
-)
+from src.errors import InvalidArgument
+from src.infra.db.repositories.enuns.individual_cares import IndividualCare
+from src.infra.db.settings.connection_irece import DBConnectionHandler
+
+from .sqls import (ATENDIMENTO_INDIVIDUAL_CID_CIAPS, CIDADAO_PEC_VIVO,
+                   MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL)
+
+
 class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
 
     def __init__(self):
         self.indicators = None
-        self.tipo_localizacao = {
-            '1': 'Não informado',
-            '2':	'Urbana',
-            '3':	'Rural',
-            'rural': 3,
-            'urbano': 2,
-            'Masculino': 1,
-            'Feminino': 2
-        }
         self.faixas_dict = {
             '1': '0 a 5 anos',
             '2': '6 a 12 anos',
@@ -39,7 +31,6 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             '7': '60 + anos'
         }
 
-
     def parse_date(self, data_frame: DataFrame) -> DataFrame:
         data_frame['idade'] = data_frame['co_dim_tempo_nascimento'].apply(
             lambda x: self.__calculate_age(
@@ -47,8 +38,8 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
                      int(str(x)[4:6]),
                      int(str(x)[6:8])
                      )
-                )
             )
+        )
         return data_frame
 
     def __calculate_age(self, birth_date: str) -> int:
@@ -82,7 +73,7 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
                 'Urbano': 0
             },
             '45 a 59 anos': {
-                'Rural': 0, 
+                'Rural': 0,
                 'Urbano': 0
             },
             '60 + anos': {
@@ -132,12 +123,14 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             by=['co_dim_sexo', 'co_dim_tipo_localizacao', 'faixas']
         ).size().reset_index(name='qtd')
 
-        urbano_value = self.tipo_localizacao['urbano']
-        rural_value = self.tipo_localizacao['rural']
-        masculino = self.tipo_localizacao['Masculino']
-        feminino = self.tipo_localizacao['Feminino']
-        faixas.loc[faixas['co_dim_sexo'] == masculino, 'co_dim_sexo'] = 'Masculino'
-        faixas.loc[faixas['co_dim_sexo'] == feminino, 'co_dim_sexo'] = 'Feminino'
+        urbano_value = IndividualCare.get_('urbano')
+        rural_value = IndividualCare.get_('rural')
+        masculino = IndividualCare.get_('Masculino')
+        feminino = IndividualCare.get_('Feminino')
+        faixas.loc[faixas['co_dim_sexo'] ==
+                   masculino, 'co_dim_sexo'] = 'Masculino'
+        faixas.loc[faixas['co_dim_sexo'] ==
+                   feminino, 'co_dim_sexo'] = 'Feminino'
         faixas.loc[
             faixas['co_dim_tipo_localizacao'] == urbano_value,
             'co_dim_tipo_localizacao'] = 'Urbano'
@@ -152,7 +145,8 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         data_frame = self.parse_date(data_frame)
         data_frame, faixas = self.__parse_age_group(data_frame)
         age_groups = self.__create_age_groups()
-        faixas.apply(lambda x: self.__hidrate_age_groups(x, age_groups), axis=1)
+        faixas.apply(lambda x: self.__hidrate_age_groups(
+            x, age_groups), axis=1)
 
         masculino = data_frame[data_frame['co_dim_sexo'] == 1].groupby(
             by=['co_dim_tipo_localizacao']
@@ -162,8 +156,8 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             by=['co_dim_tipo_localizacao']
         ).size().reset_index(name='qtd')
 
-        rural_value = self.tipo_localizacao['rural']
-        urbano_value = self.tipo_localizacao['urbano']
+        rural_value = IndividualCare.get_('rural')
+        urbano_value = IndividualCare.get_('urbano')
 
         masculino_rural_size = masculino[masculino['co_dim_tipo_localizacao'] == rural_value]
         if masculino_rural_size.shape[0] > 0:
@@ -183,7 +177,8 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         else:
             masculino_urbano_size = 0
 
-        feminino_urbano_size = feminino[feminino['co_dim_tipo_localizacao'] == urbano_value]
+        feminino_urbano_size = feminino[feminino['co_dim_tipo_localizacao']
+                                        == urbano_value]
         if feminino_urbano_size.shape[0] > 0:
             feminino_urbano_size = feminino_urbano_size['qtd'].iloc[0]
         else:
@@ -216,51 +211,49 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         hipertensao: DataFrame,
         gestantes: DataFrame
     ) -> None:
-        if not isinstance( diabetes, DataFrame):
+        if not isinstance(diabetes, DataFrame):
             raise InvalidArgument('diabetes must be a DataFrame instance')
-        if not isinstance( hipertensao, DataFrame):
+        if not isinstance(hipertensao, DataFrame):
             raise InvalidArgument('hipertensao must be a DataFrame instance')
-        if not isinstance( gestantes, DataFrame):
+        if not isinstance(gestantes, DataFrame):
             raise InvalidArgument('gestantes must be a DataFrame instance')
-
         self.indicators = {
-                'diabetes': {
-                    'rural': int(len(
-                        diabetes[diabetes['co_dim_tipo_localizacao'] ==
-                                 self.tipo_localizacao['rural']
-                                 ]['co_fat_cidadao_pec'].unique().tolist()
-                            )),
-                    'urbano':int(len(diabetes[diabetes['co_dim_tipo_localizacao'] ==
-                                          self.tipo_localizacao['urbano']
-                                          ]['co_fat_cidadao_pec'].unique().tolist()
-                                ))
-                },
-                'gestantes': {
-                    'rural': int(len(
-                        gestantes[gestantes['co_dim_tipo_localizacao'] ==
-                                  self.tipo_localizacao['rural']
+            'diabetes': {
+                'rural': int(len(
+                    diabetes[diabetes['co_dim_tipo_localizacao'] ==
+                             IndividualCare.get_('rural')
+                             ]['co_fat_cidadao_pec'].unique().tolist()
+                )),
+                'urbano': int(len(diabetes[diabetes['co_dim_tipo_localizacao'] ==
+                                           IndividualCare.get_('urbano')
+                                           ]['co_fat_cidadao_pec'].unique().tolist()
+                                  ))
+            },
+            'gestantes': {
+                'rural': int(len(
+                    gestantes[gestantes['co_dim_tipo_localizacao'] ==
+                              IndividualCare.get_('rural')
+                              ]['co_fat_cidadao_pec'].unique().tolist()
+                )),
+                'urbano': int(len(
+                    gestantes[gestantes['co_dim_tipo_localizacao'] ==
+                              IndividualCare.get_('urbano')
+                              ]['co_fat_cidadao_pec'].unique().tolist()
+                ))
+            },
+            'hipertensao': {
+                'rural': int(len(
+                    hipertensao[hipertensao['co_dim_tipo_localizacao'] ==
+                                IndividualCare.get_('rural')
                                 ]['co_fat_cidadao_pec'].unique().tolist()
-                        )),
-                    'urbano': int(len(
-                        gestantes[gestantes['co_dim_tipo_localizacao'] ==
-                                            self.tipo_localizacao['urbano']
+                )),
+                'urbano': int(len(
+                    hipertensao[hipertensao['co_dim_tipo_localizacao'] ==
+                                IndividualCare.get_('urbano')
                                 ]['co_fat_cidadao_pec'].unique().tolist()
-                                ))
-                },
-                'hipertensao': {
-                    'rural': int(len(
-                        hipertensao[hipertensao['co_dim_tipo_localizacao'] ==
-                                    self.tipo_localizacao['rural']
-                                    ]['co_fat_cidadao_pec'].unique().tolist()
-                        )),
-                    'urbano': int(len(
-                        hipertensao[hipertensao['co_dim_tipo_localizacao'] ==
-                                    self.tipo_localizacao['urbano']
-                                    ]['co_fat_cidadao_pec'].unique().tolist()
-                        ))
-                }
+                ))
+            }
         }
-
 
     def get_demographics_info(self, cnes: int = None) -> Dict:
         if cnes and not isinstance(cnes, int):
@@ -270,7 +263,8 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
 
             cidadao_pec = pd.read_sql_query(CIDADAO_PEC_VIVO, con=engine)
 
-            max_date = pd.read_sql_query(MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL, con=engine)
+            max_date = pd.read_sql_query(
+                MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL, con=engine)
             max_date = str(max_date['max'].iloc[0])
             sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS
             if cnes:
@@ -286,14 +280,14 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             atendimento_individual = pd.read_sql_query(sql, con=engine)
 
             hypertension = Hypertension()
-            hypertension_df = hypertension.filter_registers(atendimento_individual)
+            hypertension_df = hypertension.filter_registers(
+                atendimento_individual)
 
             diabetes = Diabetes()
             diabetes_df = diabetes.filter_registers(atendimento_individual)
 
             gestantes = Pregnants()
             gestantes_df = gestantes.filter_registers(atendimento_individual)
-
 
             self.parse_indicators(
                 diabetes=diabetes_df,
