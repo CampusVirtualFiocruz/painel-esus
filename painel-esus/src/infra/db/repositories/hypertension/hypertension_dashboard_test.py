@@ -29,8 +29,8 @@ def test_professionals_count():
 def test_get_complications():
     repo = HypertensionDashboardRepository()
     response = repo.get_complications()
-    assert hypertension_complications(response)
     pprint(response, indent=4)
+    assert hypertension_complications({'data': response})
 
 
 def test_get_exams_count():

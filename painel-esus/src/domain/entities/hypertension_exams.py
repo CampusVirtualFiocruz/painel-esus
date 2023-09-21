@@ -26,17 +26,17 @@ class HypertensionExams:
         def __parse(row):
             atd_id = row['co_seq_fat_atd_ind']
             atd_id = str(atd_id)
-            if id not in id_maps:
-                id_maps[id] = {
+            if atd_id not in id_maps:
+                id_maps[atd_id] = {
                     'requested': set(),
                     'evaluated': set()
                 }
             tipo = row['tipo'].strip()
             codigo = row['codigo'].strip()
             if tipo in "Procedimentos Solicitados":
-                id_maps[id]['requested'].add(codigo)
+                id_maps[atd_id]['requested'].add(codigo)
             elif tipo in "Procedimentos Avaliados":
-                id_maps[id]['evaluated'].add(codigo)
+                id_maps[atd_id]['evaluated'].add(codigo)
 
         id_maps = {}
         procedures = df[(df['tipo'] == 'Procedimentos Avaliados') | (
@@ -44,7 +44,7 @@ class HypertensionExams:
         procedures.apply(__parse, axis=1)
 
         for atd_id in id_maps.items():
-            item = id_maps[atd_id]
+            item = atd_id[1]
             for exam in self.list:
                 exam.check_presence(item['evaluated'], item['requested'])
         response = []
