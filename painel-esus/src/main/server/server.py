@@ -37,6 +37,6 @@ demographics_info_decorated = blueprint_decr.attach(
     demographics_info_bp, token_required)
 app.register_blueprint(demographics_info_decorated,
                        url_prefix='/v1/get-demographic-info')
-diabetes_bp_decorated = blueprint_decr.attach(diabetes_bp, token_required)
-app.register_blueprint(diabetes_bp_decorated, url_prefix='/v1/diabetes')
+# diabetes_bp_decorated = blueprint_decr.attach(diabetes_bp, token_required)
+app.register_blueprint(diabetes_bp, url_prefix='/v1/diabetes')
 app.register_blueprint(hypertension_bp, url_prefix='/v1/arterial-hypertension')

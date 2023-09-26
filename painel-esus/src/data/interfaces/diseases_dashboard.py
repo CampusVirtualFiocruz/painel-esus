@@ -2,9 +2,10 @@ from abc import ABC, abstractmethod
 from typing import Dict
 
 from src.domain.dict_types import DiseaseDashboardTotal
+from src.domain.entities.disease_exams import DiseaseExams
 
 
-class DiseaseDashboardUseCase(ABC):
+class DiseasesDashboardRepositoryInterface(ABC):
 
     @abstractmethod
     def get_total(self, cnes: int = None) -> DiseaseDashboardTotal: pass
@@ -26,11 +27,12 @@ class DiseaseDashboardUseCase(ABC):
         self, cnes: int = None) -> Dict: pass
 
     @abstractmethod
-    def get_exams_count(self, cnes: int = None) -> Dict: pass
+    def get_exams_count(self, cnes: int = None,
+                        exam_disease: DiseaseExams = None) -> Dict: pass
+
+    @abstractmethod
+    def get_individual_exams_count(
+        self, cnes: int = None, exam_disease: DiseaseExams = None, page: int = 1) -> Dict: pass
 
     @abstractmethod
     def get_imc(self, cnes: int = None) -> Dict: pass
-
-
-class HypertensionDasboardUseCaseInterface(DiseaseDashboardUseCase):
-    pass

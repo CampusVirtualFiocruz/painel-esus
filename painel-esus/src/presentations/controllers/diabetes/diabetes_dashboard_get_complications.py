@@ -1,12 +1,12 @@
-from src.domain.use_cases.diseases_dashboard.hypertension_use_case import \
-    HypertensionDasboardUseCaseInterface
+from src.domain.use_cases.diseases_dashboard.diabetes_use_case import \
+    DiabetesDasboardUseCaseInterface
 from src.presentations.http_types import HttpRequest, HttpResponse
 from src.presentations.interfaces.controller_interface import \
     ControllerInterface
 
 
-class HypertensionDashboardGetComplications(ControllerInterface):
-    def __init__(self, use_case: HypertensionDasboardUseCaseInterface):
+class DiabetesDashboardGetComplications(ControllerInterface):
+    def __init__(self, use_case: DiabetesDasboardUseCaseInterface):
         self.__use_case = use_case
 
     def handle(self, request: HttpRequest) -> HttpResponse:

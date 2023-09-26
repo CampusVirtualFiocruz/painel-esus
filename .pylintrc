@@ -11,7 +11,6 @@ disable=
       C0115, # missing-class-docstring
       R0903, # too-few-public-methods
       W0621, # redefined-outer-name
-      E0401,
 
       
 # Analyse import fallback blocks. This can be used to support both Python 2 and

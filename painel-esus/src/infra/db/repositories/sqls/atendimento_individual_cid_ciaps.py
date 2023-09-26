@@ -62,6 +62,7 @@ with atd_individual_filtro_ciaps as (
     )		
 select
 	atd.*,
+     tfcp.no_cidadao,
 	coalesce(tfcd.co_dim_tipo_localizacao, 1) co_dim_tipo_localizacao,
     coalesce(tc.co_cbo_2002, '0') as cbo
 from

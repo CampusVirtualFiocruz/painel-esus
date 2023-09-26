@@ -7,16 +7,16 @@ from src.data.use_cases.diseases_dashboard.tests.mocks.diabetes_repository impor
 )
 from src.presentations.http_types import HttpRequest
 
-from .hypertension_dashboard_get_total import HypertensionDashboardGetTotal
+from .diabetes_dashboard_get_total import DiabetesDashboardGetTotal
 
 
-def test_hypertension_controller():
+def test_diabetes_controller():
     with patch(
         'src.data.interfaces.diseases_dashboard.DiseasesDashboardRepositoryInterface'
     ) as repository:
         repository.get_total.return_value = {'total': 123}
         use_case = DiseaseUseCase(repository)
         http_request = HttpRequest()
-        controller = HypertensionDashboardGetTotal(use_case)
+        controller = DiabetesDashboardGetTotal(use_case)
         response = controller.handle(http_request)
         assert response.body['data'] == 123

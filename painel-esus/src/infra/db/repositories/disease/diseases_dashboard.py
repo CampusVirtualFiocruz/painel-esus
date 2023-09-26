@@ -1,22 +1,21 @@
 # pylint: disable=duplicate-string-formatting-argument
-from typing import Dict
+from typing import Dict, List
 
 import pandas as pd
 
-from src.data.interfaces.hypertension_dashboard import \
-    HypertensionDashboardRepositoryInterface
+from src.domain.entities.disease_exams import DiseaseExams
 from src.domain.dict_types import DiseaseDashboardTotal
-from src.domain.entities.hypertension import Hypertension
+from src.domain.entities.disease import Disease
 from src.domain.entities.hypertension_complications import \
     HypertensionComplications
-from src.domain.entities.hypertension_exams import HypertensionExams
+from src.data.interfaces.diseases_dashboard import DiseasesDashboardRepositoryInterface
 from src.domain.entities.imc.imc_model import ImcModel
 from src.errors import InvalidArgument
-from src.infra.db.repositories.hypertension.age_group_gender import \
+from src.infra.db.repositories.disease.age_group_gender import \
     AgeGroupGenderDF
-from src.infra.db.repositories.hypertension.age_groups_location import \
+from src.infra.db.repositories.disease.age_groups_location import \
     AgeGroupsLocationDF
-from src.infra.db.repositories.hypertension.professional_group import \
+from src.infra.db.repositories.disease.professional_group import \
     ProfessionalsGroup
 from src.infra.db.repositories.sqls import (
     ATENDIMENTO_INDIVIDUAL_CID_CIAPS_NASCIMENTO,
@@ -25,10 +24,10 @@ from src.infra.db.repositories.sqls import (
 from src.infra.db.settings.connection_irece import DBConnectionHandler
 
 
-class HypertensionDashboardRepository(HypertensionDashboardRepositoryInterface):
+class DiseasesDashboardRepository(DiseasesDashboardRepositoryInterface):
 
-    def _init_(self):
-        pass
+    def __init__(self, disease: Disease):
+        self.disease = disease
 
     def _retrieve_cares(self, cnes: int = None):
         if cnes and not isinstance(cnes, int):
@@ -39,23 +38,25 @@ class HypertensionDashboardRepository(HypertensionDashboardRepositoryInterface):
                 MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL, con=engine)
             max_date = str(max_date['max'].iloc[0])
             sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS_NASCIMENTO
-            hypertension = Hypertension()
+            disease = self.disease
 
             sql += """
                     where
                         dt_registro between '{}'::DATE - interval '12 month' and '{}' and codigo in ({})
                 """.format(
                 max_date, max_date,
-                ", ".join([f"'{cid}'" for cid in hypertension.target])
+                ", ".join([f"'{cid}'" for cid in disease.target])
             )
             if cnes:
                 sql += f""" AND atd.co_dim_unidade_saude = {cnes} """
             sql += ';'
             return pd.read_sql_query(sql, con=engine)
 
-    def _retrieve_procedures(self, cnes: int = None):
+    def _retrieve_procedures(self, cnes: int = None, id_cares: List = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument('CNES must be int')
+        if not id_cares:
+            raise InvalidArgument('ID CARES must be a List')
         with DBConnectionHandler() as db_con:
             engine = db_con.get_engine()
             max_date = pd.read_sql_query(
@@ -66,13 +67,17 @@ class HypertensionDashboardRepository(HypertensionDashboardRepositoryInterface):
             sql += """
                     where
                         dt_registro between '{}'::DATE - interval '12 month' and '{}'
+                        and co_seq_fat_atd_ind in ({}) 
                 """.format(
-                max_date, max_date
+                max_date, max_date,
+                ", ".join([f"'{id_}'" for id_ in id_cares])
             )
             if cnes:
                 sql += f""" AND atd.co_dim_unidade_saude = {cnes} """
-            sql += ';'
-            return pd.read_sql_query(sql, con=engine)
+
+            sql += 'ORDER BY tfcp.no_cidadao ASC;'
+            response = pd.read_sql_query(sql, con=engine)
+            return response
 
     def get_total(self, cnes: int = None) -> DiseaseDashboardTotal:
         cares = self._retrieve_cares(cnes)
@@ -104,9 +109,11 @@ class HypertensionDashboardRepository(HypertensionDashboardRepositoryInterface):
         professionals = ProfessionalsGroup()
         return professionals.get_professionals_count(cares)
 
-    def get_exams_count(self, cnes: int = None) -> Dict:
-        procedures = self._retrieve_procedures(cnes)
-        hypertension = HypertensionExams()
+    def get_exams_count(self, cnes: int = None, exam_disease: DiseaseExams = None) -> Dict:
+        cares = self._retrieve_cares(cnes)
+        id_cares = cares['co_seq_fat_atd_ind'].unique().tolist()
+        procedures = self._retrieve_procedures(cnes, id_cares)
+        hypertension = exam_disease
         return hypertension.check_presence(procedures)
 
     def get_imc(self, cnes: int = None) -> Dict:
@@ -120,3 +127,18 @@ class HypertensionDashboardRepository(HypertensionDashboardRepositoryInterface):
             imc_item.statistics_response(cares.shape[0])
             for imc_item in imc_model.get_list()
         ]
+
+    def get_individual_exams_count(self,
+                                   cnes: int = None,
+                                   exam_disease: DiseaseExams = None,
+                                   page=1) -> Dict:
+        cares = self._retrieve_cares(cnes)
+        id_cares = cares['co_seq_fat_atd_ind'].unique().tolist()
+        procedures = self._retrieve_procedures(cnes, id_cares)
+        age_group = AgeGroupsLocationDF()
+        procedures = age_group.parse_date(procedures)
+        hypertension = exam_disease
+        result = hypertension.check_presence(procedures)
+        page_ini = (page-1)*20
+        page_end = page*20
+        return result[page_ini:page_end]

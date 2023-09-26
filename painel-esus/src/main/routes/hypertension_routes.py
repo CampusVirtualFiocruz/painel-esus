@@ -8,7 +8,8 @@ from src.main.composers.hypertension_dashboard_composer import (
     hypertension_dashboard_get_complications,
     hypertension_dashboard_get_exams_count, hypertension_dashboard_get_imc,
     hypertension_dashboard_get_professionals_count,
-    hypertension_dashboard_get_total)
+    hypertension_dashboard_get_total,
+    hypertension_dashboard_get_individual_exams_count)
 
 hypertension_bp = Blueprint("hypertension", __name__)
 
@@ -59,7 +60,7 @@ def get_age_group_location():
 
 
 @hypertension_bp.route('/imc', methods=['GET'])
-@hypertension_bp.route('/imc/<cnes>', methods=['GET'])
+@hypertension_bp.route('/imc/<int:cnes>', methods=['GET'])
 def get_imc(cnes=None):
     if cnes:
         request.view_args['cnes'] = int(request.view_args['cnes'])
@@ -113,6 +114,25 @@ def get_professionals():
     try:
         http_response = request_adapter(
             request, hypertension_dashboard_get_professionals_count())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+
+@hypertension_bp.route('/get-hypertensive-list', methods=['GET'])
+@hypertension_bp.route('/get-hypertensive-list/<cnes>', methods=['GET'])
+def get_hypertenses_list(cnes=None):
+    if cnes:
+        request.view_args['cnes'] = int(request.view_args['cnes'])
+
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(
+            request, hypertension_dashboard_get_individual_exams_count())
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)

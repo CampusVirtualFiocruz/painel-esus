@@ -1,26 +1,26 @@
 # pylint: disable=invalid-name
 from typing import Dict, List
 
-from src.domain.entities.exams import (ECG, BloodCount, BloodGlucose,
+from src.domain.entities.exams import (BloodCount, BloodGlucose,
                                        BloodPressure, Creatinine,
-                                       SodiumPotassium, TotalCholesterol,
-                                       Urine)
+                                       TotalCholesterol, GlycatedHemoglobin,
+                                       Urine, Retinography)
 
 from .disease_exams import DiseaseExams
 
 
-class HypertensionExams(DiseaseExams):
+class DiabetesExams(DiseaseExams):
     def __init__(self):
         self._res = []
         self.list = [
-            BloodPressure(),
             BloodGlucose(),
+            GlycatedHemoglobin(),
+            Retinography(),
             Creatinine(),
             Urine(),
-            SodiumPotassium(),
-            TotalCholesterol(),
             BloodCount(),
-            ECG()
+            BloodPressure(),
+            TotalCholesterol()
         ]
 
     def check_presence(self, df) -> Dict:
@@ -48,6 +48,7 @@ class HypertensionExams(DiseaseExams):
         for atd_id in id_maps.items():
             item = atd_id[1]
             for exam in self.list:
+                print(exam)
                 exam.check_presence(item['evaluated'], item['requested'])
         response = []
         for exam in self.list:
@@ -59,7 +60,7 @@ class HypertensionExams(DiseaseExams):
         return response
 
 
-class IndividualHypertensionExams(DiseaseExams):
+class IndividualDiabetesExams(DiseaseExams):
     def check_presence(self, df) -> List:
         def __parse(row):
             atd_id = row['co_seq_fat_atd_ind']
@@ -70,7 +71,7 @@ class IndividualHypertensionExams(DiseaseExams):
                     'idade': row['idade'],
                     'requested': set(),
                     'evaluated': set(),
-                    'exams_list': HypertensionExams()
+                    'exams_list': DiabetesExams()
                 }
             tipo = row['tipo'].strip()
             codigo = row['codigo'].strip()
