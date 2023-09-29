@@ -23,8 +23,8 @@ services:
       - HOST=bd
       - DATABASE=esus
       - USER=postgres
-      - PASSWORD=painelfiocruz2023
-      - PORT=5432
+      - PASSWORD=postgres
+      - PORT=5433
       - CIDADE=SUSÓPOLIS
       - ESTADO=FC
       - ADMIN_USR=admin

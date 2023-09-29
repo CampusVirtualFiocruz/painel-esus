@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "painelsaude"
+    ],
+    "python.testing.unittestEnabled": true,
+    "python.testing.pytestEnabled": true
+}

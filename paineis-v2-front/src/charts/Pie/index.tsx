@@ -1,6 +1,7 @@
 import ReactECharts from 'echarts-for-react'
 import { formatAsPercent } from '../../utils'
 import './style.scss';
+import {numberFormat} from '../../utils/stringUtils';
 
 export interface TPieData{
     value: number
@@ -70,7 +71,7 @@ export function PieChart({dataGraphic, nome, colorActive}: TPieChart) {
                 opts={{ renderer: 'svg' }}
             />
             <div className='data-info d-flex flex-column align-items-center'>
-                <span className='porcentagem'>{(dataGraphic[0].value) + `(${formatAsPercent(ativo.toString())})`}</span>
+                <span className='porcentagem'>{numberFormat(dataGraphic[0].value) + `(${formatAsPercent(ativo.toString())})`}</span>
             </div>
         </div>
     )

@@ -28,18 +28,15 @@ export function LineChart(props: TStackData) {
     const series: {
         name: string,
         type: string,
-        stack: string,
+        // stack: string,
         data: number[]
     }[] = []
     const legends: string[] = [];
     items.forEach((item: TStackDataValues) => {
         legends.push(item.name)
-
-
         series.push({
             name: item.name,
             type: 'line',
-            stack: 'Total',
             data: item.data
         });
     })

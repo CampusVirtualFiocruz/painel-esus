@@ -89,7 +89,8 @@ export function DonutChart({dataGraphic, nome, colorActive}: TDonutChart) {
             {
                 name: nome,
                 type: 'pie',
-                radius: ['60%', '90%'],
+                radius: ['50%', '70%'],
+                center: ['50%', '50%'],
                 avoidLabelOverlap: false,
                 label: {
                     show: true,
@@ -121,7 +122,7 @@ export function DonutChart({dataGraphic, nome, colorActive}: TDonutChart) {
                 style={{
                     width: "100%",
                     minWidth: "316px",
-                    height: '216px'
+                    height: '256px'
                 }}
                 opts={{ renderer: 'svg' }}
             />

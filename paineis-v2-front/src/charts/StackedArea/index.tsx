@@ -1,4 +1,5 @@
 import ReactECharts from 'echarts-for-react'
+import { ReactNode } from 'react';
 import './style.scss';
 
 type ResultType = {
@@ -14,11 +15,12 @@ type TStackDataValues = {
 type TStackData = {
   labels: string[];
   data: TStackDataValues[],
-  setRangeData: (srgs: string[] )=>void
+  setRangeData: (srgs: string[]) => void,
+  children?: ReactNode
 }
 
 type TareaStyle = {
-  color:string;
+  color: string;
   opacity: number;
 };
 
@@ -46,11 +48,11 @@ export function StackedArea(props: TStackData) {
         opacity: 0.8,
         color: item.color
       },
-      lineStyle:{
+      lineStyle: {
         opacity: 1,
         color: item.color
       },
-      itemStyle:{
+      itemStyle: {
         opacity: 1,
         color: item.color
       },
@@ -67,7 +69,7 @@ export function StackedArea(props: TStackData) {
       axisPointer: {
         type: 'cross',
         label: {
-          
+
         }
       }
     },
@@ -126,32 +128,18 @@ export function StackedArea(props: TStackData) {
     'datazoom': (params: any) => {
       let starttime: string = `0`;
       let endtime: string = `0`;
-      try{
+      try {
 
         const isntance = echartRef.getEchartsInstance();
         const axis = isntance.getOption().xAxis[0];
-        const {startValue, endValue} = isntance.getOption().dataZoom[0]
+        const { startValue, endValue } = isntance.getOption().dataZoom[0]
         starttime = axis.data[startValue];
         endtime = axis.data[endValue];
-      }catch(e) {
-        starttime= "0";
-        endtime= "0";
+      } catch (e) {
+        starttime = "0";
+        endtime = "0";
       }
-      clearTimeout(timer);
-	    // armazenamos o timer novamente
-      timer = setTimeout(function(){
-        if (sessionStorage.getItem('starttime') == starttime && 
-        sessionStorage.getItem('endtime') == endtime 
-        ) {
-          starttime = '0';
-          endtime = '0';
-        }
-        sessionStorage.setItem('starttime', starttime.toString());
-        sessionStorage.setItem('endtime', endtime.toString());
-        props.setRangeData([starttime, endtime])
-      }, 500);
-     
-
+      props.setRangeData([starttime, endtime])
     }
   }
   return (
