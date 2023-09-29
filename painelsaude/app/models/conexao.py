@@ -73,13 +73,13 @@ class Conexao(object):
     
     def consultar_pd(self, sql, Dataframe=False):
         connection_url = f'postgresql+psycopg2://{self.usr}:{self.pwd}@{self.mhost}:{self.port}/{self.db}'
-        print(connection_url)
+        # print(connection_url)
         engine = create_engine(connection_url)
         rs=None
         cur = None
         with engine.connect() as conn:  
-            print(conn)     
-            print(pd.read_sql( sql, con = conn ))     
+            # print(conn)     
+            # print(pd.read_sql( sql, con = conn ))     
             return pd.read_sql( sql, con = conn )
         
     
