@@ -120,3 +120,16 @@ Silvia Ronsom, gerente de projetos
 Deney Alves de Araujo, desenvolvedor
 
 Vanderson Sampaio, pesquisador científico, epidemiologista
+
+
+# INSTALAÇÃO
+
+## Pré-requisitos:
+- Docker
+- Docker-compose
+
+## Passos:
+
+Após a instalação executar os passos:
+- Definir as variável de ambiente no `docker-compose.yml`
+- Executar o comando: `docker-compose up -d`

@@ -154,7 +154,7 @@ export function Diabetes() {
     };
 
     const { data: dataProffessionals, isLoading: isLoadingProffessionals, error: errorProffessionals } = useQuery(['diabetes-proffessionals', paramRoute], async () => {
-        let path = id ? `diabetes/proffessionals/${id}` : 'diabetes/proffessionals';
+        let path = id ? `diabetes/professionals/${id}` : 'diabetes/professionals';
         const response = await Api.get(path);
         const data = response.data;
 

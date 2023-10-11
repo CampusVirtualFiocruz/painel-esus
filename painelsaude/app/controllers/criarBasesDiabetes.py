@@ -20,7 +20,7 @@ def criarBasesDiabetes(path):
                                                                           'ds_filtro_proced_solicitados']]
 
     cadastro_mestre = cadastro_mestre[['co_fat_cidadao_pec', 'co_unidade_saude',
-                                       'ds_tipo_localizacao', 'ds_sexo', 'nu_idade', 'ds_faixa_etaria', 'nu_cnes']]
+                                       'ds_tipo_localizacao', 'ds_sexo', 'nu_idade', 'ds_faixa_etaria', 'nu_cnes', 'no_cidadao']]
     cadastro_mestre['nu_cnes'] = cadastro_mestre['nu_cnes'].astype(
         str).str[:-2]
 
@@ -246,6 +246,7 @@ def criarBasesDiabetes(path):
                                                                                                                                              'ds_tipo_localizacao': ','.join,
                                                                                                                                              'ds_sexo': ','.join,
                                                                                                                                              'nu_idade': ','.join,
+                                                                                                                                             'no_cidadao': ','.join,
                                                                                                                                              'nu_cbo': ','.join,
                                                                                                                                              'nu_cnes': ','.join,
                                                                                                                                              'FAIXA_ETARIA_DIABETICO': ','.join,
@@ -282,6 +283,19 @@ def criarBasesDiabetes(path):
     tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['IMC'] = tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['nu_peso_last'] / (
         tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['nu_altura_last_M']*tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['nu_altura_last_M'])
 
+    tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['nu_idade'] = tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['nu_idade'].str.split(
+        ',').str[-1]
+    tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['no_cidadao'] = tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['no_cidadao'].str.split(
+        ',').str[-1]
+    tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['nu_idade'] = tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['nu_idade'].apply(
+        lambda x: 0 if 'nan' in str(x) else int(float(str(x))))
+
+    tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['no_cidadao'] = tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['no_cidadao'].apply(
+        lambda x: '-' if 'nan' in str(x) or 'NaN' in str(x) else x)
+
+    tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS[
+        'nome'] = tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['no_cidadao']
+
     def IMC(row):
         if row['IMC'] <= 18.5:
             return "Baixo Peso"
@@ -298,6 +312,13 @@ def criarBasesDiabetes(path):
         lambda row: IMC(row), axis=1)
 
     """### Exportando para excel FINAL DATABASE DIABETICOS"""
+
+    mask = tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS[
+        'nu_idade'] > 0
+    tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS = tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS[
+        mask]
+
+    mask = tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS['no_cidadao'] != '-'
 
     tb_fat_at_ind_2018_2019_2020_SELECTED_DIABETICOS.to_csv(
         path + '/BASE_ATENDIMENTOS_X_DIABETICOS.csv')

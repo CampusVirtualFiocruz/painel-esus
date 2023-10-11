@@ -25,7 +25,6 @@ if __name__ == '__main__':
         "pwd": os.getenv('PASSWORD', ''),
         "port": os.environ['PORT']
     }
-    print(config)
     server_run(
         None, None, None, config, None
     )

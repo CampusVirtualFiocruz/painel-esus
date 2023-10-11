@@ -24,7 +24,7 @@ def criarBaseFinal(path):
     municipio['co_dim_uf'] = municipio['co_dim_uf'].astype(str).str[:-2]
 
     cadastro_mestre_SELECTED = cadastro_mestre[['co_fat_cidadao_pec', 'co_dim_municipio_CI',
-                                                'co_dim_unidade_saude_CI', 'co_dim_tipo_localizacao', 'CO_DIM_SEXO', 'DT_NASCIMENTO']]
+                                                'co_dim_unidade_saude_CI', 'co_dim_tipo_localizacao', 'CO_DIM_SEXO', 'DT_NASCIMENTO',  'no_cidadao', 'nu_idade']]
 
     """###Atendimento Individual"""
 
@@ -306,7 +306,7 @@ def criarBaseFinal(path):
     # print(MESTRE_JOIN_PIVOT_AT_IND_JOIN_UNIDADES_MUNICIPIO['FAIXA_ETARIA'].value_counts())
     # exit()
     """### Delete unecessary Column and Rename"""
-
+    print(MESTRE_JOIN_PIVOT_AT_IND_JOIN_UNIDADES_MUNICIPIO.columns)
     MESTRE_JOIN_PIVOT_AT_IND_JOIN_UNIDADES_MUNICIPIO = MESTRE_JOIN_PIVOT_AT_IND_JOIN_UNIDADES_MUNICIPIO.drop(
         columns=['DT_NASCIMENTO', 'dt_nascimento_AI', '_merge', 'co_dim_unidade_saude_2', 'nu_idade_gestacional_semanas', 'co_dim_municipio', 'co_dim_unidade_saude_1'])
     MESTRE_JOIN_PIVOT_AT_IND_JOIN_UNIDADES_MUNICIPIO_RENAME = MESTRE_JOIN_PIVOT_AT_IND_JOIN_UNIDADES_MUNICIPIO.rename(columns={'co_dim_municipio_AI': 'co_municipio',
@@ -314,7 +314,7 @@ def criarBaseFinal(path):
                                                                                                                                'co_dim_tipo_localizacao': 'ds_tipo_localizacao',
                                                                                                                                'SEXO_FINAL': 'ds_sexo',
                                                                                                                                'DT_NASCIMENTO_FINAL': 'dt_nascimento',
-                                                                                                                               'AGE': 'nu_idade',
+                                                                                                                               #    'AGE': 'nu_idade',
                                                                                                                                'FAIXA_ETARIA': 'ds_faixa_etaria',
                                                                                                                                'isContained_DIABETE': 'st_diabetes',
                                                                                                                                'isContained_HIPERTENSAO': 'st_hipertensao',
@@ -327,6 +327,6 @@ def criarBaseFinal(path):
 
     """# Exportando para Excel"""
 
-    MESTRE_JOIN_PIVOT_AT_IND_JOIN_UNIDADES_MUNICIPIO_RENAME.to_csv(
+    MESTRE_JOIN_PIVOT_AT_IND_JOIN_UNIDADES_MUNICIPIO_RENAME.dropna(how='any').to_csv(
         path + '/CADASTRO_MESTRE_JOIN_AT_IND_GEST_HIP_DIAB_JOIN_UNIDADES_CLEAN_PAINEL.csv')
     gc.collect()

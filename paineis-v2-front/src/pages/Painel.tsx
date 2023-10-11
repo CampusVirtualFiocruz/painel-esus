@@ -123,7 +123,7 @@ export function Painel() {
     const [dadosPainel, setDadosPainel] = useState<IPainel>();
     const [loading, setLoading] = useState(true);
     const [infecoesQtd, setInfecoesQtd] = useState<TypeCondiction[]>([
-        {value: 12, name: 'Rural'},{value: 21, name: 'Urbano'},
+        { value: 12, name: 'Rural' }, { value: 21, name: 'Urbano' },
     ]);
     //get-demographic-info
     useEffect(() => {
@@ -149,31 +149,31 @@ export function Painel() {
         }
     }, [id]);
 
-    const { data: sindromesAgudasData, isLoading, error } = useQuery(['sindromes-agudas', id], async () => {
-        // let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
-        let path = '/saida.json';
-        const response = await Api2.get(path);
-        let data = response.data;
-        const result = [
-            {value: 0, name: 'Rural'},
-            {value: 0, name: 'Urbano'},
-        ]
-        if (id) {
-            data = data.filter( (item:TResponse) => item.nu_cnes == id)
-        }
-        let total = 0;
-        data.map( (item:TResponse) => {
-            
-            if (item.local == 'Rural') {
-                result[0].value+= item.ds_filtro_cids;
-            } else {
-                result[1].value+=item.ds_filtro_cids
-            }
-            total+=item.ds_filtro_cids
-        })
-        setInfecoesQtd(result)
-        return data;
-    });
+    // const { data: sindromesAgudasData, isLoading, error } = useQuery(['sindromes-agudas', id], async () => {
+    //     // let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
+    //     let path = '/saida.json';
+    //     const response = await Api2.get(path);
+    //     let data = response.data;
+    //     const result = [
+    //         {value: 0, name: 'Rural'},
+    //         {value: 0, name: 'Urbano'},
+    //     ]
+    //     if (id) {
+    //         data = data.filter( (item:TResponse) => item.nu_cnes == id)
+    //     }
+    //     let total = 0;
+    //     data.map( (item:TResponse) => {
+
+    //         if (item.local == 'Rural') {
+    //             result[0].value+= item.ds_filtro_cids;
+    //         } else {
+    //             result[1].value+=item.ds_filtro_cids
+    //         }
+    //         total+=item.ds_filtro_cids
+    //     })
+    //     setInfecoesQtd(result)
+    //     return data;
+    // });
     //get nome ubs
     const { data: dataUbs, isLoading: isLoadingUbs, error: errorUbs } = useQuery('ubs', async () => {
         const response = await Api.get<ResponseDataListUbs>('get-units')
@@ -377,7 +377,7 @@ export function Painel() {
                                     <Condicao data={dadosPainel?.indicators.gestantes} />
                                 </div>
                             </div> */}
-                            <div className="card-condicao p-2" onClick={handleToSindromesAgudas}>
+                            {/* <div className="card-condicao p-2" onClick={handleToSindromesAgudas}>
                                 <span className="nome-condicao">Síndromes Agudas</span>
                                 <h4>{somaIndicador({
                                         rural: infecoesQtd[0].value,
@@ -391,7 +391,7 @@ export function Painel() {
                                         urbano: infecoesQtd[1].value,
                                     }} />
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="d-flex my-5 justify-content-center">

@@ -22,7 +22,7 @@ def criarBasesHipertensao(path):
                                                                           'ds_filtro_proced_solicitados']]
 
     cadastro_mestre = cadastro_mestre[['co_fat_cidadao_pec', 'co_unidade_saude',
-                                       'ds_tipo_localizacao', 'ds_sexo', 'nu_idade', 'ds_faixa_etaria', 'nu_cnes']]
+                                       'ds_tipo_localizacao', 'ds_sexo', 'nu_idade', 'ds_faixa_etaria', 'nu_cnes', 'no_cidadao']]
     cadastro_mestre['nu_cnes'] = cadastro_mestre['nu_cnes'].astype(
         str).str[:-2]
 
@@ -43,30 +43,8 @@ def criarBasesHipertensao(path):
     tb_fat_at_ind_2018_2019_2020_SELECTED = tb_fat_at_ind_2018_2019_2020_SELECTED.merge(
         Cbo, on='co_seq_dim_cbo', how='left', indicator=True)
 
-    """### Filter CID / CIAP HIPERTENSÂO
-
-    **Identificando atendimentos relacionados a hipertensão pelo CID/CIAP**
-    """
-
-    # DIABETICOS
-    '''
-    match = ['T89','T90','W85','E10','E100','E101','E102','E103','E104','E105','E106','E107','E108','E109','E11','E110','E111','E112','E113','E114','E115','E116','E117','E118','E119','E12','E120',
-            'E121','E122','E123','E124','E125','E126','E127','E128','E129','E13','E130','E131','E132','E133','E134','E135','E136','E137','E138','E139','E14','E140','E141','E142','E143','E144','E145',
-            'E146','E147','E148','E149','O24','O240','O241','O242','O243','O244','O249','P702','ABP006']
-
-    def string_finder(row, words):
-        if any(word in field for field in row for word in words):
-            return True
-        return False
-
-    gestante_SELECTED_FINAL['isContained_DIABETE'] = gestante_SELECTED_FINAL.astype(str).apply(string_finder, words=match, axis=1)
-    '''
-
     match = ['K86', 'K87', 'W81', 'I10', 'I11', 'I110', 'I119', 'I12', 'I120', 'I129', 'I13', 'I130', 'I131', 'I132', 'I139', 'I15', 'I150', 'I151', 'I152', 'I158', 'I159', 'I270', 'I272', 'O10', 'O100', 'O101', 'O102', 'O103',
              'O104', 'O109', 'ABP005']
-
-    # match = ['F83','H360','I64','I12','I129','I13','I130','I131','I132','I139','N083','N179','N18','N180','N188','N189','N19','U14','U99','U88','U90','I24','I248','I249','I25','I251','I258','I259','I518',
-    #         'I519','I110','I119','I130','I132','I50','I500','I509','G46','G468','I67','I678','I679','I68','I688','I69','I699']
 
     def string_finder(row, words):
         if any(word in field for field in row for word in words):
@@ -206,10 +184,6 @@ def criarBasesHipertensao(path):
                                                                                                                                                                       (np.where(tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['nu_cbo'].str.startswith("2516", na=False), 'ASSITENTE SOCIAL',
                                                                                                                                                                                 (np.where(tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['nu_cbo'].str.startswith("2235", na=False), 'ENFERMEIROS', 'OUTRO')))))))))))))))))))))))
 
-    """### GROP BY CO_FAT_PEC 1 LINHA 1 PACIENTE"""
-
-    tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO.dtypes
-
     tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO.drop(
         columns=['_merge', 'isContained_HIPERTENSAO', 'ds_faixa_etaria', 'ds_agravo_1', 'ds_agravo_2', 'ds_agravo_3', 'ds_agravo_4', 'ds_agravo_5'])
     tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO.astype(
@@ -229,6 +203,7 @@ def criarBasesHipertensao(path):
                                                                                                                                                'ds_tipo_localizacao': ','.join,
                                                                                                                                                'ds_sexo': ','.join,
                                                                                                                                                'nu_idade': ','.join,
+                                                                                                                                               'no_cidadao': ','.join,
                                                                                                                                                'nu_cbo': ','.join,
                                                                                                                                                'nu_cnes': ','.join,
                                                                                                                                                'FAIXA_ETARIA_HIPERTENSO': ','.join,
@@ -263,6 +238,19 @@ def criarBasesHipertensao(path):
     tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['IMC'] = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['nu_peso_last'] / (
         tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['nu_altura_last_M']*tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['nu_altura_last_M'])
 
+    tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['nu_idade'] = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['nu_idade'].str.split(
+        ',').str[-1]
+    tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['no_cidadao'] = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['no_cidadao'].str.split(
+        ',').str[-1]
+    tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['nu_idade'] = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['nu_idade'].apply(
+        lambda x: 0 if 'nan' in str(x) else int(float(str(x))))
+
+    tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['no_cidadao'] = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['no_cidadao'].apply(
+        lambda x: '-' if 'nan' in str(x) or 'NaN' in str(x) else x)
+
+    tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO[
+        'nome'] = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['no_cidadao']
+
     def IMC(row):
         if row['IMC'] <= 18.5:
             return "Baixo Peso"
@@ -278,8 +266,13 @@ def criarBasesHipertensao(path):
     tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['IMC_FINAL'] = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO.apply(
         lambda row: IMC(row), axis=1)
 
-    """### Exportando para excel FINAL DATABASE HIPERTENSÂO"""
+    mask = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO[
+        'nu_idade'] > 0
+    tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO[
+        mask]
 
-    tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO.to_csv(
+    mask = tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO['no_cidadao'] != '-'
+
+    tb_fat_at_ind_2018_2019_2020_SELECTED_HIPERTENSAO[mask].to_csv(
         path + '/BASE_ATENDIMENTOS_X_HIPERTENSAO.csv')
     gc.collect()

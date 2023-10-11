@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import gc
+from datetime import date
 
 
 def criarCadastroMeste(path):
@@ -94,7 +95,7 @@ def criarCadastroMeste(path):
     """Otimização do codigo"""
 
     cidadao_pec_SELECTED = cidadao_pec_SELECTED[[
-        'co_fat_cidadao_pec', 'co_dim_sexo_CP', 'co_dim_identidade_genero_CP', 'co_dim_tempo_nascimento']]
+        'co_fat_cidadao_pec', 'co_dim_sexo_CP', 'co_dim_identidade_genero_CP', 'co_dim_tempo_nascimento', 'no_cidadao']]
 
     """###Cidadão Território"""
 
@@ -146,15 +147,6 @@ def criarCadastroMeste(path):
 
     cad_domiciliar_SELECTED = cad_domiciliar_SELECTED[[
         'co_seq_fat_cad_domiciliar', 'co_dim_tipo_localizacao', 'co_dim_municipio_CD', 'co_dim_tempo_CD']]
-
-    """## Preparação para o linkage
-
-    ###Cadastro Individual
-
-    Saber quantos tem chave única
-    """
-
-    len(cad_individual_SELECTED['co_fat_cidadao_pec'].unique().tolist())
 
     cad_individual_SELECTED['co_dim_tempo_CI'] = pd.to_datetime(
         cad_individual_SELECTED['co_dim_tempo'].astype(str), format='%Y%m%d')
@@ -277,16 +269,18 @@ def criarCadastroMeste(path):
     Cadastro_Mestre_Pessoas_MERGE['dt_nascimento_CI'].fillna(
         pd.NaT, inplace=True)
 
+    def _age(birth_date):
+        today = date.today()
+        y = today.year - birth_date.year
+        if today.month < birth_date.month or today.month == birth_date.month and today.day < birth_date.day:
+            y -= 1
+        return y
     # merge same column of two dataframe in only 1
     Cadastro_Mestre_Pessoas_MERGE = Cadastro_Mestre_Pessoas_MERGE.assign(**{
         'DT_NASCIMENTO': Cadastro_Mestre_Pessoas_MERGE['dt_nascimento_CI'].mask(
             lambda x: x == 'NaT', Cadastro_Mestre_Pessoas_MERGE['co_dim_tempo_nascimento'])})
-
-    # Cadastro_Mestre_Pessoas_MERGE = Cadastro_Mestre_Pessoas_MERGE.drop(columns=['co_dim_identidade_genero_CI','co_dim_identidade_genero_CP','co_dim_sexo_CI','co_dim_sexo_CP','co_fat_cidadao_pec','co_fat_cidadao_pec_FT',
-    # 'nu_cns_CP','nu_cns_CI','nu_cpf_cidadao_CP','nu_cpf_cidadao_CI','dt_nascimento_CI','co_dim_tempo_nascimento'])
-
-    """# Exportando para Excel"""
-
+    Cadastro_Mestre_Pessoas_MERGE['nu_idade'] = Cadastro_Mestre_Pessoas_MERGE['DT_NASCIMENTO'].apply(
+        _age)
     Cadastro_Mestre_Pessoas_MERGE.to_csv(
         path + '/CADASTRO_MESTRE_PESSOAS.csv')
     gc.collect()

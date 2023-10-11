@@ -6,3 +6,5 @@ README-secret.md
 *.http
 paineis/*
 **__pycache__
+files/**
+painel/**

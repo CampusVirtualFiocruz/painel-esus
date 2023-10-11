@@ -62,7 +62,7 @@ class Conexao(object):
                 cur.execute(sql)
                 rs=cur.fetchall()
                 cur.close()
-        except (Exception, Error) as e:
+        except Exception as e:
             print(f'Error {e}')
         finally:
             if self._db:
