@@ -3,9 +3,6 @@ services:
   backend:
     container_name: backend
     image: painelsaudefiocruz/painel-esus
-    build:
-      context: painelsaude/
-      dockerfile: Dockerfile
     environment:
       - HOST=
       - DATABASE=
