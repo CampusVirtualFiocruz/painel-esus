@@ -2,6 +2,7 @@ import os
 from app import app
 from app.models.BaseConfig import BaseConfig
 import logging
+import urllib.parse
 
 
 def server_run(pagesPath, dataPath, dir_pages, config, addMsg=None):
@@ -18,11 +19,12 @@ def server_run(pagesPath, dataPath, dir_pages, config, addMsg=None):
 
 if __name__ == '__main__':
     print('INICIANDO')
+    print(urllib.parse.quote(os.getenv('PASSWORD', '')))
     config = {
         "host": os.environ['HOST'],
         "dataBase": os.environ['DATABASE'],
         "user": os.environ['USER'],
-        "pwd": os.getenv('PASSWORD', ''),
+        "pwd": urllib.parse.quote(os.getenv('PASSWORD', '')),
         "port": os.environ['PORT']
     }
     server_run(

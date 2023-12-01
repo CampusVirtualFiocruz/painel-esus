@@ -149,11 +149,11 @@ export function Hipertensao() {
         staleTime: 1000 * 60 * 10, //10 minutos
     });
 
-    const { data: dataProffessionals, isLoading: isLoadingProffessionals, error: errorProffessionals } = useQuery(['arterial-hypertension-proffessionals', paramRoute], async () => {
-        let path = id ? `arterial-hypertension/proffessionals/${id}` : 'arterial-hypertension/proffessionals';
+    const { data: dataProfessionals, isLoading: isLoadingProfessionals, error: errorProfessionals } = useQuery(['arterial-hypertension-professionals', paramRoute], async () => {
+        let path = id ? `arterial-hypertension/professionals/${id}` : 'arterial-hypertension/professionals';
         const response = await Api.get(path);
         const data = response.data;
-        
+
         return data.data;
     }, {
         staleTime: 1000 * 60 * 10, //10 minutos
@@ -366,12 +366,12 @@ export function Hipertensao() {
                             <div className="painel-secundario">
                                 <h4 className="mt-5 mb-4 text-center">Extratificação de atendimentos por profissional</h4>
                                 <div className="w-100">
-                                    {isLoadingProffessionals ? (
+                                    {isLoadingProfessionals ? (
                                         <div className="d-flex align-items-center justify-content-center">
                                             <Spinner size="sm" type="grow" className="me-2" />
                                             Carregando...
                                         </div>
-                                    ) : errorProffessionals ? (
+                                    ) : errorProfessionals ? (
                                         <div className="d-flex align-items-center justify-content-center">
                                             <Alert color="danger">
                                                 Erro ao carregar dados.
@@ -379,7 +379,7 @@ export function Hipertensao() {
                                         </div>
                                     ) : (
                                         <>
-                                            {dataProffessionals?.map((item: any, i: number) => (
+                                            {dataProfessionals?.map((item: any, i: number) => (
                                                 <div key={i} className="d-flex align-items-center mt-2">
                                                     <div className="container-extratificacao-atendimentos">
                                                         <span className="profissao-nome">{item.profissao}</span>
