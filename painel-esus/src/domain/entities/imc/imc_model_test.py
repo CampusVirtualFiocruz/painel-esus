@@ -1,3 +1,4 @@
+# pylint: disable=E0401
 import pandas as pd
 
 from .imc_model import ImcModel

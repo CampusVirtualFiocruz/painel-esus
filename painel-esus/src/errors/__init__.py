@@ -5,3 +5,4 @@ from .types.http_not_found import HttpNotFoundError
 from .types.http_unprocessable_entity import HttpUnprocessableEntityError
 from .types.invalid_argument import InvalidArgument
 from .types.invalid_imc import InvalidIMC
+from .types.http_forbiden import HttpForbiddenError

@@ -1,3 +1,4 @@
+# pylint: disable=E0401
 from datetime import date
 from typing import Dict
 
@@ -11,7 +12,7 @@ from src.domain.entities.hypertension import Hypertension
 from src.domain.entities.pregnancy import Pregnants
 from src.errors import InvalidArgument
 from src.infra.db.repositories.enuns.individual_cares import IndividualCare
-from src.infra.db.settings.connection_irece import DBConnectionHandler
+from src.infra.db.settings.connection import DBConnectionHandler
 
 from .sqls import (ATENDIMENTO_INDIVIDUAL_CID_CIAPS, CIDADAO_PEC_VIVO,
                    MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL)

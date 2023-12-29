@@ -1,3 +1,4 @@
+# pylint: disable=E0401
 from pandas import DataFrame
 
 from .complications import (BrainStroke, CoronaryDisease, HeartAttack,

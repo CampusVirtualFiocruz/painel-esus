@@ -1,3 +1,4 @@
+# pylint: disable=E0401
 import pandas as pd
 
 from .coronary_disease import CoronaryDisease

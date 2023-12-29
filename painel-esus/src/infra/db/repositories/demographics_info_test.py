@@ -1,6 +1,7 @@
-#pylint: disable=invalid-name
-#pylint: disable=unused-import
-#pylint: disable=redefined-outer-name
+# pylint: disable=invalid-name
+# pylint: disable=unused-import
+# pylint: disable=redefined-outer-name
+# pylint: disable=E0401
 from typing import Dict
 from pandas import DataFrame
 import pytest
@@ -31,11 +32,13 @@ def test_calculate_age(calc_age_df):
     assert response['idade'].iloc[0] == 1
     assert response['idade'].iloc[1] == 35
 
+
 @pytest.mark.usefixtures("demographics_info_df")
 def test_retrieve_demographics_info(demographics_info_df):
 
     demographics_info = DemographicsInfoRepository()
-    response = demographics_info.retrieve_demographics_info(demographics_info_df)
+    response = demographics_info.retrieve_demographics_info(
+        demographics_info_df)
 
     assert response['total'] == 10
     assert response['locationArea']['rural'] == 4
@@ -61,7 +64,8 @@ def test_retrieve_demographics_info(demographics_info_df):
 @pytest.mark.usefixtures("demographics_info_df_empty")
 def test_retrieve_demographics_info_when_empty_data(demographics_info_df_empty):
     demographics_info = DemographicsInfoRepository()
-    response = demographics_info.retrieve_demographics_info(demographics_info_df_empty)
+    response = demographics_info.retrieve_demographics_info(
+        demographics_info_df_empty)
     assert response['total'] == 0
     assert response['locationArea']['rural'] == 0
     assert response['locationArea']['urbano'] == 0
@@ -117,16 +121,20 @@ def test_parse_indicators(atendimento_individual_df):
     assert response['hipertensao']['rural'] == 1
     assert response['hipertensao']['urbano'] == 1
 
+
 @pytest.mark.usefixtures('atendimento_individual_df_no_rurals')
 def test_parse_indicators_no_rurals(atendimento_individual_df_no_rurals):
     hypertension = Hypertension()
-    hypertension_df = hypertension.filter_registers(atendimento_individual_df_no_rurals)
+    hypertension_df = hypertension.filter_registers(
+        atendimento_individual_df_no_rurals)
 
     diabetes = Diabetes()
-    diabetes_df = diabetes.filter_registers(atendimento_individual_df_no_rurals)
+    diabetes_df = diabetes.filter_registers(
+        atendimento_individual_df_no_rurals)
 
     gestantes = Pregnants()
-    gestantes_df = gestantes.filter_registers(atendimento_individual_df_no_rurals)
+    gestantes_df = gestantes.filter_registers(
+        atendimento_individual_df_no_rurals)
 
     demographics = DemographicsInfoRepository()
     demographics.parse_indicators(
@@ -144,16 +152,20 @@ def test_parse_indicators_no_rurals(atendimento_individual_df_no_rurals):
     assert response['hipertensao']['rural'] == 0
     assert response['hipertensao']['urbano'] == 2
 
+
 @pytest.mark.usefixtures('atendimento_individual_df_only_rurals')
 def test_parse_indicators_only_rurals(atendimento_individual_df_only_rurals):
     hypertension = Hypertension()
-    hypertension_df = hypertension.filter_registers(atendimento_individual_df_only_rurals)
+    hypertension_df = hypertension.filter_registers(
+        atendimento_individual_df_only_rurals)
 
     diabetes = Diabetes()
-    diabetes_df = diabetes.filter_registers(atendimento_individual_df_only_rurals)
+    diabetes_df = diabetes.filter_registers(
+        atendimento_individual_df_only_rurals)
 
     gestantes = Pregnants()
-    gestantes_df = gestantes.filter_registers(atendimento_individual_df_only_rurals)
+    gestantes_df = gestantes.filter_registers(
+        atendimento_individual_df_only_rurals)
 
     demographics = DemographicsInfoRepository()
     demographics.parse_indicators(
@@ -171,10 +183,12 @@ def test_parse_indicators_only_rurals(atendimento_individual_df_only_rurals):
     assert response['hipertensao']['rural'] == 2
     assert response['hipertensao']['urbano'] == 0
 
+
 @pytest.mark.usefixtures('atendimento_individual_df_only_rurals')
 def test_parse_indicators_empty(atendimento_individual_df_empty):
     hypertension = Hypertension()
-    hypertension_df = hypertension.filter_registers(atendimento_individual_df_empty)
+    hypertension_df = hypertension.filter_registers(
+        atendimento_individual_df_empty)
 
     diabetes = Diabetes()
     diabetes_df = diabetes.filter_registers(atendimento_individual_df_empty)
@@ -198,6 +212,7 @@ def test_parse_indicators_empty(atendimento_individual_df_empty):
     assert response['hipertensao']['rural'] == 0
     assert response['hipertensao']['urbano'] == 0
 
+
 @pytest.mark.usefixtures('atendimento_individual_df_only_rurals')
 def test_parse_indicators_with_invalid_arguments(atendimento_individual_df_only_rurals):
     demographics = DemographicsInfoRepository()
@@ -210,7 +225,8 @@ def test_parse_indicators_with_invalid_arguments(atendimento_individual_df_only_
         assert exc.message == 'diabetes must be a DataFrame instance'
 
     diabetes = Diabetes()
-    diabetes_df = diabetes.filter_registers(atendimento_individual_df_only_rurals)
+    diabetes_df = diabetes.filter_registers(
+        atendimento_individual_df_only_rurals)
     with pytest.raises(InvalidArgument) as exc:
         demographics.parse_indicators(
             diabetes=diabetes_df,
@@ -220,7 +236,8 @@ def test_parse_indicators_with_invalid_arguments(atendimento_individual_df_only_
         assert exc.message == 'hipertensao must be a DataFrame instance'
 
         hypertension = Hypertension()
-        hypertension_df = hypertension.filter_registers(atendimento_individual_df_only_rurals)
+        hypertension_df = hypertension.filter_registers(
+            atendimento_individual_df_only_rurals)
         with pytest.raises(InvalidArgument) as exc:
             demographics.parse_indicators(
                 diabetes=diabetes_df,
@@ -228,6 +245,7 @@ def test_parse_indicators_with_invalid_arguments(atendimento_individual_df_only_
                 gestantes=[]
             )
             assert exc.message == 'gestantes must be a DataFrame instance'
+
 
 @pytest.mark.skip(reason="Avoid hit on BD")
 def test_get_demographics_info():
@@ -237,6 +255,7 @@ def test_get_demographics_info():
 
     response = demographics.get_demographics_info(1)
     assert isinstance(response, Dict)
+
 
 @pytest.mark.skip(reason="Avoid hit on BD")
 def test_get_demographics_info_invalid_argument():

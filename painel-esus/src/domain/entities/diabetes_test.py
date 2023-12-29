@@ -1,4 +1,5 @@
 # pylint: disable=invalid-name
+# pylint: disable=E0401
 import pandas as pd
 
 from .diabetes import Diabetes

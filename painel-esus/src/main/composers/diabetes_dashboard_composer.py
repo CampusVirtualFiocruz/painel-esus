@@ -1,15 +1,16 @@
 
-from src.data.use_cases.diseases_dashboard.disease_dashboard import DiseaseUseCase
-from src.infra.db.repositories.disease.diseases_dashboard import DiseasesDashboardRepository
+from src.data.use_cases.diseases_dashboard.disease_dashboard import \
+    DiseaseUseCase
 from src.domain.entities.diabetes import Diabetes
-from src.domain.entities.diabetes_exams import DiabetesExams, IndividualDiabetesExams
-
+from src.domain.entities.diabetes_exams import (DiabetesExams,
+                                                IndividualDiabetesExams)
+from src.infra.db.repositories.disease.diseases_dashboard_local import \
+    DiseasesDashboardLocalRepository as DiseasesDashboardRepository
 from src.presentations.controllers.diabetes import (
-    DiabetesDashboardGetAgeGroupGender,
-    DiabetesDashboardGetAgeGroupsLocation,
+    DiabetesDashboardGetAgeGroupGender, DiabetesDashboardGetAgeGroupsLocation,
     DiabetesDashboardGetComplications, DiabetesDashboardGetExamsCount,
-    DiabetesDashboardGetIMC, DiabetesDashboardGetProfessionalsCount,
-    DiabetesDashboardGetTotal, DiabetesDashboardGetIndividualExamsCount)
+    DiabetesDashboardGetIMC, DiabetesDashboardGetIndividualExamsCount,
+    DiabetesDashboardGetProfessionalsCount, DiabetesDashboardGetTotal)
 
 
 def diabetes_dashboard_get_total():

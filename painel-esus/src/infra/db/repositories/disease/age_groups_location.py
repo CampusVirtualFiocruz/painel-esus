@@ -1,9 +1,10 @@
+# pylint: disable=E0401
 from datetime import date
 from typing import Dict
 
 from pandas import DataFrame, Series
 
-from src.infra.db.repositories.enuns.individual_cares import IndividualCare
+from src.infra.db.repositories.enuns import Location
 
 
 class AgeGroupsLocationDF:
@@ -107,19 +108,29 @@ class AgeGroupsLocationDF:
             by=['co_dim_tipo_localizacao', 'faixas']
         ).size().reset_index(name='qtd')
 
-        urbano_value = IndividualCare.get_('urbano')
-        rural_value = IndividualCare.get_('rural')
+        urbano_value = Location.get_('urbano')
+        rural_value = Location.get_('rural')
+        nao_informado = Location.get_('nao_informado')
         faixas.loc[
             faixas['co_dim_tipo_localizacao'] == urbano_value,
             'co_dim_tipo_localizacao'] = 'Urbano'
         faixas.loc[
             faixas['co_dim_tipo_localizacao'] == rural_value,
             'co_dim_tipo_localizacao'] = 'Rural'
+        faixas.loc[
+            faixas['co_dim_tipo_localizacao'] == nao_informado,
+            'co_dim_tipo_localizacao'] = 'Não Informado'
         return data_frame, faixas
 
     def age_group_location(self, data_frame: DataFrame):
         data_frame = self.parse_date(data_frame)
+        data_frame = data_frame[data_frame['idade'].notna()]
+        data_frame['idade'] = data_frame['idade'].astype(
+            str).astype(float).astype(int)
+        print(data_frame['co_dim_tipo_localizacao'].unique())
+
         data_frame, faixas = self._parse_age_group(data_frame)
+
         result = self._create_age_groups_items()
         faixas.apply(lambda x: self._hidrate_age_groups(x, result), axis=1)
         return result

@@ -1,4 +1,4 @@
-#pylint: disable=invalid-name
+# pylint: disable=invalid-name
 import datetime
 import logging
 import os
@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 SECRET_PASS = "OM3VpHNkEsKA"
 
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -25,19 +26,22 @@ def token_required(f):
             check_token(request)
             return f(*args, **kwargs)
         except HttpBadTokenError as exc:
-            response.body = { 'message': 'Bad token was given.'}
+            response.body = {'message': 'Bad token was given.'}
             response.status_code = exc.status_code
             logging.exception(exc)
         except IndexError as exc:
-            response.body = { 'message':'Token is missing.'}
+            response.body = {'message': 'Token is missing.'}
             response.status_code = 401
             logging.exception(exc)
         except Exception as exc:
-            response.body = { 'message':'Bearer token malformed.'}
+            response.body = {'message': 'Bearer token malformed.'}
             logging.exception(exc)
             response.status_code = 401
         return jsonify(response.body), response.status_code
+
+    decorated.__name__ = f.__name__
     return decorated
+
 
 def check_token(_request: Request) -> HttpResponse:
     auth_header = _request.headers.get('Authorization')
@@ -49,21 +53,24 @@ def check_token(_request: Request) -> HttpResponse:
 
     raise HttpBadTokenError('Token is missing')
 
-def validate_token(auth_token:str):
+
+def validate_token(auth_token: str):
     return jwt.decode(
-                auth_token,
-                os.getenv('SECRET_TOKEN',SECRET_PASS),
-                algorithms=["HS256"]
-            )
-def generate_token(name: str, cns: str, uf: str, municipio: str, profiles: List[str]= None) -> str:
+        auth_token,
+        os.getenv('SECRET_TOKEN', SECRET_PASS),
+        algorithms=["HS256"]
+    )
+
+
+def generate_token(name: str, cns: str, uf: str, municipio: str, profiles: List[str] = None) -> str:
     return jwt.encode({
-            'username': name,
-            'cns': cns,
-            'uf': uf,
-            'municipio': municipio,
-            'profiles': profiles,
-            'exp': datetime.datetime.now() + datetime.timedelta(hours=12)
-        },
-        os.getenv('SECRET_TOKEN',SECRET_PASS),
+        'username': name,
+        'cns': cns,
+        'uf': uf,
+        'municipio': municipio,
+        'profiles': profiles,
+        'exp': datetime.datetime.now() + datetime.timedelta(hours=12)
+    },
+        os.getenv('SECRET_TOKEN', SECRET_PASS),
         algorithm="HS256"
     )

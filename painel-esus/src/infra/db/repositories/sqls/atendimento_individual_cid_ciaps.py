@@ -74,4 +74,5 @@ join tb_fat_familia_territorio tfft on
 join tb_fat_cad_domiciliar tfcd on
 	tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar
 join tb_cbo tc on atd.co_dim_cbo_1 = tc.co_cbo
+join tb_fat_cidadao_pec  tfcp on tfcp.co_seq_fat_cidadao_pec  = atd.co_fat_cidadao_pec 
  """

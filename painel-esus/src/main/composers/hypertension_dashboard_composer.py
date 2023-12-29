@@ -1,16 +1,17 @@
 
-from src.data.use_cases.diseases_dashboard.disease_dashboard import DiseaseUseCase
-from src.infra.db.repositories.disease.diseases_dashboard import DiseasesDashboardRepository
+from src.data.use_cases.diseases_dashboard.disease_dashboard import \
+    DiseaseUseCase
 from src.domain.entities.hypertension import Hypertension
-
+from src.domain.entities.hypertension_exams import (
+    HypertensionExams, IndividualHypertensionExams)
+from src.infra.db.repositories.disease.diseases_dashboard_local import \
+    DiseasesDashboardLocalRepository as DiseasesDashboardRepository
 from src.presentations.controllers.hypertension import (
     HypertensionDashboardGetAgeGroupGender,
     HypertensionDashboardGetAgeGroupsLocation,
     HypertensionDashboardGetComplications, HypertensionDashboardGetExamsCount,
-    HypertensionDashboardGetIMC, HypertensionDashboardGetProfessionalsCount,
-    HypertensionDashboardGetTotal, HypertensionDashboardGetIndividualExamsCount)
-
-from src.domain.entities.hypertension_exams import HypertensionExams, IndividualHypertensionExams
+    HypertensionDashboardGetIMC, HypertensionDashboardGetIndividualExamsCount,
+    HypertensionDashboardGetProfessionalsCount, HypertensionDashboardGetTotal)
 
 
 def hypertension_dashboard_get_total():

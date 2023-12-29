@@ -1,3 +1,4 @@
+# pylint: disable=E0401
 from typing import Dict
 
 from pandas import DataFrame, Series

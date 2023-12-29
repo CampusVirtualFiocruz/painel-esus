@@ -1,3 +1,4 @@
+# pylint: disable=W0613
 from flask import Blueprint, jsonify, request
 
 from src.errors.error_handler import handle_errors
@@ -11,11 +12,18 @@ from src.main.composers.hypertension_dashboard_composer import (
     hypertension_dashboard_get_total,
     hypertension_dashboard_get_individual_exams_count)
 
+
+from src.main.server.cache import cache
+
 hypertension_bp = Blueprint("hypertension", __name__)
 
 
-@hypertension_bp.route('/total', methods=['GET'])
-def get_total():
+@hypertension_bp.route('/total', methods=['GET'],
+                       endpoint='total')
+@hypertension_bp.route('/total/<cnes>', methods=['GET'],
+                       endpoint='total_id')
+@cache.cached()
+def get_total(cnes=None):
     http_response = None
     response = None
     try:
@@ -29,8 +37,12 @@ def get_total():
     return response, http_response.status_code
 
 
-@hypertension_bp.route('/age-group-gender', methods=['GET'])
-def get_age_group_gender():
+@hypertension_bp.route('/age-group-gender', methods=['GET'],
+                       endpoint='get_age_group_gender')
+@hypertension_bp.route('/age-group-gender/<cnes>', methods=['GET'],
+                       endpoint='get_age_group_gender_id')
+@cache.cached()
+def get_age_group_gender(cnes=None):
     http_response = None
     response = None
     try:
@@ -44,8 +56,12 @@ def get_age_group_gender():
     return response, http_response.status_code
 
 
-@hypertension_bp.route('/age-group-location', methods=['GET'])
-def get_age_group_location():
+@hypertension_bp.route('/age-group-location', methods=['GET'],
+                       endpoint='get_age_group_location')
+@hypertension_bp.route('/age-group-location/<cnes>', methods=['GET'],
+                       endpoint='get_age_group_location_id')
+@cache.cached()
+def get_age_group_location(cnes=None):
     http_response = None
     response = None
     try:
@@ -59,8 +75,11 @@ def get_age_group_location():
     return response, http_response.status_code
 
 
-@hypertension_bp.route('/imc', methods=['GET'])
-@hypertension_bp.route('/imc/<int:cnes>', methods=['GET'])
+@hypertension_bp.route('/imc', methods=['GET'],
+                       endpoint='get_imc')
+@hypertension_bp.route('/imc/<int:cnes>', methods=['GET'],
+                       endpoint='get_imc_id')
+@cache.cached()
 def get_imc(cnes=None):
     if cnes:
         request.view_args['cnes'] = int(request.view_args['cnes'])
@@ -77,8 +96,12 @@ def get_imc(cnes=None):
     return response, http_response.status_code
 
 
-@hypertension_bp.route('/complications', methods=['GET'])
-def get_complications():
+@hypertension_bp.route('/complications', methods=['GET'],
+                       endpoint='get_complications')
+@hypertension_bp.route('/complications/<cnes>', methods=['GET'],
+                       endpoint='get_complications_id')
+@cache.cached()
+def get_complications(cnes=None):
     http_response = None
     response = None
     try:
@@ -92,8 +115,12 @@ def get_complications():
     return response, http_response.status_code
 
 
-@hypertension_bp.route('/exams', methods=['GET'])
-def get_exams():
+@hypertension_bp.route('/exams', methods=['GET'],
+                       endpoint='get_exams')
+@hypertension_bp.route('/exams/<cnes>', methods=['GET'],
+                       endpoint='get_exams_id')
+@cache.cached()
+def get_exams(cnes=None):
     http_response = None
     response = None
     try:
@@ -107,8 +134,12 @@ def get_exams():
     return response, http_response.status_code
 
 
-@hypertension_bp.route('/professionals', methods=['GET'])
-def get_professionals():
+@hypertension_bp.route('/professionals', methods=['GET'],
+                       endpoint='get_professionals')
+@hypertension_bp.route('/professionals/<cnes>', methods=['GET'],
+                       endpoint='get_professionals_id')
+@cache.cached()
+def get_professionals(cnes=None):
     http_response = None
     response = None
     try:
@@ -122,8 +153,11 @@ def get_professionals():
     return response, http_response.status_code
 
 
-@hypertension_bp.route('/get-hypertensive-list', methods=['GET'])
-@hypertension_bp.route('/get-hypertensive-list/<cnes>', methods=['GET'])
+@hypertension_bp.route('/get-hypertensive-list', methods=['GET'],
+                       endpoint='get_hypertenses_list')
+@hypertension_bp.route('/get-hypertensive-list/<cnes>', methods=['GET'],
+                       endpoint='get_hypertenses_list_id')
+@cache.cached()
 def get_hypertenses_list(cnes=None):
     if cnes:
         request.view_args['cnes'] = int(request.view_args['cnes'])

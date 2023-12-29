@@ -1,6 +1,6 @@
 CIDADAO_PEC_VIVO = """
-with tipo_local as (
-    select
+with _tipo_local as (
+	select 
         tfcp.co_seq_fat_cidadao_pec,
         tfcd.co_dim_tipo_localizacao
     from
@@ -9,8 +9,12 @@ with tipo_local as (
         tfft.co_fat_cidadao_pec = tfcp.co_seq_fat_cidadao_pec
     join tb_fat_cad_domiciliar tfcd on
         tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar
-    )
+    order by tfcd.co_dim_tempo desc
+), tipo_local as (
+	select distinct on (co_seq_fat_cidadao_pec) * from _tipo_local 
+)
 select
+	distinct
 	tfcp.*,
 	tp.co_dim_tipo_localizacao
 from

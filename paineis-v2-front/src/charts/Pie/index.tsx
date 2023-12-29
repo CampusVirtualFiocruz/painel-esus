@@ -2,35 +2,39 @@ import ReactECharts from 'echarts-for-react'
 import { formatAsPercent } from '../../utils'
 import './style.scss';
 
-export interface TPieData{
+export interface TPieData {
     value: number
 }
-export class TPieChart{
-    constructor(public nome:string, public dataGraphic: TPieData[], public colorActive: string = '#5cd2c8'){
+export class TPieChart {
+    constructor(public nome: string, public dataGraphic: TPieData[], public colorActive: string = '#5cd2c8', public bottom = false) {
         this.nome = nome;
         this.dataGraphic = dataGraphic;
         this.colorActive = colorActive;
+        this.bottom = bottom
+
     }
 }
-export function PieChart({dataGraphic, nome, colorActive}: TPieChart) {
+export function PieChart({ dataGraphic, nome, colorActive, bottom }: TPieChart) {
 
     const total = dataGraphic[0].value + dataGraphic[1].value;
-    const ativo = (dataGraphic[0].value / total)*100;
-    
+    const ativo = (dataGraphic[0].value / total) * 100;
+
     const options = {
-        color: [ colorActive,'#e4e4e4'],
+        color: [colorActive, '#e4e4e4'],
         tooltip: {
             trigger: "item",
             formatter: "({d}%)"
         },
-        title:{
+        title: {
             text: nome,
             left: 'center',
             top: '0',
-            textStyle:{
+            bottom: 'auto',
+            padding: 15,
+            textStyle: {
                 fontSize: 16,
                 overflow: 'break',
-                width: 120
+                width: 200,
             }
         },
         series: [
@@ -58,23 +62,28 @@ export function PieChart({dataGraphic, nome, colorActive}: TPieChart) {
             }
         ]
     };
-
+    if (bottom) {
+        options.title["top"] = 'auto';
+        options.title["bottom"] = '-15';
+    }
     return (
         <div className='pie-chart'>
             <ReactECharts
                 option={options}
                 style={{
-                    width: "126px",
-                    height: "186px"
+                    width: "30vw",
+                    minWidth: "316px",
+                    height: '30vh'
                 }}
                 opts={{ renderer: 'svg' }}
             />
             <div className='data-info d-flex flex-column align-items-center'>
-                <span className='porcentagem'>{(total) + `(${formatAsPercent(ativo.toString())})`}</span>
+                <span className='porcentagem'>{(dataGraphic[0].value) + `(${formatAsPercent(ativo.toString())})`}</span>
             </div>
         </div>
     )
 }
+
 
 export function Pie({ data }: any) {
     let nome = 'obstetrics-factors';

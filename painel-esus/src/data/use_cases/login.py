@@ -7,6 +7,7 @@ from src.errors import (
     HttpBadRequestError
 )
 
+
 class LoginUseCase(LoginUseCaseInterface):
 
     def __init__(self, repository: LoginRepository):
@@ -17,12 +18,8 @@ class LoginUseCase(LoginUseCaseInterface):
         if not username or not isinstance(username, str):
             raise InvalidArgument('Username is required and must be string.')
 
-        # if not username.isalpha():
-        #     raise HttpBadRequestError('Invalid username')
-
         if len(username) <= 3:
             raise HttpBadRequestError('Username too short')
-
 
     @classmethod
     def __validate_password(cls, password: str) -> None:
@@ -31,7 +28,6 @@ class LoginUseCase(LoginUseCaseInterface):
 
         if len(password) <= 3:
             raise HttpBadRequestError('Password too short')
-
 
     def login(self, username: str, password: str) -> UserPayload:
         self.__validate_username(username)

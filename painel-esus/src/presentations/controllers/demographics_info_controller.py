@@ -12,7 +12,7 @@ class DemographicsInfoController(ControllerInterface):
     def handle(self, request: HttpRequest) -> HttpResponse:
         cnes = None
         if request.path_params and 'cnes' in request.path_params:
-            cnes = request.path_params['cnes']
+            cnes = int(request.path_params['cnes'])
 
         response = self.__use_case.get_demographics_info(cnes)
 

@@ -1,12 +1,12 @@
 # pylint: disable=unused-import
+# pylint: disable=E0401
 from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-
-from src.data.use_cases.diseases_dashboard.tests.mocks.diabetes_repository import \
-    diabetes_dashboard_repository_mock
+from src.data.use_cases.diseases_dashboard.tests.mocks.hypertension_repository import \
+    hypertension_dashboard_repository_mock
 from src.errors import InvalidArgument
 
 from src.data.use_cases.diseases_dashboard.disease_dashboard import DiseaseUseCase

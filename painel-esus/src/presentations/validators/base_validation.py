@@ -1,3 +1,4 @@
+# pylint: disable=E0401
 from cerberus import Validator
 
 from src.errors.types import HttpUnprocessableEntityError

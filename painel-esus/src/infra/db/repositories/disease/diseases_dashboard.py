@@ -1,33 +1,61 @@
 # pylint: disable=duplicate-string-formatting-argument
+# pylint: disable=E0401
 from typing import Dict, List
 
 import pandas as pd
-
-from src.domain.entities.disease_exams import DiseaseExams
+from src.data.interfaces.diseases_dashboard import \
+    DiseasesDashboardRepositoryInterface
 from src.domain.dict_types import DiseaseDashboardTotal
 from src.domain.entities.disease import Disease
+from src.domain.entities.disease_exams import DiseaseExams
 from src.domain.entities.hypertension_complications import \
     HypertensionComplications
-from src.data.interfaces.diseases_dashboard import DiseasesDashboardRepositoryInterface
 from src.domain.entities.imc.imc_model import ImcModel
 from src.errors import InvalidArgument
-from src.infra.db.repositories.disease.age_group_gender import \
-    AgeGroupGenderDF
+from src.infra.db.repositories.disease.age_group_gender import AgeGroupGenderDF
 from src.infra.db.repositories.disease.age_groups_location import \
     AgeGroupsLocationDF
 from src.infra.db.repositories.disease.professional_group import \
     ProfessionalsGroup
 from src.infra.db.repositories.sqls import (
-    ATENDIMENTO_INDIVIDUAL_CID_CIAPS_NASCIMENTO,
+    ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS,
     ATENDIMENTO_INDIVIDUAL_PROCEDIMENTOS_NASCIMENTO,
     MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL)
-from src.infra.db.settings.connection_irece import DBConnectionHandler
+from src.infra.db.settings.connection import DBConnectionHandler
 
 
 class DiseasesDashboardRepository(DiseasesDashboardRepositoryInterface):
 
     def __init__(self, disease: Disease):
         self.disease = disease
+
+    def update_bases(self):
+        with DBConnectionHandler() as db_con:
+            engine = db_con.get_engine()
+            max_date = pd.read_sql_query(
+                MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL, con=engine)
+            max_date = str(max_date['max'].iloc[0])
+            sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS
+            disease = self.disease
+
+            sql += """
+                    where
+                        dt_registro between '{}'::DATE - interval '12 month' and '{}' and codigo in ({})
+                """.format(
+                max_date, max_date,
+                ", ".join([f"'{cid}'" for cid in disease.target])
+            )
+            sql += ';'
+            ids = pd.read_sql_query(sql, con=engine)[
+                'co_seq_fat_atd_ind'].unique().tolist()
+            sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS
+            sql += """
+                    where
+                        co_seq_fat_atd_ind in ({})
+                """.format(
+                ", ".join([f"'{id}'" for id in ids])
+            )
+            return pd.read_sql_query(sql, con=engine)
 
     def _retrieve_cares(self, cnes: int = None):
         if cnes and not isinstance(cnes, int):
@@ -37,7 +65,7 @@ class DiseasesDashboardRepository(DiseasesDashboardRepositoryInterface):
             max_date = pd.read_sql_query(
                 MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL, con=engine)
             max_date = str(max_date['max'].iloc[0])
-            sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS_NASCIMENTO
+            sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS
             disease = self.disease
 
             sql += """

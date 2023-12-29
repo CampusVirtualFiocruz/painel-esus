@@ -18,7 +18,7 @@ class IMC():
     def __check_imc(self, imc: float) -> bool:
         if not imc or imc <= 1 or imc >= 9999:
             raise InvalidIMC('Other IMC')
-        if self.max <= imc <= self.min:
+        if self.min <= imc <= self.max:
             return True
         return False
 
@@ -30,7 +30,7 @@ class IMC():
 
     def statistics_response(self, total_registros):
         try:
-            total_presence = round(
+            total_presence = 100*round(
                 float(self.total/total_registros), 2)
         except ZeroDivisionError:
             total_presence = 0
@@ -40,7 +40,7 @@ class IMC():
                 "com_consulta": total_presence,
                 "com_consulta_abs": self.total,
                 "limite": self.label,
-                "sem_consulta": round(1 - total_presence, 2),
+                "sem_consulta": round(100 - total_presence, 2),
                 "sem_consulta_abs": total_registros - self.total
             }
         ]

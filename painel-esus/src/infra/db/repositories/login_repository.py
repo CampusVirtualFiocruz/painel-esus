@@ -5,7 +5,7 @@ from src.data.interfaces.login_repository import (
     LoginRepository as LoginRepositoryInterface
 )
 from src.domain.entities.user_payload import UserPayload
-from src.infra.db.settings.connection_irece import DBConnectionHandler
+from src.infra.db.settings.connection import DBConnectionHandler
 
 from .sqls.login import LOGIN
 

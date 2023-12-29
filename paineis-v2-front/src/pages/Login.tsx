@@ -18,6 +18,7 @@ import { Snackbar } from '../components/Snackbar';
 import { useQuery } from 'react-query';
 import { Api } from "../services/api";
 import { useInfo } from '../context/infoProvider/useInfo';
+import { STALE_TIME } from '../config/stale-time';
 
 
 interface CityResponse {
@@ -27,15 +28,14 @@ interface CityResponse {
     municipio: string
     uf: string;
 }
-interface CityInformationResponse {
-    data: CityResponse
-}
+
+type CityInformationResponse = CityResponse
 export function Login() {
     const auth = useAuth();
     let navigate = useNavigate();
 
     const [username, setUsername] = useState("admin");
-    
+
     //const [password, setPassword] = useState("painelfiocruz22");
     const [password, setPassword] = useState("FCadmin");
     // const [username, setUsername] = useState("");
@@ -50,12 +50,14 @@ export function Login() {
 
     const { data: diabeticosList, isLoading, error } = useQuery('city-informations', async () => {
         const response = await Api.get<CityInformationResponse>('city-informations');
-        const data: CityResponse = response.data.data;
-        // setCity( `${data.municipio} - ${data.uf}` )
-        // infoContext.setCityInformation(data);
+        const data: CityResponse = response.data;
+        setCity(`${data.municipio} - ${data.uf}`)
+        infoContext.setCityInformation(data);
         return data;
-
-    });
+    }
+        , {
+            staleTime: STALE_TIME
+        });
 
     function validateForm() {
         return username.length > 0 && password.length > 0;

@@ -1,11 +1,16 @@
+import logging
+
 from src.presentations.http_types import HttpResponse
 
 from .types import (HttpBadRequestError, HttpCredentialsFailError,
                     HttpNotFoundError, HttpUnprocessableEntityError,
                     InvalidIMC)
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 def handle_errors(error: Exception) -> HttpResponse:
+    logging.exception(error)
     if isinstance(error, (HttpNotFoundError, HttpBadRequestError, HttpUnprocessableEntityError,
                           InvalidIMC, HttpCredentialsFailError)):
         # mandar mensagem para logger falando que teve esse erro!

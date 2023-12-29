@@ -1,16 +1,17 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+
 class DBConnectionHandler:
 
     def __init__(self) -> None:
         self.__connection_string = "{}://{}:{}@{}:{}/{}".format(
             'postgresql',
-            'postgres',
-            'FvEtJ7Ij4c1EtMU?X1kwwhYeMf',
-            'localhost',
-            '5433',
-            'esus'
+            'susopolis_user',
+            'R6Hi1J4HMkInYmvQ6iMdId8J2Lz7PP',
+            'paineisirece.ckebriuhritw.sa-east-1.rds.amazonaws.com',
+            '5432',
+            'postgres'
         )
         self.__engine = self.__create_database_engine()
         self.session = None

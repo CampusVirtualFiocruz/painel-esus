@@ -19,6 +19,7 @@ import mulher from '../assets/images/mulher.svg';
 import diabetes from '../assets/images/diabetes.svg';
 import hipertensao from '../assets/images/hipertensao.svg';
 import tosse from '../assets/images/tosse.svg';
+import thooth from '../assets/images/thooth.png'
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
@@ -28,6 +29,8 @@ import '../styles/painel.scss';
 import { Api } from '../services/api';
 import { Api as Api2 } from "../services/api2";
 import { isTemplateExpression } from 'typescript';
+import { STALE_TIME } from '../config/stale-time';
+import { useInfo } from '../context/infoProvider/useInfo';
 
 type PainelParams = {
     id: string;
@@ -115,65 +118,34 @@ type TResponse = {
     local: string;
 }
 
+type OralHealthResponse = {
+    total: number;
+    ds_tipo_localizacao: string;
+
+}
 export function Painel() {
     let navigate = useNavigate();
-    const user = getUserLocalStorage();
     const { id } = useParams<PainelParams>();
+    const { cityInformation, city } = useInfo();
 
     const [dadosPainel, setDadosPainel] = useState<IPainel>();
     const [loading, setLoading] = useState(true);
     const [infecoesQtd, setInfecoesQtd] = useState<TypeCondiction[]>([
-        {value: 12, name: 'Rural'},{value: 21, name: 'Urbano'},
+        { value: 12, name: 'Rural' }, { value: 21, name: 'Urbano' },
     ]);
     //get-demographic-info
-    useEffect(() => {
-        const getDados = async () => {
-            let rota = id ? `get-demographic-info/${id}` : 'get-demographic-info';
-
-            try {
-                const response = await Api.get<ResponseData>(rota);
-                const { data } = response.data;
-
-                setDadosPainel(data);
-                setLoading(false);
-            } catch (error) {
-                alert("Ocorreu um erro ao buscar informações demográficas");
-                setLoading(false);
-            }
-        }
-
-        getDados();
-
-        return () => {
-            console.log('...');
-        }
-    }, [id]);
-
-    const { data: sindromesAgudasData, isLoading, error } = useQuery(['sindromes-agudas', id], async () => {
-        // let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
-        let path = '/saida.json';
-        const response = await Api2.get(path);
-        let data = response.data;
-        const result = [
-            {value: 0, name: 'Rural'},
-            {value: 0, name: 'Urbano'},
-        ]
-        if (id) {
-            data = data.filter( (item:TResponse) => item.nu_cnes == id)
-        }
-        let total = 0;
-        data.map( (item:TResponse) => {
-            
-            if (item.local == 'Rural') {
-                result[0].value+= item.ds_filtro_cids;
-            } else {
-                result[1].value+=item.ds_filtro_cids
-            }
-            total+=item.ds_filtro_cids
-        })
-        setInfecoesQtd(result)
+    const { data: _dadosPainel, isLoading: _isLoading, error: error } = useQuery(['get-demographic-info', id], async () => {
+        let path = id ? `get-demographic-info/${id}` : 'get-demographic-info';
+        const response = await Api.get<ResponseData>(path);
+        const data = response.data.data
+        console.log('cityInformation', cityInformation)
+        setDadosPainel(data);
+        setLoading(false);
         return data;
+    }, {
+        staleTime: STALE_TIME
     });
+
     //get nome ubs
     const { data: dataUbs, isLoading: isLoadingUbs, error: errorUbs } = useQuery('ubs', async () => {
         const response = await Api.get<ResponseDataListUbs>('get-units')
@@ -187,9 +159,37 @@ export function Painel() {
 
         return listData;
     }, {
-        staleTime: 1000 * 60 * 10, //10 minutos
+        staleTime: STALE_TIME
     });
 
+    const { data: dataOralHealth, isLoading: isLoadingOralHealth, error: errorOralHealth } = useQuery(['oral-health/get-all-cares-by-place', id], async () => {
+        const url = 'oral-health/get-all-cares-by-place'
+        const path = id ? `${url}/${id}` : url
+        const response = await Api.get<OralHealthResponse[]>(path)
+        const data = response.data
+        const resp = {
+            'rural': {
+                'total': 0,
+                'ds_tipo_localizacao': 'Rural'
+            },
+            'urbano': {
+                'total': 0,
+                'ds_tipo_localizacao': 'Urbana'
+            }
+        }
+        const rural = data.find(i => i.ds_tipo_localizacao.toLowerCase() === 'rural')
+        if (rural !== undefined) {
+            resp['rural'] = rural
+        }
+        const urbano = data.find(i => i.ds_tipo_localizacao.toLowerCase() === 'urbana')
+        if (urbano !== undefined) {
+            resp['urbano'] = urbano
+        }
+        console.log(resp)
+        return resp
+    }, {
+        staleTime: STALE_TIME
+    });
     //get nome ubs
     const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : '-';
 
@@ -203,14 +203,20 @@ export function Painel() {
         navigate(`/painel/${e.value}`);
     };
 
-    function handleToGestante() {
+    // function handleToGestante() {
+    //     if (id !== undefined) {
+    //         navigate(`/gestantes/${id}`);
+    //     } else {
+    //         navigate('/gestantes');
+    //     }
+    // }
+    function handleToOralHealth() {
         if (id !== undefined) {
-            navigate(`/gestantes/${id}`);
+            navigate(`/saude-bucal/${id}`);
         } else {
-            navigate('/gestantes');
+            navigate('/saude-bucal');
         }
     }
-
     function handleToDiabetes() {
         if (id !== undefined) {
             navigate(`/diabetes/${id}`);
@@ -247,7 +253,7 @@ export function Painel() {
                     <hr className="linha my-4" />
 
                     <h2>
-                        {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : user.municipio + " - " + user.uf}
+                        {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : cityInformation?.municipio + " - " + cityInformation?.uf}
                     </h2>
 
                     <div className="container container-cards-principal">
@@ -377,12 +383,12 @@ export function Painel() {
                                     <Condicao data={dadosPainel?.indicators.gestantes} />
                                 </div>
                             </div> */}
-                            <div className="card-condicao p-2" onClick={handleToSindromesAgudas}>
+                            {/* <div className="card-condicao p-2" onClick={handleToSindromesAgudas}>
                                 <span className="nome-condicao">Síndromes Agudas</span>
                                 <h4>{somaIndicador({
-                                        rural: infecoesQtd[0].value,
-                                        urbano: infecoesQtd[1].value,
-                                    })}</h4>
+                                    rural: infecoesQtd[0].value,
+                                    urbano: infecoesQtd[1].value,
+                                })}</h4>
 
                                 <div className="d-flex align-items-center">
                                     <img src={tosse} alt="Sindrome Aguda" className="mx-2" />
@@ -391,7 +397,24 @@ export function Painel() {
                                         urbano: infecoesQtd[1].value,
                                     }} />
                                 </div>
+                            </div> */}
+                            {!isLoadingOralHealth && dataOralHealth && <div className="card-condicao p-2" onClick={handleToOralHealth}>
+                                <span className="nome-condicao">Saúde Bucal</span>
+                                <h4>{somaIndicador({
+                                    rural: dataOralHealth['rural'].total,
+                                    urbano: dataOralHealth['urbano'].total,
+                                })}</h4>
+
+                                <div className="d-flex align-items-center">
+                                    <img src={thooth} alt="Saúde Bucal" className="mx-2 thooth" />
+                                    <Condicao data={{
+                                        rural: dataOralHealth['rural'].total,
+                                        urbano: dataOralHealth['urbano'].total,
+                                    }} />
+                                </div>
                             </div>
+                            }
+
                         </div>
 
                         <div className="d-flex my-5 justify-content-center">
