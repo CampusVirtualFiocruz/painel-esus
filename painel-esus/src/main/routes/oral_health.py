@@ -14,9 +14,28 @@ from src.main.server.cache import cache
 oral_health_bp = Blueprint("oral_health", __name__)
 
 
-@oral_health_bp.route('/total', methods=['GET'],
+class OralHealthPath:
+    root_path = '/v1/oral-health'
+    urls = {
+        'total': '/total',
+        'cares_by_line_of_services': '/cares-by-line-of-services',
+        'cares_by_type_of_services': '/cares-by-type-of-services',
+        'get_extraction_procedures_proportion': '/get-extraction-procedures-proportion',
+        'get_cares_by_age_range': "/get-cares-by-age-range",
+        'get_cares_by_gender': '/get-cares-by-gender',
+        'get_cares_by_outcome': '/get-cares-by-outcome',
+        'get_cares_by_place': '/get-cares-by-place',
+        'get_all_cares_by_place': '/get-all-cares-by-place'
+    }
+
+
+oral_path = OralHealthPath()
+urls = oral_path.urls
+
+
+@oral_health_bp.route(urls['total'], methods=['GET'],
                       endpoint='total')
-@oral_health_bp.route('/total/<cnes>', methods=['GET'],
+@oral_health_bp.route(f"{urls['total']}/<cnes>", methods=['GET'],
                       endpoint='total_id')
 @cache.cached()
 def oral_health_get_total(cnes=None):
@@ -33,10 +52,10 @@ def oral_health_get_total(cnes=None):
     return response, http_response.status_code
 
 
-@oral_health_bp.route('/cares-by-line-of-services', methods=['GET'],
+@oral_health_bp.route(f"{urls['cares_by_line_of_services']}", methods=['GET'],
 
                       endpoint='cares_by_line_of_services')
-@oral_health_bp.route('/cares-by-line-of-services/<cnes>', methods=['GET'],
+@oral_health_bp.route(f"{urls['cares_by_line_of_services']}/<cnes>", methods=['GET'],
 
                       endpoint='cares_by_line_of_services_id')
 @cache.cached()
@@ -54,9 +73,9 @@ def oral_health_get_cares_by_line_of_service(cnes=None):
     return response, http_response.status_code
 
 
-@oral_health_bp.route('/cares-by-type-of-services', methods=['GET'],
+@oral_health_bp.route(f"{urls['cares_by_type_of_services']}", methods=['GET'],
                       endpoint='cares_by_type_of_services')
-@oral_health_bp.route('/cares-by-type-of-services/<cnes>', methods=['GET'],
+@oral_health_bp.route(f"{urls['cares_by_type_of_services']}/<cnes>", methods=['GET'],
                       endpoint='cares_by_type_of_services_id')
 @cache.cached()
 def oral_health_get_cares_by_type_of_service(cnes=None):
@@ -73,9 +92,9 @@ def oral_health_get_cares_by_type_of_service(cnes=None):
     return response, http_response.status_code
 
 
-@oral_health_bp.route('/get-extraction-procedures-proportion', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_extraction_procedures_proportion']}", methods=['GET'],
                       endpoint='get_extraction_procedures_proportion')
-@oral_health_bp.route('/get-extraction-procedures-proportion/<cnes>', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_extraction_procedures_proportion']}/<cnes>", methods=['GET'],
                       endpoint='get_extraction_procedures_proportion_id')
 @cache.cached()
 def oral_health_get_extraction_procedures_proportion_fn(cnes=None):
@@ -92,9 +111,9 @@ def oral_health_get_extraction_procedures_proportion_fn(cnes=None):
     return response, http_response.status_code
 
 
-@oral_health_bp.route('/get-cares-by-age-range', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_cares_by_age_range']}", methods=['GET'],
                       endpoint='get_cares_by_age_range')
-@oral_health_bp.route('/get-cares-by-age-range/<cnes>', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_cares_by_age_range']}/<cnes>", methods=['GET'],
                       endpoint='get_cares_by_age_range_id')
 @cache.cached()
 def oral_health_get_cares_by_age_range_fn(cnes=None):
@@ -111,9 +130,9 @@ def oral_health_get_cares_by_age_range_fn(cnes=None):
     return response, http_response.status_code
 
 
-@oral_health_bp.route('/get-cares-by-gender', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_cares_by_gender']}", methods=['GET'],
                       endpoint='get_cares_by_gender')
-@oral_health_bp.route('/get-cares-by-gender/<cnes>', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_cares_by_gender']}/<cnes>", methods=['GET'],
                       endpoint='get_cares_by_gender_id')
 @cache.cached()
 def oral_health_get_cares_by_gender_fn(cnes=None):
@@ -130,9 +149,9 @@ def oral_health_get_cares_by_gender_fn(cnes=None):
     return response, http_response.status_code
 
 
-@oral_health_bp.route('/get-cares-by-outcome', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_cares_by_outcome']}", methods=['GET'],
                       endpoint='get_cares_by_outcome')
-@oral_health_bp.route('/get-cares-by-outcome/<cnes>', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_cares_by_outcome']}/<cnes>", methods=['GET'],
                       endpoint='get_cares_by_outcome_id')
 @cache.cached()
 def oral_health_get_cares_by_outcome_fn(cnes=None):
@@ -149,9 +168,9 @@ def oral_health_get_cares_by_outcome_fn(cnes=None):
     return response, http_response.status_code
 
 
-@oral_health_bp.route('/get-cares-by-place', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_cares_by_place']}", methods=['GET'],
                       endpoint='get_cares_by_place')
-@oral_health_bp.route('/get-cares-by-place/<cnes>', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_cares_by_place']}/<cnes>", methods=['GET'],
                       endpoint='get_cares_by_place_id')
 @cache.cached()
 def oral_health_get_cares_by_place_fn(cnes=None):
@@ -168,9 +187,9 @@ def oral_health_get_cares_by_place_fn(cnes=None):
     return response, http_response.status_code
 
 
-@oral_health_bp.route('/get-all-cares-by-place', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_all_cares_by_place']}", methods=['GET'],
                       endpoint='get_all_cares_by_place')
-@oral_health_bp.route('/get-all-cares-by-place/<cnes>', methods=['GET'],
+@oral_health_bp.route(f"{urls['get_all_cares_by_place']}/<cnes>", methods=['GET'],
                       endpoint='get_all_cares_by_place_id')
 @cache.cached()
 def oral_health_get_all_cares_by_place_fn(cnes=None):

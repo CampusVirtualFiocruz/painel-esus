@@ -8,11 +8,23 @@ from src.main.server.cache import cache
 demographics_info_bp = Blueprint("demographics_info", __name__)
 
 
-@demographics_info_bp.route("", methods=["GET"], endpoint='get_demographics_info')
-@demographics_info_bp.route("/<cnes>", methods=['GET'], endpoint='get_demographics_info_id')
+class DemographichInfoPath:
+    root_path = '/v1/get-demographic-info'
+    urls = {
+        'root': '',
+    }
+
+
+demographics_info = DemographichInfoPath()
+urls = demographics_info.urls
+
+
+@demographics_info_bp.route(f"{urls['root']}", methods=["GET"],
+                            endpoint='get_demographics_info')
+@demographics_info_bp.route(f"{urls['root']}/<cnes>", methods=['GET'],
+                            endpoint='get_demographics_info_id')
 @cache.cached()
 def get_demographics_info_fn(cnes=None):
-    print('DEMOGRAPHIC ')
     if cnes:
         request.view_args['cnes'] = int(request.view_args['cnes'])
     http_response = None
