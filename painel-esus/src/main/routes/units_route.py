@@ -7,7 +7,18 @@ from src.main.server.cache import cache
 units_bp = Blueprint("units", __name__)
 
 
-@units_bp.route('', methods=['GET'])
+class UnitsPath:
+    root_path = '/v1/city-informations'
+    urls = {
+        'root': '',
+    }
+
+
+units = UnitsPath()
+urls = UnitsPath.urls
+
+
+@units_bp.route(urls['root'], methods=['GET'])
 @cache.cached()
 def units_list():
     http_response = None

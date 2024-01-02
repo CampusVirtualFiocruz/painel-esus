@@ -6,9 +6,19 @@ from src.errors.error_handler import handle_errors
 city_informations_bp = Blueprint("city_informations", __name__)
 
 
-@city_informations_bp.route('', methods=['GET'])
+class CityInfoPath:
+    root_path = '/v1/city-informations'
+    urls = {
+        'root': '',
+    }
+
+
+city_info = CityInfoPath()
+urls = city_info.urls
+
+
+@city_informations_bp.route(urls['root'], methods=['GET'])
 def city():
-    print('CITY INFO')
     http_response = None
     response = None
     try:

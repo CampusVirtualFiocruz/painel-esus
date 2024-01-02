@@ -4,13 +4,13 @@ import os
 import blueprint_decr
 from flask import Flask, send_from_directory
 from flask_cors import CORS
-from src.main.routes.city_informations_route import city_informations_bp
+from src.main.routes.city_informations_route import city_informations_bp, CityInfoPath
 from src.main.routes.demographics_info_route import demographics_info_bp, DemographichInfoPath
 from src.main.routes.diabetes_routes import diabetes_bp, DiabetesPath
 from src.main.routes.hypertension_routes import hypertension_bp, HypertensionPath
 from src.main.routes.login_route import login_bp
 from src.main.routes.oral_health import oral_health_bp, OralHealthPath
-from src.main.routes.units_route import units_bp
+from src.main.routes.units_route import units_bp, UnitsPath
 from src.main.server.cache import cache
 # from src.main.server.decorators.check_access import check_access
 from src.main.server.decorators.token_required import token_required
@@ -47,11 +47,14 @@ def serve(path):
 
 app.register_blueprint(login_bp, url_prefix='/v1/auth')
 
+city_info = CityInfoPath()
 register_blueprint(
-    app, (city_informations_bp, '/v1/city-informations'), [cache.cached(timeout=24*60*60)])
+    app, (city_informations_bp, city_info.root_path), [cache.cached(timeout=24*60*60)])
 
+
+units = UnitsPath()
 app.register_blueprint(units_bp,
-                       url_prefix='/v1/get-units')
+                       url_prefix=units.root_path)
 
 demographics_info = DemographichInfoPath()
 register_blueprint(
@@ -63,7 +66,6 @@ register_blueprint(
     app, (diabetes_bp, diabetes.root_path), [token_required])
 
 hypertension = HypertensionPath()
-
 register_blueprint(
     app, (hypertension_bp, hypertension.root_path), [token_required])
 
