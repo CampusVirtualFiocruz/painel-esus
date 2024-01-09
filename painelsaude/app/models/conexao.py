@@ -10,10 +10,11 @@ class Conexao(object):
     _db = None
 
     def __init__(self, mhost, db, usr, pwd, port):
+        print('pwd teste: {}'.format(pwd))
         self.mhost = mhost
         self.db = db
         self.usr = usr
-        self.pwd = urllib.parse.quote_plus(pwd)
+        self.pwd = pwd
         self.port = port
         self.connect()
 

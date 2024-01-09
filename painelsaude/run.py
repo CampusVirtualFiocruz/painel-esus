@@ -3,7 +3,8 @@ from app import app
 from app.models.BaseConfig import BaseConfig
 import logging
 import urllib.parse
-
+from dotenv import load_dotenv
+load_dotenv()
 
 def server_run(pagesPath, dataPath, dir_pages, config, addMsg=None):
     print('RODANDO SERVIDOR')
