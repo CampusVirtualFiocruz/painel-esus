@@ -23,31 +23,32 @@ app = Flask(
 )
 CORS(app)
 
-
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    print("------------------------------------HOME1")
     if path != "" and os.path.exists(app.static_folder + '/' + path):
+        print("------------------------------------HOME2: ", path)
         return send_from_directory(app.static_folder, path)
     else:
+        print("------------------------------------HOME3", path)
         return send_from_directory(app.static_folder, 'index.html')
 
 
 app.register_blueprint(accute_infections_blueprint,
                        url_prefix='/v1/accute_infections')
-
 app.register_blueprint(diabetes_bp)
 app.register_blueprint(route_bp)
 app.register_blueprint(hypertension_bp)
 app.register_blueprint(city_bp)
 app.register_blueprint(pregnants_bp)
-
 print('path: ' + os.getcwd())
 print("Generating base.....")
 start_time = time.time()
-generateBases(os.getcwd())
+# generateBases(os.getcwd())
 print("--- %s seconds ---" % (time.time() - start_time))
 print("------")
+
 
 file = IreceBase.IreceBase()
 file.getBase()
