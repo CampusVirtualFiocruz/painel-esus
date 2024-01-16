@@ -8,6 +8,7 @@ import Pagination from "../components/Pagination";
 import { Api } from "../services/api";
 import "../styles/gestanteList.scss";
 import "../styles/hipertensosList.scss";
+import { useParams } from 'react-router-dom';
 type TDiabetico = {
     'Retinopatia diabética': boolean,
     'Doença renal': boolean,
@@ -22,14 +23,20 @@ type TDiabetico = {
 type ResponseDataListUbs = {
     data: TDiabetico[];
 }
+type PainelParams = {
+    id: string;
+}
 export function DiabeticosList() {
     const [currentPage, setCurrentPage] = React.useState<any>(1)
     const [totalPages, setTotalPages] = React.useState<any>(1)
     const [response, setResponse] = React.useState<any>(null)
-    const { data: diabeticosList, isLoading, error } = useQuery(['lista-diabeticos', currentPage], async () => {
+    const { id } = useParams<PainelParams>()
+
+    const { data: diabeticosList, isLoading, error } = useQuery(['lista-diabeticos', id, currentPage], async () => {
         const total = 20;
         if (response == null) {
-            const response = await Api.get<ResponseDataListUbs>('get-diabetes-list')
+            let path = id ? `diabetes/get-diabetes-list/${id}` : 'diabetes/get-diabetes-list';
+            const response = await Api.get<ResponseDataListUbs>(path)
             const data = response.data;
             setTotalPages(data.data.length)
             setResponse(data.data)

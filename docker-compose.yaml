@@ -1,0 +1,24 @@
+version: "3.3"
+services:
+  backend:
+    container_name: backend
+    # image: painelsaudefiocruz/demo:backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=paineisirece.ckebriuhritw.sa-east-1.rds.amazonaws.com
+      - DB_DATABASE=postgres
+      - DB_USER=susopolis_user
+      - DB_PASSWORD=R6Hi1J4HMkInYmvQ6iMdId8J2Lz7PP
+      - DB_PORT=5432
+      - CIDADE=SUSÓPOLIS
+      - ESTADO=FC
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=FCadmin23
+      - POPULATION=20000
+      - SECRET_TOKEN=111111111111111111111
+      - PASSWORD_SALT=painel
+      - RELOAD_BASE_SCHELDULE=5:00
+    ports:
+      - "5001:5001"
