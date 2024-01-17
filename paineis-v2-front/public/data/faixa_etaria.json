@@ -1,0 +1,54 @@
+[
+    {
+        "label": "0 a 24 meses",
+        "axis": [
+            {
+                "label": "Área Urbana",
+                "value": 5
+            },
+            {
+                "label": "Área Rural",
+                "value": 55
+            }
+        ]
+    },
+    {
+        "label": "2 a 9 anos",
+        "axis": [
+            {
+                "label": "Área Urbana",
+                "value": 5
+            },
+            {
+                "label": "Área Rural",
+                "value": 55
+            }
+        ]
+    },
+    {
+        "label": "10 a 19 anos",
+        "axis": [
+            {
+                "label": "Área Urbana",
+                "value": 5
+            },
+            {
+                "label": "Área Rural",
+                "value": 55
+            }
+        ]
+    },
+    {
+        "label": "20 a 29 anos",
+        "axis": [
+            {
+                "label": "Área Urbana",
+                "value": 350
+            },
+            {
+                "label": "Área Rural",
+                "value": 1255
+            }
+        ]
+    }
+]
