@@ -1,14 +1,14 @@
 # pylint: disable=invalid-name
 from typing import Dict, List
 
-from src.domain.entities.exams import (BloodCount, BloodGlucose,
-                                       BloodPressure, Creatinine,
-                                       TotalCholesterol, GlycatedHemoglobin,
-                                       Urine, Retinography)
 
-from src.domain.entities.complications import (
-    HeartAttack, BrainStroke, KidneyDisease, CoronaryDisease, VascularBrainDisease
-)
+from src.domain.entities.complications import (BrainStroke, CoronaryDisease,
+                                               HeartAttack, KidneyDisease,
+                                               VascularBrainDisease)
+from src.domain.entities.exams import (BloodCount, BloodGlucose, BloodPressure,
+                                       Creatinine, GlycatedHemoglobin,
+                                       Retinography, TotalCholesterol, Urine)
+
 from .disease_exams import DiseaseExams
 
 
@@ -62,8 +62,10 @@ class DiabetesExams(DiseaseExams):
             })
         return response
 
+
 class DiabetesExamsList(DiabetesExams):
     def __init__(self):
+        super().__init__()
         self._res = []
         self.list = [
             HeartAttack(),
@@ -72,6 +74,7 @@ class DiabetesExamsList(DiabetesExams):
             CoronaryDisease(),
             VascularBrainDisease(),
         ]
+
 
 class IndividualDiabetesExams(DiseaseExams):
     def check_presence(self, df) -> List:
