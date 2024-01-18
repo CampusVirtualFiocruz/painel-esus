@@ -349,7 +349,7 @@ export function Painel() {
                         <h6 className='text-danger'>Sem dados de proporção de indivíduos cadastrados.</h6>
                     )}
 
-                    <h3 className="my-5">Condição de saúde dos indivíduos cadastrados no município</h3>
+                    <h3 className="my-5">Pessoas acompanhadas nos últimos 12 meses</h3>
 
                     <div className="container">
                         <div className="row container-cards-condicoes">
