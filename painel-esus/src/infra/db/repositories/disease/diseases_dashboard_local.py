@@ -1,25 +1,25 @@
 # pylint: disable=duplicate-string-formatting-argument
-# pylint: disable=E0401
-from typing import Dict, List
+# pylint: disable=E0401,W0613
+from typing import Dict
+from typing import List
 
 import pandas as pd
-
-from src.domain.entities.disease_exams import DiseaseExams
-from src.domain.dict_types import DiseaseDashboardTotal
-from src.domain.entities.disease import Disease
-from src.domain.entities.hypertension_complications import \
-    HypertensionComplications
 from src.data.interfaces.diseases_dashboard import \
     DiseasesDashboardRepositoryInterface
+from src.domain.dict_types import DiseaseDashboardTotal
+from src.domain.entities.disease import Disease
+from src.domain.entities.disease_exams import DiseaseExams
+from src.domain.entities.hypertension_complications import \
+    HypertensionComplications
 from src.domain.entities.imc.imc_model import ImcModel
 from src.errors import InvalidArgument
-from src.infra.db.repositories.disease.age_group_gender import \
-    AgeGroupGenderDF
+from src.infra.db.repositories.disease.age_group_gender import AgeGroupGenderDF
 from src.infra.db.repositories.disease.age_groups_location import \
     AgeGroupsLocationDF
 from src.infra.db.repositories.disease.professional_group import \
     ProfessionalsGroup
 from src.infra.db.settings.connection_local import DBConnectionHandler
+
 from ..sqls import LISTA_PESOS_ALTURAS
 
 
@@ -94,7 +94,9 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         professionals = ProfessionalsGroup()
         return professionals.get_professionals_count(cares)
 
-    def get_exams_count(self, cnes: int = None, exam_disease: DiseaseExams = None) -> Dict:
+    def get_exams_count(self,
+                        cnes: int = None,
+                        exam_disease: DiseaseExams = None) -> Dict:
         cares = self._retrieve_cares(cnes)
         id_cares = cares['co_seq_fat_atd_ind'].unique().tolist()
         procedures = self._retrieve_procedures(cnes, id_cares)
@@ -126,6 +128,9 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         hypertension = exam_disease
         result = hypertension.check_presence(procedures)
         result = list(filter(lambda x: x['nome'] is not None, result))
+        for i in result:
+            i['idade'] = 0 if i['idade'] is None else i['idade']
+
         page_ini = (page-1)*20
         page_end = page*20
         return result[page_ini:page_end]

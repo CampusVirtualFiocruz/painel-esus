@@ -1,17 +1,16 @@
 # pylint: disable=logging-too-many-args
 # pylint: disable=line-too-long
-from src.env import env
-from src.errors.logging import logging
+# pylint: disable=W0012
 import urllib.parse
 
 import requests
-
 from src.data.interfaces.login_repository import \
     LoginRepository as LoginRepositoryInterface
 from src.domain.entities.user_payload import UserPayload
+from src.env import env
+from src.errors.logging import logging
 
 from .queries.query_sessao import QUERY_SESSAO
-
 
 
 class LoginBridgeRepository(LoginRepositoryInterface):
@@ -19,13 +18,17 @@ class LoginBridgeRepository(LoginRepositoryInterface):
     def check_credentials(self, username: str, password: str) -> UserPayload:
         session = requests.Session()
         url = env.get("BRIDGE_LOGIN_URL", "")
-        payload = "{\"query\":\"mutation mutation_login {\\n  login(input: {username: \\\""+username + \
-            "\\\", password: \\\""+password + \
+        payload = (
+            "{\"query\":\"mutation mutation_login {\\n  login(input: {username: \\\"\
+                "+username +
+            "\\\", password: \\\""+password +
             "\\\", force: true}) {\\n    success\\n  }\\n}\",\"variables\":{}}"
+        )
         headers = {
             'Api-Consumer-Id': 'PAINEIS_FIOCRUZ',
             'Content-Type': 'application/json',
-            'Cookie': 'JSESSIONID=87J4pWjfQUVaO3b_lndd1DQE-8hJ3RZzcHes0uFb; XSRF-TOKEN=25038984-1945-43e2-a990-f62709f4eddd'
+            'Cookie':
+            'JSESSIONID=87J4pWjfQUVaO3b_lndd1DQE-8hJ3RZzcHes0uFb; XSRF-TOKEN=25038984-1945-43e2-a990-f62709f4eddd'
         }
 
         response = session.request("POST", url, headers=headers, data=payload)

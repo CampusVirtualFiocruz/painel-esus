@@ -1,7 +1,7 @@
-import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from src.env.conf import env
+
 
 class DBConnectionHandler:
 

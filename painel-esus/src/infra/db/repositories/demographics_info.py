@@ -1,23 +1,25 @@
-# pylint: disable=E0401
+# pylint: disable=E0401,W0012
+# pylint: disable=E0501
 from datetime import date
 from typing import Dict
 
 import pandas as pd
-from pandas import DataFrame, Series
-
+from pandas import DataFrame
+from pandas import Series
 from src.data.interfaces.demographics_info import \
     DemographicsInfoRepository as DemographicsInfoRepositoryInterface
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
 from src.domain.entities.pregnancy import Pregnants
+from src.env.conf import env
 from src.errors import InvalidArgument
 from src.infra.db.repositories.enuns.individual_cares import IndividualCare
 from src.infra.db.settings.connection import DBConnectionHandler
 
-from .sqls import (ATENDIMENTO_INDIVIDUAL_CID_CIAPS, CIDADAO_PEC_VIVO,
-                   MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL)
+from .sqls import ATENDIMENTO_INDIVIDUAL_CID_CIAPS
+from .sqls import CIDADAO_PEC_VIVO
+from .sqls import MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL
 
-from src.env.conf import env
 
 class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
 

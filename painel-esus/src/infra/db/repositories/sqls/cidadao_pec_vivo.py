@@ -5,9 +5,9 @@ with _tipo_local as (
         tfcd.co_dim_tipo_localizacao
     from
         tb_fat_cidadao_pec tfcp
-    join tb_fat_familia_territorio tfft on
+    left join tb_fat_familia_territorio tfft on
         tfft.co_fat_cidadao_pec = tfcp.co_seq_fat_cidadao_pec
-    join tb_fat_cad_domiciliar tfcd on
+    left join tb_fat_cad_domiciliar tfcd on
         tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar
     order by tfcd.co_dim_tempo desc
 ), tipo_local as (
@@ -19,7 +19,7 @@ select
 	tp.co_dim_tipo_localizacao
 from
 	tb_fat_cidadao_pec tfcp
-join tipo_local tp on
+left join tipo_local tp on
 	tp.co_seq_fat_cidadao_pec = tfcp.co_seq_fat_cidadao_pec
 where
 	tfcp.st_faleceu = 0;

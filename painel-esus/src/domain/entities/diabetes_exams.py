@@ -1,14 +1,23 @@
 # pylint: disable=invalid-name
-from typing import Dict, List
+from typing import Dict
+from typing import List
 
-from src.domain.entities.exams import (BloodCount, BloodGlucose,
-                                       BloodPressure, Creatinine,
-                                       TotalCholesterol, GlycatedHemoglobin,
-                                       Urine, Retinography)
+from src.domain.entities.complications import BrainStroke
+from src.domain.entities.complications import CoronaryDisease
+from src.domain.entities.complications import DiabeticRetinopathy
+from src.domain.entities.complications import KidneyDisease
+from src.domain.entities.complications import Neuropathy
+from src.domain.entities.complications import OcclusiveArterialDisease
+from src.domain.entities.complications import VascularBrainDisease
+from src.domain.entities.exams import BloodCount
+from src.domain.entities.exams import BloodGlucose
+from src.domain.entities.exams import BloodPressure
+from src.domain.entities.exams import Creatinine
+from src.domain.entities.exams import GlycatedHemoglobin
+from src.domain.entities.exams import Retinography
+from src.domain.entities.exams import TotalCholesterol
+from src.domain.entities.exams import Urine
 
-from src.domain.entities.complications import (
-    HeartAttack, BrainStroke, KidneyDisease, CoronaryDisease, VascularBrainDisease
-)
 from .disease_exams import DiseaseExams
 
 
@@ -62,16 +71,21 @@ class DiabetesExams(DiseaseExams):
             })
         return response
 
+
 class DiabetesExamsList(DiabetesExams):
     def __init__(self):
+        super().__init__()
         self._res = []
         self.list = [
-            HeartAttack(),
             BrainStroke(),
             KidneyDisease(),
             CoronaryDisease(),
             VascularBrainDisease(),
+            OcclusiveArterialDisease(),
+            Neuropathy(),
+            DiabeticRetinopathy()
         ]
+
 
 class IndividualDiabetesExams(DiseaseExams):
     def check_presence(self, df) -> List:
