@@ -54,13 +54,14 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
                     fontSize: '16',
                     fontWeight: 'bold',
                     width: 120,
+                    padding: [53, 10, 10, 5],
                     formatter: '{b|{d}%} \n\n{a|{b}}',
                     rich: {
                         a: {
                             color: '#6E7079',
                             fontWeight: 'bold',
-                            fontSize: 15,
-                            align: 'center'
+                            fontSize: 14,
+                            align: 'center',
                         },
                         b: {
                             color: '#6E7079',
@@ -92,7 +93,7 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
                 style={{
                     width: "80vw",
                     minWidth: "316px",
-                    height: '40vh'
+                    // height: '40vh'
                 }}
                 opts={{ renderer: 'svg' }}
             />

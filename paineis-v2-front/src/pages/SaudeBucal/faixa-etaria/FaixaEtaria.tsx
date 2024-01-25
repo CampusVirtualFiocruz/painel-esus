@@ -55,9 +55,19 @@ export const BarChart = ({ titulo, data }: BarchartType) => {
         '#2775b0',
         '#78b4d0',
     ]
+    const formatLabel = (val: number) =>{
+        if ( val >= 1000 ) {
+            return `${val / 1000}K`
+        }
+        return val;
+    }
     const options = {
         legend: {
             bottom: "0%"
+        },
+        tooltip: {
+            trigger: "item",
+            formatter: "<strong>{a0}</strong><br/>{b0}: {c0} "
         },
         xAxis: {
             data: xAxis,
@@ -71,15 +81,17 @@ export const BarChart = ({ titulo, data }: BarchartType) => {
                 show: true,
                 fontSize: 16,
                 margin: 10,
-                rotate: 90
+                rotate: 90,
+
             }
         },
         yAxis: {
             type: 'log',
             axisLabel: {
                 show: true,
-                fontSize: 16,
-                margin: 6
+                fontSize: 14,
+                margin: 6,
+                formatter: (val: number) => formatLabel(val)
             },
             splitLine: {
                 show: false

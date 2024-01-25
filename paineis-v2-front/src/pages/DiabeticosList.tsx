@@ -10,14 +10,14 @@ import "../styles/gestanteList.scss";
 import "../styles/hipertensosList.scss";
 import { useParams } from 'react-router-dom';
 type TDiabetico = {
-    'Retinopatia diabética': boolean | boolean[],
-    'Doença renal': boolean | boolean[],
-    'Doença Coronariana': boolean | boolean[],
     'Doença Cerebrovascular': boolean | boolean[],
-    'Neuropatia': boolean | boolean[],
+    'Doença Coronariana': boolean | boolean[],
+    'Doença renal': boolean | boolean[],
     'Doença Arterial Oclusiva': boolean | boolean[],
-    'nome': string,
-    'idade': number,
+    'Retinopatia diabética': boolean | boolean[],
+    'Neuropatia': boolean | boolean[],
+    'nome': string | null,
+    'idade': number |   null,
 }
 
 type ResponseDataListUbs = {
@@ -38,7 +38,9 @@ export function DiabeticosList() {
             let path = id ? `diabetes/get-diabetes-list/${id}` : 'diabetes/get-diabetes-list';
             const response = await Api.get<ResponseDataListUbs>(path)
             const data = response.data;
-            console.log(data)
+            console.log('data:', data)
+            console.log('data.data: ', data.data)
+            console.log(data.data.length)
             setTotalPages(data.data.length)
             setResponse(data.data)
             return data.data.slice((currentPage - 1) * total, currentPage * total)

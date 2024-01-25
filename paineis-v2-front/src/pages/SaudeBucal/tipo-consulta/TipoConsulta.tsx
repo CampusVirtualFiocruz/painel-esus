@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DonutChart, TDonutChart } from "../../../charts/Donut";
 import { useParams } from 'react-router-dom';
-import { FaixaEtariaResponse, PainelParams } from '../faixa-etaria/FaixaEtaria';
+import { PainelParams } from '../faixa-etaria/FaixaEtaria';
 import { useQuery } from 'react-query';
 import { Api } from '../../../services/api';
 import { STALE_TIME } from '../../../config/stale-time';
