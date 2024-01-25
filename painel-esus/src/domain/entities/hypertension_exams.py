@@ -1,14 +1,21 @@
 # pylint: disable=invalid-name
-from typing import Dict, List
+from typing import Dict
+from typing import List
 
-from src.domain.entities.exams import (ECG, BloodCount, BloodGlucose,
-                                       BloodPressure, Creatinine,
-                                       SodiumPotassium, TotalCholesterol,
-                                       Urine)
+from src.domain.entities.complications import BrainStroke
+from src.domain.entities.complications import CoronaryDisease
+from src.domain.entities.complications import HeartAttack
+from src.domain.entities.complications import KidneyDisease
+from src.domain.entities.complications import VascularBrainDisease
+from src.domain.entities.exams import BloodCount
+from src.domain.entities.exams import BloodGlucose
+from src.domain.entities.exams import BloodPressure
+from src.domain.entities.exams import Creatinine
+from src.domain.entities.exams import ECG
+from src.domain.entities.exams import SodiumPotassium
+from src.domain.entities.exams import TotalCholesterol
+from src.domain.entities.exams import Urine
 
-from src.domain.entities.complications import (
-    HeartAttack, BrainStroke, KidneyDisease, CoronaryDisease, VascularBrainDisease
-)
 from .disease_exams import DiseaseExams
 
 
@@ -64,6 +71,7 @@ class HypertensionExams(DiseaseExams):
 
 class HypertensionExamsList(HypertensionExams):
     def __init__(self):
+        super().__init__()
         self._res = []
         self.list = [
             HeartAttack(),
@@ -73,8 +81,9 @@ class HypertensionExamsList(HypertensionExams):
             VascularBrainDisease(),
         ]
 
+
 class IndividualHypertensionExams(DiseaseExams):
-        
+
     def check_presence(self, df) -> List:
         def __parse(row):
             atd_id = row['co_seq_fat_atd_ind']
@@ -117,4 +126,3 @@ class IndividualHypertensionExams(DiseaseExams):
             response.append(partial_resp)
 
         return response
-

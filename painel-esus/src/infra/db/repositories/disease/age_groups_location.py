@@ -2,8 +2,8 @@
 from datetime import date
 from typing import Dict
 
-from pandas import DataFrame, Series
-
+from pandas import DataFrame
+from pandas import Series
 from src.infra.db.repositories.enuns import Location
 
 
@@ -68,7 +68,7 @@ class AgeGroupsLocationDF:
                          int(str(_date)[6:8])
                          )
                 )
-            return None
+            return 0
 
         data_frame['idade'] = data_frame['co_dim_tempo_nascimento'].apply(
             _calculate_age_fn)
@@ -81,7 +81,11 @@ class AgeGroupsLocationDF:
             value = int(row['qtd'])
             age_group[key][location] = value
 
-    def _parse_age_group(self, data_frame: DataFrame) -> tuple([DataFrame, DataFrame]):
+    def _parse_age_group(self,
+                         data_frame: DataFrame) -> tuple([
+                             DataFrame,
+                             DataFrame
+                         ]):
         data_frame['faixas'] = ''
         mask_faixa1 = (data_frame['idade'] >= 0) & (data_frame['idade'] <= 5)
         data_frame.loc[mask_faixa1, 'faixas'] = '1'

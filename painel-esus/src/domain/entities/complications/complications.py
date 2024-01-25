@@ -1,6 +1,8 @@
 # pylint: disable=E0401
-from pandas import DataFrame
 import collections
+
+from pandas import DataFrame
+
 
 class Complications:
     def __init__(self, cids):
@@ -14,7 +16,6 @@ class Complications:
         self.label = None
         self.exams = []
 
-
     def filter_registers(self, data_frame: any) -> any:
         target_df = data_frame[['co_seq_fat_atd_ind', 'tipo', 'codigo']]
         target_df = target_df.drop_duplicates()
@@ -26,16 +27,18 @@ class Complications:
     def statistics(self, data_frame: DataFrame):
         total_registros = int(data_frame.shape[0])
         com_consulta_abs = float(
-            total_registros/self.total)*100 if self.total > 0 else 0
+            total_registros/self.total
+        )*100 if self.total > 0 else 0
         sem_consulta_abs = float(
-            (self.total-total_registros)/self.total)*100 if self.total > 0 else 0
+            (
+                self.total-total_registros)/self.total
+        )*100 if self.total > 0 else 0
         return {
             'com_consulta': round(com_consulta_abs, 2),
             'com_consulta_abs': total_registros,
             'sem_consulta': round(sem_consulta_abs, 2),
             'sem_consulta_abs': self.total - total_registros
         }
-
 
     def __repr__(self):
         return f'{self.label}: evaluated: {self.evaluated}\trequested: {self.requested}'
@@ -52,8 +55,12 @@ class Complications:
             _resquest ([str]): List of requested exams
         """
         exams = self.exams
-        evaluated_procedures_presence = self.intersect(exams, list(_eval))
-        requested_procedures_presence = self.intersect(exams, list(_resquest))
+        evaluated_procedures_presence = (
+            self.intersect(exams, list(_eval))
+        )
+        requested_procedures_presence = (
+            self.intersect(exams, list(_resquest))
+        )
         # - if the exam code did't present on requested and evaluated column
         # plus one on requested pendency
         if len(requested_procedures_presence) == 0 and len(evaluated_procedures_presence) == 0:

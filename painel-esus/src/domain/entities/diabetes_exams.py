@@ -1,13 +1,22 @@
 # pylint: disable=invalid-name
-from typing import Dict, List
+from typing import Dict
+from typing import List
 
-
-from src.domain.entities.complications import (BrainStroke, CoronaryDisease,
-                                               HeartAttack, KidneyDisease,
-                                               VascularBrainDisease)
-from src.domain.entities.exams import (BloodCount, BloodGlucose, BloodPressure,
-                                       Creatinine, GlycatedHemoglobin,
-                                       Retinography, TotalCholesterol, Urine)
+from src.domain.entities.complications import BrainStroke
+from src.domain.entities.complications import CoronaryDisease
+from src.domain.entities.complications import DiabeticRetinopathy
+from src.domain.entities.complications import KidneyDisease
+from src.domain.entities.complications import Neuropathy
+from src.domain.entities.complications import OcclusiveArterialDisease
+from src.domain.entities.complications import VascularBrainDisease
+from src.domain.entities.exams import BloodCount
+from src.domain.entities.exams import BloodGlucose
+from src.domain.entities.exams import BloodPressure
+from src.domain.entities.exams import Creatinine
+from src.domain.entities.exams import GlycatedHemoglobin
+from src.domain.entities.exams import Retinography
+from src.domain.entities.exams import TotalCholesterol
+from src.domain.entities.exams import Urine
 
 from .disease_exams import DiseaseExams
 
@@ -68,11 +77,13 @@ class DiabetesExamsList(DiabetesExams):
         super().__init__()
         self._res = []
         self.list = [
-            HeartAttack(),
             BrainStroke(),
             KidneyDisease(),
             CoronaryDisease(),
             VascularBrainDisease(),
+            OcclusiveArterialDisease(),
+            Neuropathy(),
+            DiabeticRetinopathy()
         ]
 
 

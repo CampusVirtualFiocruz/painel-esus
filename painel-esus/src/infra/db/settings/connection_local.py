@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -8,9 +9,9 @@ class DBConnectionHandler:
 
     def __init__(self) -> None:
         path = os.getcwd()
-        path = path.split('/painel-esus')[0]
-        path = path + '/painel-esus'
-        self.__connection_string = f"sqlite:///{path}/painel_esus.db"
+        path = Path(path.split('/painel-esus')[0])
+        path = os.path.join(path, 'painel-esus', 'painel_esus.db')
+        self.__connection_string = f"sqlite:///{path}"
         self.__engine = self.__create_database_engine()
         self.session = None
 

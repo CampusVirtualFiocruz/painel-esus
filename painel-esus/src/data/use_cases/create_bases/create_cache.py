@@ -1,10 +1,11 @@
+# pylint: disable=C0103
+# pylint: disable=R0914
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime
 from pprint import pprint
-from time import perf_counter
 
 import aiohttp
-import requests
+from src.errors.logging import logging
 from src.infra.db.repositories.city_informations_repository import \
     CityInformationsRepository
 from src.main.routes.city_informations_route import CityInfoPath
@@ -14,7 +15,6 @@ from src.main.routes.hypertension_routes import HypertensionPath
 from src.main.routes.oral_health import OralHealthPath
 from src.main.routes.units_route import UnitsPath
 from src.main.server.decorators.token_required import generate_token
-from src.errors.logging import logging
 
 
 class CreateCacheUseCase:
@@ -92,18 +92,22 @@ class CreateCacheUseCase:
 
         for url in hypertension.urls.values():
             for cnes in units_list:
-                second_round.append(root_path + hypertension.root_path +
-                                    url + f"/{cnes['co_seq_dim_unidade_saude']}")
+                second_round.append(
+                    root_path + hypertension.root_path +
+                    url + f"/{cnes['co_seq_dim_unidade_saude']}"
+                )
 
         for url in diabetes.urls.values():
             for cnes in units_list:
-                second_round.append(root_path + hypertension.root_path +
-                                    url + f"/{cnes['co_seq_dim_unidade_saude']}")
+                second_round.append(
+                    root_path + hypertension.root_path +
+                    url + f"/{cnes['co_seq_dim_unidade_saude']}")
 
         for url in oral.urls.values():
             for cnes in units_list:
-                second_round.append(root_path + hypertension.root_path +
-                                    url + f"/{cnes['co_seq_dim_unidade_saude']}")
+                second_round.append(
+                    root_path + hypertension.root_path +
+                    url + f"/{cnes['co_seq_dim_unidade_saude']}")
         asyncio.run(self._main(second_round, token))
         stop = datetime.now()
         time_result = stop - start
