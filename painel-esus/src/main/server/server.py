@@ -20,9 +20,10 @@ app = Flask(__name__)
 
 app = Flask(
     __name__,
-    static_folder=f'{os.getcwd()}/../paineis-v2-front/build'
+    static_folder=f'{os.getcwd()}{os.sep}..{os.sep}paineis-v2-front{os.sep}build'
 )
 CORS(app)
+print(f'{os.getcwd()}{os.sep}..{os.sep}paineis-v2-front{os.sep}build')
 
 cache.init_app(app)
 

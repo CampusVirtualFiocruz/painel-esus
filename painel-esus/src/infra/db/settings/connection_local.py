@@ -8,11 +8,13 @@ class DBConnectionHandler:
 
     def __init__(self) -> None:
         path = os.getcwd()
-        path = path.split('/painel-esus')[0]
-        path = path + '/painel-esus'
-        self.__connection_string = f"sqlite:///{path}/painel_esus.db"
+        path = path.split(f'{os.sep}painel-esus')[0]
+        path = path + f'{os.sep}painel-esus'
+        self.__connection_string = f"sqlite:///{path}{os.sep}painel_esus.db"
+        print("CONNECTION STRING", self.__connection_string)
         self.__engine = self.__create_database_engine()
         self.session = None
+        print("CONNECTION STRING", self.__connection_string)
 
     def __create_database_engine(self):
         engine = create_engine(self.__connection_string)
