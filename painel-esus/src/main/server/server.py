@@ -27,6 +27,9 @@ app = Flask(__name__)
 # tell Flask to use the above defined config
 
 static_folder = os.path.join(os.getcwd(), '..', 'paineis-v2-front', 'build')
+static_folder = os.path.relpath(static_folder)
+
+
 app = Flask(
     __name__,
     static_folder=f'{static_folder}'

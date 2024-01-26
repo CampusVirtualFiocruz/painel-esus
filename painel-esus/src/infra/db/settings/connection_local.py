@@ -11,6 +11,7 @@ class DBConnectionHandler:
         path = os.getcwd()
         path = Path(path.split('/painel-esus')[0])
         path = os.path.join(path, 'painel-esus', 'painel_esus.db')
+        path = os.path.relpath(path)
         self.__connection_string = f"sqlite:///{path}"
         self.__engine = self.__create_database_engine()
         self.session = None
