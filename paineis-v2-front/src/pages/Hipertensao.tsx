@@ -180,7 +180,7 @@ export function Hipertensao() {
     };
 
     const handleToHipertensosList = () => {
-        navigate(`/hipertensos/${id}`)
+        navigate( !!id ? `/hipertensos/${id}` : `/hipertensos`)
     }
     return (
         <div id="page-painel">

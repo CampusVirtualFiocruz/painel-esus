@@ -3,6 +3,8 @@ from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from src.env import env
+from src.errors.logging import logging
 
 
 class DBConnectionHandler:
@@ -12,6 +14,10 @@ class DBConnectionHandler:
         path = Path(path.split('/painel-esus')[0])
         path = os.path.join(path, 'painel-esus', 'painel_esus.db')
         path = os.path.relpath(path)
+        if env.get('ARTEFACT') == 'web':
+            path = 'painel_esus.db'
+        logging.info(f'Connection url: {path}')
+
         self.__connection_string = f"sqlite:///{path}"
         self.__engine = self.__create_database_engine()
         self.session = None

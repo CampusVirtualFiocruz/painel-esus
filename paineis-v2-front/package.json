@@ -17,7 +17,7 @@
     "json-server": "^0.17.0",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.3",
-    "node-sass": "5.0.0",
+    "node-sass": "9.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",

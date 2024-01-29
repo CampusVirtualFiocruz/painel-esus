@@ -12,4 +12,4 @@ RUN pip3 install -r requirements.txt
 
 EXPOSE 5001
 
-CMD [ "python", "run.py" ]
+CMD [ "python", "run.py" ] ls

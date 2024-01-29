@@ -36,7 +36,8 @@ export function HipertensosList() {
     const { data: hipertensosList, isLoading, error } = useQuery(['lista-hipertensos', id, currentPage], async () => {
         const total = 20;
         if (response == null) {
-            let path = id ? `arterial-hypertension/get-hypertensive-list/${id}` : 'arterial-hypertension/get-hypertensive-list';
+            console.log( 'id: ', id);
+            let path = (id !== undefined) ? `arterial-hypertension/get-hypertensive-list/${id}` : 'arterial-hypertension/get-hypertensive-list';
 
             const response = await Api.get<ResponseDataListUbs>(path)
             const data = response.data;

@@ -5,6 +5,8 @@ import blueprint_decr
 from flask import Flask
 from flask import send_from_directory
 from flask_cors import CORS
+from src.env import env
+from src.errors.logging import logging
 from src.main.routes.city_informations_route import city_informations_bp
 from src.main.routes.city_informations_route import CityInfoPath
 from src.main.routes.demographics_info_route import DemographichInfoPath
@@ -27,9 +29,10 @@ app = Flask(__name__)
 # tell Flask to use the above defined config
 
 static_folder = os.path.join(os.getcwd(), '..', 'paineis-v2-front', 'build')
-static_folder = os.path.relpath(static_folder)
+if env.get('ARTEFACT') != 'web':
+    static_folder = os.path.relpath(static_folder)
 
-
+logging.info(f'STATIC PATH: {static_folder}')
 app = Flask(
     __name__,
     static_folder=f'{static_folder}'
