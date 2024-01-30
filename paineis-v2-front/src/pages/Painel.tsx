@@ -20,6 +20,7 @@ import diabetes from '../assets/images/diabetes.svg';
 import hipertensao from '../assets/images/hipertensao.svg';
 import tosse from '../assets/images/tosse.svg';
 import thooth from '../assets/images/thooth.png'
+import gestantes from '../assets/images/gestantes.svg';
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
@@ -203,13 +204,13 @@ export function Painel() {
         navigate(`/painel/${e.value}`);
     };
 
-    // function handleToGestante() {
-    //     if (id !== undefined) {
-    //         navigate(`/gestantes/${id}`);
-    //     } else {
-    //         navigate('/gestantes');
-    //     }
-    // }
+    function handleToGestante() {
+        if (id !== undefined) {
+            navigate(`/gestantes/${id}`);
+        } else {
+            navigate('/gestantes');
+        }
+    }
     function handleToOralHealth() {
         if (id !== undefined) {
             navigate(`/saude-bucal/${id}`);
@@ -374,7 +375,7 @@ export function Painel() {
                                 </div>
                             </div>
 
-                            {/* <div className="card-condicao p-2" onClick={handleToGestante}>
+                            <div className="card-condicao p-2" onClick={handleToGestante}>
                                 <span className="nome-condicao">Gestantes</span>
                                 <h4>{somaIndicador(dadosPainel?.indicators.gestantes)}</h4>
 
@@ -382,7 +383,7 @@ export function Painel() {
                                     <img src={gestantes} alt="Gestantes" className="mx-2" />
                                     <Condicao data={dadosPainel?.indicators.gestantes} />
                                 </div>
-                            </div> */}
+                            </div>
                             {/* <div className="card-condicao p-2" onClick={handleToSindromesAgudas}>
                                 <span className="nome-condicao">Síndromes Agudas</span>
                                 <h4>{somaIndicador({

@@ -3,7 +3,7 @@ import { getUserLocalStorage } from '../context/AuthProvider/util';
 
 const URL = window.location.host;
 const PROTOCOL = window.location.protocol;
-const API_URL = process.env.REACT_APP_NODE_ENV === 'production' ? `${PROTOCOL}//${URL}/v1/`: "http://localhost:5002/v1/";
+const API_URL = process.env.REACT_APP_NODE_ENV === 'production' ? `${PROTOCOL}//${URL}/v1/`: "http://localhost:5001/v1/";
 
 export const Api = axios.create({
     // baseURL: "https://backend-ouropreto.painelsaude.info/v1/"

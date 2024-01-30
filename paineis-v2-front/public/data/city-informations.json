@@ -1,0 +1,10 @@
+{
+    "data": {
+        "cep": "44900000",
+        "codIgbe": "2914604",
+        "estado": "FC",
+        "municipio": "SUS\u00d3POLIS",
+        "uf": "BA"
+    },
+    "message": "successfully fetched"
+}

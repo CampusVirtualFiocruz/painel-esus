@@ -1,0 +1,20 @@
+{
+    "data": {
+        "groupByTrimester": {
+            "1\u00ba Trimestre": 831,
+            "2\u00ba Trimestre": 3600,
+            "3\u00ba Trimestre": 1087
+        },
+        "groupByWeeks": {
+            "1 a 12 semanas": 831,
+            "13 a 16 semanas": 589,
+            "17 a 20 semanas": 571,
+            "21 a 24 semanas": 593,
+            "25 a 28 semanas": 611,
+            "29 a 32 semanas": 621,
+            "33 a 36 semanas": 662,
+            "37 a 41 semanas": 570
+        }
+    },
+    "message": "successfully fetched"
+}

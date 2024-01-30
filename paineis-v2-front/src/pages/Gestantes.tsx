@@ -14,6 +14,7 @@ import info from "../assets/images/info-circle.svg";
 
 import "../styles/gestantes.scss";
 import { Api } from "../services/api";
+import { Api as Api2 } from '../services/api2';
 import { Header } from "../components/Header";
 
 import { Bar } from "../charts/Bar";
@@ -100,8 +101,9 @@ export function Gestantes() {
     const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : '-';
 
     const { data: dataTotalPerTrimester, isLoading: isLoadingTotalPerTrimester, error: errorTotalPerTrimester } = useQuery(['pregnants-total-per-trimester', paramRoute], async () => {
-        let path = id ? `pregnants/total-per-trimester/${id}` : 'pregnants/total-per-trimester';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/total-per-trimester/${id}` : 'pregnants/total-per-trimester';
+        let path = `data/total-per-trimester.json`;
+        const response = await Api2.get(path);
         const responseData = response.data;
 
         return responseData.data;
@@ -111,8 +113,9 @@ export function Gestantes() {
 
     //pregnants per weeks
     const { data: dataPregnantsPerWeeks, isLoading: isLoadingPregnantsPerWeeks, error: errorPregnantsPerWeeks } = useQuery(['pregnants-per-weeks', paramRoute], async () => {
-        let path = id ? `pregnants/per-weeks/${id}` : 'pregnants/per-weeks';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/per-weeks/${id}` : 'pregnants/per-weeks';
+        let path = 'data/per-weeks.json';
+        const response = await Api2.get(path);
         const responseData = response.data;
 
         return responseData.data;
@@ -122,8 +125,9 @@ export function Gestantes() {
 
     //prenatal indicators
     const { data: dataPrenatalIndicators, isLoading: isLoadingPrenatalIndicators, error: errorPrenatalIndicators } = useQuery(['pregnants-prenatal-indicators', paramRoute], async () => {
-        let path = id ? `pregnants/prenatal-indicators/${id}` : 'pregnants/prenatal-indicators';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/prenatal-indicators/${id}` : 'pregnants/prenatal-indicators';
+        let path = 'data/prenatal-indicators.json';
+        const response = await Api2.get(path);
         const responseData = response.data;
 
         const arrData = Object.entries(responseData.data);
@@ -135,8 +139,9 @@ export function Gestantes() {
 
     //obstetrics factors
     const { data: dataObstetricsFactors, isLoading: isLoadingObstetricsFactors, error: errorObstetricsFactors } = useQuery(['pregnants-obstetrics-factors', paramRoute], async () => {
-        let path = id ? `pregnants/obstetrics-factors/${id}` : 'pregnants/obstetrics-factors';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/obstetrics-factors/${id}` : 'pregnants/obstetrics-factors';
+        let path ='data/obstetrics-factors.json';
+        const response = await Api2.get(path);
         const responseData = response.data;
 
         const arrData = Object.entries(responseData.data);
@@ -148,8 +153,9 @@ export function Gestantes() {
 
     //exams table
     const { data: dataExamsTable, isLoading: isLoadingExamsTable, error: errorExamsTable } = useQuery(['pregnants-exams-table', paramRoute], async () => {
-        let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
+        let path = 'data/exams-table.json';
+        const response = await Api2.get(path);
         const data = response.data;
 
         return data.data;
