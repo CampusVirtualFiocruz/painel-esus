@@ -8,10 +8,14 @@ from sqlalchemy.orm import sessionmaker
 class DBConnectionHandler:
 
     def __init__(self) -> None:
-        path = os.getcwd()
-        path = Path(path.split('/painel-esus')[0])
-        path = os.path.join(path, 'painel-esus', 'painel_esus.db')
-        path = os.path.relpath(path)
+        if(os.getenv("ENV") == "instalador"):
+            path = 'painel_esus.db'
+        else:
+            path = os.getcwd()
+            path = Path(path.split('/painel-esus')[0])
+            path = os.path.join(path, 'painel_esus.db')
+            path = os.path.relpath(path)
+        print("PATH: ", path)
         self.__connection_string = f"sqlite:///{path}"
         self.__engine = self.__create_database_engine()
         self.session = None

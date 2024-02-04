@@ -28,6 +28,7 @@ app = Flask(__name__)
 
 static_folder = os.path.join(os.getcwd(), '..', 'paineis-v2-front', 'build')
 static_folder = os.path.relpath(static_folder)
+print('STATIC FOLDERS: ', static_folder)
 
 
 app = Flask(
