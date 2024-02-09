@@ -32,3 +32,10 @@
 **/*.db
 **/docker-compose.yaml
 **/deploy.sh
+
+
+#build
+**/static-files
+
+**/package-lock.json
+**/yarn.lock
