@@ -40,6 +40,7 @@ app = Flask(
 CORS(app)
 
 cache.init_app(app)
+app.json.sort_keys = False
 
 
 def register_blueprint(_app, blueprint, decorators_list):

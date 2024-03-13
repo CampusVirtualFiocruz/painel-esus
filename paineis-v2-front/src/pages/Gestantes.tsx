@@ -21,6 +21,7 @@ import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
 import { Pie } from "../charts/Pie";
 import { getNomeUbs, showValuePerTrimester, showValuePerWeeks } from "../utils";
+import { useInfo } from "../context/infoProvider/useInfo";
 
 type PainelParams = {
     id: string;
@@ -35,6 +36,7 @@ type TModal = {
 type TypeUbs = {
     label: string;
     value: number | string;
+    id: string;
 };
 
 type Lista = {
@@ -51,6 +53,7 @@ export function Gestantes() {
     let navigate = useNavigate();
     const user = getUserLocalStorage();
     const { id } = useParams<PainelParams>();
+    const { cityInformation, city } = useInfo();
 
     let paramRoute = id ? id : 'all';
 
@@ -68,17 +71,17 @@ export function Gestantes() {
     };
 
     const handleClick = (idModal: number) => {
-        setData({ loaded: 0 });
-        setShowModal(true);
-        getData(idModal);
+        // setData({ loaded: 0 });
+        // setShowModal(true);
+        // getData(idModal);
     };
 
     const handleModalList = (e: any, idModal: number, tipo: string) => {
-        if (e.currentTarget === e.target) {
-            setData({ loaded: idModal, tipo, cnes: id });
-            setShowModalList(true);
-            getData(idModal, tipo);
-        }
+        // if (e.currentTarget === e.target) {
+        //     setData({ loaded: idModal, tipo, cnes: id });
+        //     setShowModalList(true);
+        //     getData(idModal, tipo);
+        // }
     }
 
     //get nome ubs
@@ -86,10 +89,11 @@ export function Gestantes() {
         const response = await Api.get<ResponseDataListUbs>('get-units')
         const data = response.data
 
-        const listData: TypeUbs[] = data.data.map((ubs) => {
+        const listData: TypeUbs[] = data.data.map((ubs: any) => {
             return {
                 "label": ubs.no_unidade_saude,
                 "value": ubs.nu_cnes,
+                "id": ubs.co_seq_dim_unidade_saude
             }
         })
 
@@ -98,7 +102,7 @@ export function Gestantes() {
         staleTime: 1000 * 60 * 10, //10 minutos
     });
 
-    const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : '-';
+    const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
 
     const { data: dataTotalPerTrimester, isLoading: isLoadingTotalPerTrimester, error: errorTotalPerTrimester } = useQuery(['pregnants-total-per-trimester', paramRoute], async () => {
         // let path = id ? `pregnants/total-per-trimester/${id}` : 'pregnants/total-per-trimester';
@@ -164,11 +168,11 @@ export function Gestantes() {
     });
 
     function handleToPainelUbs() {
-        navigate(`/painel/${id}`);
+        window.location.href=`/painel/${id}`;
     }
 
     function handleToPainelMunicipio() {
-        navigate("/painelx");
+        window.location.href="/painelx";
     }
 
     function handleToGestantesList() {
@@ -187,8 +191,8 @@ export function Gestantes() {
 
                 <hr className="linha my-4" />
 
-                <h2>
-                    {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : user.municipio + " - " + user.uf} / Painel das gestantes
+                <h2 style={{textAlign: 'center'}}>
+                    {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : nomeUbs} / Painel das gestantes
                 </h2>
 
                 <div className="container-fluid">
@@ -258,11 +262,11 @@ export function Gestantes() {
                             </div>
                         </div>
 
-                        <div className="col-12 col-lg-7 d-flex flex-column justify-content-between">
+                        <div className="col-12 col-lg-7 d-flex flex-column justify-content-between" >
                             <div className="painel-lateral">
                                 <h4 className="my-5 text-center">Gestantes por trimestre</h4>
 
-                                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center  top-alignment">
 
                                     {showModal && <Modal data={data} setShowModal={setShowModal} />}
                                     {showModalList && <ModalList params={data} setShowModalList={setShowModalList} />}

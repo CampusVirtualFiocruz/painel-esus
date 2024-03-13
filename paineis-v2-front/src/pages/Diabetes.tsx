@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Alert, Progress, Spinner } from "reactstrap";
@@ -19,6 +20,8 @@ import { Pie } from "../charts/Pie";
 import { getNomeUbs } from "../utils";
 import { useState } from "react";
 import { BarSexo } from "../charts/BarSexo";
+import { useInfo } from "../context/infoProvider/useInfo";
+
 
 type TModal = {
     loaded: number;
@@ -33,6 +36,7 @@ type PainelParams = {
 type TypeUbs = {
     label: string;
     value: number | string;
+    id: string;
 };
 
 type Lista = {
@@ -51,6 +55,8 @@ export function Diabetes() {
     const { id } = useParams<PainelParams>();
     const [showModal, setShowModal] = useState(false);
     const [data, setData] = useState<TModal>({ loaded: 0 });
+    const { cityInformation, city } = useInfo();
+    console.log(cityInformation)
 
     let paramRoute = id ? id : 'all';
 
@@ -68,10 +74,11 @@ export function Diabetes() {
         const response = await Api.get<ResponseDataListUbs>('get-units')
         const data = response.data
 
-        const listData: TypeUbs[] = data.data.map((ubs) => {
+        const listData: TypeUbs[] = data.data.map((ubs: any) => {
             return {
                 "label": ubs.no_unidade_saude,
                 "value": ubs.nu_cnes,
+                "id": ubs.co_seq_dim_unidade_saude
             }
         })
 
@@ -80,7 +87,7 @@ export function Diabetes() {
         staleTime: 1000 * 60 * 10, //10 minutos
     });
 
-    const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : '-';
+    const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
 
     const { data: dataTotalDiabetes, isLoading: isLoadingTotalDiabetes, error: errorTotalDiabetes } = useQuery(['diabetes/total', paramRoute], async () => {
         const response = await Api.get('diabetes/total');
@@ -164,11 +171,12 @@ export function Diabetes() {
     });
 
     function handleToPainelUbs() {
-        navigate(`/painel/${id}`);
+        window.location.href=`/painel/${id}`;
+
     }
 
     function handleToPainelMunicipio() {
-        navigate("/painelx");
+        window.location.href="/painelx";
     }
 
     const handleClick = (idModal: number) => {
@@ -187,8 +195,8 @@ export function Diabetes() {
 
                 <hr className="linha my-4" />
 
-                <h2>
-                    {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : user.municipio + " - " + user.uf} / Painel Diabetes
+                <h2 style={{textAlign: 'center'}}>
+                    {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : nomeUbs} / <br/>Painel Diabetes
                 </h2>
 
                 {showModal && <Modal data={data} setShowModal={setShowModal} />}

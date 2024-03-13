@@ -86,7 +86,15 @@ type Ubs = {
 }
 
 export function getNomeUbs(data: any, id: string) {
-    let ubs = Object.values(data).find((item: any) => item.value === id) as Ubs;
+    let ubs = {} as Ubs;
+    if ( id != undefined ) {
+        ubs = Object.values(data).find((item: any) => {
+            console.log(item.co_seq_dim_unidade_saude , parseInt(id))
+            return item.id === parseInt(id)
+        }) as Ubs;
+
+        console.log(ubs)
+    }
     return ubs ? ubs.label : '-';
 }
 

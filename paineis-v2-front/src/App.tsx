@@ -16,6 +16,7 @@ import { DiabeticosList } from './pages/DiabeticosList';
 import { SindromesAgudas } from './pages/SindromesAgudas/SindromesAgudas';
 import { SelecionarUbs } from './pages/SelecionarUbs';
 import SaudeBucal from "./pages/SaudeBucal/SaudeBucal";
+import RelatoriosQualidadeInformacao from "./pages/RelatoriosQualidadeInformacao";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -184,6 +185,14 @@ function App() {
                 element={
                   <ProtectedLayout>
                     <SaudeBucal />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/relatorios"
+                element={
+                  <ProtectedLayout>
+                    <RelatoriosQualidadeInformacao />
                   </ProtectedLayout>
                 }
               />
