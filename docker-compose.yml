@@ -2,7 +2,7 @@ version: "3.3"
 services:
   bd:
     container_name: bd
-    image: postgres 
+    image: postgres
     environment:
       - POSTGRES_PASSWORD=painelfiocruz2023
     volumes:
@@ -16,7 +16,7 @@ services:
   backend:
     container_name: backend
     image: painelsaudefiocruz/demo:backend
-    build: 
+    build:
       context: painelsaude/
       dockerfile: Dockerfile
     environment:
@@ -52,7 +52,7 @@ services:
       - 80:80
     networks:
       - painel-network
-    
+
 networks:
-    painel-network:
-      driver: bridge
+  painel-network:
+    driver: bridge
