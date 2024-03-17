@@ -18,7 +18,7 @@ export const setupBarChart = ({
   labels: Array<string>;
   series: Array<{
     name: string;
-    data: Array<number>;
+    value: Array<number>;
   }>;
 }) => ({
   xAxis: {
@@ -64,7 +64,7 @@ export const setupBarChart = ({
   },
   series: series.map((s, i) => ({
     name: s.name,
-    data: s.data,
+    data: s.value,
     type: 'bar',
     stack: 'one',
     barWidth: '50%',
