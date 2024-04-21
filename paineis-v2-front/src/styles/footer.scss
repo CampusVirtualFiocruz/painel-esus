@@ -1,29 +1,29 @@
-@import './_exports.module.scss';
+@import "./_exports.module.scss";
 footer {
+  display: flex;
+  height: 20vh;
+
+  background: white;
+  box-shadow: inset 0px 6px 8px -10px #000000, inset 0 0 0 0 #fff;
+
+  align-items: center;
+  justify-content: center;
+
+  .grid-sponsors {
     display: flex;
-    height: 20vh;
-
-    background: #ffffff;
-    box-shadow: inset 0px 6px 8px -10px #000000, inset 0 0 0 0 #fff;
-
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
 
-    .grid-sponsors {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-
-        img {
-            max-width: 250px;
-            margin: 8px 16px;
-        }
+    img {
+      max-width: 250px;
+      margin: 8px 16px;
     }
+  }
 }
 
 @media (max-width: 591px) {
-    footer {
-        height: 40%;
-    }
+  footer {
+    height: 40%;
+  }
 }

@@ -1,185 +1,185 @@
-
-@import './_exports.module.scss';
+@import "./_exports.module.scss";
 
 #page-login {
-    display: flex;
-    min-height: 100vh;
-    flex-direction: column;
-    margin: 0;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  margin: 0;
 
+  #main {
+    display: flex;
+    flex: 1;
+    padding: 32px 64px;
+    margin: auto;
+    gap: 64px;
+  }
+
+  @media (max-width: 591px) {
     #main {
-        display: flex;
-        flex: 1;
-        padding: 32px 64px;
-        margin: auto;
-        gap: 64px;
+      padding: 0 24px;
+    }
+  }
+
+  aside {
+    flex: 8;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+
+    .header-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo-content {
+      display: flex;
+      align-items: baseline;
+
+      img {
+        margin-right: 16px;
+        max-height: 34px;
+      }
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--teal-300);
+      margin-bottom: 0;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 500;
+      color: var(--white);
     }
 
     @media (max-width: 591px) {
-        #main {
-            padding: 0 24px;
-        }
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
     }
 
-    aside {
-        flex: 8;
-        display: flex;
-        flex-direction: column;
-        margin: auto;
-
-        .header-content {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .logo-content {
-            display: flex;
-            align-items: baseline;
-
-            img {
-                margin-right: 16px;
-                max-height: 34px;
-            }
-        }
-
-        h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--teal-300);
-            margin-bottom: 0;
-        }
-
-        h2 {
-            font-size: 2rem;
-            font-weight: 500;
-            color: var(--white);
-        }
-
-        @media (max-width: 591px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-        }
-
-        .separator {
-            width: 50px;
-            height: 3px;
-            background-color: #ffffff;
-            align-self: flex-start;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            font-weight: 300;
-        }
-
-        p {
-            font-size: 1rem;
-            font-weight: 400;
-        }
+    .separator {
+      width: 50px;
+      height: 3px;
+      background-color: white;
+      align-self: flex-start;
     }
 
-    main {
-        flex: 4;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    .subtitle {
+      font-size: 1rem;
+      font-weight: 300;
     }
 
-    .formCenter {
-        max-width: 536px;
-        display: flex;
-        flex: 1;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--white);
-        border-radius: 4px;
+    p {
+      font-size: 1rem;
+      font-weight: 400;
     }
+  }
 
-    .formFields {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        padding: 40px 40px 0 40px;
+  main {
+    flex: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .formCenter {
+    max-width: 536px;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--white);
+    border-radius: 4px;
+  }
+
+  .formFields {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 40px 40px 0 40px;
+  }
+
+  .formField {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+  }
+
+  .formFieldLabel {
+    text-transform: uppercase;
+    font-size: 1.25rem;
+    color: white;
+
+    img {
+      margin-right: 22px;
     }
+  }
 
-    .formField {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 40px;
+  .formField:focus-within label {
+    color: var(--teal-300);
+
+    img {
+      filter: invert(1%) sepia(16%) saturate(7475%) hue-rotate(81deg)
+        brightness(100%) contrast(87%);
     }
+  }
 
-    .formFieldLabel {
-        text-transform: uppercase;
-        font-size: 1.25rem;
-        color: white;
+  .container-field {
+    display: flex;
+    border-bottom: 1px solid #fafafa;
+    padding-bottom: 10px;
+    margin-top: 10px;
+    position: relative;
+  }
 
-        img {
-            margin-right: 22px;
-        }
-    }
+  .formFieldInput {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: white;
+    outline: none;
+    font-size: 1em;
+    font-weight: 300;
+  }
 
-    .formField:focus-within label {
-        color: var(--teal-300);
+  .formFieldInput::placeholder {
+    color: var(--teal-300);
+  }
 
-        img {
-            filter: invert(1%) sepia(16%) saturate(7475%) hue-rotate(81deg) brightness(100%) contrast(87%);
-        }
-    }
+  .container-field:focus {
+    border-bottom: 1px solid var(--teal-300);
+  }
 
-    .container-field {
-        display: flex;
-        border-bottom: 1px solid #fafafa;
-        padding-bottom: 10px;
-        margin-top: 10px;
-        position: relative;
-    }
+  .password-toggle {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+  }
 
-    .formFieldInput {
-        width: 100%;
-        background-color: transparent;
-        border: none;
-        color: white;
-        outline: none;
-        font-size: 1em;
-        font-weight: 300;
-    }
+  .formFieldButton {
+    background-color: var(--teal-300);
+    color: #343131;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 500;
+  }
 
-    .formFieldInput::placeholder {
-        color: #616e7f;
-    }
-
-    .container-field:focus {
-        border-bottom: 1px solid var(--teal-300);
-    }
-
-    .password-toggle {
-        cursor: pointer;
-        position: absolute;
-        right: 0;
-    }
-
-    .formFieldButton {
-        background-color: var(--teal-300);
-        color: #343131;
-        border: none;
-        outline: none;
-        border-radius: 4px;
-        padding: 10px;
-        font-size: 1rem;
-        line-height: 1rem;
-        font-weight: 500;
-    }
-
-    .formFieldLink {
-        color: #66707d;
-        text-decoration: none;
-        display: inline-block;
-        border-bottom: 1.5px solid #6b5b95;
-        padding-bottom: 5px;
-    }
+  .formFieldLink {
+    color: #66707d;
+    text-decoration: none;
+    display: inline-block;
+    border-bottom: 1.5px solid #6b5b95;
+    padding-bottom: 5px;
+  }
 }

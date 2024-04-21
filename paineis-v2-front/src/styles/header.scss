@@ -1,69 +1,69 @@
-@import './_exports.module.scss';
+@import "./_exports.module.scss";
 
 header {
+  display: flex;
+  align-items: center;
+  background-color: var(--teal-300);
+
+  .siteInfo {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    background-color: #343131;
+    padding: 8px 16px;
+    color: var(--teal-300);
+
+    .logoName {
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+    }
+
+    img {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+    }
+
+    strong {
+      font-size: 18px;
+
+      span {
+        color: white;
+      }
+    }
+  }
+
+  .userInfo {
     display: flex;
     align-items: center;
-    background-color: #6eacde;
+    justify-content: flex-end;
 
-    .siteInfo {
-        display: flex;
-        flex: 1;
-        align-items: center;
-        background-color: #343131;
-        padding: 8px 16px;
-        color: #6eacde;
+    flex: 1;
+    padding: 0 32px;
 
-        .logoName {
-            display: flex;
-            cursor: pointer;
-            align-items: center;
-        }
-
-        img {
-            width: 18px;
-            height: 18px;
-            margin-right: 8px;
-        }
-
-        strong {
-            font-size: 18px;
-
-            span {
-                color: #ffffff;
-            }
-        }
+    img {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
     }
 
-    .userInfo {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-
-        flex: 1;
-        padding: 0 32px;
-
-        img {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-        }
-
-        span {
-            font-size: 1rem;
-            color: #343131;
-        }
-
-        .logoutWrapper {
-            display: flex;
-            align-items: center;
-            margin-left: 40px;
-            cursor: pointer;
-
-            a {
-                font-size: 1rem;
-                color: #343131;
-                cursor: pointer;
-            }
-        }
+    span {
+      font-size: 1rem;
+      color: #343131;
     }
+
+    .logoutWrapper {
+      display: flex;
+      align-items: center;
+      margin-left: 40px;
+      cursor: pointer;
+
+      a {
+        font-size: 1rem;
+        color: #343131;
+        cursor: pointer;
+      }
+    }
+  }
 }

@@ -1,139 +1,139 @@
-@import './_exports.module.scss';
+@import "./_exports.module.scss";
 #page-painel {
-    width: 100%;
-    height: 100vh;
+  width: 100%;
+  height: 100vh;
 
-    .contentWrapperLoading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: calc(100% - 25.2vh);
-        background: #ffffff;
-        color: var(--gray-800);
+  .contentWrapperLoading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 25.2vh);
+    background: white;
+    color: var(--gray-800);
+  }
+
+  .contentWrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background: white;
+    flex: 1;
+    padding: 32px;
+
+    color: var(--gray-800);
+
+    .linha {
+      width: 49px;
+      height: 5px;
+      background-color: #343131;
+      opacity: 1;
     }
 
-    .contentWrapper {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        background: #ffffff;
-        flex: 1;
-        padding: 32px;
+    .container-trimestre {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #343131;
+      border-radius: 20px;
+      margin: 0 16px;
+      padding: 16px 32px;
+      cursor: pointer;
 
-        color: var(--gray-800);
+      .titulo {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: white;
+      }
 
-        .linha {
-            width: 49px;
-            height: 5px;
-            background-color: #343131;
-            opacity: 1;
-        }
+      .info {
+        cursor: pointer;
+      }
 
-        .container-trimestre {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: #343131;
-            border-radius: 20px;
-            margin: 0 16px;
-            padding: 16px 32px;
-            cursor: pointer;
+      .separador {
+        width: 36px;
+        height: 2px;
+        background-color: white;
+        opacity: 1;
+      }
 
-            .titulo {
-                font-size: 1.125rem;
-                font-weight: 700;
-                color: #ffffff;
-            }
-
-            .info {
-                cursor: pointer;
-            }
-
-            .separador {
-                width: 36px;
-                height: 2px;
-                background-color: #ffffff;
-                opacity: 1;
-            }
-
-            .total-trimestre {
-                font-size: 2.5rem;
-                font-weight: 700;
-                color: #ffffff;
-            }
-        }
-
-        .container-semana {
-            margin: 0 16px;
-            padding: 8px 16px;
-            border: 1px solid #343131;
-            border-radius: 5px;
-            cursor: pointer;
-
-            font-size: 1.125rem;
-            font-weight: 700;
-        }
-
-        h4 {
-            font-size: 1.5rem;
-            color: #343131;
-        }
-
-        .situacao-exames {
-            .bordas {
-                border-radius: 5px;
-                border: 1px solid #343131b6;
-            }
-            .tipo {
-                font-size: 1.125rem;
-                font-weight: 700;
-                color: #343131;
-            }
-        }
-
-        .painel-secundario {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .btn-secondary {
-            width: 349px;
-            height: 38px;
-            background-color: #343131;
-            border-radius: 5px;
-
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin: 0;
-        }
-
-        .btn-light {
-            width: 278px;
-
-            background-color: #ffffff;
-            border-radius: 5px;
-            border: 1px solid #343131;
-
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: #343131;
-        }
-
-        .btn-primary {
-            height: 38px;
-            background-color: #2775b0;
-            border-radius: 5px;
-            margin: 0;
-            padding: 0 16px;
-            border: none;
-
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: #343131;
-        }
+      .total-trimestre {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+      }
     }
+
+    .container-semana {
+      margin: 0 16px;
+      padding: 8px 16px;
+      border: 1px solid #343131;
+      border-radius: 5px;
+      cursor: pointer;
+
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+
+    h4 {
+      font-size: 1.5rem;
+      color: #343131;
+    }
+
+    .situacao-exames {
+      .bordas {
+        border-radius: 5px;
+        border: 1px solid #343131b6;
+      }
+      .tipo {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #343131;
+      }
+    }
+
+    .painel-secundario {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-secondary {
+      width: 349px;
+      height: 38px;
+      background-color: #343131;
+      border-radius: 5px;
+
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: white;
+      margin: 0;
+    }
+
+    .btn-light {
+      width: 278px;
+
+      background-color: white;
+      border-radius: 5px;
+      border: 1px solid #343131;
+
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #343131;
+    }
+
+    .btn-primary {
+      height: 38px;
+      background-color: var(--teal-300);
+      border-radius: 5px;
+      margin: 0;
+      padding: 0 16px;
+      border: none;
+
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: #343131;
+    }
+  }
 }
