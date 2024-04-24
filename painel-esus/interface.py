@@ -137,7 +137,7 @@ def createNewEnv():
         checkbox = ctk.CTkCheckBox(master=frame, text="Lembrar conexão")
         checkbox.pack(pady=12, padx=10)
 
-if os.path.exists('.env3'):
+if os.path.exists('.env'):
         existsEnv(root)
 else:
         createNewEnv()
