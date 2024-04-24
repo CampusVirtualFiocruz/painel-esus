@@ -1,9 +1,7 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/global.scss';
@@ -11,11 +9,8 @@ import './styles/global.scss';
 const queryClient = new QueryClient();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-      <ReactQueryDevtools />
-    </QueryClientProvider>
-  </React.StrictMode>,
+  <QueryClientProvider client={queryClient}>
+    <App />
+  </QueryClientProvider>,
   document.getElementById('root')
 );
