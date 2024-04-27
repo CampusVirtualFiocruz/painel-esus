@@ -47,7 +47,6 @@ def connectDB(new_window):
         with DBConnectionHandler() as db_con:
                 engine = db_con.get_engine()
                 res = pd.read_sql_query("select * from information_schema.tables", con=engine)
-                print("CONECTOU", res.shape)
 
                 image_path = os.getcwd()
                 image_path = os.path.join(image_path, 'success.png')
@@ -61,7 +60,6 @@ def connectDB(new_window):
                 label.pack(pady=12, padx=10)
 
 def connectDBWithParams(new_window, dbUser, dbPassword, dbHost, dbPort, dbDatabase):
-        print('-----------------------------CONNECT DB WITH PARAMS')
         with DBConnectionHandler(dbUser, dbPassword, dbHost, dbPort, dbDatabase) as db_con:
                 engine = db_con.get_engine()
                 res = pd.read_sql_query("select * from information_schema.tables", con=engine)
@@ -98,7 +96,6 @@ def connectionErrorDB(new_window):
         error_label.pack(pady=10, padx=10)      
 
 def topLevelViewConeectionFunction(frame, dbUser, dbPassword, dbHost, dbPort, dbDatabase):
-        print('----------------------------------------TOP LEVEL VIEW CONNECTION FUNCION')
         new_window = ctk.CTkToplevel(frame)
         new_window.title("Hello There!")
         new_window.geometry(CenterWindowToDisplay(new_window, 400, 200, new_window._get_window_scaling()))
@@ -112,10 +109,8 @@ def topLevelViewConeectionFunction(frame, dbUser, dbPassword, dbHost, dbPort, db
         try:
                 if(dbUser and dbPassword  and dbHost  and dbPort and dbDatabase ):
                         print(dbUser, ' ', dbPassword , ' ', dbHost , ' ', dbPort, ' ', dbDatabase )
-                        print('=========================POSSUI PARAMETROS')
                         new_window.after(1, connectDBWithParams(new_window, dbUser, dbPassword, dbHost, dbPort, dbDatabase))
                 else:
-                        print('=========================NÃO POSSUI PARAMETROS')
                         new_window.after(1, connectDB(new_window))
         except Exception as error:
                 logging.exception(error)
@@ -174,7 +169,6 @@ def existsEnv(root):
 
 
 def buildEnvStr(env):
-        print("++++++++++++++++++++++++++++++++++++BUILD ENV STR++++++++++++++++++++++++++++++++++++")
         if(env != None):
                 strValue = str(env)
                 new_str = strValue.replace('\n', '')
@@ -182,43 +176,29 @@ def buildEnvStr(env):
                 return new_str
         return env
 
-def createEnv(inputHost, inputDatabase, inputUser,inputPassword, inputPort, inputCidade, inputEstado, inputUserAdmin, inputPasswordAdmin, inputPopulacao):
-        print('========================= CREATE ENV 1')
+def createEnv(input_host, input_database, input_user, input_password, input_port, input_cidade, input_estado, 
+              input_user_admin, input_password_admin, input_populacao, input_bridge_login_url):
         with open(".env", "w",encoding='utf-8') as f:
-                print('========================= CREATE ENV 1.1')
-                print("inputHost: ", inputHost.get())
-                print("inputDatabase: ", inputDatabase.get())
-                print("inputUser: ", inputUser.get())
-                print("nputPassword: ", inputPassword.get())
-                print("inputPort: ", inputPort.get())
-                print("inputCidade: ", inputCidade.get())
-                print("inputEstado: ", inputEstado.get())
-                print("inputUserAdmin: ", inputUserAdmin.get())
-                print("inputPasswordAdmin: ", inputPasswordAdmin.get())
-                print("inputPopulacao: ", inputPopulacao.get())
-                print('========================= CREATE ENV 1.2')
                 lines = [
-                                "DB_HOST='"+buildEnvStr(inputHost.get())+"'\n",
-                                "DB_DATABASE='"+buildEnvStr(inputDatabase.get())+"'\n",
-                                "DB_USER='"+buildEnvStr(inputUser.get())+"'\n",
-                                "DB_PASSWORD='"+buildEnvStr(inputPassword.get())+"'\n",
-                                "DB_PORT='"+buildEnvStr(inputPort.get())+"'\n",
-                                "CIDADE='"+buildEnvStr(inputCidade.get())+"'\n",
-                                "ESTADO='"+buildEnvStr(inputEstado.get())+"'\n",
-                                "ADMIN_USERNAME='"+buildEnvStr(inputUserAdmin.get())+"'\n",
-                                "ADMIN_PASSWORD='"+buildEnvStr(inputPasswordAdmin.get())+"'\n",
+                                "DB_HOST='"+buildEnvStr(input_host.get())+"'\n",
+                                "DB_DATABASE='"+buildEnvStr(input_database.get())+"'\n",
+                                "DB_USER='"+buildEnvStr(input_user.get())+"'\n",
+                                "DB_PASSWORD='"+buildEnvStr(input_password.get())+"'\n",
+                                "DB_PORT='"+buildEnvStr(input_port.get())+"'\n",
+                                "CIDADE='"+buildEnvStr(input_cidade.get())+"'\n",
+                                "ESTADO='"+buildEnvStr(input_estado.get())+"'\n",
+                                "ADMIN_USERNAME='"+buildEnvStr(input_user_admin.get())+"'\n",
+                                "ADMIN_PASSWORD='"+buildEnvStr(input_password_admin.get())+"'\n",
+                                "POPULATION="+input_populacao.get()+"\n",
                                 "PASSWORD_SALT='"+'painel'+"'\n",
-                                "BRIDGE_LOGIN_URL='"+'https://dev.pec.bridge.ufsc.br/api/graphql'+"'\n",
+                                "BRIDGE_LOGIN_URL='"+buildEnvStr(input_bridge_login_url.get())+"'\n",
                                 "RELOAD_BASE_SCHELDULE='4:00'"+"\n",
-                                "POPULATION="+inputPopulacao.get()+"\n",
                                 "ARTEFACT="+'web'+"\n",
                                 "ENV="+'instalador'+"\n",
                                 "SECRET_TOKEN="+'111111111111111111111'+"\n",
                                 
                         ]
-                print('========================= CREATE ENV 2')
                 f.writelines(lines)
-                print('========================= CREATE ENV 3')
                 f.close()
 
 class Field():
@@ -242,110 +222,20 @@ class Field():
 
 def fillInputFields(inputFieldsArray: [any]): 
         if os.path.exists('.env'):
-                # file = open(".env", "r")
                 fileContent = any
                 with open(".env", "r") as file:
                         fileContent = file.readlines()
-                
                 for input in fileContent:
                         field = Field(input)
                         field.getFieldIndex()
                         if(field.index != None):
-                                inputFieldsArray[field.index].insert(0, field.value.replace("'","").strip())
+                                envField = field.value.replace("'","").strip()
+                                if len(envField) > 0:
+                                        inputFieldsArray[field.index].insert(0, field.value.replace("'","").strip())
 
                 file.close()
         else:
                 return
-
-def createNewEnv():
-        frame = ctk.CTkScrollableFrame(root, height=800, width=600)
-        frame.pack(fill="both", expand=True)
-        
-        label = ctk.CTkLabel(master=frame, text="Configuração Painel Esus", font=("arial bold", 25))
-        label.pack(pady=12, padx=10)
-
-        image_path = os.getcwd()
-        image_path = os.path.join(image_path, 'icon/database.png')
-        my_image = ctk.CTkImage(light_image=Image.open(image_path), dark_image=Image.open(image_path),
-                                size=(100, 100))
-        image_label = ctk.CTkLabel(master=frame, text="", font=("arial bold", 20), image=my_image)
-        image_label.pack(pady=10)
-
-        labelConfigDatabase = ctk.CTkLabel(master=frame, text="Configuração do banco de dados:", font=("arial bold", 15))
-        labelConfigDatabase.pack(pady=12, padx=10)
-
-        inputHost = ctk.CTkEntry(master=frame, placeholder_text="Host:", width=600,
-                                height=25,
-                                corner_radius=10)
-        inputHost.pack(pady=10, padx=10)
-
-        inputDatabase = ctk.CTkEntry(master=frame, placeholder_text="Base de dados:", width=600,
-                                height=25,
-                                corner_radius=10)
-        inputDatabase.pack(pady=10, padx=10)
-
-        inputUser = ctk.CTkEntry(master=frame, placeholder_text="Usuário do banco de dados:", width=600,
-                                height=25,
-                                corner_radius=10)
-        inputUser.pack(pady=10, padx=10)
-
-        inputPassword = ctk.CTkEntry(master=frame, 
-                                     placeholder_text="Senha do banco de dados:",
-                                     show="*",
-                                     width=600,
-                                     height=25,
-                                     corner_radius=10)
-        inputPassword.pack(pady=10, padx=10)
-
-        inputPort = ctk.CTkEntry(master=frame, placeholder_text="Porta do banco de dados:", width=600,
-                                height=25,
-                                corner_radius=10)
-        inputPort.pack(pady=10, padx=10)
-
-
-        labelConfigPainel = ctk.CTkLabel(master=frame, text="Configuração do painel:", font=("arial bold", 15))
-        labelConfigPainel.pack(pady=12, padx=10)
-
-        inputCidade = ctk.CTkEntry(master=frame, placeholder_text="Cidade:", width=600,
-                                height=25,
-                                corner_radius=10)
-        inputCidade.pack(pady=10, padx=10)
-
-        inputEstado = ctk.CTkEntry(master=frame, placeholder_text="Estado:", width=600,
-                                height=25,
-                                corner_radius=10)
-        inputEstado.pack(pady=10, padx=10)
-
-        inputUserAdmin = ctk.CTkEntry(master=frame, placeholder_text="Usuário de acesso ao painel-esus:", width=600,
-                                height=25,
-                                corner_radius=10)
-        inputUserAdmin.pack(pady=10, padx=10)
-
-        inputPasswordAdmin = ctk.CTkEntry(master=frame, 
-                                        placeholder_text="Senha de acesso ao painel-esus:", 
-                                        show="*",
-                                        width=600,
-                                height=25,
-                                corner_radius=10)
-        inputPasswordAdmin.pack(pady=10, padx=10)
-
-        inputPopulacao = ctk.CTkEntry(master=frame, 
-                                      placeholder_text="Tamanho da população (Ex: 20000):", 
-                                      width=600,
-                                      height=25,
-                                      corner_radius=10
-                                      )
-        inputPopulacao.pack(pady=10, padx=10)
-
-        fillInputFields([inputHost, inputDatabase, inputUser,inputPassword, inputPort, inputCidade, inputEstado, inputUserAdmin, inputPasswordAdmin, inputPopulacao])
-        
-        
-        testConnectionButton = ctk.CTkButton(master=frame, text="Testar conexão!", command=lambda: startTopLevelViewConnection(frame, inputUser.get().strip(), inputPassword.get().strip(),inputHost.get().strip(), inputPort.get().strip(), inputDatabase.get().strip()))
-        testConnectionButton.pack(pady=12, padx=10)
-
-        createEnvButton = ctk.CTkButton(master=frame, text="Salvar configuração", command=lambda: createEnv(frame, inputHost, inputDatabase, inputUser,inputPassword, inputPort, inputCidade, inputEstado, inputUserAdmin, inputPasswordAdmin, inputPopulacao))
-        createEnvButton.pack(pady=12, padx=10)
-
 
 def successFrame():
         frame = ctk.CTkFrame(master=root,  height=300, width=600)
@@ -408,10 +298,8 @@ def tabs():
         tabview.pack()
         tabview.add("Banco de dados")
         tabview.add("Painel E-sus")
-        # tabview.add("Finalização")
         tabview.tab("Banco de dados").grid_columnconfigure(0, weight=1)
         tabview.tab("Painel E-sus").grid_columnconfigure(0, weight=1)
-        # tabview.tab("Finalização").grid_columnconfigure(0, weight=1)
 
 
         # --------------------------------CONFIGURAÇÃO BANCO DE DADOS--------------------------------
@@ -431,39 +319,36 @@ def tabs():
         image_label = ctk.CTkLabel(master=frame, text="", font=("arial bold", 20), image=my_image)
         image_label.pack(pady=10)
 
-        inputHost = ctk.CTkEntry(master=frame, placeholder_text="Host:", width=600,
+        input_host = ctk.CTkEntry(master=frame, placeholder_text="Host:", width=600,
                                 height=25,
                                 corner_radius=10)
-        inputHost.pack(pady=10, padx=10)
+        input_host.pack(pady=10, padx=10)
 
-        inputDatabase = ctk.CTkEntry(master=frame, placeholder_text="Base de dados:", width=600,
+        input_database = ctk.CTkEntry(master=frame, placeholder_text="Base de dados:", width=600,
                                 height=25,
                                 corner_radius=10)
-        inputDatabase.pack(pady=10, padx=10)
+        input_database.pack(pady=10, padx=10)
 
-        inputUser = ctk.CTkEntry(master=frame, placeholder_text="Usuário do banco de dados:", width=600,
+        input_user = ctk.CTkEntry(master=frame, placeholder_text="Usuário do banco de dados:", width=600,
                                 height=25,
                                 corner_radius=10)
-        inputUser.pack(pady=10, padx=10)
+        input_user.pack(pady=10, padx=10)
 
-        inputPassword = ctk.CTkEntry(master=frame, 
+        input_password = ctk.CTkEntry(master=frame, 
                                      placeholder_text="Senha do banco de dados:",
                                      show="*",
                                      width=600,
                                      height=25,
                                      corner_radius=10)
-        inputPassword.pack(pady=10, padx=10)
+        input_password.pack(pady=10, padx=10)
 
-        inputPort = ctk.CTkEntry(master=frame, placeholder_text="Porta do banco de dados:", width=600,
+        input_port = ctk.CTkEntry(master=frame, placeholder_text="Porta do banco de dados:", width=600,
                                 height=25,
                                 corner_radius=10)
-        inputPort.pack(pady=10, padx=10)
-
-        # fillInputFields([inputHost, inputDatabase, inputUser,inputPassword, inputPort, inputCidade, inputEstado, inputUserAdmin, inputPasswordAdmin, inputPopulacao])
+        input_port.pack(pady=10, padx=10)
         
-        
-        testConnectionButton = ctk.CTkButton(master=frame, text="Testar conexão", command=lambda: startTopLevelViewConnection(frame, inputUser.get().strip(), inputPassword.get().strip(),inputHost.get().strip(), inputPort.get().strip(), inputDatabase.get().strip()))
-        testConnectionButton.pack(pady=12, padx=10)
+        test_connection_button = ctk.CTkButton(master=frame, text="Testar conexão", command=lambda: startTopLevelViewConnection(frame, input_user.get().strip(), input_password.get().strip(),input_host.get().strip(), input_port.get().strip(), input_database.get().strip()))
+        test_connection_button.pack(pady=12, padx=10)
 
         # --------------------------------CONFIGURAÇÃO PAINEL--------------------------------
         frame_painel = ctk.CTkFrame(tabview.tab("Painel E-sus"), height=780, width=580)
@@ -474,8 +359,8 @@ def tabs():
         painel_image = ctk.CTkImage(light_image=Image.open(image_path_painel), dark_image=Image.open(image_path_painel),
                                 size=(130, 100))
 
-        labelConfigPainel = ctk.CTkLabel(master=frame_painel, text="Configuração do painel:", font=("arial bold", 25))
-        labelConfigPainel.pack(pady=12, padx=10)
+        label_config_painel = ctk.CTkLabel(master=frame_painel, text="Configuração do painel:", font=("arial bold", 25))
+        label_config_painel.pack(pady=12, padx=10)
 
         label_info_painel = ctk.CTkLabel(master=frame_painel, text="Preencha todos os campos abaixo solicitados para a configuração dos dados de acesso ao painel-esus. \n Os campos 'Usuário' e 'Senha' aqui apresentados serão utilizados para fazer login na plataforma.", font=("arial bold", 15))
         label_info_painel.pack(pady=12, padx=10)
@@ -483,45 +368,52 @@ def tabs():
         image_label_painel = ctk.CTkLabel(master=frame_painel, text="", font=("arial bold", 20), image=painel_image)
         image_label_painel.pack(pady=10)
 
-        inputCidade = ctk.CTkEntry(master=frame_painel, placeholder_text="Cidade:", width=600,
+        input_cidade = ctk.CTkEntry(master=frame_painel, placeholder_text="Cidade:", width=600,
                                 height=25,
                                 corner_radius=10)
-        inputCidade.pack(pady=10, padx=10)
+        input_cidade.pack(pady=10, padx=10)
 
-        inputEstado = ctk.CTkEntry(master=frame_painel, placeholder_text="Estado:", width=600,
+        input_estado = ctk.CTkEntry(master=frame_painel, placeholder_text="Estado:", width=600,
                                 height=25,
                                 corner_radius=10)
-        inputEstado.pack(pady=10, padx=10)
+        input_estado.pack(pady=10, padx=10)
 
-        inputUserAdmin = ctk.CTkEntry(master=frame_painel, placeholder_text="Usuário de acesso ao painel-esus:", width=600,
+        input_user_admin = ctk.CTkEntry(master=frame_painel, placeholder_text="Usuário de acesso ao painel-esus:", width=600,
                                 height=25,
                                 corner_radius=10)
-        inputUserAdmin.pack(pady=10, padx=10)
+        input_user_admin.pack(pady=10, padx=10)
 
-        inputPasswordAdmin = ctk.CTkEntry(master=frame_painel, 
+        input_password_admin = ctk.CTkEntry(master=frame_painel, 
                                         placeholder_text="Senha de acesso ao painel-esus:", 
                                         show="*",
                                         width=600,
                                 height=25,
                                 corner_radius=10)
-        inputPasswordAdmin.pack(pady=10, padx=10)
+        input_password_admin.pack(pady=10, padx=10)
 
-        inputPopulacao = ctk.CTkEntry(master=frame_painel, 
+        input_populacao = ctk.CTkEntry(master=frame_painel, 
                                       placeholder_text="Tamanho da população (Ex: 20000):", 
                                       width=600,
                                       height=25,
                                       corner_radius=10
                                       )
-        inputPopulacao.pack(pady=10, padx=10)
+        input_populacao.pack(pady=10, padx=10)
 
-        fillInputFields([inputHost, inputDatabase, inputUser,inputPassword, inputPort, inputCidade, inputEstado, inputUserAdmin, inputPasswordAdmin, inputPopulacao])
+        input_bridge_login_url = ctk.CTkEntry(master=frame_painel, 
+                                      placeholder_text="Url de login:", 
+                                      width=600,
+                                      height=25,
+                                      corner_radius=10
+                                      )
+        input_bridge_login_url.pack(pady=10, padx=10)
+
+        fillInputFields([input_host, input_database, input_user,input_password, input_port, input_cidade, input_estado, input_user_admin, input_password_admin, input_populacao, input_bridge_login_url])
         def close():
+                createEnv(input_host, input_database, input_user,input_password, input_port, input_cidade, input_estado, input_user_admin, input_password_admin, input_populacao, input_bridge_login_url)
                 tabview.destroy()
                 tabview.update()
                 frame_painel.destroy()
                 frame_painel.update()
-                createEnv(inputHost, inputDatabase, inputUser,inputPassword, inputPort, inputCidade, inputEstado, inputUserAdmin, inputPasswordAdmin, inputPopulacao)
-                print("=============================CLOSE 3")
                 successFrame()
 
 
@@ -533,6 +425,5 @@ if os.path.exists('.env'):
         existsEnv(root)
 else:
         tabs()
-        # createNewEnv()
 
 root.mainloop()
