@@ -5,6 +5,8 @@ import blueprint_decr
 from flask import Flask
 from flask import send_from_directory
 from flask_cors import CORS
+from src.env import env
+from src.errors.logging import logging
 from src.main.routes.city_informations_route import city_informations_bp
 from src.main.routes.city_informations_route import CityInfoPath
 from src.main.routes.demographics_info_route import DemographichInfoPath
@@ -29,13 +31,15 @@ app = Flask(__name__)
 config = dotenv_values(".env")
 print('ENV ', config["ENV"])
 
-if(config["ENV"] == "instalador"):
+if config["ENV"] == "instalador":
     static_folder = os.path.join(os.getcwd(), 'static-files')
-elif(config["ENV"] == "windows"):
-    static_folder = os.path.join(os.getcwd(), '..', 'paineis-v2-front', 'static-files')
+elif config["ENV"] == "windows":
+    static_folder = os.path.join(
+        os.getcwd(), '..', 'paineis-v2-front', 'static-files')
     static_folder = os.path.relpath(static_folder)
 else:
-    static_folder = os.path.join(os.getcwd(), '..', 'paineis-v2-front', 'build')
+    static_folder = os.path.join(
+        os.getcwd(), '..', 'paineis-v2-front', 'build')
     static_folder = os.path.relpath(static_folder)
 print('STATIC FOLDER: ', static_folder)
 
@@ -46,6 +50,7 @@ app = Flask(
 CORS(app)
 
 cache.init_app(app)
+app.json.sort_keys = False
 
 
 def register_blueprint(_app, blueprint, decorators_list):

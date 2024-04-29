@@ -3,12 +3,14 @@ from pathlib import Path
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from src.env import env
+from src.errors.logging import logging
 
 
 class DBConnectionHandler:
 
     def __init__(self) -> None:
-        if(os.getenv("ENV") == "instalador"):
+        if os.getenv("ENV") == "instalador":
             path = 'painel_esus.db'
         else:
             path = os.getcwd()

@@ -12,7 +12,7 @@ class ProfessionalsGroup():
         "2239": 'TERAPEUTAS OCUPACIONAIS',
         "2241": 'EDUCAÇÃO FÍSICA',
         "2263": 'INTEGRATIVA E COMPLEMENTAR',
-        "2515": 'PSCICÓLOGOS',
+        "2515": 'PSICÓLOGOS',
         "2516": 'ASSITENTE SOCIAL',
         "2235": 'ENFERMEIROS'
     }
@@ -68,7 +68,7 @@ class ProfessionalsGroup():
                 'totalCount': 0,
                 'total': 0
             },
-            'PSCICÓLOGOS': {
+            'PSICÓLOGOS': {
                 'profissao': 'PSCICÓLOGOS',
                 'totalCount': 0,
                 'total': 0

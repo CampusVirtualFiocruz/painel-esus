@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from src.env.conf import env
+import urllib
 
 
 class DBConnectionHandler:
@@ -9,7 +10,7 @@ class DBConnectionHandler:
         self.__connection_string = "{}://{}:{}@{}:{}/{}".format(
             'postgresql',
             env.get('DB_USER', '-'),
-            env.get('DB_PASSWORD', '-'),
+            urllib.parse.quote(env.get('DB_PASSWORD', '-')),
             env.get('DB_HOST', '-'),
             env.get('DB_PORT', '-'),
             env.get('DB_DATABASE', '-')

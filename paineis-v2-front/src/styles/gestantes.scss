@@ -1,4 +1,7 @@
 @import './_exports.module.scss';
+.top-alignment{
+    align-items: flex-start!important;
+}
 #page-painel {
     width: 100%;
     height: 100vh;

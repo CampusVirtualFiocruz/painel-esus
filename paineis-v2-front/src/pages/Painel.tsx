@@ -1,4 +1,4 @@
-import { CSSProperties, useState, useEffect } from 'react';
+import { CSSProperties, useState } from 'react';
 import Select, { StylesConfig } from 'react-select';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from "react-query";
@@ -20,6 +20,7 @@ import diabetes from '../assets/images/diabetes.svg';
 import hipertensao from '../assets/images/hipertensao.svg';
 import tosse from '../assets/images/tosse.svg';
 import thooth from '../assets/images/thooth.png'
+import gestantes from '../assets/images/gestantes.svg';
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
@@ -28,7 +29,6 @@ import { Zonas } from "../charts/Zonas";
 import '../styles/painel.scss';
 import { Api } from '../services/api';
 import { Api as Api2 } from "../services/api2";
-import { isTemplateExpression } from 'typescript';
 import { STALE_TIME } from '../config/stale-time';
 import { useInfo } from '../context/infoProvider/useInfo';
 
@@ -124,6 +124,7 @@ type OralHealthResponse = {
 
 }
 export function Painel() {
+
     let navigate = useNavigate();
     const { id } = useParams<PainelParams>();
     const { cityInformation, city } = useInfo();
@@ -131,7 +132,7 @@ export function Painel() {
     const [dadosPainel, setDadosPainel] = useState<IPainel>();
     const [loading, setLoading] = useState(true);
     const [infecoesQtd, setInfecoesQtd] = useState<TypeCondiction[]>([
-        { value: 12, name: 'Rural' }, { value: 21, name: 'Urbano' },
+        { value: 200, name: 'Rural' }, { value: 4321, name: 'Urbano' },
     ]);
     //get-demographic-info
     const { data: _dadosPainel, isLoading: _isLoading, error: error } = useQuery(['get-demographic-info', id], async () => {
@@ -143,7 +144,8 @@ export function Painel() {
         setLoading(false);
         return data;
     }, {
-        staleTime: STALE_TIME
+        staleTime: 50,
+        enabled: true
     });
 
     //get nome ubs
@@ -159,7 +161,7 @@ export function Painel() {
 
         return listData;
     }, {
-        staleTime: STALE_TIME
+        staleTime: 50,
     });
 
     const { data: dataOralHealth, isLoading: isLoadingOralHealth, error: errorOralHealth } = useQuery(['oral-health/get-all-cares-by-place', id], async () => {
@@ -188,7 +190,7 @@ export function Painel() {
         console.log(resp)
         return resp
     }, {
-        staleTime: STALE_TIME
+        staleTime: 50,
     });
     //get nome ubs
     const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : '-';
@@ -203,13 +205,13 @@ export function Painel() {
         navigate(`/painel/${e.value}`);
     };
 
-    // function handleToGestante() {
-    //     if (id !== undefined) {
-    //         navigate(`/gestantes/${id}`);
-    //     } else {
-    //         navigate('/gestantes');
-    //     }
-    // }
+    function handleToGestante() {
+        if (id !== undefined) {
+            navigate(`/gestantes/${id}`);
+        } else {
+            navigate('/gestantes');
+        }
+    }
     function handleToOralHealth() {
         if (id !== undefined) {
             navigate(`/saude-bucal/${id}`);
@@ -374,7 +376,7 @@ export function Painel() {
                                 </div>
                             </div>
 
-                            {/* <div className="card-condicao p-2" onClick={handleToGestante}>
+                            <div className="card-condicao p-2" onClick={handleToGestante}>
                                 <span className="nome-condicao">Gestantes</span>
                                 <h4>{somaIndicador(dadosPainel?.indicators.gestantes)}</h4>
 
@@ -382,8 +384,8 @@ export function Painel() {
                                     <img src={gestantes} alt="Gestantes" className="mx-2" />
                                     <Condicao data={dadosPainel?.indicators.gestantes} />
                                 </div>
-                            </div> */}
-                            {/* <div className="card-condicao p-2" onClick={handleToSindromesAgudas}>
+                            </div>
+                            <div className="card-condicao p-2" onClick={handleToSindromesAgudas}>
                                 <span className="nome-condicao">Síndromes Agudas</span>
                                 <h4>{somaIndicador({
                                     rural: infecoesQtd[0].value,
@@ -397,7 +399,7 @@ export function Painel() {
                                         urbano: infecoesQtd[1].value,
                                     }} />
                                 </div>
-                            </div> */}
+                            </div>
                             {!isLoadingOralHealth && dataOralHealth && <div className="card-condicao p-2" onClick={handleToOralHealth}>
                                 <span className="nome-condicao">Saúde Bucal</span>
                                 <h4>{somaIndicador({

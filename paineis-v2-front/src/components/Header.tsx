@@ -8,7 +8,7 @@ import '../styles/header.scss';
 import imgLogo from '../assets/images/logo.svg';
 import imgUser from '../assets/images/user-alt.svg';
 import imgLogout from '../assets/images/logout.svg';
-
+import report from '../assets/images/report.svg';
 import { getFirstName } from '../utils';
 import { useInfo } from '../context/infoProvider/useInfo';
 
@@ -25,14 +25,18 @@ export function Header() {
         logout();
         navigate('/');
     }
+
+    function handleRelatoriosQualidadeInformacao(){
+        navigate('/relatorios')
+    }
     const infoContext = useInfo();
     const city = infoContext.cityInformation;
     return (
         <header id='header'>
             <div className="siteInfo" >
                 <div className='logoName' onClick={handleHome}>
-                    <img src={imgLogo} alt="Painel Saúde Fiocruz" />
-                    <strong>Painel Saúde Fiocruz / <span>{city?.municipio} - {city?.uf}</span></strong>
+                    <img src={imgLogo} alt="Painel Esus" />
+                    <strong>Painel e-SUS / <span>{city?.municipio} - {city?.uf}</span></strong>
                 </div>
             </div>
 
@@ -40,6 +44,10 @@ export function Header() {
                 <img src={imgUser} alt="Profissional" />
                 <span>{getFirstName(user?.fullName)}</span>
 
+                <div className="logoutWrapper" onClick={handleRelatoriosQualidadeInformacao}>
+                    <img src={report} alt="Relatórios de qualidade da informação" />
+                    <a href='#' onClick={handleRelatoriosQualidadeInformacao} className="logout">Relatórios de Qualidade da informação</a>
+                </div>
                 <div className="logoutWrapper" onClick={handleLogout}>
                     <img src={imgLogout} alt="Sair" />
 

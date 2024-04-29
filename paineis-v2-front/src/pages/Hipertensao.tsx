@@ -19,6 +19,7 @@ import { Pie } from "../charts/Pie";
 import { getNomeUbs } from "../utils";
 import { useState } from "react";
 import { BarSexo } from "../charts/BarSexo";
+import { useInfo } from "../context/infoProvider/useInfo";
 
 type TModal = {
     loaded: number;
@@ -33,6 +34,7 @@ type PainelParams = {
 type TypeUbs = {
     label: string;
     value: number | string;
+    id: string;
 };
 
 type Lista = {
@@ -51,6 +53,7 @@ export function Hipertensao() {
     const { id } = useParams<PainelParams>();
     const [showModal, setShowModal] = useState(false);
     const [data, setData] = useState<TModal>({ loaded: 0 });
+    const { cityInformation, city } = useInfo();
 
     let paramRoute = id ? id : 'all';
 
@@ -68,10 +71,11 @@ export function Hipertensao() {
         const response = await Api.get<ResponseDataListUbs>('get-units')
         const data = response.data
 
-        const listData: TypeUbs[] = data.data.map((ubs) => {
+        const listData: TypeUbs[] = data.data.map((ubs: any) => {
             return {
                 "label": ubs.no_unidade_saude,
                 "value": ubs.nu_cnes,
+                "id": ubs.co_seq_dim_unidade_saude
             }
         })
 
@@ -80,7 +84,7 @@ export function Hipertensao() {
         staleTime: 1000 * 60 * 10, //10 minutos
     });
 
-    const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : '-';
+    const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
 
     const { data: dataTotalHipertensao, isLoading: isLoadingTotalHipertensao, error: errorTotalHipertensao } = useQuery(['arterial-hypertension/total', paramRoute], async () => {
         let path = id ? `arterial-hypertension/total/${id}` : 'arterial-hypertension/total';
@@ -161,11 +165,11 @@ export function Hipertensao() {
     });
 
     function handleToPainelUbs() {
-        navigate(`/painel/${id}`);
+         window.location.href=`/painel/${id}`;
     }
 
     function handleToPainelMunicipio() {
-        navigate("/painelx");
+         window.location.href="/painelx";
     }
 
     const handleClick = (idModal: number) => {
@@ -180,7 +184,7 @@ export function Hipertensao() {
     };
 
     const handleToHipertensosList = () => {
-        navigate(`/hipertensos/${id}`)
+        navigate( !!id ? `/hipertensos/${id}` : `/hipertensos`)
     }
     return (
         <div id="page-painel">
@@ -190,8 +194,8 @@ export function Hipertensao() {
 
                 <hr className="linha my-4" />
 
-                <h2>
-                    {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : user.municipio + " - " + user.uf} / Painel Hipertensão
+                <h2 style={{textAlign: 'center'}}>
+                    {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : nomeUbs} / <br/>Painel Hipertensão
                 </h2>
 
                 {showModal && <Modal data={data} setShowModal={setShowModal} />}

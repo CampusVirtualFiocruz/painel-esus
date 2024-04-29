@@ -1,0 +1,50 @@
+{
+    "data": [
+        {
+            "avaliados": 10,
+            "solicitados": 56,
+            "tipo": "Hemograma"
+        },
+        {
+            "avaliados": 33,
+            "solicitados": 313,
+            "tipo": "Tipo Sangu\u00edneo/Rg"
+        },
+        {
+            "avaliados": 56,
+            "solicitados": 67,
+            "tipo": "Taxa IgM e IgG"
+        },
+        {
+            "avaliados": 88,
+            "solicitados": 45,
+            "tipo": "Anti HbsAg"
+        },
+        {
+            "avaliados": 12,
+            "solicitados": 10,
+            "tipo": "US Obstetr\u00edcia"
+        },
+        {
+            "avaliados": 56,
+            "solicitados": 87,
+            "tipo": "Glicemia Jejum"
+        },
+        {
+            "avaliados": 0,
+            "solicitados": 12,
+            "tipo": "Teste r\u00e1pido s\u00edfilis"
+        },
+        {
+            "avaliados": 100,
+            "solicitados": 311,
+            "tipo": "Urina"
+        },
+        {
+            "avaliados": 121,
+            "solicitados": 12,
+            "tipo": "Urocultura"
+        }
+    ],
+    "message": "successfully fetched"
+}

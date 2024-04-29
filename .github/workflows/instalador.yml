@@ -1,0 +1,25 @@
+name: Package Application with Pyinstaller and Inno Setup
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  creating-pyinstaller-exe:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Package Application
+      uses: JackMcKew/pyinstaller-action-windows@main
+      with:
+        path: painel-esus
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: name-of-artifact
+        path: dist/windows

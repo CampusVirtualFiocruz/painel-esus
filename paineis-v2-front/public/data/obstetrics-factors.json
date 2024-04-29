@@ -1,0 +1,21 @@
+{
+    "data": {
+        "diabetes mellitus": {
+            "com_consulta": 0.8500000000000001,
+            "sem_consulta": 99.15
+        },
+        "gesta\u00e7\u00f5es pr\u00e9vias": {
+            "com_consulta": 2.3800000000000003,
+            "sem_consulta": 97.61999999999999
+        },
+        "gravidez planejada": {
+            "com_consulta": 15.58,
+            "sem_consulta": 84.42
+        },
+        "hipertens\u00e3o arterial": {
+            "com_consulta": 0.8500000000000001,
+            "sem_consulta": 99.15
+        }
+    },
+    "message": "successfully fetched"
+}

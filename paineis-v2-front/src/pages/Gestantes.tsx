@@ -14,12 +14,14 @@ import info from "../assets/images/info-circle.svg";
 
 import "../styles/gestantes.scss";
 import { Api } from "../services/api";
+import { Api as Api2 } from '../services/api2';
 import { Header } from "../components/Header";
 
 import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
 import { Pie } from "../charts/Pie";
 import { getNomeUbs, showValuePerTrimester, showValuePerWeeks } from "../utils";
+import { useInfo } from "../context/infoProvider/useInfo";
 
 type PainelParams = {
     id: string;
@@ -34,6 +36,7 @@ type TModal = {
 type TypeUbs = {
     label: string;
     value: number | string;
+    id: string;
 };
 
 type Lista = {
@@ -50,6 +53,7 @@ export function Gestantes() {
     let navigate = useNavigate();
     const user = getUserLocalStorage();
     const { id } = useParams<PainelParams>();
+    const { cityInformation, city } = useInfo();
 
     let paramRoute = id ? id : 'all';
 
@@ -67,17 +71,17 @@ export function Gestantes() {
     };
 
     const handleClick = (idModal: number) => {
-        setData({ loaded: 0 });
-        setShowModal(true);
-        getData(idModal);
+        // setData({ loaded: 0 });
+        // setShowModal(true);
+        // getData(idModal);
     };
 
     const handleModalList = (e: any, idModal: number, tipo: string) => {
-        if (e.currentTarget === e.target) {
-            setData({ loaded: idModal, tipo, cnes: id });
-            setShowModalList(true);
-            getData(idModal, tipo);
-        }
+        // if (e.currentTarget === e.target) {
+        //     setData({ loaded: idModal, tipo, cnes: id });
+        //     setShowModalList(true);
+        //     getData(idModal, tipo);
+        // }
     }
 
     //get nome ubs
@@ -85,10 +89,11 @@ export function Gestantes() {
         const response = await Api.get<ResponseDataListUbs>('get-units')
         const data = response.data
 
-        const listData: TypeUbs[] = data.data.map((ubs) => {
+        const listData: TypeUbs[] = data.data.map((ubs: any) => {
             return {
                 "label": ubs.no_unidade_saude,
                 "value": ubs.nu_cnes,
+                "id": ubs.co_seq_dim_unidade_saude
             }
         })
 
@@ -97,11 +102,12 @@ export function Gestantes() {
         staleTime: 1000 * 60 * 10, //10 minutos
     });
 
-    const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : '-';
+    const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
 
     const { data: dataTotalPerTrimester, isLoading: isLoadingTotalPerTrimester, error: errorTotalPerTrimester } = useQuery(['pregnants-total-per-trimester', paramRoute], async () => {
-        let path = id ? `pregnants/total-per-trimester/${id}` : 'pregnants/total-per-trimester';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/total-per-trimester/${id}` : 'pregnants/total-per-trimester';
+        let path = `data/total-per-trimester.json`;
+        const response = await Api2.get(path);
         const responseData = response.data;
 
         return responseData.data;
@@ -111,8 +117,9 @@ export function Gestantes() {
 
     //pregnants per weeks
     const { data: dataPregnantsPerWeeks, isLoading: isLoadingPregnantsPerWeeks, error: errorPregnantsPerWeeks } = useQuery(['pregnants-per-weeks', paramRoute], async () => {
-        let path = id ? `pregnants/per-weeks/${id}` : 'pregnants/per-weeks';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/per-weeks/${id}` : 'pregnants/per-weeks';
+        let path = 'data/per-weeks.json';
+        const response = await Api2.get(path);
         const responseData = response.data;
 
         return responseData.data;
@@ -122,8 +129,9 @@ export function Gestantes() {
 
     //prenatal indicators
     const { data: dataPrenatalIndicators, isLoading: isLoadingPrenatalIndicators, error: errorPrenatalIndicators } = useQuery(['pregnants-prenatal-indicators', paramRoute], async () => {
-        let path = id ? `pregnants/prenatal-indicators/${id}` : 'pregnants/prenatal-indicators';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/prenatal-indicators/${id}` : 'pregnants/prenatal-indicators';
+        let path = 'data/prenatal-indicators.json';
+        const response = await Api2.get(path);
         const responseData = response.data;
 
         const arrData = Object.entries(responseData.data);
@@ -135,8 +143,9 @@ export function Gestantes() {
 
     //obstetrics factors
     const { data: dataObstetricsFactors, isLoading: isLoadingObstetricsFactors, error: errorObstetricsFactors } = useQuery(['pregnants-obstetrics-factors', paramRoute], async () => {
-        let path = id ? `pregnants/obstetrics-factors/${id}` : 'pregnants/obstetrics-factors';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/obstetrics-factors/${id}` : 'pregnants/obstetrics-factors';
+        let path ='data/obstetrics-factors.json';
+        const response = await Api2.get(path);
         const responseData = response.data;
 
         const arrData = Object.entries(responseData.data);
@@ -148,8 +157,9 @@ export function Gestantes() {
 
     //exams table
     const { data: dataExamsTable, isLoading: isLoadingExamsTable, error: errorExamsTable } = useQuery(['pregnants-exams-table', paramRoute], async () => {
-        let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
-        const response = await Api.get(path);
+        // let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
+        let path = 'data/exams-table.json';
+        const response = await Api2.get(path);
         const data = response.data;
 
         return data.data;
@@ -158,11 +168,11 @@ export function Gestantes() {
     });
 
     function handleToPainelUbs() {
-        navigate(`/painel/${id}`);
+        window.location.href=`/painel/${id}`;
     }
 
     function handleToPainelMunicipio() {
-        navigate("/painelx");
+        window.location.href="/painelx";
     }
 
     function handleToGestantesList() {
@@ -181,8 +191,8 @@ export function Gestantes() {
 
                 <hr className="linha my-4" />
 
-                <h2>
-                    {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : user.municipio + " - " + user.uf} / Painel das gestantes
+                <h2 style={{textAlign: 'center'}}>
+                    {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : nomeUbs} / Painel das gestantes
                 </h2>
 
                 <div className="container-fluid">
@@ -252,11 +262,11 @@ export function Gestantes() {
                             </div>
                         </div>
 
-                        <div className="col-12 col-lg-7 d-flex flex-column justify-content-between">
+                        <div className="col-12 col-lg-7 d-flex flex-column justify-content-between" >
                             <div className="painel-lateral">
                                 <h4 className="my-5 text-center">Gestantes por trimestre</h4>
 
-                                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center  top-alignment">
 
                                     {showModal && <Modal data={data} setShowModal={setShowModal} />}
                                     {showModalList && <ModalList params={data} setShowModalList={setShowModalList} />}
