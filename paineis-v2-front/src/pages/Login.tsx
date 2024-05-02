@@ -103,7 +103,7 @@ export function Login() {
                 title="Painel e-SUS APS"
               />
               <div>
-                <h1>e-SUS</h1>
+                <h1>Painel e-SUS</h1>
                 <h2 className="text-end">{city}</h2>
               </div>
             </div>

@@ -124,11 +124,6 @@
 
   .formField:focus-within label {
     color: var(--teal-300);
-
-    img {
-      filter: invert(1%) sepia(16%) saturate(7475%) hue-rotate(81deg)
-        brightness(100%) contrast(87%);
-    }
   }
 
   .container-field {

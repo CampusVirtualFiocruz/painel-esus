@@ -3,7 +3,7 @@
 header {
   display: flex;
   align-items: center;
-  background-color: var(--teal-300);
+  background-color: var(--ds-color-primary);
 
   .siteInfo {
     display: flex;
@@ -11,7 +11,7 @@ header {
     align-items: center;
     background-color: #343131;
     padding: 8px 16px;
-    color: var(--teal-300);
+    color: #84aaff;
 
     .logoName {
       display: flex;
@@ -41,6 +41,7 @@ header {
 
     flex: 1;
     padding: 0 32px;
+    color: white;
 
     img {
       width: 20px;
@@ -50,7 +51,6 @@ header {
 
     span {
       font-size: 1rem;
-      color: #343131;
     }
 
     .logoutWrapper {
@@ -61,7 +61,6 @@ header {
 
       a {
         font-size: 1rem;
-        color: #343131;
         cursor: pointer;
       }
     }
