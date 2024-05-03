@@ -1,0 +1,13 @@
+{
+    "terminal.integrated.fontFamily": "'Hack Nerd Font'",
+    "python.testing.pytestArgs": [
+        "painel-esus/src"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    "codesnap-plus.containerPadding": "4em",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8",
+        "editor.formatOnSave": true
+    }
+}

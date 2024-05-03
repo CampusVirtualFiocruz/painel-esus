@@ -1,0 +1,12 @@
+from .hypertension_dashboard_get_age_groups_location import \
+    HypertensionDashboardGetAgeGroupsLocation
+from .hypertension_dashboard_get_complications import \
+    HypertensionDashboardGetComplications
+from .hypertension_dashboard_get_imc import HypertensionDashboardGetIMC
+from .hypertension_dashboard_get_profissionals_count import \
+    HypertensionDashboardGetProfessionalsCount
+from .hypertension_dashboard_get_total import HypertensionDashboardGetTotal
+from .hypertension_get_age_group_gender import \
+    HypertensionDashboardGetAgeGroupGender
+from .hypertension_get_exams_count import HypertensionDashboardGetExamsCount
+from .hypertension_get_individual_exams_count import HypertensionDashboardGetIndividualExamsCount

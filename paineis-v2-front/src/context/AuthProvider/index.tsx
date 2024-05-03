@@ -26,10 +26,10 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
 
   async function authenticate(username: string, password: string) {
     const response = await LoginRequest(username, password);
-    const payload: PayloadJwt = jwt(response.token);
+    const payload: PayloadJwt = jwt(response.data);
 
     const user = {
-      token: response.token,
+      token: response.data,
       expirationDate: response.exp,
       username,
       fullName: payload.username,

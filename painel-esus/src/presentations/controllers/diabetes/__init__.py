@@ -1,0 +1,12 @@
+from .diabetes_dashboard_get_age_groups_location import \
+    DiabetesDashboardGetAgeGroupsLocation
+from .diabetes_dashboard_get_complications import \
+    DiabetesDashboardGetComplications
+from .diabetes_dashboard_get_imc import DiabetesDashboardGetIMC
+from .diabetes_dashboard_get_profissionals_count import \
+    DiabetesDashboardGetProfessionalsCount
+from .diabetes_dashboard_get_total import DiabetesDashboardGetTotal
+from .diabetes_get_age_group_gender import \
+    DiabetesDashboardGetAgeGroupGender
+from .diabetes_get_exams_count import DiabetesDashboardGetExamsCount
+from .diabetes_get_individual_exams_count import DiabetesDashboardGetIndividualExamsCount

@@ -1,0 +1,13 @@
+.total-atd {
+    background-color: #343131;
+    color: #fff;
+    font-size: 52px;
+    width: 324px;
+    padding: 5px 15px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.total-atd-container {
+    flex-direction: column;
+}

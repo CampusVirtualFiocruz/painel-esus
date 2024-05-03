@@ -20,7 +20,6 @@ export function getUserLocalStorage() {
 export async function LoginRequest(username: string, password: string) {
   try {
     const response = await Api.post("auth", { username, password });
-
     return response.data;
   } catch (error) {
     return null;

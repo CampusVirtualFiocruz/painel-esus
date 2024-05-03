@@ -1,8 +1,8 @@
-import { useLayoutEffect } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { useLayoutEffect } from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from './context/AuthProvider';
 import { InfoProvider } from './context/infoProvider';
-import { ProtectedLayout } from './components/ProtectedLayout';
+import { ProtectedLayout } from "./components/ProtectedLayout";
 
 import { Login } from './pages/Login';
 import { Painel } from './pages/Painel';
@@ -15,14 +15,15 @@ import { HipertensosList } from './pages/HipertensosList';
 import { DiabeticosList } from './pages/DiabeticosList';
 import { SindromesAgudas } from './pages/SindromesAgudas/SindromesAgudas';
 import { SelecionarUbs } from './pages/SelecionarUbs';
+import SaudeBucal from "./pages/SaudeBucal/SaudeBucal";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
   useLayoutEffect(() => {
     document.documentElement.scrollTo(0, 0);
   }, [location.pathname]);
-  return children;
-};
+  return children
+}
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Wrapper>
             <Routes>
               <Route path="/" element={<Login />} />
+
               <Route
                 path="/selecionarubs"
                 element={
@@ -62,8 +64,7 @@ function App() {
                   <ProtectedLayout>
                     <Gestantes />
                   </ProtectedLayout>
-                }
-              />
+                } />
               <Route
                 path="/gestantes/:id"
                 element={
@@ -86,34 +87,38 @@ function App() {
                   <ProtectedLayout>
                     <GestantesList />
                   </ProtectedLayout>
-                }
-              />
+                } />
               <Route
                 path="/gestantes/list/:id"
                 element={
                   <ProtectedLayout>
                     <GestantesList />
                   </ProtectedLayout>
-                }
-              />
+                } />
               <Route
                 path="/diabetes"
                 element={
                   <ProtectedLayout>
                     <Diabetes />
                   </ProtectedLayout>
-                }
-              />
+                } />
               <Route
                 path="/diabetes/:id"
                 element={
                   <ProtectedLayout>
                     <Diabetes />
                   </ProtectedLayout>
+                } />
+              <Route
+                path="/diabeticos"
+                element={
+                  <ProtectedLayout>
+                    <DiabeticosList />
+                  </ProtectedLayout>
                 }
               />
               <Route
-                path="/diabeticos"
+                path="/diabeticos/:id"
                 element={
                   <ProtectedLayout>
                     <DiabeticosList />
@@ -126,18 +131,24 @@ function App() {
                   <ProtectedLayout>
                     <Hipertensao />
                   </ProtectedLayout>
-                }
-              />
+                } />
               <Route
                 path="/hipertensao/:id"
                 element={
                   <ProtectedLayout>
                     <Hipertensao />
                   </ProtectedLayout>
+                } />
+              <Route
+                path="/hipertensos"
+                element={
+                  <ProtectedLayout>
+                    <HipertensosList />
+                  </ProtectedLayout>
                 }
               />
               <Route
-                path="/hipertensos"
+                path="/hipertensos/:id"
                 element={
                   <ProtectedLayout>
                     <HipertensosList />
@@ -157,6 +168,22 @@ function App() {
                 element={
                   <ProtectedLayout>
                     <SindromesAgudas />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/saude-bucal"
+                element={
+                  <ProtectedLayout>
+                    <SaudeBucal />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/saude-bucal/:id"
+                element={
+                  <ProtectedLayout>
+                    <SaudeBucal />
                   </ProtectedLayout>
                 }
               />
