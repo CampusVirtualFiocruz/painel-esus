@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
 import { Spinner } from 'reactstrap';
@@ -18,6 +18,7 @@ import { Snackbar } from '../components/Snackbar';
 import { useQuery } from 'react-query';
 import { Api } from "../services/api";
 import { useInfo } from '../context/infoProvider/useInfo';
+import { STALE_TIME } from '../config/stale-time';
 
 
 interface CityResponse {
@@ -27,15 +28,14 @@ interface CityResponse {
     municipio: string
     uf: string;
 }
-interface CityInformationResponse {
-    data: CityResponse
-}
+
+type CityInformationResponse = CityResponse
 export function Login() {
     const auth = useAuth();
     let navigate = useNavigate();
 
     const [username, setUsername] = useState("admin");
-    
+
     //const [password, setPassword] = useState("painelfiocruz22");
     const [password, setPassword] = useState("FCadmin");
     // const [username, setUsername] = useState("");
@@ -50,12 +50,14 @@ export function Login() {
 
     const { data: diabeticosList, isLoading, error } = useQuery('city-informations', async () => {
         const response = await Api.get<CityInformationResponse>('city-informations');
-        const data: CityResponse = response.data.data;
-        // setCity( `${data.municipio} - ${data.uf}` )
-        // infoContext.setCityInformation(data);
+        const data: CityResponse = response.data;
+        setCity(`${data.municipio} - ${data.uf}`)
+        infoContext.setCityInformation(data);
         return data;
-
-    });
+    }
+        , {
+            staleTime: STALE_TIME
+        });
 
     function validateForm() {
         return username.length > 0 && password.length > 0;
@@ -95,7 +97,7 @@ export function Login() {
                         <div className="logo-content">
                             <img src={logoImg} alt="Painel e-SUS APS" title="Painel e-SUS APS" />
                             <div>
-                                <h1>e-SUS</h1>
+                                <h1>Painel Saúde Fiocruz</h1>
                                 <h2 className='text-end'>{city}</h2>
                             </div>
                         </div>
@@ -108,14 +110,14 @@ export function Login() {
 
                                 <div>
                                     <div className="subtitle my-4">O QUE É:</div>
-                                    <p>O e-SUS é um software nativo para o Windows criado para ajudar gestores e profissionais da saúde na tomada de decisão e gestão do cuidado em saúde.</p>
+                                    <p>O Painel Saúde Fiocruz é um software nativo para o Windows criado para ajudar gestores e profissionais da saúde na tomada de decisão e gestão do cuidado em saúde.</p>
                                 </div>
 
                                 <div className="separator mt-4"></div>
 
                                 <div>
                                     <div className="subtitle my-4">PARA QUÊ:</div>
-                                    <p>O e-SUS conecta o e-SUS APS e a base local de dados. Com isso, você tem acesso à informação de forma estruturada e a relatórios pré-configurados. Os relatórios são validados por especialistas em saúde pública e são atribuições das equipes de APS.</p>
+                                    <p>O Painel Saúde Fiocruz conecta o e-SUS APS e a base local de dados. Com isso, você tem acesso à informação de forma estruturada e a relatórios pré-configurados. Os relatórios são validados por especialistas em saúde pública e são atribuições das equipes de APS.</p>
                                 </div>
 
                                 <div className='mt-5'>

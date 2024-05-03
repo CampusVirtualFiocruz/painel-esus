@@ -1,0 +1,20 @@
+[
+    {
+        "label": "UBS",
+        "axis": [
+            {
+                "label": "",
+                "value": 5
+            }
+        ]
+    },
+    {
+        "label": "Unidade móvel",
+        "axis": [
+            {
+                "label": "",
+                "value": 5
+            }
+        ]
+    }
+]

@@ -31,8 +31,8 @@ export function Header() {
         <header id='header'>
             <div className="siteInfo" >
                 <div className='logoName' onClick={handleHome}>
-                    <img src={imgLogo} alt="e-SUS" />
-                    <strong>e-SUS / <span>{city?.municipio} - {city?.uf}</span></strong>
+                    <img src={imgLogo} alt="Painel Saúde Fiocruz" />
+                    <strong>Painel Saúde Fiocruz / <span>{city?.municipio} - {city?.uf}</span></strong>
                 </div>
             </div>
 

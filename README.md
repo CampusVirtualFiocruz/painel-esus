@@ -17,7 +17,6 @@ Infelizmente, não temos recursos suficientes no momento para investir em suport
 
 Estamos buscando parcerias e apoios para dar continuidade ao desenvolvimento dessa inovação para o SUS.
 
-
 # LICENÇA DE USO
 
 © Fundação Oswaldo Cruz - Fiocruz
@@ -26,7 +25,7 @@ O Painel e-SUS é um recurso educacional aberto publicado pela Fiocruz: https://
 
 O código fonte é licenciado pela licença de software livre GPL 2.0, e a arte gráfica e bancos de dados experimentais pela licença Creative Commons Attribution-ShareAlike 4.0. Na prática isso significa que todos podem utilizar, adaptar e criar versões derivadas desse software, mas devem dar crédito aos autores e o novo software ou adaptação deve continuar livre.
 
-https://www.gnu.org/licenses/old-licenses/gpl-2.0.html 
+https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
 
 https://creativecommons.org/licenses/by-sa/4.0/
 
@@ -37,6 +36,7 @@ Diversas unidades e programas da Fiocruz participaram do desenvolvimento do Pain
 ### Gerência Regional de Brasília
 
 Sediou os projetos de pesquisa que embasaram o desenvolvimento do Painel:
+
 - Processo de trabalho das equipes de Atenção Primária à Saúde e uso da informação do e-SUS AB para gestão da clínica e do cuidado, liderado por Renata Bernardes David - CAAE: 20085119.0.0000.8027
 - Vigilância Digital em Saúde para COVID-19 a partir de prontuários eletrônicos , liderado por Vinícius de Araújo Oliveira e Manoel Barral-Netto. CAAE: 31735320.1.0000.8027
 
@@ -81,7 +81,7 @@ Ana Cristina da Matta Furniel, cientista social, tecnologista em saúde pública
 
 **Coordenação**: Luciana Dantas Soares Alves - gerente de desenvolvimento
 
-Adriano Neves de Paula e Souza, cientista da computação 
+Adriano Neves de Paula e Souza, cientista da computação
 
 Joaquim Alves C Junior, engenheiro mecatrônico
 

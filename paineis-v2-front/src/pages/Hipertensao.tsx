@@ -118,6 +118,7 @@ export function Hipertensao() {
         let path = id ? `arterial-hypertension/complications/${id}` : 'arterial-hypertension/complications';
         const response = await Api.get(path);
         const responseData = response.data;
+        console.log(responseData)
 
         const arrData = responseData.data.map((item: any, i: number) => {
             let obj = Object.entries(item);
@@ -150,10 +151,10 @@ export function Hipertensao() {
     });
 
     const { data: dataProffessionals, isLoading: isLoadingProffessionals, error: errorProffessionals } = useQuery(['arterial-hypertension-proffessionals', paramRoute], async () => {
-        let path = id ? `arterial-hypertension/proffessionals/${id}` : 'arterial-hypertension/proffessionals';
+        let path = id ? `arterial-hypertension/professionals/${id}` : 'arterial-hypertension/professionals';
         const response = await Api.get(path);
         const data = response.data;
-        
+
         return data.data;
     }, {
         staleTime: 1000 * 60 * 10, //10 minutos
@@ -179,7 +180,7 @@ export function Hipertensao() {
     };
 
     const handleToHipertensosList = () => {
-        navigate('/hipertensos')
+        navigate(`/hipertensos/${id}`)
     }
     return (
         <div id="page-painel">
