@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import { DonutChart, TDonutChart } from "../../charts/Donut";
@@ -7,16 +7,19 @@ import { PieChart, TPieChart } from "../../charts/Pie";
 import { StackedArea } from "../../charts/StackedArea";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
-import { Api as Api2} from "../../services/api";
 import { Api } from "../../services/api2";
 import '../../styles/sindromeAguda.scss';
-import { parseChartData, filterStackAccuteCare, TResponse } from './chart-data';
-import { numberFormat } from '../../utils/stringUtils'
-import { Spinner, Alert } from "reactstrap";
 type PainelParams = {
     id: string;
 }
 
+type TResponse = {
+    co_dim_tempo: string;
+    nu_cnes: string;
+    type: string;
+    ds_filtro_cids: number;
+    local: string;
+}
 type TStackDataValues = {
     name: string;
     type: string;
@@ -25,39 +28,19 @@ type TStackDataValues = {
 };
 type TStackData = {
     labels: string[];
-    data: any[]
+    data: TStackDataValues[]
     setRangeData: (args: string[]) => void
-}
-
-type ParsedChartData = {
-    totalInfeccoesRespiratorias: number;
-    totalInfeccoesIntestinais: number;
-    totalFebreExantematicas: number;
-    totalFebreInespecificas: number;
-    totalAtendimentosPorSindromesAgudas: number;
-    totalAtendimentosPorOutrosCasos: number;
-}
-const MemoStackArea = memo(function MemoStackArea(stackData: any) {
-    return <StackedArea {...stackData} />
-});
-
-
-type LoadingData = {
-    frequency: boolean;
-    stackData: boolean;
-    donut: boolean;
-    lineChart: boolean
 }
 export function SindromesAgudas() {
     let navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+
+    const taxa_atendimento_agudo = 1.53;
     const [infecaoRespiratoriaState, setInfecaoRespiratoriaState] = useState<number>(0);
     const [infecaoIntestinalState, setInfecaoIntestinalState] = useState<number>(0);
     const [febreExantematicaState, setFebreExantematicaState] = useState<number>(0);
     const [febreInespecificaState, setFebreInespecificaState] = useState<number>(0);
     const [totalAtendimentosState, setTotalAtendimentosState] = useState<number>(0);
-    const [totalAtendimentosAgudosState, setTotalAtendimentosAgudosState] = useState<number>(0);
-    const [totalOutrosAtendimentosState, setTotalOutrosAtendimentosState] = useState<number>(0);
     const [stackData, setStackData] = useState<TStackData>({
         labels: [],
         data: [],
@@ -70,116 +53,142 @@ export function SindromesAgudas() {
     });
     const [rangeData, setRangeData] = useState<string[]>([]);
     const [responseData, setResponseData] = useState<TResponse[]>([]);
-    const [isLoadingData, setLoadingData] = useState<LoadingData>({
-        frequency: true,
-        stackData: true,
-        donut: true,
-        lineChart: true,
-    })
+
 
     const { id } = useParams<PainelParams>();
     const { data: sindromesAgudasData, isLoading, error } = useQuery(['sindromes-agudas', id], async () => {
         // let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
-        let path = '/data/get-chart-data.json';
+        let path = '/saida.json';
         const response = await Api.get(path);
-        let data = response.data.data;
+        let data = response.data;
         if (id) {
             data = data.filter((item: TResponse) => item.nu_cnes == id)
         }
         handleSindromeAgudaData(data);
-        handleStackData(data);
         setResponseData(data)
         return data;
-    }, {
-        staleTime: 1000 * 60 * 10, //10 minutos
     });
 
-    const handleSindromeAgudaData = useCallback((response: TResponse[]) => {
-        setLoadingData((prev: LoadingData) => ({
-            ...prev,
-            frequency: true,
-            donut: true,
-            lineChart: true,
-        }));
-        if (response == undefined || response.length == 0) return;
-        const parsedData: ParsedChartData = parseChartData(response) as ParsedChartData;
-        setFebreExantematicaState(parsedData.totalFebreExantematicas);
-        setFebreInespecificaState(parsedData.totalFebreInespecificas);
-        setInfecaoIntestinalState(parsedData.totalInfeccoesIntestinais);
-        setInfecaoRespiratoriaState(parsedData.totalInfeccoesRespiratorias);
+    function handleSindromeAgudaData(response: TResponse[]) {
 
-        setTotalOutrosAtendimentosState(parsedData.totalAtendimentosPorOutrosCasos);
-        setTotalAtendimentosAgudosState(parsedData.totalAtendimentosPorSindromesAgudas);
+        const mapSindromes: { [key: string]: number } = {
+            'infeccao_respiratorio': 0,
+            'infeccao_intestinal': 0,
+            'febre_exantematica': 0,
+            'febre_inespecifica': 0,
+            'total': 0
+        }
+        const labels: Set<string> = new Set([]);
+        const dataSet: any = {}
 
-        setTotalAtendimentosState(
+        const totalSindromeAgura: number[] = []
 
-            (parsedData.totalAtendimentosPorOutrosCasos + parsedData.totalAtendimentosPorSindromesAgudas)
-        );
-        console.log('response', response)
-        setLoadingData((prev: LoadingData) => ({
-            ...prev,
-            frequency: false,
-            donut: false,
-            lineChart: false,
-        }))
-    }, [])
+        for (const resp of response) {
+            // console.log(resp)
+            labels.add(resp.co_dim_tempo)
+            if (!(resp.co_dim_tempo in dataSet)) {
+                dataSet[resp.co_dim_tempo] = [resp]
+            } else {
 
-    function handleStackData(response: TResponse[]) {
-        setLoadingData((prev: LoadingData) => ({
-            ...prev,
-            stackData: true
-        }));
+                dataSet[resp.co_dim_tempo].push(resp)
+            }
+            totalSindromeAgura.push(resp.ds_filtro_cids);
 
-        const accuteFiltred = filterStackAccuteCare(response);
+            mapSindromes[resp.type] += resp.ds_filtro_cids;
+            mapSindromes['total'] += resp.ds_filtro_cids;
+        }
 
+        let initZeros: number[] = [];
+        labels.forEach(i => initZeros.push(0));
+
+        const mapSindromesData: { [key: string]: number[] } = {
+            'infeccao_respiratorio': Array.from(initZeros),
+            'infeccao_intestinal': Array.from(initZeros),
+            'febre_exantematica': Array.from(initZeros),
+            'febre_inespecifica': Array.from(initZeros)
+        };
+
+        const mapLabels: { [key: string]: string } = {
+            'infeccao_respiratorio': 'Infecção Respiratoria',
+            'infeccao_intestinal': 'Infecção Intestinal',
+            'febre_exantematica': 'Febre Exantemática',
+            'febre_inespecifica': 'Febre Inespecífica'
+        }
+        const mapColors: { [key: string]: string } = {
+            'infeccao_respiratorio': '#5dd2c9',
+            'infeccao_intestinal': '#3996c1',
+            'febre_exantematica': '#2675b0',
+            'febre_inespecifica': '#094069'
+        }
+        let idx = 0;
+        for (const data of Array.from(labels)) {
+            if (data in dataSet) {
+                for (const item of dataSet[data]) {
+                    mapSindromesData[item.type][idx] += item.ds_filtro_cids
+                }
+            }
+            idx++;
+        }
+        const restulStackData = []
+        for (const item of Object.keys(mapSindromesData)) {
+            restulStackData.push({
+                name: mapLabels[item],
+                type: item,
+                color: mapColors[item],
+                data: mapSindromesData[item]
+            })
+        }
+        setFebreExantematicaState(mapSindromes.febre_exantematica);
+        setFebreInespecificaState(mapSindromes.febre_inespecifica);
+        setInfecaoIntestinalState(mapSindromes.infeccao_intestinal);
+        setInfecaoRespiratoriaState(mapSindromes.infeccao_respiratorio);
+        setTotalAtendimentosState(mapSindromes.total)
         setStackData({
-            labels: accuteFiltred.labels,
-            data: accuteFiltred.stack.slice(0,
-                -2),
+            labels: Array.from(labels),
+            data: restulStackData,
             setRangeData: setRangeData
-        });
+        })
         setLineData({
-            labels: accuteFiltred.labels,
+            labels: Array.from(labels),
             data: [
                 {
-                    name: 'Outros atendimentos',
-                    type: 'outros atendimentos',
+                    name: 'Atendimentos gerais',
+                    type: 'atendimentos gerais',
                     color: '#5cd2c8fc',
-                    data: accuteFiltred.stack[4].data
+                    data: totalSindromeAgura.map( (item: number) => Math.ceil(item * taxa_atendimento_agudo))
                 },
-                {
-                    name: 'Atendimentos por síndromes agudas',
-                    type: 'atendimentos por sindrome agudas',
-                    color: '#09406a',
-                    data: accuteFiltred.stack[5].data
-                }],
+            {
+                name: 'Atendimentos por síndromes agudas',
+                type: 'atendimentos por sindrome agudas',
+                color: '#09406a',
+                data: totalSindromeAgura
+            }],
             setRangeData: setRangeData
-        });
-        setLoadingData((prev: LoadingData) => ({
-            ...prev,
-            stackData: false
-        }));
+        })
+
     }
-    const filterRange = useCallback(() => {
-        const startDate = new Date(rangeData[0]);
-        const endDate = new Date(rangeData[1]);
+    function filterRange(start: string, end: string) {
+        const startDate = new Date(start);
+        const endDate = new Date(end);
         return responseData.filter((item: TResponse) => {
-            const itemDate = new Date(item.time);
+            const itemDate = new Date(item.co_dim_tempo);
             return itemDate >= startDate && itemDate <= endDate
         })
-    }, [rangeData[0], rangeData[1]]);
-
+    }
     useEffect(() => {
         let filteredData = []
-        filteredData = filterRange();
+        if (rangeData[0] != "0" && rangeData[1] != "0") {
+            filteredData = filterRange(rangeData[0], rangeData[1]);
+        } else {
+            filteredData = responseData;
+        }
         handleSindromeAgudaData(filteredData);
-    }, [rangeData[0], rangeData[1]]);
+    }, [rangeData]);
 
     function handleToHome() {
         setLoading(true);
         navigate('/painelx');
     }
-
     return (
         <div id="page-painel">
             <Header />
@@ -196,105 +205,64 @@ export function SindromesAgudas() {
                     <div className="row gx-5">
                         <div className="col-12 col-lg-5">
                             <div className="painel-lateral">
-                                {/* <h4 className="my-5 text-center">Frequência de atendimentos por síndrome aguda</h4> */}
-                                <h4 className="my-5 text-center">Frequência de sintomas por atendimentos</h4>
-                                {isLoadingData.frequency ? (
-                                    <div className="d-flex my-5 align-items-center justify-content-center">
-                                        <Spinner className="me-2" />
-                                        Carregando...
+                                <h4 className="my-5 text-center">Número de atendimentos por síndrome aguda</h4>
+                                <div className="row gx-5  d-flex-center">
+                                    <div className="col-12 col-lg-5">
+                                        <PieChart {...new TPieChart(
+                                            'Infeccoes respiratórias',
+                                            [
+                                                { value: infecaoRespiratoriaState },
+                                                { value: totalAtendimentosState },
+                                            ],
+                                            '#5cd2c8'
+                                        )} />
                                     </div>
-                                ) : error ? (
-                                    <div className="d-flex my-5 align-items-center justify-content-center">
-                                        <Alert color="danger">
-                                            Erro ao carregar dados.
-                                        </Alert>
+                                    <div className="col-12 col-lg-5">
+                                        <PieChart {...new TPieChart(
+                                            'Infeccoes Intestinais',
+                                            [
+                                                { value: infecaoIntestinalState },
+                                                { value: totalAtendimentosState },
+                                            ],
+                                            '#3996c1'
+                                        )} />
                                     </div>
-                                ) : (
-                                    <div className="row gx-5  d-flex-center">
-                                        <div className="col-12 col-lg-5">
-                                            <PieChart {...new TPieChart(
-                                                'Infeccoes respiratórias',
-                                                [
-                                                    { value: infecaoRespiratoriaState },
-                                                    { value: totalAtendimentosAgudosState },
-                                                ],
-                                                '#5cd2c8'
-                                            )} />
-                                        </div>
-                                        <div className="col-12 col-lg-5">
-                                            <PieChart {...new TPieChart(
-                                                'Infeccoes Intestinais',
-                                                [
-                                                    { value: infecaoIntestinalState },
-                                                    { value: totalAtendimentosAgudosState },
-                                                ],
-                                                '#3996c1'
-                                            )} />
-                                        </div>
-                                        <div className="col-12 col-lg-5 mt-10">
-                                            <PieChart {...new TPieChart(
-                                                'Febres Exantemáticas',
-                                                [
-                                                    { value: febreExantematicaState },
-                                                    { value: totalAtendimentosAgudosState },
-                                                ],
-                                                '#2775b0'
-                                            )} />
-                                        </div>
-                                        <div className="col-12 col-lg-5 mt-10">
-                                            <PieChart {...new TPieChart(
-                                                'Febres Inespecíficas',
-                                                [
-                                                    { value: febreInespecificaState },
-                                                    { value: totalAtendimentosAgudosState },
-                                                ],
-                                                '#09406a'
-                                            )} />
-                                        </div>
+                                    <div className="col-12 col-lg-5 mt-10">
+                                        <PieChart {...new TPieChart(
+                                            'Febres Exantemáticas',
+                                            [
+                                                { value: febreExantematicaState },
+                                                { value: totalAtendimentosState },
+                                            ],
+                                            '#2775b0'
+                                        )} />
                                     </div>
-                                )}
-
+                                    <div className="col-12 col-lg-5 mt-10">
+                                        <PieChart {...new TPieChart(
+                                            'Febres Inespecíficas',
+                                            [
+                                                { value: febreInespecificaState },
+                                                { value: totalAtendimentosState },
+                                            ],
+                                            '#09406a'
+                                        )} />
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div className="col-12 col-lg-7 ">
                             <div className="painel-lateral">
                                 <h4 className="my-5 text-center">Relação de atendimentos por síndrome aguda</h4>
-                                {isLoadingData.stackData ? (
-                                    <div className="d-flex my-5 align-items-center justify-content-center">
-                                        <Spinner className="me-2" />
-                                        Carregando...
-                                    </div>
-                                ) : error ? (
-                                    <div className="d-flex my-5 align-items-center justify-content-center">
-                                        <Alert color="danger">
-                                            Erro ao carregar dados.
-                                        </Alert>
-                                    </div>
-                                ) : (
-                                    <MemoStackArea {...stackData} />
-                                )}
+                                <StackedArea {...stackData} />
                             </div>
                         </div>
 
-                        <div className="col-12 col-lg-4 label-container " style={{ marginTop: 30 }}>
+                        <div className="col-12 col-lg-4 label-container "  style={{marginTop: 30}}>
                             <div className="label">
                                 Número de atendimentos por síndromes agudas
                             </div>
-                            {isLoadingData.frequency ? (
-                                <div className="d-flex my-5 align-items-center justify-content-center">
-                                    <Spinner className="me-2" />
-                                    Carregando...
-                                </div>
-                            ) : error ? (
-                                <div className="d-flex my-5 align-items-center justify-content-center">
-                                    <Alert color="danger">
-                                        Erro ao carregar dados.
-                                    </Alert>
-                                </div>
-                            ) : (
-                                <div className="label-value">{numberFormat(totalAtendimentosAgudosState)}</div>
-                            )}
+                            <div className="label-value">{totalAtendimentosState}</div>
                         </div>
 
                     </div>
@@ -304,68 +272,42 @@ export function SindromesAgudas() {
                     <div className="row gx-5">
                         <div className="col-12 col-lg-5">
                             <div className="painel-lateral">
-                                <h4 className="my-5 text-center">Relação de atendimentos por outras causas x sídromes agudas</h4>
+                                <h4 className="my-5 text-center">Relação de atendimentos gerais x sídromes agudas</h4>
                             </div>
-                            {isLoadingData.donut ? (
-                                <div className="d-flex my-5 align-items-center justify-content-center">
-                                    <Spinner className="me-2" />
-                                    Carregando...
-                                </div>
-                            ) : error ? (
-                                <div className="d-flex my-5 align-items-center justify-content-center">
-                                    <Alert color="danger">
-                                        Erro ao carregar dados.
-                                    </Alert>
-                                </div>
-                            ) : (
-                                <div className="col-12">
-                                    <DonutChart {...new TDonutChart(
-                                        'Febres Inespecíficas',
-                                        [
-                                            { value: totalOutrosAtendimentosState, name: 'Atendimentos por outras causas' },
-                                            { value: totalAtendimentosAgudosState, name: 'Atendimentos por síndromes agudas' },
-                                        ],
-                                        '#5cd2c8'
-                                    )} />
-                                </div>
-                            )}
-
+                            <div className="col-12">
+                                <DonutChart {...new TDonutChart(
+                                    'Febres Inespecíficas',
+                                    [
+                                        { value: Math.ceil(totalAtendimentosState * 1.33), name: 'Atendimentos gerais' },
+                                        { value: totalAtendimentosState, name: 'Atendimentos por síndromes agudas' },
+                                    ],
+                                    '#5cd2c8'
+                                )} />
+                            </div>
+                            
                         </div>
 
                         <div className="col-12 col-lg-7" >
                             <div className="painel-lateral">
                                 <h4 className="my-5 text-center">Comparativo do volume de atendimentos gerais em relacao às síndromes  agudas</h4>
-                                {isLoadingData.lineChart ? (
-                                    <div className="d-flex my-5 align-items-center justify-content-center">
-                                        <Spinner className="me-2" />
-                                        Carregando...
-                                    </div>
-                                ) : error ? (
-                                    <div className="d-flex my-5 align-items-center justify-content-center">
-                                        <Alert color="danger">
-                                            Erro ao carregar dados.
-                                        </Alert>
-                                    </div>
-                                ) : (
-                                    <LineChart {...lineData} />
-                                )}
+                                <LineChart {...lineData} />
                             </div>
                         </div>
                         <div className="col-12 col-lg-4 label-container">
-                            <div className="label" style={{ display: 'flex', 'justifyContent': 'center' }}>
-                                Total de atendimentos
+                                <div className="label" style={{display: 'flex', 'justifyContent': 'center'}}>
+                                    Total de atendimentos
+                                </div>
+                                <div className="label-value">{Math.ceil(totalAtendimentosState * taxa_atendimento_agudo)}</div>
                             </div>
-                            <div className="label-value">{numberFormat(totalAtendimentosState)}</div>
-                        </div>
                     </div>
                     <div className="row gx-5">
                         <div className="col-12 col-lg-12 d-flex-center">
                             <button
-                                type="button"
-                                onClick={handleToHome}
-                                className="btn btn-primary">
-                                Voltar
-                            </button>
+                                    type="button"
+                                    onClick={handleToHome}
+                                    className="btn btn-primary">
+                                    Voltar
+                                </button>
                         </div>
                     </div>
                 </div>

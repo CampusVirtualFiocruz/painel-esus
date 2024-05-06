@@ -82,7 +82,7 @@ export const ageGroupParser = (data: any) => {
     ],
   };
 
-  //   data.ageGroups = dataFake;
+  // data.ageGroups = dataFake;
 
   const ageGroups = data.ageGroups;
   const masculino = ageGroups.Masculino;
@@ -105,7 +105,6 @@ export const ageGroupParser = (data: any) => {
   if (masculino !== undefined) {
     ageGroupsKeys = Object.keys(masculino);
     ageGroupsKeys.forEach((item: string) => {
-      console.log("item", item);
       const newKey = item.replace("Faixa et\u00e1ria ", "");
       // @ts-ignore: Unreachable code error
       masculinoType.areaUrbana[newKey] = {
@@ -140,6 +139,6 @@ export const ageGroupParser = (data: any) => {
       };
     });
   }
-  console.log("masculinoType", masculinoType);
+
   return [masculinoType, femininoType];
 };

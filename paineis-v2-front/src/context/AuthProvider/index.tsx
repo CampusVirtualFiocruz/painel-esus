@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { IAuthProvider, IContext, IUser } from "./types";
 import { getUserLocalStorage, LoginRequest, setUserLocalStorage } from "./util";
-import jwt from 'jwt-decode';
+import jwt from "jwt-decode";
 
 export const AuthContext = createContext<IContext>({} as IContext);
 
@@ -11,7 +11,7 @@ type PayloadJwt = {
   uf: string;
   username: string;
   exp: number;
-}
+};
 
 export const AuthProvider = ({ children }: IAuthProvider) => {
   const [user, setUser] = useState<IUser | null>();
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
       fullName: payload.username,
       cns: payload.cns,
       municipio: payload.municipio,
-      uf: payload.uf
+      uf: payload.uf,
     };
 
     setUser(user);

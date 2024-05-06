@@ -2,39 +2,35 @@ import ReactECharts from 'echarts-for-react'
 import { formatAsPercent } from '../../utils'
 import './style.scss';
 
-export interface TPieData {
+export interface TPieData{
     value: number
 }
-export class TPieChart {
-    constructor(public nome: string, public dataGraphic: TPieData[], public colorActive: string = '#5cd2c8', public bottom = false) {
+export class TPieChart{
+    constructor(public nome:string, public dataGraphic: TPieData[], public colorActive: string = '#5cd2c8'){
         this.nome = nome;
         this.dataGraphic = dataGraphic;
         this.colorActive = colorActive;
-        this.bottom = bottom
-
     }
 }
-export function PieChart({ dataGraphic, nome, colorActive, bottom }: TPieChart) {
+export function PieChart({dataGraphic, nome, colorActive}: TPieChart) {
 
-    const total = dataGraphic[0].value + dataGraphic[1].value;
-    const ativo = (dataGraphic[0].value / total) * 100;
-
+    const total = dataGraphic[1].value;
+    const ativo = (dataGraphic[0].value / total)*100;
+    
     const options = {
-        color: [colorActive, '#e4e4e4'],
+        color: [ colorActive,'#e4e4e4'],
         tooltip: {
             trigger: "item",
             formatter: "({d}%)"
         },
-        title: {
+        title:{
             text: nome,
             left: 'center',
             top: '0',
-            bottom: 'auto',
-            padding: 15,
-            textStyle: {
+            textStyle:{
                 fontSize: 16,
                 overflow: 'break',
-                width: 200,
+                width: 120
             }
         },
         series: [
@@ -62,18 +58,14 @@ export function PieChart({ dataGraphic, nome, colorActive, bottom }: TPieChart) 
             }
         ]
     };
-    if (bottom) {
-        options.title["top"] = 'auto';
-        options.title["bottom"] = '-15';
-    }
+
     return (
         <div className='pie-chart'>
             <ReactECharts
                 option={options}
                 style={{
-                    width: "30vw",
-                    minWidth: "316px",
-                    height: '30vh'
+                    width: "126px",
+                    height: "186px"
                 }}
                 opts={{ renderer: 'svg' }}
             />
@@ -83,7 +75,6 @@ export function PieChart({ dataGraphic, nome, colorActive, bottom }: TPieChart) 
         </div>
     )
 }
-
 
 export function Pie({ data }: any) {
     let nome = 'obstetrics-factors';
@@ -102,6 +93,11 @@ export function Pie({ data }: any) {
             trigger: "item",
             formatter: "({d}%)"
         },
+        legend: {
+            bottom: 10,
+            left: 'center',
+            data: ['CityA', 'CityB']
+          },
         series: [
             {
                 name: nome,

@@ -9,13 +9,11 @@ import { Footer } from "../components/Footer";
 import Pagination from "../components/Pagination";
 
 import { Api } from "../services/api";
-import { Api as Api2} from "../services/api2";
 import { getUserLocalStorage } from "../context/AuthProvider/util";
 import { getNomeUbs } from "../utils";
 
 import "../styles/gestanteList.scss";
 import { useState } from "react";
-import { useInfo } from "../context/infoProvider/useInfo";
 
 type PainelParams = {
     id: string;
@@ -30,7 +28,6 @@ type Lista = {
 type TypeUbs = {
     label: string;
     value: number | string;
-    id: string;
 };
 
 type ResponseDataListUbs = {
@@ -77,17 +74,16 @@ export function GestantesList() {
     const user = getUserLocalStorage()
     let paramRoute = id ? id : 'all'
     const [currentPage, setCurrentPage] = useState<any>(1)
-     const { cityInformation, city } = useInfo();
+
     //get nome ubs
     const { data: dataUbs, isLoading: isLoadingUbs } = useQuery('ubs', async () => {
         const response = await Api.get<ResponseDataListUbs>('get-units')
         const data = response.data
 
-        const listData: TypeUbs[] = data.data.map((ubs: any) => {
+        const listData: TypeUbs[] = data.data.map((ubs) => {
             return {
                 "label": ubs.no_unidade_saude,
                 "value": ubs.nu_cnes,
-                'id': ubs.co_seq_dim_unidade_saude
             }
         })
 
@@ -97,19 +93,18 @@ export function GestantesList() {
     });
 
     //get nome ubs
-    const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : city;
+    const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : '-';
 
     const { isLoading, error, data } = useQuery(
         ['pregnants-table', paramRoute, currentPage], async () => {
-            // let path = id
-            //     ? `pregnants/pregnants-table/${id}?page=${currentPage}`
-            //     : `pregnants/pregnants-table?page=${currentPage}`;
-            let path = `data/pregnants-table-page=${currentPage}`;
+            let path = id
+                ? `pregnants/pregnants-table/${id}?page=${currentPage}`
+                : `pregnants/pregnants-table?page=${currentPage}`;
 
-            const response = await Api2.get(path)
+            const response = await Api.get(path)
             const { data, total }: any = response.data
 
-            return { "gestantes": data, "total": 20 }
+            return { "gestantes": data, "total": total }
         },
         {
             keepPreviousData: true,
@@ -140,7 +135,7 @@ export function GestantesList() {
 
                 <div>
                     <h2>
-                        {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : nomeUbs}  / Lista das gestantes
+                        {id ? (!isLoadingUbs ? nomeUbs : 'Carregando...') : user.municipio + " - " + user.uf}  / Lista das gestantes
                     </h2>
                     <p className="text-end fw-bold">(referente aos últimos 12 meses)</p>
                 </div>
@@ -204,13 +199,13 @@ export function GestantesList() {
                                     </p>
                                 </div>
                             </div>
-                            { data?.total && <Pagination
+                            <Pagination
                                 className="pagination-bar"
                                 currentPage={currentPage}
                                 totalCount={data?.total}
                                 pageSize={10}
                                 onPageChange={page => setCurrentPage(page)}
-                            /> }
+                            />
                         </>
                     )}
                 </div>

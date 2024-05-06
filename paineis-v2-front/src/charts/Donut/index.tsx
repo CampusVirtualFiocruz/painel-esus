@@ -63,24 +63,24 @@ export function Donut({ data }: any) {
     )
 }
 
-export interface TPieData {
+export interface TPieData{
     value: number,
     name: string
 }
-export class TDonutChart {
-    constructor(public nome: string, public dataGraphic: TPieData[], public colorActive: string = '#5cd2c8') {
+export class TDonutChart{
+    constructor(public nome:string, public dataGraphic: TPieData[], public colorActive: string = '#5cd2c8'){
         this.nome = nome;
         this.dataGraphic = dataGraphic;
         this.colorActive = colorActive;
     }
 }
-export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
+export function DonutChart({dataGraphic, nome, colorActive}: TDonutChart) {
     const total = dataGraphic[0].value + dataGraphic[1].value;
-    const ativo = (dataGraphic[0].value / total) * 100;
-
+    const ativo = (dataGraphic[0].value / total)*100;
+    
 
     const options = {
-        color: ['#09406a', '#63a0b2', '#81bfc9', '#276082', '#45809a', '#9fdfe1', '#bdfff9'],
+        color: [colorActive,'#09406a'],
         tooltip: {
             trigger: "item",
             formatter: "{b0}: {c0}({d}%)"
@@ -89,39 +89,21 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
             {
                 name: nome,
                 type: 'pie',
-                radius: ['35%', '70%'],
-                center: ['50%', '50%'],
+                radius: ['60%', '90%'],
                 avoidLabelOverlap: false,
                 label: {
                     show: true,
                     overflow: 'break',
-                    fontSize: '14',
-                    width: 120,
-                    formatter: '{a|{b}} \n {b|{c} ({d}%)}',
-                    rich: {
-                        a: {
-                            color: '#6E7079',
-                            fontWeight: 'bold',
-                            fontSize: 14,
-                            align: 'center',
-                            overflow: 'breakAll',
-                            padding: [3, 10, 10, 5],
-                            lineHeight: 20,
-                        },
-                        b: {
-                            color: '#6E7079',
-                            fontWeight: 'bold',
-                            fontSize: 25,
-                            align: 'center'
-                        },
-                    }
+                    fontSize: '16',
+                    fontWeight: 'bold',
+                    width: 110
                 },
                 emphasis: {
                     label: {
                         show: true,
                         fontSize: '16',
                         fontWeight: 'bold',
-
+                        
                     }
                 },
                 labelLine: {
@@ -137,9 +119,9 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
             <ReactECharts
                 option={options}
                 style={{
-                    width: "90vw",
+                    width: "100%",
                     minWidth: "316px",
-                    height: '50vh'
+                    height: '216px'
                 }}
                 opts={{ renderer: 'svg' }}
             />

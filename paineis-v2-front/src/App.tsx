@@ -13,10 +13,8 @@ import { Diabetes } from './pages/Diabetes';
 import { Hipertensao } from './pages/Hipertensao';
 import { HipertensosList } from './pages/HipertensosList';
 import { DiabeticosList } from './pages/DiabeticosList';
-import { SindromesAgudas } from './pages/SindromesAgudas/SindromesAgudas';
+import {SindromesAgudas} from './pages/SindromesAgudas/SindromesAgudas';
 import { SelecionarUbs } from './pages/SelecionarUbs';
-import SaudeBucal from "./pages/SaudeBucal/SaudeBucal";
-import RelatoriosQualidadeInformacao from "./pages/RelatoriosQualidadeInformacao";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -30,175 +28,135 @@ function App() {
   return (
     <AuthProvider>
       <InfoProvider>
-        <BrowserRouter>
-          <Wrapper>
-            <Routes>
-              <Route path="/" element={<Login />} />
+      <BrowserRouter>
+        <Wrapper>
+          <Routes>
+            <Route path="/" element={<Login />} />
 
-              <Route
-                path="/selecionarubs"
-                element={
-                  <ProtectedLayout>
-                    <SelecionarUbs />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/painelx"
-                element={
-                  <ProtectedLayout>
-                    <Painel />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/painel/:id"
-                element={
-                  <ProtectedLayout>
-                    <Painel />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/gestantes"
-                element={
-                  <ProtectedLayout>
-                    <Gestantes />
-                  </ProtectedLayout>
-                } />
-              <Route
-                path="/gestantes/:id"
-                element={
-                  <ProtectedLayout>
-                    <Gestantes />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/gestante/:id"
-                element={
-                  <ProtectedLayout>
-                    <Gestante />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/gestantes/list"
-                element={
-                  <ProtectedLayout>
-                    <GestantesList />
-                  </ProtectedLayout>
-                } />
-              <Route
-                path="/gestantes/list/:id"
-                element={
-                  <ProtectedLayout>
-                    <GestantesList />
-                  </ProtectedLayout>
-                } />
-              <Route
-                path="/diabetes"
-                element={
-                  <ProtectedLayout>
-                    <Diabetes />
-                  </ProtectedLayout>
-                } />
-              <Route
-                path="/diabetes/:id"
-                element={
-                  <ProtectedLayout>
-                    <Diabetes />
-                  </ProtectedLayout>
-                } />
-              <Route
-                path="/diabeticos"
-                element={
-                  <ProtectedLayout>
-                    <DiabeticosList />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/diabeticos/:id"
-                element={
-                  <ProtectedLayout>
-                    <DiabeticosList />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/hipertensao"
-                element={
-                  <ProtectedLayout>
-                    <Hipertensao />
-                  </ProtectedLayout>
-                } />
-              <Route
-                path="/hipertensao/:id"
-                element={
-                  <ProtectedLayout>
-                    <Hipertensao />
-                  </ProtectedLayout>
-                } />
-              <Route
-                path="/hipertensos"
-                element={
-                  <ProtectedLayout>
-                    <HipertensosList />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/hipertensos/:id"
-                element={
-                  <ProtectedLayout>
-                    <HipertensosList />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/sindromes-agudas"
-                element={
-                  <ProtectedLayout>
-                    <SindromesAgudas />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/sindromes-agudas/:id"
-                element={
-                  <ProtectedLayout>
-                    <SindromesAgudas />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/saude-bucal"
-                element={
-                  <ProtectedLayout>
-                    <SaudeBucal />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/saude-bucal/:id"
-                element={
-                  <ProtectedLayout>
-                    <SaudeBucal />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/relatorios"
-                element={
-                  <ProtectedLayout>
-                    <RelatoriosQualidadeInformacao />
-                  </ProtectedLayout>
-                }
-              />
-            </Routes>
-          </Wrapper>
-        </BrowserRouter>
+            <Route
+              path="/selecionarubs"
+              element={
+                <ProtectedLayout>
+                  <SelecionarUbs />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/painelx"
+              element={
+                <ProtectedLayout>
+                  <Painel />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/painel/:id"
+              element={
+                <ProtectedLayout>
+                  <Painel />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/gestantes"
+              element={
+                <ProtectedLayout>
+                  <Gestantes />
+                </ProtectedLayout>
+              } />
+            <Route
+              path="/gestantes/:id"
+              element={
+                <ProtectedLayout>
+                  <Gestantes />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/gestante/:id"
+              element={
+                <ProtectedLayout>
+                  <Gestante />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/gestantes/list"
+              element={
+                <ProtectedLayout>
+                  <GestantesList />
+                </ProtectedLayout>
+              } />
+            <Route
+              path="/gestantes/list/:id"
+              element={
+                <ProtectedLayout>
+                  <GestantesList />
+                </ProtectedLayout>
+              } />
+            <Route
+              path="/diabetes"
+              element={
+                <ProtectedLayout>
+                  <Diabetes />
+                </ProtectedLayout>
+              } />
+            <Route
+              path="/diabetes/:id"
+              element={
+                <ProtectedLayout>
+                  <Diabetes />
+                </ProtectedLayout>
+              } />
+            <Route
+              path="/diabeticos"
+              element={
+                <ProtectedLayout>
+                  <DiabeticosList />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/hipertensao"
+              element={
+                <ProtectedLayout>
+                  <Hipertensao />
+                </ProtectedLayout>
+              } />
+            <Route
+              path="/hipertensao/:id"
+              element={
+                <ProtectedLayout>
+                  <Hipertensao />
+                </ProtectedLayout>
+              } />
+            <Route
+              path="/hipertensos"
+              element={
+                <ProtectedLayout>
+                  <HipertensosList />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/sindromes-agudas"
+              element={
+                <ProtectedLayout>
+                  <SindromesAgudas />
+                </ProtectedLayout>
+              }
+            />
+            <Route
+              path="/sindromes-agudas/:id"
+              element={
+                <ProtectedLayout>
+                  <SindromesAgudas />
+                </ProtectedLayout>
+              }
+            />
+          </Routes>
+        </Wrapper>
+      </BrowserRouter>
       </InfoProvider>
     </AuthProvider>
   );

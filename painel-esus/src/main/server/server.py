@@ -39,7 +39,7 @@ elif config["ENV"] == "windows":
     static_folder = os.path.relpath(static_folder)
 else:
     static_folder = os.path.join(
-        os.getcwd(), '..', 'paineis-v2-front', 'build')
+        os.getcwd(), '..', 'paineis-v2-front', 'static-files')
     static_folder = os.path.abspath(static_folder)
 print('STATIC FOLDER: ', static_folder)
 
