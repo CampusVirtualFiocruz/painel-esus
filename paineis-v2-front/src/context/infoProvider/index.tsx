@@ -8,27 +8,30 @@ interface CityResponse {
   cep: string;
   codIgbe: string;
   estado: string;
-  municipio: string
+  municipio: string;
   uf: string;
 }
 interface CityInformationResponse {
-  data: CityResponse
+  data: CityResponse;
 }
 
 export const InfoProvider = ({ children }: IInfoProvider) => {
-    const [cityInformation, setCityInformation] = useState<ICityInfomation | null>(null);
-    const [city, setCity] = useState<string|null>(null);
-  
-      useQuery('city-informations', async () => {
-        const response = await Api.get<CityInformationResponse>('city-informations');
-        const data: CityResponse = response.data.data;
-        setCity( `${data.municipio} - ${data.uf}` )
-        setCityInformation(data);
-      });
+  const [cityInformation, setCityInformation] =
+    useState<ICityInfomation | null>(null);
+  const [city, setCity] = useState<string | null>(null);
 
-    return (
-      <InfoContext.Provider value={{ cityInformation, setCityInformation, city }}>
-        {children}
-      </InfoContext.Provider>
+  useQuery("city-informations", async () => {
+    const response = await Api.get<CityInformationResponse>(
+      "city-informations"
     );
-  };
+    const data: CityResponse = response.data.data;
+    setCity(`${data.municipio} - ${data.uf}`);
+    setCityInformation(data);
+  });
+
+  return (
+    <InfoContext.Provider value={{ cityInformation, setCityInformation, city }}>
+      {children}
+    </InfoContext.Provider>
+  );
+};
