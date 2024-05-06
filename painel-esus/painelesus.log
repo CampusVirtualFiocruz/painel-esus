@@ -1794,3 +1794,71 @@ src.errors.types.http_credentials_fail.HttpCredentialsFailError: Credentials fai
 2024-03-13 16:04:03 INFO     Starting base generation
 2024-03-13 16:04:03 DEBUG    Next wakeup is due at 2024-03-14 04:00:00-03:00 (in 42956.660385 seconds)
 2024-03-13 16:04:03 INFO     Base already destroyed!
+2024-04-29 16:52:38 DEBUG    /etc/timezone found, contents:
+ America/Sao_Paulo
+
+2024-04-29 16:52:38 DEBUG    /etc/localtime found
+2024-04-29 16:52:38 DEBUG    2 found:
+ {'/etc/timezone': 'America/Sao_Paulo', '/etc/localtime is a symlink to': 'America/Sao_Paulo'}
+2024-04-29 16:52:38 INFO     Scheduler started
+2024-04-29 16:52:38 DEBUG    Looking for jobs to run
+2024-04-29 16:52:38 DEBUG    No jobs; waiting until a job is added
+2024-04-29 16:52:38 INFO     Added job "generate_base_scheduled.<locals>.init" to job store "default"
+2024-04-29 16:52:38 INFO     Start base generator.
+2024-04-29 16:52:38 DEBUG    Looking for jobs to run
+2024-04-29 16:52:38 INFO     Starting base generation
+2024-04-29 16:52:38 DEBUG    Next wakeup is due at 2024-04-30 04:00:00-03:00 (in 40041.774020 seconds)
+2024-04-29 16:52:38 INFO     Base already destroyed!
+2024-04-29 16:52:50 INFO     Base already destroyed!
+2024-04-29 16:53:04 INFO     Base already destroyed!
+2024-04-29 16:53:04 INFO     Base atendimento_odontologico already destroyed!
+2024-04-29 16:53:12 INFO     Finish base generator. time spent: 0:00:34.468095
+2024-04-29 16:53:12 INFO     Start cache generator.
+2024-04-29 16:53:13 DEBUG    Using selector: EpollSelector
+2024-04-29 16:53:13 INFO     Server not running yet.
+2024-04-29 16:53:13 INFO     Added job "generate_base_scheduled.<locals>.cache_init" to job store "default"
+2024-04-29 16:53:13 DEBUG    Looking for jobs to run
+2024-04-29 16:53:13 DEBUG    Next wakeup is due at 2024-04-29 17:03:13.424843-03:00 (in 599.998978 seconds)
+2024-04-29 16:53:13 INFO     [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.236.3:5001
+2024-04-29 16:53:13 INFO     [33mPress CTRL+C to quit[0m
+2024-04-29 17:01:46 INFO     127.0.0.1 - - [29/Apr/2024 17:01:46] "[33mGET / HTTP/1.1[0m" 404 -
+2024-04-29 17:01:47 INFO     127.0.0.1 - - [29/Apr/2024 17:01:47] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2024-04-29 17:04:08 DEBUG    /etc/timezone found, contents:
+ America/Sao_Paulo
+
+2024-04-29 17:04:08 DEBUG    /etc/localtime found
+2024-04-29 17:04:08 DEBUG    2 found:
+ {'/etc/timezone': 'America/Sao_Paulo', '/etc/localtime is a symlink to': 'America/Sao_Paulo'}
+2024-04-29 17:04:08 INFO     Scheduler started
+2024-04-29 17:04:08 DEBUG    Looking for jobs to run
+2024-04-29 17:04:08 DEBUG    No jobs; waiting until a job is added
+2024-04-29 17:04:08 INFO     Added job "generate_base_scheduled.<locals>.init" to job store "default"
+2024-04-29 17:04:08 INFO     Start base generator.
+2024-04-29 17:04:08 DEBUG    Looking for jobs to run
+2024-04-29 17:04:08 INFO     Starting base generation
+2024-04-29 17:04:08 DEBUG    Next wakeup is due at 2024-04-30 04:00:00-03:00 (in 39351.934952 seconds)
+2024-04-29 17:04:08 INFO     Base already destroyed!
+2024-04-29 17:04:21 INFO     Base already destroyed!
+2024-04-29 17:04:36 INFO     Base already destroyed!
+2024-04-29 17:04:36 INFO     Base atendimento_odontologico already destroyed!
+2024-04-29 17:04:44 INFO     Finish base generator. time spent: 0:00:36.748899
+2024-04-29 17:04:44 INFO     Start cache generator.
+2024-04-29 17:04:45 DEBUG    Using selector: EpollSelector
+2024-04-29 17:04:45 INFO     Server not running yet.
+2024-04-29 17:04:45 INFO     Added job "generate_base_scheduled.<locals>.cache_init" to job store "default"
+2024-04-29 17:04:45 DEBUG    Looking for jobs to run
+2024-04-29 17:04:45 DEBUG    Next wakeup is due at 2024-04-29 17:14:45.748847-03:00 (in 599.998669 seconds)
+2024-04-29 17:04:45 INFO     [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.236.3:5001
+2024-04-29 17:04:45 INFO     [33mPress CTRL+C to quit[0m
+2024-04-29 17:04:55 INFO     127.0.0.1 - - [29/Apr/2024 17:04:55] "[33mGET / HTTP/1.1[0m" 404 -
+2024-04-29 17:04:56 INFO     127.0.0.1 - - [29/Apr/2024 17:04:56] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2024-04-29 17:04:58 INFO     127.0.0.1 - - [29/Apr/2024 17:04:58] "[33mGET / HTTP/1.1[0m" 404 -
+2024-04-29 17:06:24 INFO     127.0.0.1 - - [29/Apr/2024 17:06:24] "[33mGET / HTTP/1.1[0m" 404 -
+2024-04-29 17:06:27 INFO     127.0.0.1 - - [29/Apr/2024 17:06:27] "[33mGET / HTTP/1.1[0m" 404 -
+2024-04-29 17:06:38 INFO     127.0.0.1 - - [29/Apr/2024 17:06:38] "[33mGET / HTTP/1.1[0m" 404 -

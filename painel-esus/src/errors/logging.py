@@ -4,5 +4,5 @@ logging.basicConfig(
     level=logging.DEBUG,
     datefmt='%Y-%m-%d %H:%M:%S',
     force=True,
-    filename="painelesus.log"
+    # filename="painelesus.log"
 )

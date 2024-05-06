@@ -1,7 +1,8 @@
-# pylint: disable=C0301
+# pylint: disable=C0301, W0611
 import os
 
 import blueprint_decr
+from dotenv import dotenv_values
 from flask import Flask
 from flask import send_from_directory
 from flask_cors import CORS
@@ -22,7 +23,6 @@ from src.main.routes.units_route import units_bp
 from src.main.routes.units_route import UnitsPath
 from src.main.server.cache import cache
 from src.main.server.decorators.token_required import token_required
-from dotenv import dotenv_values
 
 # from src.main.server.decorators.check_access import check_access
 
@@ -40,7 +40,7 @@ elif config["ENV"] == "windows":
 else:
     static_folder = os.path.join(
         os.getcwd(), '..', 'paineis-v2-front', 'build')
-    static_folder = os.path.relpath(static_folder)
+    static_folder = os.path.abspath(static_folder)
 print('STATIC FOLDER: ', static_folder)
 
 app = Flask(

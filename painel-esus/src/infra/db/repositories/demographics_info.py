@@ -1,6 +1,7 @@
 # pylint: disable=E0401,W0012
 # pylint: disable=E0501
 from datetime import date
+from datetime import datetime
 from typing import Dict
 
 import pandas as pd
@@ -17,7 +18,7 @@ from src.infra.db.repositories.enuns.individual_cares import IndividualCare
 from src.infra.db.settings.connection import DBConnectionHandler
 
 from .sqls import ATENDIMENTO_INDIVIDUAL_CID_CIAPS
-from .sqls import CIDADAO_PEC_VIVO
+from .sqls import LISTAGEM_FCI
 from .sqls import MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL
 
 
@@ -38,10 +39,7 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
     def parse_date(self, data_frame: DataFrame) -> DataFrame:
         data_frame['idade'] = data_frame['co_dim_tempo_nascimento'].apply(
             lambda x: self.__calculate_age(
-                date(int(str(x)[:4]),
-                     int(str(x)[4:6]),
-                     int(str(x)[6:8])
-                     )
+                datetime.strptime(str(x), '%Y-%m-%d').date()
             )
         )
         return data_frame
@@ -164,18 +162,21 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         urbano_value = IndividualCare.get_('urbano')
 
         masculino_rural_size = masculino[masculino['co_dim_tipo_localizacao'] == rural_value]
+
         if masculino_rural_size.shape[0] > 0:
             masculino_rural_size = masculino_rural_size['qtd'].iloc[0]
         else:
             masculino_rural_size = 0
 
         feminino_rural_size = feminino[feminino['co_dim_tipo_localizacao'] == rural_value]
+
         if feminino_rural_size.shape[0] > 0:
             feminino_rural_size = feminino_rural_size['qtd'].iloc[0]
         else:
             feminino_rural_size = 0
 
         masculino_urbano_size = masculino[masculino['co_dim_tipo_localizacao'] == urbano_value]
+
         if masculino_urbano_size.shape[0] > 0:
             masculino_urbano_size = masculino_urbano_size['qtd'].iloc[0]
         else:
@@ -183,13 +184,14 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
 
         feminino_urbano_size = feminino[feminino['co_dim_tipo_localizacao']
                                         == urbano_value]
+
         if feminino_urbano_size.shape[0] > 0:
             feminino_urbano_size = feminino_urbano_size['qtd'].iloc[0]
         else:
             feminino_urbano_size = 0
 
         response = {
-            'total': int(data_frame.shape[0]),
+            'total': data_frame.shape[0],
             'ibgePopulation': env.get('POPULATION', '-'),
             'ageGroups': age_groups,
             'locationArea': {
@@ -201,10 +203,14 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
                     masculino_urbano_size +
                     feminino_urbano_size
                 ),
+                "nao_definido": int(
+                    data_frame[data_frame['co_dim_tipo_localizacao'].isnull()
+                               ].shape[0]
+                )
             },
             'gender': {
-                'feminino': int(feminino['qtd'].sum()),
-                'masculino': int(masculino['qtd'].sum())
+                'feminino': int(data_frame[data_frame['co_dim_sexo'] == 2].shape[0]),
+                'masculino': int(data_frame[data_frame['co_dim_sexo'] == 1].shape[0]),
             },
             'indicators': self.indicators
         }
@@ -266,12 +272,14 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         with DBConnectionHandler() as db_con:
             engine = db_con.get_engine()
 
-            cidadao_pec = pd.read_sql_query(CIDADAO_PEC_VIVO, con=engine)
+            # cidadao_pec = pd.read_sql_query(CIDADAO_PEC_VIVO, con=engine)
+            cidadao_pec = pd.read_sql_query(LISTAGEM_FCI, con=engine)
 
             max_date = pd.read_sql_query(
                 MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL, con=engine)
             max_date = str(max_date['max'].iloc[0])
             sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS
+            # sql = LISTAGEM_FCI
             if cnes:
                 sql += f"""
                     where

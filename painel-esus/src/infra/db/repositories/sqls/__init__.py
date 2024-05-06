@@ -8,6 +8,7 @@ from .atendimento_individual_procedimentos_nascimento import \
 from .cidadao_pec_vivo import CIDADAO_PEC_VIVO
 from .city_information import CITY_INFORMATION
 from .lista_pesos_alturas import LISTA_PESOS_ALTURAS
+from .listagem_fci import LISTAGEM_FCI
 from .max_dt_atendimento_atendimento_individual import \
     MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL
 from .units_list import UNITS_LIST

@@ -93,6 +93,7 @@ interface IPainel {
     locationArea: {
         rural: number;
         urbano: number;
+        nao_definido:number;
     },
     total: number;
 }
@@ -139,7 +140,6 @@ export function Painel() {
         let path = id ? `get-demographic-info/${id}` : 'get-demographic-info';
         const response = await Api.get<ResponseData>(path);
         const data = response.data.data
-        console.log('cityInformation', cityInformation)
         setDadosPainel(data);
         setLoading(false);
         return data;
@@ -294,6 +294,16 @@ export function Painel() {
                                         </div>
                                         <span>{formataNumero(dadosPainel?.locationArea.rural)}</span>
                                     </div>
+
+                                </div>
+                                <div style={{
+                                    position: 'relative',
+                                    top: '-27px',
+                                    fontSize: '12px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'center'}}>
+                                    * Não definido {formataNumero(dadosPainel?.locationArea.nao_definido)}
                                 </div>
                             </div>
 
@@ -330,7 +340,6 @@ export function Painel() {
                                         <img src={feminino} className="img-fluid" alt="Feminino" />
                                     </div>
                                 </div>
-
                                 <Piramide data={dadosPainel.ageGroups} />
                             </div>
 
