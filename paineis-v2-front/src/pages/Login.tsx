@@ -27,9 +27,7 @@ interface CityResponse {
   municipio: string;
   uf: string;
 }
-interface CityInformationResponse {
-  data: CityResponse;
-}
+type CityInformationResponse = CityResponse;
 export function Login() {
   const auth = useAuth();
   let navigate = useNavigate();
@@ -56,9 +54,9 @@ export function Login() {
     const response = await Api.get<CityInformationResponse>(
       "city-informations"
     );
-    const data: CityResponse = response.data.data;
-    // setCity( `${data.municipio} - ${data.uf}` )
-    // infoContext.setCityInformation(data);
+    const data: CityResponse = response.data;
+    setCity(`${data.municipio} - ${data.uf}`);
+    infoContext.setCityInformation(data);
     return data;
   });
 
@@ -117,9 +115,9 @@ export function Login() {
                 <div>
                   <div className="subtitle my-4">O QUE É:</div>
                   <p>
-                    O e-SUS é um software nativo para o Windows criado para
-                    ajudar gestores e profissionais da saúde na tomada de
-                    decisão e gestão do cuidado em saúde.
+                    O Painel Saúde Fiocruz é um software nativo para o Windows
+                    criado para ajudar gestores e profissionais da saúde na
+                    tomada de decisão e gestão do cuidado em saúde.
                   </p>
                 </div>
 
@@ -128,11 +126,11 @@ export function Login() {
                 <div>
                   <div className="subtitle my-4">PARA QUÊ:</div>
                   <p>
-                    O e-SUS conecta o e-SUS APS e a base local de dados. Com
-                    isso, você tem acesso à informação de forma estruturada e a
-                    relatórios pré-configurados. Os relatórios são validados por
-                    especialistas em saúde pública e são atribuições das equipes
-                    de APS.
+                    O Painel Saúde Fiocruz conecta o e-SUS APS e a base local de
+                    dados. Com isso, você tem acesso à informação de forma
+                    estruturada e a relatórios pré-configurados. Os relatórios
+                    são validados por especialistas em saúde pública e são
+                    atribuições das equipes de APS.
                   </p>
                 </div>
 

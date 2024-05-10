@@ -19,6 +19,7 @@ import mulher from "../assets/images/mulher.svg";
 import diabetes from "../assets/images/diabetes.svg";
 import hipertensao from "../assets/images/hipertensao.svg";
 import tosse from "../assets/images/tosse.svg";
+import thooth from "../assets/images/thooth.png";
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
@@ -29,6 +30,8 @@ import { Api } from "../services/api";
 import { Api as Api2 } from "../services/api2";
 import { isTemplateExpression } from "typescript";
 import { Button } from "bold-ui";
+
+import { useInfo } from "../context/infoProvider/useInfo";
 
 type PainelParams = {
   id: string;
@@ -115,11 +118,15 @@ type TResponse = {
   ds_filtro_cids: number;
   local: string;
 };
-
+type OralHealthResponse = {
+  total: number;
+  ds_tipo_localizacao: string;
+};
 export function Painel() {
   let navigate = useNavigate();
   const user = getUserLocalStorage();
   const { id } = useParams<PainelParams>();
+  const { cityInformation, city } = useInfo();
 
   const [dadosPainel, setDadosPainel] = useState<IPainel>();
   const [loading, setLoading] = useState(true);
@@ -178,6 +185,40 @@ export function Painel() {
     });
     setInfecoesQtd(result);
     return data;
+  });
+  const {
+    data: dataOralHealth,
+    isLoading: isLoadingOralHealth,
+    error: errorOralHealth,
+  } = useQuery(["oral-health/get-all-cares-by-place", id], async () => {
+    const url = "oral-health/get-all-cares-by-place";
+    const path = id ? `${url}/${id}` : url;
+    const response = await Api.get<OralHealthResponse[]>(path);
+    const data = response.data;
+    const resp = {
+      rural: {
+        total: 0,
+        ds_tipo_localizacao: "Rural",
+      },
+      urbano: {
+        total: 0,
+        ds_tipo_localizacao: "Urbana",
+      },
+    };
+    const rural = data.find(
+      (i) => i.ds_tipo_localizacao.toLowerCase() === "rural"
+    );
+    if (rural !== undefined) {
+      resp["rural"] = rural;
+    }
+    const urbano = data.find(
+      (i) => i.ds_tipo_localizacao.toLowerCase() === "urbana"
+    );
+    if (urbano !== undefined) {
+      resp["urbano"] = urbano;
+    }
+    console.log(resp);
+    return resp;
   });
   //get nome ubs
   const {
@@ -246,6 +287,13 @@ export function Painel() {
       navigate("/sindromes-agudas");
     }
   }
+  function handleToOralHealth() {
+    if (id !== undefined) {
+      navigate(`/saude-bucal/${id}`);
+    } else {
+      navigate("/saude-bucal");
+    }
+  }
   return (
     <div id="page-painel">
       <Header />
@@ -263,7 +311,7 @@ export function Painel() {
               ? !isLoadingUbs
                 ? nomeUbs
                 : "Carregando..."
-              : user.municipio + " - " + user.uf}
+              : cityInformation?.municipio + " - " + cityInformation?.uf}
           </h2>
 
           <div className="container container-cards-principal">
@@ -409,7 +457,7 @@ export function Painel() {
                                     <Condicao data={dadosPainel?.indicators.gestantes} />
                                 </div>
                             </div> */}
-              <div
+              {/*<div
                 className="card-condicao p-2"
                 onClick={handleToSindromesAgudas}
               >
@@ -430,7 +478,32 @@ export function Painel() {
                     }}
                   />
                 </div>
-              </div>
+              </div>*/}
+              {!isLoadingOralHealth && dataOralHealth && (
+                <div className="card-condicao p-2" onClick={handleToOralHealth}>
+                  <span className="nome-condicao">Saúde Bucal</span>
+                  <h4>
+                    {somaIndicador({
+                      rural: dataOralHealth["rural"].total,
+                      urbano: dataOralHealth["urbano"].total,
+                    })}
+                  </h4>
+
+                  <div className="d-flex align-items-center">
+                    <img
+                      src={thooth}
+                      alt="Saúde Bucal"
+                      className="mx-2 thooth"
+                    />
+                    <Condicao
+                      data={{
+                        rural: dataOralHealth["rural"].total,
+                        urbano: dataOralHealth["urbano"].total,
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="d-flex my-5 justify-content-center">

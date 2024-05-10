@@ -20,6 +20,7 @@ import { getNomeUbs } from "../utils";
 import { useState } from "react";
 import { BarSexo } from "../charts/BarSexo";
 import { Button } from "bold-ui";
+import { useInfo } from "../context/infoProvider/useInfo";
 
 type TModal = {
   loaded: number;
@@ -52,6 +53,7 @@ export function Diabetes() {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<TModal>({ loaded: 0 });
+  const { cityInformation, city } = useInfo();
 
   let paramRoute = id ? id : "all";
 
@@ -258,8 +260,7 @@ export function Diabetes() {
             ? !isLoadingUbs
               ? nomeUbs
               : "Carregando..."
-            : user.municipio + " - " + user.uf}{" "}
-          / Painel Diabetes
+            : cityInformation?.municipio + " - " + cityInformation?.uf}
         </h2>
 
         {showModal && <Modal data={data} setShowModal={setShowModal} />}

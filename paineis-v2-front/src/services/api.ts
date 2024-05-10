@@ -1,10 +1,18 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import { getUserLocalStorage } from "../context/AuthProvider/util";
 
+const URL = window.location.host;
+const PROTOCOL = window.location.protocol;
+const API_URL =
+  process.env.REACT_APP_NODE_ENV === "production"
+    ? `${PROTOCOL}//${URL}/v1/`
+    : "http://localhost:5001/v1/";
+
 export const Api = axios.create({
   // baseURL: "https://backend-ouropreto.painelsaude.info/v1/"
-  // baseURL: "http://demo.painelsaude.info:5001/v1/"
-  baseURL: "http://localhost:5001/v1/",
+  // baseURL: "http://localhost:5001/v1/"
+  //   baseURL: API_URL,
+  baseURL: "https://demo2.painelsaude.info/v1/",
 });
 
 // Request interceptor
