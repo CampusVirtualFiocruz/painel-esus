@@ -35,13 +35,6 @@ export function Footer() {
           style={{ maxWidth: "170px" }}
         />
       </div>
-      <div className="version">
-        <div>Versão {process.env.REACT_APP_VERSION}</div>
-        <br />
-        <div>
-          <small>Última atualização: {process.env.REACT_APP_LAST_UPDATE}</small>
-        </div>
-      </div>
     </footer>
   );
 }

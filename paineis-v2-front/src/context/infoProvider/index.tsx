@@ -11,7 +11,9 @@ interface CityResponse {
   municipio: string;
   uf: string;
 }
-type CityInformationResponse = CityResponse;
+interface CityInformationResponse {
+  data: CityResponse;
+}
 
 export const InfoProvider = ({ children }: IInfoProvider) => {
   const [cityInformation, setCityInformation] =
@@ -22,7 +24,7 @@ export const InfoProvider = ({ children }: IInfoProvider) => {
     const response = await Api.get<CityInformationResponse>(
       "city-informations"
     );
-    const data: CityResponse = response.data;
+    const data: CityResponse = response.data.data;
     setCity(`${data.municipio} - ${data.uf}`);
     setCityInformation(data);
   });

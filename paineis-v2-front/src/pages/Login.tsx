@@ -27,7 +27,9 @@ interface CityResponse {
   municipio: string;
   uf: string;
 }
-type CityInformationResponse = CityResponse;
+interface CityInformationResponse {
+  data: CityResponse;
+}
 export function Login() {
   const auth = useAuth();
   let navigate = useNavigate();
@@ -54,9 +56,9 @@ export function Login() {
     const response = await Api.get<CityInformationResponse>(
       "city-informations"
     );
-    const data: CityResponse = response.data;
-    setCity(`${data.municipio} - ${data.uf}`);
-    infoContext.setCityInformation(data);
+    const data: CityResponse = response.data.data;
+    // setCity( `${data.municipio} - ${data.uf}` )
+    // infoContext.setCityInformation(data);
     return data;
   });
 
@@ -101,7 +103,7 @@ export function Login() {
                 title="Painel e-SUS APS"
               />
               <div>
-                <h1>Painel e-SUS APS</h1>
+                <h1>Painel e-SUS</h1>
                 <h2 className="text-end">{city}</h2>
               </div>
             </div>
@@ -115,9 +117,9 @@ export function Login() {
                 <div>
                   <div className="subtitle my-4">O QUE É:</div>
                   <p>
-                    O Painel e-SUS APS é um software livre nativo para o Windows
-                    e Linux, criado para ajudar gestores e profissionais da
-                    saúde na tomada de decisão e gestão do cuidado em saúde.
+                    O e-SUS é um software nativo para o Windows criado para
+                    ajudar gestores e profissionais da saúde na tomada de
+                    decisão e gestão do cuidado em saúde.
                   </p>
                 </div>
 
@@ -126,21 +128,15 @@ export function Login() {
                 <div>
                   <div className="subtitle my-4">PARA QUÊ:</div>
                   <p>
-                    O Painel se conecta ao banco local do e-SUS APS. Com isso,
-                    você tem acesso à informação de forma estruturada e a
-                    relatórios pré-configurados de acordo com o seu perfil:
-                    gestor, profissional de saúde ou de tecnologia. Os
-                    relatórios são validados por especialistas em saúde pública
-                    e visam apoiar a qualificação das ações das equipes de Saúde
-                    da Família e Atenção Primária.
+                    O e-SUS conecta o e-SUS APS e a base local de dados. Com
+                    isso, você tem acesso à informação de forma estruturada e a
+                    relatórios pré-configurados. Os relatórios são validados por
+                    especialistas em saúde pública e são atribuições das equipes
+                    de APS.
                   </p>
                 </div>
 
                 <div className="mt-5">
-                  <p>
-                    * Susópolis é uma cidade fictícia. Qualquer semelhança com a
-                    realidade é mera coincidência.
-                  </p>
                   <p>
                     * Esta é uma ferramenta gratuita e essencial para a tomada
                     de decisão em Atenção e Vigilância à Saúde.

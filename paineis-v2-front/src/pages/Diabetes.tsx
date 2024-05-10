@@ -20,7 +20,6 @@ import { getNomeUbs } from "../utils";
 import { useState } from "react";
 import { BarSexo } from "../charts/BarSexo";
 import { Button } from "bold-ui";
-import { useInfo } from "../context/infoProvider/useInfo";
 
 type TModal = {
   loaded: number;
@@ -53,7 +52,6 @@ export function Diabetes() {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<TModal>({ loaded: 0 });
-  const { cityInformation, city } = useInfo();
 
   let paramRoute = id ? id : "all";
 
@@ -213,13 +211,15 @@ export function Diabetes() {
   };
 
   const {
-    data: dataProfessionals,
-    isLoading: isLoadingProfessionals,
-    error: errorProfessionals,
+    data: dataProffessionals,
+    isLoading: isLoadingProffessionals,
+    error: errorProffessionals,
   } = useQuery(
-    ["diabetes-professionals", paramRoute],
+    ["diabetes-proffessionals", paramRoute],
     async () => {
-      let path = id ? `diabetes/professionals/${id}` : "diabetes/professionals";
+      let path = id
+        ? `diabetes/proffessionals/${id}`
+        : "diabetes/proffessionals";
       const response = await Api.get(path);
       const data = response.data;
 
@@ -258,7 +258,8 @@ export function Diabetes() {
             ? !isLoadingUbs
               ? nomeUbs
               : "Carregando..."
-            : cityInformation?.municipio + " - " + cityInformation?.uf}
+            : user.municipio + " - " + user.uf}{" "}
+          / Painel Diabetes
         </h2>
 
         {showModal && <Modal data={data} setShowModal={setShowModal} />}
@@ -461,18 +462,18 @@ export function Diabetes() {
                   Extratificação de atendimentos por profissional
                 </h4>
                 <div className="w-100">
-                  {isLoadingProfessionals ? (
+                  {isLoadingProffessionals ? (
                     <div className="d-flex align-items-center justify-content-center">
                       <Spinner size="sm" type="grow" className="me-2" />
                       Carregando...
                     </div>
-                  ) : errorProfessionals ? (
+                  ) : errorProffessionals ? (
                     <div className="d-flex align-items-center justify-content-center">
                       <Alert color="danger">Erro ao carregar dados.</Alert>
                     </div>
                   ) : (
                     <>
-                      {dataProfessionals?.map((item: any, i: number) => (
+                      {dataProffessionals?.map((item: any, i: number) => (
                         <div key={i} className="d-flex align-items-center mt-2">
                           <div className="container-extratificacao-atendimentos">
                             <span className="profissao-nome">
@@ -495,19 +496,17 @@ export function Diabetes() {
               </div>
             </div>
           </div>
-          {/*!id && (
-            <div className="row my-5 text-center">
-              <div className="col-12">
-                <button
-                  type="button"
-                  onClick={() => handleToDiabeticosList()}
-                  className="btn btn-secondary my-2"
-                >
-                  Ver todos pacientes com Diabetes
-                </button>
-              </div>
+          <div className="row my-5 text-center">
+            <div className="col-12">
+              <button
+                type="button"
+                onClick={() => handleToDiabeticosList()}
+                className="btn btn-secondary my-2"
+              >
+                Ver todos pacientes com Diabetes
+              </button>
             </div>
-          )*/}
+          </div>
         </div>
 
         <div className="d-flex flex-column align-items-center mt-5">
