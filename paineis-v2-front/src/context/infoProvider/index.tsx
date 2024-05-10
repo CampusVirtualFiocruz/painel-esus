@@ -24,7 +24,7 @@ export const InfoProvider = ({ children }: IInfoProvider) => {
     const response = await Api.get<CityInformationResponse>(
       "city-informations"
     );
-    const data: CityResponse = response.data.data;
+    const data: CityResponse = response.data;
     setCity(`${data.municipio} - ${data.uf}`);
     setCityInformation(data);
   });
