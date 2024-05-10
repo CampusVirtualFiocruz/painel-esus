@@ -11,9 +11,7 @@ interface CityResponse {
   municipio: string;
   uf: string;
 }
-interface CityInformationResponse {
-  data: CityResponse;
-}
+type CityInformationResponse = CityResponse;
 
 export const InfoProvider = ({ children }: IInfoProvider) => {
   const [cityInformation, setCityInformation] =

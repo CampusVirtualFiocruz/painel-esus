@@ -10,9 +10,9 @@ const API_URL =
 
 export const Api = axios.create({
   // baseURL: "https://backend-ouropreto.painelsaude.info/v1/"
-  // baseURL: "http://localhost:5001/v1/"
+  baseURL: "http://localhost:5001/v1/",
   //   baseURL: API_URL,
-  baseURL: "https://demo2.painelsaude.info/v1/",
+  // baseURL: "https://demo2.painelsaude.info/v1/",
 });
 
 // Request interceptor

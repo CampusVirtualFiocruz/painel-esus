@@ -94,6 +94,7 @@ interface IPainel {
   locationArea: {
     rural: number;
     urbano: number;
+    nao_definido: number;
   };
   total: number;
 }
@@ -354,6 +355,12 @@ export function Painel() {
                       {formataNumero(dadosPainel?.locationArea.rural)}
                     </span>
                   </div>
+                </div>
+                <div className="container-dados-nao-definidos ">
+                  <p>
+                    *Não definido:{" "}
+                    {formataNumero(dadosPainel?.locationArea.nao_definido)}
+                  </p>
                 </div>
               </div>
 
