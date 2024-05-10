@@ -20,7 +20,7 @@ import { getNomeUbs } from "../utils";
 import { useState } from "react";
 import { BarSexo } from "../charts/BarSexo";
 import { Button } from "bold-ui";
-
+import { useInfo } from "../context/infoProvider/useInfo";
 type TModal = {
   loaded: number;
   tipo?: string;
@@ -52,6 +52,7 @@ export function Hipertensao() {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<TModal>({ loaded: 0 });
+  const { cityInformation, city } = useInfo();
 
   let paramRoute = id ? id : "all";
 
@@ -215,15 +216,15 @@ export function Hipertensao() {
   );
 
   const {
-    data: dataProffessionals,
-    isLoading: isLoadingProffessionals,
-    error: errorProffessionals,
+    data: dataProfessionals,
+    isLoading: isLoadingProfessionals,
+    error: errorProfessionals,
   } = useQuery(
-    ["arterial-hypertension-proffessionals", paramRoute],
+    ["arterial-hypertension-professionals", paramRoute],
     async () => {
       let path = id
-        ? `arterial-hypertension/proffessionals/${id}`
-        : "arterial-hypertension/proffessionals";
+        ? `arterial-hypertension/professionals/${id}`
+        : "arterial-hypertension/professionals";
       const response = await Api.get(path);
       const data = response.data;
 
@@ -268,8 +269,7 @@ export function Hipertensao() {
             ? !isLoadingUbs
               ? nomeUbs
               : "Carregando..."
-            : user.municipio + " - " + user.uf}{" "}
-          / Painel Hipertensão
+            : cityInformation?.municipio + " - " + cityInformation?.uf}
         </h2>
 
         {showModal && <Modal data={data} setShowModal={setShowModal} />}
@@ -474,18 +474,18 @@ export function Hipertensao() {
                   Extratificação de atendimentos por profissional
                 </h4>
                 <div className="w-100">
-                  {isLoadingProffessionals ? (
+                  {isLoadingProfessionals ? (
                     <div className="d-flex align-items-center justify-content-center">
                       <Spinner size="sm" type="grow" className="me-2" />
                       Carregando...
                     </div>
-                  ) : errorProffessionals ? (
+                  ) : errorProfessionals ? (
                     <div className="d-flex align-items-center justify-content-center">
                       <Alert color="danger">Erro ao carregar dados.</Alert>
                     </div>
                   ) : (
                     <>
-                      {dataProffessionals?.map((item: any, i: number) => (
+                      {dataProfessionals?.map((item: any, i: number) => (
                         <div key={i} className="d-flex align-items-center mt-2">
                           <div className="container-extratificacao-atendimentos">
                             <span className="profissao-nome">
@@ -508,7 +508,7 @@ export function Hipertensao() {
               </div>
             </div>
           </div>
-          <div className="row my-5 text-center">
+          {/* id && (<div className="row my-5 text-center">
             <div className="col-12">
               <button
                 type="button"
@@ -518,7 +518,7 @@ export function Hipertensao() {
                 Ver todos Hipertensos
               </button>
             </div>
-          </div>
+          </div>)*/}
         </div>
 
         <div className="d-flex flex-column align-items-center mt-5">
