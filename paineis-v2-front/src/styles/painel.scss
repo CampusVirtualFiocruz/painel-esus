@@ -72,7 +72,13 @@
           font-weight: 500;
         }
       }
-
+      .container-dados-nao-definidos {
+        position: relative;
+        top: -27px;
+        font-size: 12px;
+        display: flex;
+        justify-content: center;
+      }
       .container-card-alt {
         min-height: 140px;
         background-color: #ffffff;
