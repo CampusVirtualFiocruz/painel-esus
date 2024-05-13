@@ -1,124 +1,122 @@
-import ReactECharts from 'echarts-for-react'
-import './style.scss';
+import ReactECharts from "echarts-for-react";
+import "./style.scss";
 
 type Faixa = {
-    NaN?: number;
-    Rural?: string;
-    Urbano?: number;
-}
+  NaN?: number;
+  Rural?: string;
+  Urbano?: number;
+};
 
 type BarData = {
-    data: any;
-    titulo: string;
-}
+  data: any;
+  titulo: string;
+};
 
 export function Bar({ data, titulo }: BarData) {
-    let faixaEtaria = Object.keys(data).map(function (key) {
-        return String(key);
-    });
+  let faixaEtaria = Object.keys(data).map(function (key) {
+    return String(key);
+  });
 
-    let arrData = Object.entries(data).map(function (obj: any) {
-        let objFaixa = obj[1];
+  let arrData = Object.entries(data).map(function (obj: any) {
+    let objFaixa = obj[1];
 
-        if (!objFaixa.hasOwnProperty('Rural') || !objFaixa.hasOwnProperty('Urbano')) {
-            return {
-                'NaN': objFaixa.NaN,
-                'Rural': 0,
-                'Urbano': 0
-            }
-        }
+    if (
+      !objFaixa.hasOwnProperty("Rural") ||
+      !objFaixa.hasOwnProperty("Urbano")
+    ) {
+      return {
+        NaN: objFaixa.NaN,
+        Rural: 0,
+        Urbano: 0,
+      };
+    }
 
-        return objFaixa;
-    });
-    let dataRural = arrData.map((obj: Faixa) => {
-        return obj.Rural;
+    return objFaixa;
+  });
+  let dataRural = arrData.map((obj: Faixa) => {
+    return obj.Rural;
+  });
+  let dataUrbano = arrData.map((obj: Faixa) => {
+    return obj.Urbano;
+  });
 
-    });
-    let dataUrbano = arrData.map((obj: Faixa) => {
-        return obj.Urbano;
-    });
-
-    const options = {
-        legend: {
-            bottom: "0%"
+  const options = {
+    legend: {
+      bottom: "0%",
+    },
+    xAxis: {
+      data: faixaEtaria,
+      axisLine: { onZero: true },
+      splitLine: { show: false },
+      splitArea: { show: false },
+      axisTick: {
+        show: false,
+      },
+      axisLabel: {
+        show: true,
+        fontSize: 16,
+        margin: 10,
+        rotate: 90,
+      },
+    },
+    yAxis: {
+      axisLabel: {
+        show: true,
+        fontSize: 16,
+        margin: 6,
+      },
+      splitLine: {
+        show: false,
+      },
+      axisLine: {
+        show: true,
+      },
+      axisTick: {
+        show: true,
+      },
+    },
+    grid: {
+      width: "auto",
+      left: 50,
+      bottom: 150,
+    },
+    series: [
+      {
+        name: "Área Rural",
+        type: "bar",
+        stack: "one",
+        barWidth: "50%",
+        itemStyle: {
+          color: "#84aaff",
         },
-        xAxis: {
-            data: faixaEtaria,
-            axisLine: { onZero: true },
-            splitLine: { show: false },
-            splitArea: { show: false },
-            axisTick: {
-                show: false
-            },
-            axisLabel: {
-                show: true,
-                fontSize: 16,
-                margin: 10,
-                rotate: 90
-            }
+        data: dataRural,
+      },
+      {
+        name: "Área Urbana",
+        type: "bar",
+        stack: "one",
+        barWidth: "50%",
+        itemStyle: {
+          color: "#0069d0",
         },
-        yAxis: {
-            axisLabel: {
-                show: true,
-                fontSize: 16,
-                margin: 6
-            },
-            splitLine: {
-                show: false
-            },
-            axisLine: {
-                show: true,
-            },
-            axisTick: {
-                show: true
-            }
-        },
-        grid: {
-            width: "auto",
-            left: 50,
-            bottom: 150
-        },
-        series: [
-            {
-                name: 'Área Rural',
-                type: 'bar',
-                stack: 'one',
-                barWidth: '50%',
-                itemStyle: {
-                    color: '#78b4d0',
-                    shadowBlur: 4,
-                    shadowColor: 'rgba(0,0,0,0.1)'
-                },
-                data: dataRural
-            },
-            {
-                name: 'Área Urbana',
-                type: 'bar',
-                stack: 'one',
-                barWidth: '50%',
-                itemStyle: {
-                    color: '#2775b0',
-                    shadowBlur: 5,
-                    shadowColor: 'rgba(0,0,0,0.1)'
-                },
-                data: dataUrbano
-            }
-        ]
-    };
+        data: dataUrbano,
+      },
+    ],
+  };
 
-    return (
-        <div className='bar'>
-            <div className="vertical ms-1 me-4">{titulo}</div>
+  return (
+    <div className="bar">
+      <div className="vertical ms-1 me-4">{titulo}</div>
 
-            <ReactECharts
-                option={options}
-                style={{
-                    width: "100%",
-                    minWidth: "370px",
-                    height: "484px"
-                }}
-                opts={{ renderer: 'svg' }}
-            />
-        </div>
-    )
+      <ReactECharts
+        option={options}
+        style={{
+          width: "100%",
+          minWidth: "370px",
+          height: "484px",
+        }}
+        opts={{ renderer: "svg" }}
+      />
+    </div>
+  );
 }

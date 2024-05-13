@@ -246,7 +246,7 @@ export function SindromesAgudas() {
                           { value: febreExantematicaState },
                           { value: totalAtendimentosState },
                         ],
-                        "#2775b0"
+                        "#0069d0"
                       )}
                     />
                   </div>

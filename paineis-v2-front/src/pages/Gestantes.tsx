@@ -529,13 +529,11 @@ export function Gestantes() {
                   )}
                 </div>
 
-                <button
-                  type="button"
-                  className="btn btn-primary mt-5"
-                  onClick={() => handleClick(4)}
-                >
-                  Boas práticas na assistência do Pré-Natal
-                </button>
+                <div className="mt-5">
+                  <Button kind="primary" onClick={() => handleClick(4)}>
+                    Boas práticas na assistência do Pré-Natal
+                  </Button>
+                </div>
               </div>
 
               <div className="painel-secundario">
@@ -580,15 +578,11 @@ export function Gestantes() {
           </div>
         </div>
 
-        <div className="d-flex flex-column align-items-center mt-5">
+        <div className="d-flex flex-column align-items-center mt-5 gap-3">
           {id && (
-            <button
-              type="button"
-              onClick={handleToPainelUbs}
-              className="btn btn-light my-2"
-            >
+            <Button onClick={handleToPainelUbs}>
               Voltar para o Painel da UBS
-            </button>
+            </Button>
           )}
 
           <Button onClick={handleToPainelMunicipio}>

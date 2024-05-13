@@ -110,13 +110,13 @@ export const ageGroupParser = (data: any) => {
       masculinoType.areaUrbana[newKey] = {
         value: masculino[item]["Urbano"],
         itemStyle: {
-          color: "#2775b0",
+          color: "#0069d0",
         },
       };
       // @ts-ignore: Unreachable code error
       masculinoType.areaRural[newKey] = {
         value: masculino[item]["Rural"],
-        itemStyle: { color: "#78b4d0" },
+        itemStyle: { color: "#84aaff" },
       };
     });
   }
@@ -129,13 +129,13 @@ export const ageGroupParser = (data: any) => {
       femininoType.areaUrbana[newKey] = {
         value: feminino[item]["Urbano"],
         itemStyle: {
-          color: "#2775b0",
+          color: "#0069d0",
         },
       };
       // @ts-ignore: Unreachable code error
       femininoType.areaRural[newKey] = {
         value: feminino[item]["Rural"],
-        itemStyle: { color: "#78b4d0" },
+        itemStyle: { color: "#84aaff" },
       };
     });
   }
