@@ -92,12 +92,10 @@ export function SelecionarUbs() {
   return (
     <div id="page-selecionar-ubs">
       <Header />
-
       <div className="contentWrapper">
         <div className="container-titulo mb-3">
           <h2>Visualizar dados:</h2>
         </div>
-
         <div className="container-escolher-ubs d-flex flex-column flex-md-row align-items-center">
           <div className="container-municipio mb-4 mb-md-0">
             <Button
@@ -132,7 +130,6 @@ export function SelecionarUbs() {
           </div>
         </div>
       </div>
-
       <Footer />
     </div>
   );

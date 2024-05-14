@@ -125,13 +125,13 @@
     .box-container-light {
       width: 24px;
       height: 21px;
-      background-color: #2775b0;
+      background-color: #0069d0;
     }
 
     .box-container-dark {
       width: 24px;
       height: 21px;
-      background-color: #78b4d0;
+      background-color: #84aaff;
     }
 
     h3 {
@@ -223,7 +223,7 @@
 
     .btn-primary {
       height: 38px;
-      background-color: #2775b0;
+      background-color: #0069d0;
       border-radius: 5px;
       margin: 0;
       padding: 0 32px;
@@ -237,7 +237,7 @@
     .combo-ubs {
       width: 349px;
       height: 38px;
-      background-color: #2775b0;
+      background-color: #0069d0;
       border: none;
 
       font-size: 1.125rem;
@@ -245,5 +245,9 @@
       color: #343131;
       text-align: left;
     }
+  }
+
+  .thooth {
+    filter: invert(1);
   }
 }

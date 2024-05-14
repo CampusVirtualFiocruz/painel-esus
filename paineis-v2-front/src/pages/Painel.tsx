@@ -3,6 +3,7 @@ import Select, { StylesConfig } from "react-select";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Spinner } from "reactstrap";
+import { Button } from "bold-ui";
 
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -12,26 +13,22 @@ import { formataNumero, getNomeUbs, somaIndicador } from "../utils";
 
 import masculino from "../assets/images/masculino.svg";
 import feminino from "../assets/images/feminino.svg";
-
 import homem from "../assets/images/homem.svg";
 import mulher from "../assets/images/mulher.svg";
-
 import diabetes from "../assets/images/diabetes.svg";
 import hipertensao from "../assets/images/hipertensao.svg";
-import tosse from "../assets/images/tosse.svg";
 import thooth from "../assets/images/thooth.png";
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
 import { Zonas } from "../charts/Zonas";
 
-import "../styles/painel.scss";
 import { Api } from "../services/api";
 import { Api as Api2 } from "../services/api2";
-import { isTemplateExpression } from "typescript";
-import { Button } from "bold-ui";
 
 import { useInfo } from "../context/infoProvider/useInfo";
+
+import "../styles/painel.scss";
 
 type PainelParams = {
   id: string;
@@ -50,10 +47,8 @@ type TypeCondiction = {
   name: string;
 };
 const customControlStyles: CSSProperties = {
-  backgroundColor: "#2775b0",
   width: "320px",
   height: "40px",
-  color: "#000000",
 };
 
 type IsMulti = false;
@@ -67,8 +62,6 @@ const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
   },
   option: (provided, state) => ({
     ...provided,
-    color: state.isSelected ? "white" : "",
-    backgroundColor: state.isSelected ? "#343131" : "",
     padding: 10,
   }),
   clearIndicator: () => ({

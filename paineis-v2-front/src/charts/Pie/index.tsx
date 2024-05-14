@@ -42,18 +42,14 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
         type: "pie",
         radius: "80%",
         center: ["50%", "50%"],
-        animationDuration: 5000,
+        animationDuration: 1000,
         label: {
           show: true,
           position: "center",
           fontSize: "16",
           fontWeight: "bold",
         },
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: "rgba(0, 0, 0, 0.5)",
-        },
+        itemStyle: {},
         labelLine: {
           show: false,
         },
@@ -90,7 +86,7 @@ export function Pie({ data }: any) {
   let dataGraphic = [{ value: comConsulta }, { value: semConsulta }];
 
   const options = {
-    color: ["#78b4d0", "#2775b0"],
+    color: ["#84aaff", "#0069d0"],
     tooltip: {
       trigger: "item",
       formatter: "({d}%)",
@@ -106,18 +102,14 @@ export function Pie({ data }: any) {
         type: "pie",
         radius: "80%",
         center: ["50%", "50%"],
-        animationDuration: 5000,
+        animationDuration: 1000,
         label: {
           show: true,
           position: "center",
           fontSize: "16",
           fontWeight: "bold",
         },
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: "rgba(0, 0, 0, 0.5)",
-        },
+        itemStyle: {},
         labelLine: {
           show: false,
         },

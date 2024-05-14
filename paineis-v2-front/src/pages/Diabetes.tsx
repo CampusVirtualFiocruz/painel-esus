@@ -422,13 +422,11 @@ export function Diabetes() {
                   )}
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => handleClick(5)}
-                  className="btn btn-primary mt-5"
-                >
-                  Boas práticas na assistência a pessoa com diabetes
-                </button>
+                <div className="mt-5">
+                  <Button kind="primary" onClick={() => handleClick(5)}>
+                    Boas práticas na assistência a pessoa com diabetes
+                  </Button>
+                </div>
               </div>
 
               <div className="painel-secundario">
@@ -510,15 +508,11 @@ export function Diabetes() {
           )*/}
         </div>
 
-        <div className="d-flex flex-column align-items-center mt-5">
+        <div className="d-flex flex-column align-items-center mt-5 gap-3">
           {id && (
-            <button
-              type="button"
-              onClick={handleToPainelUbs}
-              className="btn btn-light my-2"
-            >
+            <Button kind="primary" onClick={handleToPainelUbs}>
               Voltar para o Painel da UBS
-            </button>
+            </Button>
           )}
           <Button onClick={handleToPainelMunicipio}>
             Visualizar dados do painel do Município

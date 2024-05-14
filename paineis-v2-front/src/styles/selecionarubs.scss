@@ -2,18 +2,17 @@
 #page-selecionar-ubs {
   width: 100%;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
 
   .contentWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: calc(100% - 25.2vh);
-
     background: white;
     flex: 1;
+    display: flex;
+    flex-direction: column;
     padding: 32px;
-
+    align-items: center;
+    justify-content: center;
     color: var(--gray-800);
 
     .container-titulo {

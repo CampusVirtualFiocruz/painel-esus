@@ -1,7 +1,5 @@
-@import "./_exports.module.scss";
 footer {
   display: flex;
-  height: 16vh;
   flex-direction: column;
 
   background: white;
@@ -21,6 +19,7 @@ footer {
       margin: 8px 16px;
     }
   }
+
   .version {
     color: #000000;
     display: flex;
@@ -29,7 +28,6 @@ footer {
     justify-content: center;
     font-size: small;
     position: relative;
-    top: -29px;
     margin-bottom: 30px;
 
     div {
@@ -37,11 +35,5 @@ footer {
       display: flex;
       justify-content: center;
     }
-  }
-}
-
-@media (max-width: 591px) {
-  footer {
-    height: 40%;
   }
 }

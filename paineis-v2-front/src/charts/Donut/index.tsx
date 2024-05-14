@@ -10,7 +10,7 @@ export function Donut({ data }: any) {
   let dataGraphic = [{ value: comConsulta }, { value: semConsulta }];
 
   const options = {
-    color: ["#78b4d0", "#2775b0"],
+    color: ["#84aaff", "#0069d0"],
     tooltip: {
       trigger: "item",
       formatter: "({d}%)",
