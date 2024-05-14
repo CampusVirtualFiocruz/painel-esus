@@ -64,7 +64,7 @@ class ProfessionalsGroup():
                 'total': 0
             },
             'PSICÓLOGO': {
-                'profissao': 'PSCICÓLOGOS',
+                'profissao': 'PSCICÓLOGO',
                 'totalCount': 0,
                 'total': 0
             },
