@@ -49,7 +49,7 @@ def connectDB(new_window):
                 res = pd.read_sql_query("select * from information_schema.tables", con=engine)
 
                 image_path = os.getcwd()
-                image_path = os.path.join(image_path, 'success.png')
+                image_path = os.path.join(image_path, 'icon/success.png')
                 
                 my_image = ctk.CTkImage(light_image=Image.open(image_path), dark_image=Image.open(image_path),
                                         size=(30, 30))
@@ -66,7 +66,7 @@ def connectDBWithParams(new_window, dbUser, dbPassword, dbHost, dbPort, dbDataba
                 print("CONECTOU", res.shape)
 
                 image_path = os.getcwd()
-                image_path = os.path.join(image_path, 'success.png')
+                image_path = os.path.join(image_path, 'icon/success.png')
                 
                 my_image = ctk.CTkImage(light_image=Image.open(image_path), dark_image=Image.open(image_path),
                                         size=(30, 30))
