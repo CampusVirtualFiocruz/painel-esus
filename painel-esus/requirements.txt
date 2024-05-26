@@ -4,6 +4,7 @@ APScheduler==3.10.4
 astroid==3.0.2
 async-timeout==4.0.3
 attrs==23.2.0
+black==24.4.2
 blinker==1.6.2
 blueprint-decr==0.1.1
 cachelib==0.9.0
@@ -35,10 +36,12 @@ Jinja2==3.1.2
 MarkupSafe==2.1.3
 mccabe==0.7.0
 multidict==6.0.4
+mypy-extensions==1.0.0
 nodeenv==1.8.0
 numpy==1.24.4
 packaging==23.1
 pandas==2.0.3
+pathspec==0.12.1
 platformdirs==3.10.0
 pluggy==1.3.0
 pre-commit==3.4.0
