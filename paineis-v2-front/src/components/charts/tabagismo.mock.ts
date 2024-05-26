@@ -7,7 +7,7 @@ type MockRelatorioTabagismo = {
   "pessoas-tabagistas-escolaridade": BarChart;
 };
 
-const tabagismoCharts: MockRelatorioTabagismo = {
+export const tabagismoCharts: MockRelatorioTabagismo = {
   "proporcao-tabagistas-acompanhadas": {
     data: [
       {
