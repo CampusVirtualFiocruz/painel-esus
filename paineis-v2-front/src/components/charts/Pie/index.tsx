@@ -10,6 +10,7 @@ export function Pie(props: PieChart) {
     },
     legend: {
       top: "5%",
+      data: [],
       // left: "center",
     },
     series: [

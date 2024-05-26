@@ -10,6 +10,13 @@ export function Donut(props: DonutChart) {
     },
     legend: {
       top: "5%",
+      data: [],
+      // data: ["Legend A", "Legend B", "Legend C"],
+      // backgroundColor: "#ccc",
+      // textStyle: {
+      //   color: "#ccc",
+      //   // ...
+      // },
       // left: "center",
     },
     series: [
@@ -18,7 +25,6 @@ export function Donut(props: DonutChart) {
         type: "pie",
         radius: ["40%", "70%"],
         avoidLabelOverlap: false,
-
         labelLine: {
           show: false,
         },

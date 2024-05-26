@@ -18,8 +18,8 @@ export const content: any = {
     "Proporção de consultas odontológicas entre pessoas tabagistas",
   "pessoas-tabagistas-escolaridade": "Pessoas tabagistas por escolaridade",
   "acompanhadas-ubs-nao-tabagistas":
-    "Pessoas acompanhadas na UBS não tabagistas",
-  "acompanhadas-ubs-tabagistas": "Pessoas tabagistas acompanhadas na UBS",
+    "Pessoas acompanhadas \n na UBS não tabagistas",
+  "acompanhadas-ubs-tabagistas": "Pessoas tabagistas \nacompanhadas na UBS",
   "doenca-cardiovascular": "Doença Cardiovascular",
   cancer: "Câncer",
   "diabetes-melitus": "Diabetes Melitus",
