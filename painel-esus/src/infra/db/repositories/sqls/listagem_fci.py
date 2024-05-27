@@ -8,6 +8,7 @@ select
     t2.no_cidadao,
     t2.dt_nascimento as co_dim_tempo_nascimento,
     upper(t2.no_social) as no_social_cidadao,
+    t3.co_dim_unidade_saude as co_dim_unidade_saude,
     t1.co_dim_sexo,
     t15.sg_sexo,
     t1.co_dim_identidade_genero,
@@ -52,7 +53,9 @@ from
     left join tb_fat_familia_territorio tfft on tfft.co_fat_cidadao_pec = t1.co_seq_fat_cidadao_pec
     left join tb_fat_cad_domiciliar tfcd on tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar
 where
-    (t2.st_ativo = 1 and t3.co_dim_tipo_saida_cadastro = 3 and t5_fci.nu_ine is not null and t3.st_ficha_inativa = 0)
-    or
-    (t3.co_dim_tipo_saida_cadastro is null and t2.st_ativo = 1 and t2.st_faleceu = 0 and t29.st_ativo = 1 and t30.nu_ms in ('70', '76'));
+    (
+        (t2.st_ativo = 1 and t3.co_dim_tipo_saida_cadastro = 3 and t5_fci.nu_ine is not null and t3.st_ficha_inativa = 0)
+        or
+        (t3.co_dim_tipo_saida_cadastro is null and t2.st_ativo = 1 and t2.st_faleceu = 0 and t29.st_ativo = 1 and t30.nu_ms in ('70', '76'))
+    )
 """

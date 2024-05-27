@@ -47,17 +47,18 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
       {
         name: "",
         type: "pie",
-        radius: "80%",
+        radius: "70%",
         center: ["50%", "50%"],
         animationDuration: 1000,
         avoidLabelOverlap: false,
         label: {
           show: true,
+          position: "outside",
           overflow: "break",
           fontSize: "16",
           fontWeight: "bold",
           width: 120,
-          padding: [53, 10, 10, 5],
+          // padding: [53, 10, 10, 5],
           formatter: "{b|{d}%} \n\n{a|{b}}",
           rich: {
             a: {
@@ -73,6 +74,7 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
               align: "center",
             },
           },
+          distanceToLabelLine: 5,
         },
         emphasis: {
           label: {

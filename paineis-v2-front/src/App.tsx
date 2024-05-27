@@ -17,6 +17,7 @@ import { SindromesAgudas } from "./pages/SindromesAgudas/SindromesAgudas";
 import { SelecionarUbs } from "./pages/SelecionarUbs";
 import Tabagismo from "./pages/Tabagismo";
 import FeridaVascular from "./pages/FeridaVascular";
+import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -176,6 +177,22 @@ function App() {
                 element={
                   <ProtectedLayout>
                     <SindromesAgudas />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/saude-bucal"
+                element={
+                  <ProtectedLayout>
+                    <SaudeBucal />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/saude-bucal/:id"
+                element={
+                  <ProtectedLayout>
+                    <SaudeBucal />
                   </ProtectedLayout>
                 }
               />
