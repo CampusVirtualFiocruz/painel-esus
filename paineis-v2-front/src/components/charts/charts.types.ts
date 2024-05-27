@@ -21,7 +21,10 @@ type generalConfigs = {
 
 type LinearChart = {
   data: groupedValuesInput;
-  config?: generalConfigs;
+  config?: {
+    xAxis?: { name?: string };
+    yAxis?: { name?: string };
+  } & generalConfigs;
 };
 
 type PercentualChart = {

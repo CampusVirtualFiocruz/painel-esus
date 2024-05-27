@@ -5,10 +5,12 @@ import { Footer } from "../Footer";
 
 const ReportWrapper = ({
   title,
+  subtitle,
   children,
   ...props
 }: {
   title: string;
+  subtitle: string;
   children: ReactNode;
 } & HTMLProps<HTMLDivElement>) => {
   const navigate = useNavigate();
@@ -31,7 +33,26 @@ const ReportWrapper = ({
           backgroundColor: "white",
         }}
       >
-        <h1 style={{ textAlign: "center", marginTop: "60px" }}>{title}</h1>
+        <center>
+          <h1
+            style={{
+              display: "inline-block",
+              textAlign: "center",
+              marginTop: "60px",
+              fontWeight: "bold",
+              marginRight: "10px",
+            }}
+          >
+            {title}
+          </h1>
+          <p
+            style={{
+              display: "inline-block",
+            }}
+          >
+            {subtitle}
+          </p>
+        </center>
         {children}
         <div className="container">
           <div className="row justify-content-center mb-2">

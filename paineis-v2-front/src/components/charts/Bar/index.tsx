@@ -15,6 +15,7 @@ export function Bar(props: BarChart) {
     return {
       name: content?.[s] || s,
       type: "bar",
+      stack: "total",
       data: props.data.reduce(
         (prev, curr) =>
           [
@@ -26,16 +27,18 @@ export function Bar(props: BarChart) {
           ] as any,
         []
       ),
+      ...props?.config,
     };
   });
 
   const options = {
-    color: ["#84aaff", "#0069d0"],
+    color: ["#77B4D0", "#2775B0"],
     tooltip: {
       trigger: "item",
     },
     legend: {
       bottom: "0%",
+      borderRadius: 0,
     },
     // grid: {
     //   width: "auto",
@@ -43,11 +46,20 @@ export function Bar(props: BarChart) {
     //   bottom: 150,
     // },
     xAxis: {
+      name: props?.config?.xAxis?.name ?? undefined,
       type: "category",
     },
-    yAxis: {
-      type: "value",
-    },
+    yAxis: [
+      {
+        type: "value",
+        axisLabel: {
+          formatter: "{value}",
+        },
+        name: props?.config?.yAxis?.name ?? undefined,
+        nameLocation: "middle",
+        nameGap: 24,
+      },
+    ],
     series: chartSeries,
   };
 

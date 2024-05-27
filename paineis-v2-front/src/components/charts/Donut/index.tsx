@@ -4,7 +4,7 @@ import { content } from "../../../assets/content/content";
 
 export function Donut(props: DonutChart) {
   const options = {
-    color: ["#84aaff", "#0069d0"],
+    color: ["#5CD2C8", "#09406A"],
     tooltip: {
       trigger: "item",
     },
@@ -30,9 +30,7 @@ export function Donut(props: DonutChart) {
         },
         label: {
           show: true,
-          // position: "bottom",
-          fontSize: "16",
-          fontWeight: "bold",
+          fontSize: "10",
         },
         emphasis: {
           label: {

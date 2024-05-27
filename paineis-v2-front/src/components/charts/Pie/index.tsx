@@ -4,7 +4,7 @@ import { content } from "../../../assets/content/content";
 
 export function Pie(props: PieChart) {
   const options = {
-    color: ["#84aaff", "#0069d0"],
+    color: ["#5CD2C8", "#E4E4E4"],
     tooltip: {
       trigger: "item",
     },
@@ -19,11 +19,12 @@ export function Pie(props: PieChart) {
         type: "pie",
         radius: ["70%"],
         avoidLabelOverlap: false,
+        labelLine: {
+          show: false,
+        },
         label: {
           show: true,
-          // position: "bottom",
-          fontSize: "16",
-          fontWeight: "bold",
+          fontSize: "10",
         },
         emphasis: {
           label: {
@@ -31,9 +32,6 @@ export function Pie(props: PieChart) {
             fontSize: 16,
             fontWeight: "bold",
           },
-        },
-        labelLine: {
-          show: false,
         },
         data: props.data.reduce(
           (prev, curr) =>

@@ -10,6 +10,8 @@ export const content: any = {
   //tabagismo
   "proporcao-tabagistas-acompanhadas":
     "Proporção de pessoas tabagistas acompanhadas",
+  "total-pessoas-acompanhadas": "Total de pessoas acompanhadas",
+  "total-pessoas": "Total de pessoas",
   "tabagistas-faixa-etaria": "Pessoas tabagistas por faixa etária",
   "pessoas-tabagistas-sexo": "Pessoas tabagistas por sexo",
   "proporcao-fatores-riscos-por-dant":
