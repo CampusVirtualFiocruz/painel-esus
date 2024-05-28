@@ -2,6 +2,7 @@ import { HTMLProps, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header } from "../Header";
 import { Footer } from "../Footer";
+import { Button } from "bold-ui";
 
 const ReportWrapper = ({
   title,
@@ -34,11 +35,21 @@ const ReportWrapper = ({
         }}
       >
         <center>
+          <div
+            style={{
+              marginTop: "50px",
+              display: "block",
+              width: "40px",
+              height: "4px",
+              backgroundColor: "black",
+              content: " ",
+            }}
+          />
           <h1
             style={{
               display: "inline-block",
               textAlign: "center",
-              marginTop: "60px",
+              marginTop: "20px",
               fontWeight: "bold",
               marginRight: "10px",
             }}
@@ -57,15 +68,14 @@ const ReportWrapper = ({
         <div className="container">
           <div className="row justify-content-center mb-2">
             <div className="col-12 col-md-8 containerButtons d-flex justify-content-center my-5">
-              <button
+              <Button
                 type="button"
                 onClick={() => {
                   navigate(-1);
                 }}
-                className="btn btn-light me-5"
               >
                 Voltar
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -40,25 +40,39 @@ export function Bar(props: BarChart) {
       bottom: "0%",
       borderRadius: 0,
     },
-    // grid: {
-    //   width: "auto",
-    //   left: 50,
-    //   bottom: 150,
-    // },
+    grid: {
+      width: "auto",
+      left: 70,
+      bottom: 140,
+    },
     xAxis: {
-      name: props?.config?.xAxis?.name ?? undefined,
       type: "category",
+      axisLabel: {
+        formatter: "{value}",
+        rotate: 90,
+        nameTextStyle: { overflow: "break" },
+        margin: 10,
+        fontSize: 14,
+        weight: "bold",
+      },
+      ...{
+        ...(props?.config?.xAxis ?? {}),
+        rotate: 45,
+        nameTextStyle: { overflow: "break" },
+      },
     },
     yAxis: [
       {
         type: "value",
         axisLabel: {
           formatter: "{value}",
+          fontSize: 12,
         },
         name: props?.config?.yAxis?.name ?? undefined,
         nameLocation: "middle",
-        nameGap: 24,
+        nameGap: 40,
       },
+      //{ ...(props?.config?.yAxis ?? {}) },
     ],
     series: chartSeries,
   };
@@ -69,7 +83,7 @@ export function Bar(props: BarChart) {
       style={{
         width: "100%",
         minWidth: "316px",
-        height: "216px",
+        height: "460px",
       }}
       opts={{ renderer: "svg" }}
     />

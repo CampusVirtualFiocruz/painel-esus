@@ -3,7 +3,7 @@ import { Bar, Pie, Donut } from "../components/charts";
 import { tabagismoCharts } from "../components/charts/tabagismo.mock";
 import ReportWrapper from "../components/ui/ReportWrapper";
 
-const reportKeys = [
+const reportSections = [
   {
     "proporcao-tabagistas-acompanhadas": {
       Chart: Donut,
@@ -51,26 +51,34 @@ const reportKeys = [
 const Tabagismo = () => {
   return (
     <ReportWrapper
-      title="UBS abc / Painel Tabagismo"
+      title="UBS Sérgio Arouca / Painel Tabagismo"
       subtitle="(últimos 12 meses)"
     >
       <div className="container" style={{ marginTop: "80px" }}>
         <div className="row justify-content-center">
-          {reportKeys.map((chartList: any) => (
+          {reportSections.map((chartList: any) => (
             <div className="col-12 col-md-6">
               {Object.keys(chartList).map((chartKey) => {
                 const CustomChart = chartList?.[chartKey]?.Chart;
                 const chartConfigs = chartList?.[chartKey]?.config;
+                const data = (tabagismoCharts as any)?.[chartKey]?.data;
+
+                if (chartConfigs) {
+                  const xAxisNames = data?.map(
+                    (d: any) => content?.[d?.tag] ?? d?.tag
+                  );
+                  console.log(xAxisNames);
+
+                  chartConfigs.xAxis = {};
+                  chartConfigs.xAxis.data = xAxisNames;
+                }
 
                 return (
-                  <div style={{ marginBottom: "30px" }}>
+                  <div style={{ marginBottom: "70px" }}>
                     <h4 style={{ fontWeight: "bold", textAlign: "center" }}>
                       {content?.[chartKey] || chartKey}
                     </h4>
-                    <CustomChart
-                      data={(tabagismoCharts as any)?.[chartKey]?.data}
-                      config={chartConfigs}
-                    />
+                    <CustomChart data={data} config={chartConfigs} />
                   </div>
                 );
               })}

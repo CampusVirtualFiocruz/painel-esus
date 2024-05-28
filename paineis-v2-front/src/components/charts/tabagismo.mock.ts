@@ -12,7 +12,7 @@ export const tabagismoCharts: MockRelatorioTabagismo = {
     data: [
       {
         tag: "acompanhadas-ubs-nao-tabagistas",
-        value: 4451,
+        value: 5861,
       },
       {
         tag: "acompanhadas-ubs-tabagistas",

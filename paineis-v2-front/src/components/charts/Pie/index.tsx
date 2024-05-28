@@ -10,14 +10,15 @@ export function Pie(props: PieChart) {
     },
     legend: {
       top: "5%",
-      data: [],
+
+      //data: [],
       // left: "center",
     },
     series: [
       {
         name: "",
         type: "pie",
-        radius: ["70%"],
+        radius: ["0%", "70%"],
         avoidLabelOverlap: false,
         labelLine: {
           show: false,
@@ -54,7 +55,7 @@ export function Pie(props: PieChart) {
       style={{
         width: "100%",
         minWidth: "316px",
-        height: "216px",
+        height: "316px",
       }}
       opts={{ renderer: "svg" }}
     />
