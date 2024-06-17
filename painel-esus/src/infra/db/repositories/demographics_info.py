@@ -273,7 +273,15 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             engine = db_con.get_engine()
 
             # cidadao_pec = pd.read_sql_query(CIDADAO_PEC_VIVO, con=engine)
-            cidadao_pec = pd.read_sql_query(LISTAGEM_FCI, con=engine)
+            listagem_fci = LISTAGEM_FCI
+            if cnes:
+                listagem_fci += f"""
+    and t3.co_dim_unidade_saude = {cnes};
+                """
+            else:
+                listagem_fci += ";"
+
+            cidadao_pec = pd.read_sql_query(listagem_fci, con=engine)
 
             max_date = pd.read_sql_query(
                 MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL, con=engine)

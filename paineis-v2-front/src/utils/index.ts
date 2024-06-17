@@ -102,7 +102,9 @@ type Ubs = {
 };
 
 export function getNomeUbs(data: any, id: string) {
-  let ubs = Object.values(data).find((item: any) => item.value === id) as Ubs;
+  let ubs = Object.values(data).find(
+    (item: any) => parseInt(item.value) === parseInt(id)
+  ) as Ubs;
   return ubs ? ubs.label : "-";
 }
 
