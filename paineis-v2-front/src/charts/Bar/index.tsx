@@ -5,7 +5,7 @@ type Faixa = {
   NaN?: number;
   Rural?: string;
   Urbano?: number;
-  Nao_Informado?: number;
+  "Nao Informado"?: number;
 };
 
 type BarData = {
@@ -30,7 +30,7 @@ export function Bar({ data, titulo }: BarData) {
         NaN: objFaixa.NaN,
         Rural: 0,
         Urbano: 0,
-        Nao_Informado: 0,
+        "Nao Informado": 0,
       };
     }
 
