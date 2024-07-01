@@ -15,6 +15,9 @@ export function Condicao({ data }: any) {
 
     options = {
       color: ["#84aaff", "#0069d0"],
+      tooltip: {
+        trigger: "item",
+      },
       series: [
         {
           name: "Grafico 1",

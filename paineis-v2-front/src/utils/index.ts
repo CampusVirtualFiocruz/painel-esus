@@ -225,3 +225,8 @@ export const cpfMask = (value: string | undefined) => {
 
   return "NÃO CADASTRADO";
 };
+
+export const capitalize = (s: string, lower = false) =>
+  (lower ? s.toLowerCase() : s).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
+    match.toUpperCase()
+  );

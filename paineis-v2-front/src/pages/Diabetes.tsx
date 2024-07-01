@@ -16,7 +16,7 @@ import { Header } from "../components/Header";
 import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
 import { Pie } from "../charts/Pie";
-import { getNomeUbs } from "../utils";
+import { capitalize, getNomeUbs } from "../utils";
 import { useState } from "react";
 import { BarSexo } from "../charts/BarSexo";
 import { Button } from "bold-ui";
@@ -474,7 +474,10 @@ export function Diabetes() {
                         <div key={i} className="d-flex align-items-center mt-2">
                           <div className="container-extratificacao-atendimentos">
                             <span className="profissao-nome">
-                              {item.profissao}
+                              {capitalize(
+                                item.profissao.split("-").join(" "),
+                                true
+                              )}
                             </span>
                             <Progress
                               value={item.total}

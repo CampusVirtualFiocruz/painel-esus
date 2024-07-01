@@ -17,7 +17,7 @@ import homem from "../assets/images/homem.svg";
 import mulher from "../assets/images/mulher.svg";
 import diabetes from "../assets/images/diabetes.svg";
 import hipertensao from "../assets/images/hipertensao.svg";
-import thooth from "../assets/images/thooth.png";
+import thooth from "../assets/images/theeth.svg";
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
@@ -140,7 +140,7 @@ export function Painel() {
         setDadosPainel(data);
         setLoading(false);
       } catch (error) {
-        alert("Ocorreu um erro ao buscar informações demográficas");
+        /* alert("Ocorreu um erro ao buscar informações demográficas"); */
         setLoading(false);
       }
     };
@@ -351,7 +351,7 @@ export function Painel() {
                 </div>
                 <div className="container-dados-nao-definidos ">
                   <p>
-                    *Não definido:{" "}
+                    *Não informado:{" "}
                     {formataNumero(dadosPainel?.locationArea.nao_definido)}
                   </p>
                 </div>
@@ -494,7 +494,8 @@ export function Painel() {
                     <img
                       src={thooth}
                       alt="Saúde Bucal"
-                      className="mx-2 thooth"
+                      className="mx-2"
+                      width="72px"
                     />
                     <Condicao
                       data={{

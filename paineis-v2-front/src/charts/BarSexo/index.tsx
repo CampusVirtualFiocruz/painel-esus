@@ -80,6 +80,9 @@ export function BarSexo({ data, titulo }: BarData) {
       left: 50,
       bottom: 150,
     },
+    tooltip: {
+      trigger: "item",
+    },
     series: [
       {
         name: "Feminino",

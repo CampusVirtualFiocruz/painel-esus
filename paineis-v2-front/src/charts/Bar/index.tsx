@@ -80,6 +80,9 @@ export function Bar({ data, titulo }: BarData) {
       left: 50,
       bottom: 150,
     },
+    tooltip: {
+      trigger: "item",
+    },
     series: [
       {
         name: "Área Rural",
