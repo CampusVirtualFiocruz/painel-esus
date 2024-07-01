@@ -5,6 +5,7 @@ type Faixa = {
   NaN?: number;
   Rural?: string;
   Urbano?: number;
+  Nao_Informado?: number;
 };
 
 type BarData = {
@@ -22,12 +23,14 @@ export function Bar({ data, titulo }: BarData) {
 
     if (
       !objFaixa.hasOwnProperty("Rural") ||
-      !objFaixa.hasOwnProperty("Urbano")
+      !objFaixa.hasOwnProperty("Urbano") ||
+      !objFaixa.hasOwnProperty("Não Informado")
     ) {
       return {
         NaN: objFaixa.NaN,
         Rural: 0,
         Urbano: 0,
+        Nao_Informado: 0,
       };
     }
 
@@ -39,10 +42,20 @@ export function Bar({ data, titulo }: BarData) {
   let dataUrbano = arrData.map((obj: Faixa) => {
     return obj.Urbano;
   });
-
+  let dataNaoInformado = arrData.map((obj: Faixa) => {
+    return obj["Não Informado"];
+  });
+  console.log("dataNaoInformado", dataNaoInformado);
   const options = {
     legend: {
       bottom: "0%",
+    },
+    tooltip: {
+      trigger: "item",
+      formatter: function (params: any) {
+        console.log(params);
+        return `${params.name} <br />${params.seriesName}: ${params.value}`;
+      },
     },
     xAxis: {
       data: faixaEtaria,
@@ -60,6 +73,7 @@ export function Bar({ data, titulo }: BarData) {
       },
     },
     yAxis: {
+      type: "value",
       axisLabel: {
         show: true,
         fontSize: 16,
@@ -88,7 +102,7 @@ export function Bar({ data, titulo }: BarData) {
         name: "Área Rural",
         type: "bar",
         stack: "one",
-        barWidth: "50%",
+        barWidth: "33%",
         itemStyle: {
           color: "#84aaff",
         },
@@ -98,11 +112,21 @@ export function Bar({ data, titulo }: BarData) {
         name: "Área Urbana",
         type: "bar",
         stack: "one",
-        barWidth: "50%",
+        barWidth: "33%",
         itemStyle: {
           color: "#0069d0",
         },
         data: dataUrbano,
+      },
+      {
+        name: "Não Definido",
+        type: "bar",
+        stack: "one",
+        barWidth: "33%",
+        itemStyle: {
+          color: "#e9ecef",
+        },
+        data: dataNaoInformado,
       },
     ],
   };

@@ -13,7 +13,7 @@ select
     t15.sg_sexo,
     t1.co_dim_identidade_genero,
     t16.ds_raca_cor,
-    tfcd.co_dim_tipo_localizacao,
+    coalesce( tfcd.co_dim_tipo_localizacao, '1') co_dim_tipo_localizacao,
     upper(t2.no_mae) as no_mae_cidadao, upper(t2.no_pai) as no_pai_cidadao,
     upper(t13.no_profissional) as no_profissional,
     t2.dt_obito, t2.nu_documento_obito as nu_declaracao_obito,

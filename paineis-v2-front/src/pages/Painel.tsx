@@ -211,7 +211,6 @@ export function Painel() {
     if (urbano !== undefined) {
       resp["urbano"] = urbano;
     }
-    console.log(resp);
     return resp;
   });
   //get nome ubs
@@ -517,6 +516,10 @@ export function Painel() {
               <div className="container-areas d-flex align-items-center ms-4">
                 <div className="box-container-dark me-2"></div>
                 <h4>Área Rural</h4>
+              </div>
+              <div className="container-areas d-flex align-items-center ms-4">
+                <div className="box-container-nonactive me-2"></div>
+                <h4>Não Definido</h4>
               </div>
             </div>
           </div>

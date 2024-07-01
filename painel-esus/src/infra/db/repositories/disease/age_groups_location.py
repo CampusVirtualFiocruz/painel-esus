@@ -131,7 +131,7 @@ class AgeGroupsLocationDF:
         data_frame = data_frame[data_frame['idade'].notna()]
         data_frame['idade'] = data_frame['idade'].astype(
             str).astype(float).astype(int)
-        print(data_frame['co_dim_tipo_localizacao'].unique())
+        print('----->', data_frame['co_dim_tipo_localizacao'].unique())
 
         data_frame, faixas = self._parse_age_group(data_frame)
 

@@ -1,7 +1,7 @@
 //
 // Tipos de suporte
 //
-type groupedValuesInput = Array<{
+export type groupedValuesInput = Array<{
   value: {
     [tag: string]: number;
   };

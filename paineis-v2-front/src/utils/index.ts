@@ -26,7 +26,8 @@ export function somaIndicador(indicador: any) {
   let result = 0;
 
   if (indicador) {
-    result = indicador.rural + indicador.urbano;
+    result =
+      indicador.rural + indicador.urbano + (indicador.nao_informado || 0);
   }
 
   return formataNumero(result);
