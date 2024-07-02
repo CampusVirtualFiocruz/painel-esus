@@ -17,7 +17,7 @@ import homem from "../assets/images/homem.svg";
 import mulher from "../assets/images/mulher.svg";
 import diabetes from "../assets/images/diabetes.svg";
 import hipertensao from "../assets/images/hipertensao.svg";
-import thooth from "../assets/images/thooth.png";
+import thooth from "../assets/images/theeth.svg";
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
@@ -97,7 +97,7 @@ type ResponseData = {
 };
 
 type Lista = {
-  co_dim_unidade_saude_1: number;
+  co_seq_dim_unidade_saude: number;
   no_unidade_saude: string;
   nu_cnes: number;
 };
@@ -140,7 +140,7 @@ export function Painel() {
         setDadosPainel(data);
         setLoading(false);
       } catch (error) {
-        alert("Ocorreu um erro ao buscar informações demográficas");
+        /* alert("Ocorreu um erro ao buscar informações demográficas"); */
         setLoading(false);
       }
     };
@@ -152,34 +152,34 @@ export function Painel() {
     };
   }, [id]);
 
-  const {
-    data: sindromesAgudasData,
-    isLoading,
-    error,
-  } = useQuery(["sindromes-agudas", id], async () => {
-    // let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
-    let path = "/saida.json";
-    const response = await Api2.get(path);
-    let data = response.data;
-    const result = [
-      { value: 0, name: "Rural" },
-      { value: 0, name: "Urbano" },
-    ];
-    if (id) {
-      data = data.filter((item: TResponse) => item.nu_cnes == id);
-    }
-    let total = 0;
-    data.map((item: TResponse) => {
-      if (item.local == "Rural") {
-        result[0].value += item.ds_filtro_cids;
-      } else {
-        result[1].value += item.ds_filtro_cids;
-      }
-      total += item.ds_filtro_cids;
-    });
-    setInfecoesQtd(result);
-    return data;
-  });
+  // const {
+  //   data: sindromesAgudasData,
+  //   isLoading,
+  //   error,
+  // } = useQuery(["sindromes-agudas", id], async () => {
+  //   // let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
+  //   let path = "/saida.json";
+  //   const response = await Api2.get(path);
+  //   let data = response.data;
+  //   const result = [
+  //     { value: 0, name: "Rural" },
+  //     { value: 0, name: "Urbano" },
+  //   ];
+  //   if (id) {
+  //     data = data.filter((item: TResponse) => item.nu_cnes == id);
+  //   }
+  //   let total = 0;
+  //   data.map((item: TResponse) => {
+  //     if (item.local == "Rural") {
+  //       result[0].value += item.ds_filtro_cids;
+  //     } else {
+  //       result[1].value += item.ds_filtro_cids;
+  //     }
+  //     total += item.ds_filtro_cids;
+  //   });
+  //   setInfecoesQtd(result);
+  //   return data;
+  // });
   const {
     data: dataOralHealth,
     isLoading: isLoadingOralHealth,
@@ -211,7 +211,6 @@ export function Painel() {
     if (urbano !== undefined) {
       resp["urbano"] = urbano;
     }
-    console.log(resp);
     return resp;
   });
   //get nome ubs
@@ -227,7 +226,7 @@ export function Painel() {
       const listData: TypeUbs[] = data.data.map((ubs) => {
         return {
           label: ubs.no_unidade_saude,
-          value: ubs.nu_cnes,
+          value: ubs.co_seq_dim_unidade_saude,
         };
       });
 
@@ -351,7 +350,7 @@ export function Painel() {
                 </div>
                 <div className="container-dados-nao-definidos ">
                   <p>
-                    *Não definido:{" "}
+                    *Não informado:{" "}
                     {formataNumero(dadosPainel?.locationArea.nao_definido)}
                   </p>
                 </div>
@@ -413,6 +412,10 @@ export function Painel() {
                   <div className="box-container-dark me-2"></div>
                   <h5 className="mb-0">Área Rural</h5>
                 </div>
+                <div className="d-flex align-items-center mx-3">
+                  <div className="box-container-nonactive me-2"></div>
+                  <h5 className="mb-0">Não Informado</h5>
+                </div>
               </div>
             </div>
           ) : (
@@ -422,7 +425,8 @@ export function Painel() {
           )}
 
           <h3 className="my-5">
-            Condição de saúde dos indivíduos cadastrados no município
+            Condição de saúde dos indivíduos cadastrados no município nos
+            últimos 12 meses
           </h3>
 
           <div className="container">
@@ -493,7 +497,8 @@ export function Painel() {
                     <img
                       src={thooth}
                       alt="Saúde Bucal"
-                      className="mx-2 thooth"
+                      className="mx-2"
+                      width="72px"
                     />
                     <Condicao
                       data={{
@@ -515,6 +520,10 @@ export function Painel() {
               <div className="container-areas d-flex align-items-center ms-4">
                 <div className="box-container-dark me-2"></div>
                 <h4>Área Rural</h4>
+              </div>
+              <div className="container-areas d-flex align-items-center ms-4">
+                <div className="box-container-nonactive me-2"></div>
+                <h4>Não Informado</h4>
               </div>
             </div>
           </div>

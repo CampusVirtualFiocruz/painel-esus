@@ -26,7 +26,8 @@ export function somaIndicador(indicador: any) {
   let result = 0;
 
   if (indicador) {
-    result = indicador.rural + indicador.urbano;
+    result =
+      indicador.rural + indicador.urbano + (indicador.nao_informado || 0);
   }
 
   return formataNumero(result);
@@ -102,7 +103,9 @@ type Ubs = {
 };
 
 export function getNomeUbs(data: any, id: string) {
-  let ubs = Object.values(data).find((item: any) => item.value === id) as Ubs;
+  let ubs = Object.values(data).find(
+    (item: any) => parseInt(item.value) === parseInt(id)
+  ) as Ubs;
   return ubs ? ubs.label : "-";
 }
 
@@ -223,3 +226,8 @@ export const cpfMask = (value: string | undefined) => {
 
   return "NÃO CADASTRADO";
 };
+
+export const capitalize = (s: string, lower = false) =>
+  (lower ? s.toLowerCase() : s).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
+    match.toUpperCase()
+  );

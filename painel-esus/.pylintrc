@@ -12,6 +12,12 @@ disable=
       R0903, # too-few-public-methods
       W0621, # redefined-outer-name
       E0401, # Unable to import
+      R1718, # Remover
+      C0301, # Remover
+      E1111, 
+      R0914,
+      R1735,
+      C0303,
       
 # Analyse import fallback blocks. This can be used to support both Python 2 and
 # 3 compatible code, which means that the block might have code that exists

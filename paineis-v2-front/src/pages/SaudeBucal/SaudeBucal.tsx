@@ -35,7 +35,8 @@ type ResponseDataListUbs = {
   data: Lista[];
 };
 
-const SaudeBucal = () => {
+export const SaudeBucal = () => {
+  console.log("SAUDE");
   const { id } = useParams<PainelParams>();
   const user = getUserLocalStorage();
   const { cityInformation, city } = useInfo();
@@ -150,5 +151,3 @@ const SaudeBucal = () => {
     </div>
   );
 };
-
-export default SaudeBucal;

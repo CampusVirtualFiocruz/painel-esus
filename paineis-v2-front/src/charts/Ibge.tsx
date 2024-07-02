@@ -3,6 +3,9 @@ import ReactECharts from "echarts-for-react";
 export function Ibge({ data }: any) {
   const options = {
     color: ["#0069d0", "#84aaff"],
+    tooltip: {
+      trigger: "item",
+    },
     series: [
       {
         name: "População estimada (IBGE)",

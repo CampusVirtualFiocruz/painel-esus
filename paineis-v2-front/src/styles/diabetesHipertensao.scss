@@ -33,7 +33,7 @@
       align-items: center;
       justify-content: center;
       background-color: #515162;
-      border-radius: 20px;
+      border-radius: var(--default-radius);
       padding: 8px 32px;
       cursor: pointer;
 
@@ -65,7 +65,7 @@
       margin: 0 16px;
       padding: 8px 16px;
       border: 1px solid #515162;
-      border-radius: 5px;
+      border-radius: var(--default-radius);
       cursor: pointer;
 
       font-size: 1.125rem;
@@ -79,7 +79,7 @@
 
     .situacao-exames {
       .bordas {
-        border-radius: 5px;
+        border-radius: var(--default-radius);
         border: 1px solid #515162;
       }
       .tipo {
@@ -131,7 +131,7 @@
       width: 349px;
       height: 38px;
       background-color: #343131;
-      border-radius: 5px;
+      border-radius: var(--default-radius);
 
       font-size: 1.125rem;
       font-weight: 700;
@@ -143,7 +143,7 @@
       width: 278px;
 
       background-color: white;
-      border-radius: 5px;
+      border-radius: var(--default-radius);
       border: 1px solid #515162;
 
       font-size: 1.125rem;
@@ -154,7 +154,7 @@
     .btn-primary {
       height: 38px;
       background-color: var(--teal-300);
-      border-radius: 5px;
+      border-radius: var(--default-radius);
       margin: 0;
       padding: 0 16px;
       border: none;

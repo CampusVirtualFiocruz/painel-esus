@@ -32,7 +32,7 @@
           height: 44px;
 
           background-color: #343131;
-          border-radius: 10px;
+          border-radius: var(--default-radius);
           border-color: #343131;
 
           font-size: 1.3rem;
@@ -52,7 +52,7 @@
           font-weight: 500;
           text-align: left;
           border: none;
-          border-radius: 0.25rem;
+          border-radius: var(--default-radius);
           cursor: pointer;
 
           scrollbar-width: auto;
@@ -79,7 +79,7 @@
 
         .combo-ubs ::-webkit-scrollbar-thumb {
           background-color: var(--primary-color);
-          border-radius: 10px;
+          border-radius: var(--default-radius);
           border: 3px solid white;
         }
       }

@@ -19,6 +19,8 @@ from src.main.routes.hypertension_routes import HypertensionPath
 from src.main.routes.login_route import login_bp
 from src.main.routes.oral_health import oral_health_bp
 from src.main.routes.oral_health import OralHealthPath
+from src.main.routes.smoking import smoking_bp
+from src.main.routes.smoking import SmokingPath
 from src.main.routes.units_route import units_bp
 from src.main.routes.units_route import UnitsPath
 from src.main.server.cache import cache
@@ -104,3 +106,7 @@ register_blueprint(
 oral_path = OralHealthPath()
 register_blueprint(
     app, (oral_health_bp, oral_path.root_path), [token_required])
+
+smoking = SmokingPath()
+register_blueprint(
+    app, (smoking_bp, smoking.root_path), [token_required])

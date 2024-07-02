@@ -11,7 +11,6 @@ import imgLogout from "../assets/images/logout.svg";
 
 import { getFirstName } from "../utils";
 import { useInfo } from "../context/infoProvider/useInfo";
-import BarraBrasil from "./BarraBrasil";
 
 export function Header() {
   const { logout } = useAuth();
@@ -26,11 +25,12 @@ export function Header() {
     logout();
     navigate("/");
   }
+
   const infoContext = useInfo();
   const city = infoContext.cityInformation;
+
   return (
     <>
-      <BarraBrasil />
       <header id="header">
         <div className="siteInfo">
           <div className="logoName" onClick={handleHome}>
@@ -43,14 +43,11 @@ export function Header() {
             </strong>
           </div>
         </div>
-
         <div className="userInfo">
           <img src={imgUser} alt="Profissional" />
           <span>{getFirstName(user?.fullName)}</span>
-
           <div className="logoutWrapper" onClick={handleLogout}>
             <img src={imgLogout} alt="Sair" />
-
             <a href="/" onClick={handleLogout} className="logout">
               Sair
             </a>
