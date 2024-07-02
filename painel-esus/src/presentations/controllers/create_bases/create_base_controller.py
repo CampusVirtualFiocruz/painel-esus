@@ -22,7 +22,7 @@ class CreateBasesController:
         _list = [
             CreateDiabetesBasesRepository(),
             CreateHypertensionBasesRepository(),
-            # CreateOralHealthBasesRepository(),
+            CreateOralHealthBasesRepository(),
             # CreateSmokingBasesRepository()
         ]
         usecase = CreateBasesUseCase(bases_generators=_list)
