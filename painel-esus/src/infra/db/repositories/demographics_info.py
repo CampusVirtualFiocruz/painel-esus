@@ -273,8 +273,10 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
                 "rural": int(masculino_rural_size + feminino_rural_size),
                 "urbano": int(masculino_urbano_size + feminino_urbano_size),
                 "nao_definido": int(
-                    data_frame[data_frame["co_dim_tipo_localizacao"].isnull()
-                               ].shape[0]
+                    data_frame[
+                        (data_frame["co_dim_tipo_localizacao"].isnull()) |
+                        (data_frame["co_dim_tipo_localizacao"] == 1)
+                    ].shape[0]
                 ),
             },
             "gender": {
@@ -379,14 +381,10 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS
             # sql = LISTAGEM_FCI
             if cnes:
-                # sql += f"""
-                #     where
-                #         atd.co_dim_unidade_saude = {cnes} AND dt_registro between '{max_date}'::DATE - interval '12 month' and '{max_date}';
-                # """
                 sql += f"""
-                #     where
-                #         atd.co_dim_unidade_saude = {cnes} ';
-                # """
+                     where
+                         atd.co_dim_unidade_saude = {cnes}
+                 """
             # else:
             #     sql += f"""
             #         where
@@ -395,10 +393,11 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             atendimento_individual = pd.read_sql_query(sql, con=engine)
 
             hypertension = Hypertension()
-            hypertension_df = hypertension.filter_registers_sql("hipertensao")
+            hypertension_df = hypertension.filter_registers_sql(
+                "hipertensao", cnes)
 
             diabetes = Diabetes()
-            diabetes_df = diabetes.filter_registers_sql("diabetes")
+            diabetes_df = diabetes.filter_registers_sql("diabetes", cnes)
 
             gestantes = Pregnants()
             gestantes_df = gestantes.filter_registers(atendimento_individual)

@@ -95,14 +95,14 @@ export function Diabetes() {
     isLoading: isLoadingTotalDiabetes,
     error: errorTotalDiabetes,
   } = useQuery(
-    ["diabetes/total", paramRoute],
+    ["diabetes/total", id],
     async () => {
       const response = await Api.get("diabetes/total");
       const responseData = response.data;
 
       let total = responseData.data;
 
-      return total.toLocaleString("pt-BR");
+      return total;
     },
     {
       staleTime: 1000 * 60 * 10, //10 minutos
@@ -255,10 +255,8 @@ export function Diabetes() {
         <hr className="linha my-4" />
 
         <h2>
-          {id
-            ? !isLoadingUbs
-              ? nomeUbs
-              : "Carregando..."
+          {isLoadingUbs
+            ? "Carregando..."
             : cityInformation?.municipio + " - " + cityInformation?.uf}
         </h2>
 
@@ -369,6 +367,37 @@ export function Diabetes() {
 
                 <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                   <div>
+                    <div
+                      className="container-atendimentos"
+                      style={{ width: "221px" }}
+                    >
+                      <span className="total-trimestre ms-4">
+                        {isLoadingTotalDiabetes ? (
+                          <div className="d-flex align-items-center justify-content-center">
+                            <Spinner size="sm" type="grow" className="me-2" />0
+                          </div>
+                        ) : errorTotalDiabetes ? (
+                          <div className="d-flex align-items-center justify-content-center">
+                            <Alert color="danger">
+                              Erro ao carregar dados.
+                            </Alert>
+                          </div>
+                        ) : (
+                          dataTotalDiabetes.total_atendimentos
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="painel-lateral">
+                <h4 className="mt-5 mb-4 text-center">
+                  Total de pessoas diagnosticadas com Hipertensão nos últimos 12
+                  meses
+                </h4>
+
+                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                  <div>
                     <div className="container-atendimentos">
                       <div className="titulo d-flex align-items-center">
                         <img
@@ -389,7 +418,7 @@ export function Diabetes() {
                             </Alert>
                           </div>
                         ) : (
-                          dataTotalDiabetes
+                          dataTotalDiabetes.total_pacientes
                         )}
                       </span>
                     </div>

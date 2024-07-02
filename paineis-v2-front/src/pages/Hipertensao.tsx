@@ -56,6 +56,7 @@ export function Hipertensao() {
   const [data, setData] = useState<TModal>({ loaded: 0 });
   const { cityInformation, city } = useInfo();
 
+  console.log("cityInformation", cityInformation);
   let paramRoute = id ? id : "all";
 
   const wait = (milliseconds: number) => {
@@ -88,14 +89,14 @@ export function Hipertensao() {
     }
   );
 
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : "-";
+  // const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : "-";
 
   const {
     data: dataTotalHipertensao,
     isLoading: isLoadingTotalHipertensao,
     error: errorTotalHipertensao,
   } = useQuery(
-    ["arterial-hypertension/total", paramRoute],
+    ["arterial-hypertension/total", id],
     async () => {
       let path = id
         ? `arterial-hypertension/total/${id}`
@@ -105,7 +106,7 @@ export function Hipertensao() {
 
       let total = responseData.data;
 
-      return total.toLocaleString("pt-BR");
+      return total;
     },
     {
       staleTime: 1000 * 60 * 10, //10 minutos
@@ -267,10 +268,8 @@ export function Hipertensao() {
         <hr className="linha my-4" />
 
         <h2>
-          {id
-            ? !isLoadingUbs
-              ? nomeUbs
-              : "Carregando..."
+          {isLoadingUbs
+            ? "Carregando..."
             : cityInformation?.municipio + " - " + cityInformation?.uf}
         </h2>
 
@@ -381,6 +380,37 @@ export function Hipertensao() {
 
                 <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                   <div>
+                    <div
+                      className="container-atendimentos"
+                      style={{ width: "221px" }}
+                    >
+                      <span className="total-trimestre ms-4">
+                        {isLoadingTotalHipertensao ? (
+                          <div className="d-flex align-items-center justify-content-center">
+                            <Spinner size="sm" type="grow" className="me-2" />0
+                          </div>
+                        ) : errorTotalHipertensao ? (
+                          <div className="d-flex align-items-center justify-content-center">
+                            <Alert color="danger">
+                              Erro ao carregar dados.
+                            </Alert>
+                          </div>
+                        ) : (
+                          dataTotalHipertensao.total_atendimentos
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="painel-lateral">
+                <h4 className="mt-5 mb-4 text-center">
+                  Total de pessoas diagnosticadas com Hipertensão nos últimos 12
+                  meses
+                </h4>
+
+                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                  <div>
                     <div className="container-atendimentos">
                       <div className="titulo d-flex align-items-center">
                         <img
@@ -401,7 +431,7 @@ export function Hipertensao() {
                             </Alert>
                           </div>
                         ) : (
-                          dataTotalHipertensao
+                          dataTotalHipertensao.total_pacientes
                         )}
                       </span>
                     </div>

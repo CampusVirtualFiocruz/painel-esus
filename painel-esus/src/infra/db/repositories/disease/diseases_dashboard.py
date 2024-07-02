@@ -115,7 +115,10 @@ class DiseasesDashboardRepository(DiseasesDashboardRepositoryInterface):
 
     def get_total(self, cnes: int = None) -> DiseaseDashboardTotal:
         cares = self._retrieve_cares(cnes)
-        return {"total": int(cares["co_seq_fat_atd_ind"].unique().shape[0])}
+        return {
+            "total_atendimentos": int(cares["co_seq_fat_atd_ind"].unique().shape[0]),
+            "total_pacientes": int(cares["co_fat_cidadao_pec"].unique().shape[0]),
+        }
 
     def get_age_groups_location(self, cnes: int = None) -> Dict:
         cares = self._retrieve_cares(cnes)

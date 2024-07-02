@@ -19,9 +19,11 @@ class Complications:
     def filter_registers(self, data_frame: any) -> any:
         target_df = data_frame[['co_seq_fat_atd_ind', 'tipo', 'codigo']]
         target_df = target_df.drop_duplicates()
-        self.total = target_df.shape[0]
+        self.total = data_frame[['co_seq_fat_atd_ind']
+                                ].drop_duplicates().shape[0]
         mask = target_df['codigo'].isin(self.cids)
         result_df = target_df.loc[mask]
+        result_df = result_df[['co_seq_fat_atd_ind']].drop_duplicates()
         return result_df
 
     def statistics(self, data_frame: DataFrame):

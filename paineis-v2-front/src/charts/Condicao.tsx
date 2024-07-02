@@ -5,7 +5,7 @@ const parse_label = (label: string) => {
   return {
     rural: "Rural",
     urbano: "Urbano",
-    nao_informado: "Não Defindo",
+    nao_informado: "Não Informado",
   }[label];
 };
 export function Condicao({ data }: any) {

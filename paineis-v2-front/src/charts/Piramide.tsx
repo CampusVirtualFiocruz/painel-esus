@@ -186,7 +186,7 @@ export default function Piramide({ data }: any) {
         option={options}
         style={{
           width: "100%",
-          height: "200px",
+          height: "400px",
         }}
         className="my-5"
         opts={{ renderer: "svg" }}

@@ -24,7 +24,7 @@ export function Bar({ data, titulo }: BarData) {
     if (
       !objFaixa.hasOwnProperty("Rural") ||
       !objFaixa.hasOwnProperty("Urbano") ||
-      !objFaixa.hasOwnProperty("Não Informado")
+      !objFaixa.hasOwnProperty("Nao Informado")
     ) {
       return {
         NaN: objFaixa.NaN,
@@ -99,6 +99,7 @@ export function Bar({ data, titulo }: BarData) {
         name: "Área Rural",
         type: "bar",
         stack: "one",
+        barMinHeight: 10,
         barWidth: "33%",
         itemStyle: {
           color: "#84aaff",
@@ -109,6 +110,7 @@ export function Bar({ data, titulo }: BarData) {
         name: "Área Urbana",
         type: "bar",
         stack: "one",
+        barMinHeight: 10,
         barWidth: "33%",
         itemStyle: {
           color: "#0069d0",
@@ -119,6 +121,7 @@ export function Bar({ data, titulo }: BarData) {
         name: "Não Informado",
         type: "bar",
         stack: "one",
+        barMinHeight: 10,
         barWidth: "33%",
         itemStyle: {
           color: "#e9ecef",
