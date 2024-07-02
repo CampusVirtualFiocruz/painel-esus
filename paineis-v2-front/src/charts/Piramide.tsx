@@ -19,10 +19,13 @@ export default function Piramide({ data }: any) {
   }
 
   const result: any = ageGroupParser({ ageGroups: data });
-
+  console.log(result);
   const options = {
     tooltip: {
       trigger: "item",
+      formatter: function (params: any) {
+        return `${params.name}<br />${params.marker}${params.data.label}: ${params.value}`;
+      },
     },
     legend: {
       // Try 'horizontal'
@@ -132,6 +135,18 @@ export default function Piramide({ data }: any) {
       {
         type: "bar",
         barWidth: "20px",
+        stack: "masculino",
+        z: 3,
+        xAxisIndex: 0,
+        yAxisIndex: 0,
+        data: Object.keys(result[0].nao_informado).map(function (key) {
+          return result[0].nao_informado[key];
+        }),
+      },
+
+      {
+        type: "bar",
+        barWidth: "20px",
         stack: "feminino",
         z: 3,
         xAxisIndex: 1,
@@ -149,6 +164,17 @@ export default function Piramide({ data }: any) {
         yAxisIndex: 1,
         data: Object.keys(result[1].areaRural).map(function (key) {
           return result[1].areaRural[key];
+        }),
+      },
+      {
+        type: "bar",
+        barWidth: "20px",
+        stack: "feminino",
+        z: 3,
+        xAxisIndex: 1,
+        yAxisIndex: 1,
+        data: Object.keys(result[1].nao_informado).map(function (key) {
+          return result[1].nao_informado[key];
         }),
       },
     ],

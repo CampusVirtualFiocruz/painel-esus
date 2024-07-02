@@ -43,7 +43,7 @@ export function Bar({ data, titulo }: BarData) {
     return obj.Urbano;
   });
   let dataNaoInformado = arrData.map((obj: Faixa) => {
-    return obj["Não Informado"];
+    return obj["Nao Informado"];
   });
   console.log("dataNaoInformado", dataNaoInformado);
   const options = {

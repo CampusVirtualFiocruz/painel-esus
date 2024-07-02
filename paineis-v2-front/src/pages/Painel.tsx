@@ -412,6 +412,10 @@ export function Painel() {
                   <div className="box-container-dark me-2"></div>
                   <h5 className="mb-0">Área Rural</h5>
                 </div>
+                <div className="d-flex align-items-center mx-3">
+                  <div className="box-container-nonactive me-2"></div>
+                  <h5 className="mb-0">Não Informado</h5>
+                </div>
               </div>
             </div>
           ) : (
@@ -519,7 +523,7 @@ export function Painel() {
               </div>
               <div className="container-areas d-flex align-items-center ms-4">
                 <div className="box-container-nonactive me-2"></div>
-                <h4>Não Definido</h4>
+                <h4>Não Informado</h4>
               </div>
             </div>
           </div>
