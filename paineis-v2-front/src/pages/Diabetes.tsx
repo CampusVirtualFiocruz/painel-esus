@@ -21,6 +21,7 @@ import { useState } from "react";
 import { BarSexo } from "../charts/BarSexo";
 import { Button } from "bold-ui";
 import { useInfo } from "../context/infoProvider/useInfo";
+import { Typography } from "../components/ui/Typography";
 
 type TModal = {
   loaded: number;
@@ -267,9 +268,9 @@ export function Diabetes() {
           <div className="row gx-5">
             <div className="col-12 col-lg-5">
               <div className="painel-lateral">
-                <h4 className="mt-5 text-center">
+                <Typography.Subtitle>
                   Pessoas com diabetes por faixa etária
-                </h4>
+                </Typography.Subtitle>
                 {isLoadingDiabetes ? (
                   <div className="d-flex align-items-center justify-content-center">
                     <Spinner size="sm" type="grow" className="me-2" />
@@ -288,9 +289,9 @@ export function Diabetes() {
               </div>
 
               <div className="painel-lateral">
-                <h4 className="mt-5 text-center">
+                <Typography.Subtitle>
                   Pessoas com diabetes por sexo
-                </h4>
+                </Typography.Subtitle>
                 {isLoadingDiabetesAgeGroupGender ? (
                   <div className="d-flex align-items-center justify-content-center">
                     <Spinner size="sm" type="grow" className="me-2" />
@@ -309,9 +310,9 @@ export function Diabetes() {
               </div>
 
               <div className="painel-lateral situacao-exames">
-                <h3 className="my-5 text-center">
+                <Typography.Subtitle>
                   Situação dos exames nos últimos 12 meses
-                </h3>
+                </Typography.Subtitle>
 
                 <div className="row gx-4 my-3">
                   <div className="col-5 col-lg-6"></div>
@@ -362,9 +363,9 @@ export function Diabetes() {
 
             <div className="col-12 col-lg-7 d-flex flex-column">
               <div className="painel-lateral">
-                <h4 className="mt-5 mb-4 text-center">
+                <Typography.Subtitle>
                   Total de atendimento nos últimos 12 meses
-                </h4>
+                </Typography.Subtitle>
 
                 <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                   <div>
@@ -397,9 +398,9 @@ export function Diabetes() {
               </div>
 
               <div className="painel-secundario my-2">
-                <h4 className="my-4 text-center">
+                <Typography.Subtitle>
                   Frequência de complicações relacionadas à diabetes
-                </h4>
+                </Typography.Subtitle>
 
                 <div className="d-flex flex-wrap flex-xl-nowrap justify-content-center">
                   {isLoadingDiabetesIndicators ? (
@@ -430,9 +431,9 @@ export function Diabetes() {
               </div>
 
               <div className="painel-secundario">
-                <h4 className="mt-5 mb-4 text-center">
+                <Typography.Subtitle>
                   Adultos com diabetes de acordo com o IMC
-                </h4>
+                </Typography.Subtitle>
 
                 <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                   {isLoadingDiabetesFactors ? (
@@ -455,9 +456,9 @@ export function Diabetes() {
               </div>
 
               <div className="painel-secundario">
-                <h4 className="mt-5 mb-4 text-center">
+                <Typography.Subtitle>
                   Extratificação de atendimentos por profissional
-                </h4>
+                </Typography.Subtitle>
                 <div className="w-100">
                   {isLoadingProfessionals ? (
                     <div className="d-flex align-items-center justify-content-center">

@@ -20,7 +20,7 @@ class CreateBasesController:
     def create_bases(self):
         logging.info("Starting base generation")
         _list = [
-            # CreateDiabetesBasesRepository(),
+            CreateDiabetesBasesRepository(),
             CreateHypertensionBasesRepository(),
             # CreateOralHealthBasesRepository(),
             # CreateSmokingBasesRepository()

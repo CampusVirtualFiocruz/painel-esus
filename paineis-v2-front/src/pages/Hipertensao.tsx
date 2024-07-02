@@ -21,6 +21,8 @@ import { useState } from "react";
 import { BarSexo } from "../charts/BarSexo";
 import { Button } from "bold-ui";
 import { useInfo } from "../context/infoProvider/useInfo";
+import { Typography } from "../components/ui/Typography";
+
 type TModal = {
   loaded: number;
   tipo?: string;
@@ -278,9 +280,9 @@ export function Hipertensao() {
           <div className="row gx-5">
             <div className="col-12 col-lg-5">
               <div className="painel-lateral">
-                <h4 className="mt-5 text-center">
+                <Typography.Subtitle>
                   Pessoas com hipertensão por faixa etária
-                </h4>
+                </Typography.Subtitle>
                 {isLoadingHipertensao ? (
                   <div className="d-flex align-items-center justify-content-center">
                     <Spinner size="sm" type="grow" className="me-2" />
@@ -299,9 +301,9 @@ export function Hipertensao() {
               </div>
 
               <div className="painel-lateral">
-                <h4 className="mt-5 text-center">
+                <Typography.Subtitle>
                   Pessoas com hipertensão por sexo
-                </h4>
+                </Typography.Subtitle>
                 {isLoadingHipertensaoAgeGroupGender ? (
                   <div className="d-flex align-items-center justify-content-center">
                     <Spinner size="sm" type="grow" className="me-2" />
@@ -320,9 +322,9 @@ export function Hipertensao() {
               </div>
 
               <div className="painel-lateral situacao-exames">
-                <h3 className="my-5 text-center">
+                <Typography.Subtitle>
                   Situação dos exames nos últimos 12 meses
-                </h3>
+                </Typography.Subtitle>
 
                 <div className="row gx-4 my-3">
                   <div className="col-5 col-lg-6"></div>
@@ -373,9 +375,9 @@ export function Hipertensao() {
 
             <div className="col-12 col-lg-7 d-flex flex-column">
               <div className="painel-lateral">
-                <h4 className="mt-5 mb-4 text-center">
+                <Typography.Subtitle>
                   Total de atendimento nos últimos 12 meses
-                </h4>
+                </Typography.Subtitle>
 
                 <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                   <div>
@@ -408,9 +410,9 @@ export function Hipertensao() {
               </div>
 
               <div className="painel-secundario my-2">
-                <h4 className="my-4 text-center">
+                <Typography.Subtitle>
                   Frequência de complicações relacionadas à hipertensão
-                </h4>
+                </Typography.Subtitle>
 
                 <div className="d-flex flex-wrap flex-xl-nowrap justify-content-center">
                   {isLoadingHipertensaoIndicators ? (
@@ -441,9 +443,9 @@ export function Hipertensao() {
               </div>
 
               <div className="painel-secundario">
-                <h4 className="mt-5 mb-4 text-center">
+                <Typography.Subtitle>
                   Adultos com hipertensão de acordo com o IMC
-                </h4>
+                </Typography.Subtitle>
 
                 <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                   {isLoadingHipertensaoFactors ? (
@@ -468,9 +470,9 @@ export function Hipertensao() {
               </div>
 
               <div className="painel-secundario">
-                <h4 className="mt-5 mb-4 text-center">
+                <Typography.Subtitle>
                   Extratificação de atendimentos por profissional
-                </h4>
+                </Typography.Subtitle>
                 <div className="w-100">
                   {isLoadingProfessionals ? (
                     <div className="d-flex align-items-center justify-content-center">
