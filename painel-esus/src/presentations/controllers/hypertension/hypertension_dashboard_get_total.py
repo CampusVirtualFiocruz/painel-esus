@@ -1,8 +1,8 @@
 from src.domain.use_cases.diseases_dashboard.hypertension_use_case import (
     HypertensionDasboardUseCaseInterface
 )
-
-from src.presentations.http_types import HttpRequest, HttpResponse
+from src.presentations.http_types import HttpRequest
+from src.presentations.http_types import HttpResponse
 from src.presentations.interfaces.controller_interface import \
     ControllerInterface
 
@@ -20,5 +20,5 @@ class HypertensionDashboardGetTotal(ControllerInterface):
 
         return HttpResponse(
             status_code=200,
-            body={'data': response['total']}
+            body={'data': response}
         )

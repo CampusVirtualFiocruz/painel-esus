@@ -39,7 +39,7 @@
         min-height: 140px;
         background-color: #343131;
         color: #fff;
-        border-radius: 20px;
+        border-radius: var(--default-radius);
         cursor: pointer;
 
         transition: all 0.3s ease-out;
@@ -83,7 +83,7 @@
         min-height: 140px;
         background-color: #ffffff;
         border: 2px solid #343131;
-        border-radius: 20px;
+        border-radius: var(--default-radius);
         padding: 9px 16px;
         color: #343131;
         cursor: pointer;
@@ -127,7 +127,11 @@
       height: 21px;
       background-color: #0069d0;
     }
-
+    .box-container-nonactive {
+      width: 24px;
+      height: 21px;
+      background-color: #e9ecef;
+    }
     .box-container-dark {
       width: 24px;
       height: 21px;
@@ -160,7 +164,7 @@
     }
 
     .painel-demografico {
-      height: 296px;
+      height: 496px;
       position: relative;
       text-align: center;
     }
@@ -182,7 +186,7 @@
         justify-content: center;
 
         height: 233px;
-        border-radius: 20px;
+        border-radius: var(--default-radius);
         background-color: #343131;
 
         cursor: pointer;
@@ -224,7 +228,7 @@
     .btn-primary {
       height: 38px;
       background-color: #0069d0;
-      border-radius: 5px;
+      border-radius: var(--default-radius);
       margin: 0;
       padding: 0 32px;
       border: none;

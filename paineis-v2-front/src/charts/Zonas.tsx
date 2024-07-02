@@ -7,6 +7,7 @@ export function Zonas({ data }: any) {
   let dados = [
     { value: data?.urbano ?? 0, name: "Zona Urbana" },
     { value: data?.rural ?? 0, name: "Zona Rural" },
+    { value: data?.nao_definido ?? 0, name: "Não informado" },
   ];
 
   function onChartClick(params: any) {
@@ -14,7 +15,10 @@ export function Zonas({ data }: any) {
   }
 
   const options = {
-    color: ["#0069d0", "#84aaff"],
+    color: ["#0069d0", "#84aaff", "#d3d4dd"],
+    tooltip: {
+      trigger: "item",
+    },
     series: [
       {
         name: nome,

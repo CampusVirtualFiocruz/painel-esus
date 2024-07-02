@@ -1,20 +1,34 @@
 import ReactECharts from "echarts-for-react";
 import { getPorcentagemIndicador } from "../utils";
 
+const parse_label = (label: string) => {
+  return {
+    rural: "Rural",
+    urbano: "Urbano",
+    nao_informado: "Não Informado",
+  }[label];
+};
 export function Condicao({ data }: any) {
   let options = {};
 
   if (data !== undefined) {
-    let total = data.urbano + data.rural;
+    let total = data.urbano + data.rural + (data.nao_informado || 0);
     const entries = Object.entries(data).map((item) => {
       return {
         value: item[1],
         name: getPorcentagemIndicador(item[0], total, item[1]),
+        label: parse_label(item[0]),
       };
     });
 
     options = {
-      color: ["#84aaff", "#0069d0"],
+      color: ["#84aaff", "#0069d0", "#e9ecef"],
+      tooltip: {
+        trigger: "item",
+        formatter: function (params: any) {
+          return `${params.data.label}: ${params.data.value} (${params.name}%)`;
+        },
+      },
       series: [
         {
           name: "Grafico 1",

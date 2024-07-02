@@ -90,7 +90,7 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
         name: nome,
         type: "pie",
         radius: ["60%", "90%"],
-        avoidLabelOverlap: false,
+        avoidLabelOverlap: true,
         label: {
           show: true,
           overflow: "break",
@@ -114,7 +114,14 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
   };
 
   return (
-    <div className="donut">
+    <div
+      className="donut"
+      style={{
+        width: "100%",
+        margin: 10,
+        padding: 10,
+      }}
+    >
       <ReactECharts
         option={options}
         style={{

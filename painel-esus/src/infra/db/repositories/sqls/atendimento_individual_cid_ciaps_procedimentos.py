@@ -1,9 +1,29 @@
-ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS = """
-with atd_individual_filtro_ciaps as (
+# pylint: disable=R1718,C0301
+def get_atendimentos(cids, dates=None):
+    if dates is not None:
+        if isinstance(dates, list):
+            dates_sql = f"and  tfai.co_dim_tempo: : text: : date between '{dates[0]}' and '{dates[1]}'"
+    else:
+        dates_sql = """ and co_dim_tempo::text::date between (
+		select
+			max(tfai.co_dim_tempo::text::date)
+		from
+			tb_fat_atendimento_individual tfai)::DATE - interval '12 month' and (
+		select
+			max(tfai.co_dim_tempo::text::date) from tb_fat_atendimento_individual tfai) """
+
+    return f"""with 
+atendimento_individual  as (
+    select * from tb_fat_atendimento_individual tfai  where (ds_filtro_ciaps like any (array[ {cids}])
+		or ds_filtro_cids like any(array[{cids}]))  {dates_sql}
+	order by co_dim_tempo asc
+),
+atd_individual_filtro_ciaps as (
     select
             co_seq_fat_atd_ind,
             co_dim_tempo,
-            nu_cns,
+            atd.nu_cns,
+            atd.co_dim_cbo_1,
             coalesce(nu_peso, 0 ) nu_peso,
             coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
@@ -13,10 +33,9 @@ with atd_individual_filtro_ciaps as (
             co_fat_cidadao_pec,
             nu_cpf_cidadao,
             unnest(STRING_TO_ARRAY(rtrim(ltrim(ds_filtro_ciaps, '|'), '|'), '|')) as codigo,
-            'CIAPS' as tipo,
-            co_dim_cbo_1
+            'CIAPS' as tipo
     from
-                tb_fat_atendimento_individual
+                atendimento_individual atd
     group by
         1,
         2,
@@ -33,7 +52,8 @@ with atd_individual_filtro_ciaps as (
     select
                         co_seq_fat_atd_ind,
             co_dim_tempo,
-            nu_cns,
+            atd.nu_cns,
+            atd.co_dim_cbo_1,
             coalesce(nu_peso, 0 ) nu_peso,
             coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
@@ -43,10 +63,9 @@ with atd_individual_filtro_ciaps as (
             co_fat_cidadao_pec,
             nu_cpf_cidadao,
             unnest(STRING_TO_ARRAY(rtrim(ltrim(ds_filtro_cids, '|'), '|'), '|')) as codigo,
-            'CID' as tipo,
-            co_dim_cbo_1
+            'CID' as tipo
     from
-                tb_fat_atendimento_individual
+                atendimento_individual atd
     group by
         1,
         2,
@@ -63,7 +82,8 @@ union
 select
             co_seq_fat_atd_ind,
             co_dim_tempo,
-            nu_cns,
+            atd.nu_cns,
+            atd.co_dim_cbo_1,
             coalesce(nu_peso, 0) nu_peso,
             coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
@@ -73,10 +93,9 @@ select
             co_fat_cidadao_pec,
             nu_cpf_cidadao,
             unnest(STRING_TO_ARRAY(rtrim(ltrim(ds_filtro_proced_solicitados , '|'), '|'), '|')) as codigo,
-		    'Procedimentos Solicitados' as tipo,
-            co_dim_cbo_1
+                    'Procedimentos Solicitados' as tipo
     from
-                tb_fat_atendimento_individual
+                atendimento_individual atd
     group by
         1,
         2,
@@ -93,7 +112,8 @@ select
     select
                         co_seq_fat_atd_ind,
             co_dim_tempo,
-            nu_cns,
+            atd.nu_cns,
+            atd.co_dim_cbo_1,
             coalesce(nu_peso, 0) nu_peso,
             coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
@@ -103,10 +123,9 @@ select
             co_fat_cidadao_pec,
             nu_cpf_cidadao,
             unnest(STRING_TO_ARRAY(rtrim(ltrim(ds_filtro_proced_avaliados , '|'), '|'), '|')) as codigo,
-		    'Procedimentos Avaliados' as tipo,
-            co_dim_cbo_1
+                    'Procedimentos Avaliados' as tipo
     from
-                tb_fat_atendimento_individual
+                atendimento_individual atd
     group by
         1,
         2,
@@ -119,22 +138,25 @@ select
         9,
         10,
         11, 12, 13
-    )		
+    )
 select
-	atd.*,
+        atd.*,
      tfcp.no_cidadao,
-	coalesce(tfcd.co_dim_tipo_localizacao, 1) co_dim_tipo_localizacao,
-	coalesce(tfcp.co_dim_tempo_nascimento, 0) co_dim_tempo_nascimento,
+        coalesce(tfcd.co_dim_tipo_localizacao, 1) co_dim_tipo_localizacao,
+        coalesce(tfcp.co_dim_tempo_nascimento, 0) co_dim_tempo_nascimento,
     coalesce(tc.nu_cbo, '0') as cbo,
     t.dt_registro
 from
-	atd_individual_filtro_ciaps atd
+        atd_individual_filtro_ciaps atd
 left join tb_dim_tempo t on
-	t.co_seq_dim_tempo = atd.co_dim_tempo
+        t.co_seq_dim_tempo = atd.co_dim_tempo
 left join tb_fat_familia_territorio tfft on
-	tfft.co_fat_cidadao_pec = atd.co_fat_cidadao_pec
+        tfft.co_fat_cidadao_pec = atd.co_fat_cidadao_pec
 left join tb_fat_cad_domiciliar tfcd on
-	tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar
+        tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar 
 left join tb_fat_cidadao_pec  tfcp on tfcp.co_seq_fat_cidadao_pec  = atd.co_fat_cidadao_pec 
-left join tb_dim_cbo tc on atd.co_dim_cbo_1 = tc.co_seq_dim_cbo 
- """
+left join tb_dim_cbo tc on atd.co_dim_cbo_1 = tc.co_seq_dim_cbo
+"""
+
+
+ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS = get_atendimentos

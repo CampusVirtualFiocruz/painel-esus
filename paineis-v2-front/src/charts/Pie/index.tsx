@@ -43,6 +43,7 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
         radius: "80%",
         center: ["50%", "50%"],
         animationDuration: 1000,
+
         label: {
           show: true,
           position: "center",
@@ -59,7 +60,12 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
   };
 
   return (
-    <div className="pie-chart">
+    <div
+      className="pie-chart"
+      style={{
+        width: "100%",
+      }}
+    >
       <ReactECharts
         option={options}
         style={{

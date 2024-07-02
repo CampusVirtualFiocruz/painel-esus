@@ -32,4 +32,4 @@ class ImcModel():
                     self.other.total += 1
 
     def get_list(self) -> List[IMC]:
-        return self.list + [self.other]
+        return self.list

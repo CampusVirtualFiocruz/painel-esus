@@ -53,7 +53,7 @@
         width: 300px;
         height: 38px;
         background-color: #ffffff;
-        border-radius: 5px;
+        border-radius: var(--default-radius);
         margin: 0;
         border: 1px solid #343131;
 
@@ -66,7 +66,7 @@
         width: 170px;
         height: 38px;
         background-color: #343131;
-        border-radius: 5px;
+        border-radius: var(--default-radius);
         margin: 0;
         border: none;
 

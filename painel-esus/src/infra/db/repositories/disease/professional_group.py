@@ -3,18 +3,18 @@ from typing import List
 
 class ProfessionalsGroup():
     professionals_map = {
-        "225":  'MÉDICOS',
-        "2232": 'CIRURGIÕES-DENTISTAS',
-        "2234": 'FARMACÊUTICOS',
-        "2236": 'FISIOTERAPEUTAS',
-        "2237": 'NUTRICIONISTAS',
-        "2238": 'FONOAUDIÓLOGOS',
-        "2239": 'TERAPEUTAS OCUPACIONAIS',
-        "2241": 'EDUCAÇÃO FÍSICA',
-        "2263": 'INTEGRATIVA E COMPLEMENTAR',
-        "2515": 'PSICÓLOGOS',
-        "2516": 'ASSITENTE SOCIAL',
-        "2235": 'ENFERMEIROS'
+        "2516": 'ASSISTENTE SOCIAL',
+        "2232": 'CIRURGIÃO-DENTISTA',
+        "2235": 'ENFERMEIRO',
+        "2234": 'FARMACÊUTICO',
+        "2236": 'FISIOTERAPEUTA',
+        "2238": 'FONOAUDIÓLOGO',
+        "225":  'MÉDICO',
+        "2237": 'NUTRICIONISTA',
+        "2241": 'PROFISSIONAL DA PROFISSIONAL DA EDUCAÇÃO FÍSICA',
+        "2515": 'PSICÓLOGO',
+        "2239": 'TERAPEUTA OCUPACIONAL',
+        # "2263": 'INTEGRATIVA E COMPLEMENTAR',
     }
 
     def __init__(self):
@@ -22,64 +22,59 @@ class ProfessionalsGroup():
         self._create_items()
 
     def _create_items(self):
-        self.professionals_dict = {
-            'MÉDICOS': {
-                'profissao': 'MÉDICOS',
+        professionals_dict = {
+            'MÉDICO': {
+                'profissao': 'MÉDICO',
                 'totalCount': 0,
                 'total': 0
             },
-            'CIRURGIÕES-DENTISTAS': {
-                'profissao': 'CIRURGIÕES-DENTISTAS',
+            'CIRURGIÃO-DENTISTA': {
+                'profissao': 'CIRURGIÃO-DENTISTA',
                 'totalCount': 0,
                 'total': 0
             },
-            'FARMACÊUTICOS': {
-                'profissao': 'FARMACÊUTICOS',
+            'FARMACÊUTICO': {
+                'profissao': 'FARMACÊUTICO',
                 'totalCount': 0,
                 'total': 0
             },
-            'FISIOTERAPEUTAS': {
-                'profissao': 'FISIOTERAPEUTAS',
+            'FISIOTERAPEUTA': {
+                'profissao': 'FISIOTERAPEUTA',
                 'totalCount': 0,
                 'total': 0
             },
-            'NUTRICIONISTAS': {
-                'profissao': 'NUTRICIONISTAS',
+            'NUTRICIONISTA': {
+                'profissao': 'NUTRICIONISTA',
                 'totalCount': 0,
                 'total': 0
             },
-            'FONOAUDIÓLOGOS': {
-                'profissao': 'FONOAUDIÓLOGOS',
+            'FONOAUDIÓLOGO': {
+                'profissao': 'FONOAUDIÓLOGO',
                 'totalCount': 0,
                 'total': 0
             },
-            'TERAPEUTAS OCUPACIONAIS': {
-                'profissao': 'TERAPEUTAS OCUPACIONAIS',
+            'TERAPEUTA OCUPACIONAL': {
+                'profissao': 'TERAPEUTA OCUPACIONAL',
                 'totalCount': 0,
                 'total': 0
             },
-            'EDUCAÇÃO FÍSICA': {
-                'profissao': 'EDUCAÇÃO FÍSICA',
+            'PROFISSIONAL DA EDUCAÇÃO FÍSICA': {
+                'profissao': 'PROFISSIONAL DA EDUCAÇÃO FÍSICA',
                 'totalCount': 0,
                 'total': 0
             },
-            'INTEGRATIVA E COMPLEMENTAR': {
-                'profissao': 'INTEGRATIVA E COMPLEMENTAR',
+            'PSICÓLOGO': {
+                'profissao': 'PSICÓLOGO',
                 'totalCount': 0,
                 'total': 0
             },
-            'PSICÓLOGOS': {
-                'profissao': 'PSCICÓLOGOS',
+            'ASSISTENTE SOCIAL': {
+                'profissao': 'ASSISTENTE SOCIAL',
                 'totalCount': 0,
                 'total': 0
             },
-            'ASSITENTE SOCIAL': {
-                'profissao': 'ASSITENTE SOCIAL',
-                'totalCount': 0,
-                'total': 0
-            },
-            'ENFERMEIROS': {
-                'profissao': 'ENFERMEIROS',
+            'ENFERMEIRO': {
+                'profissao': 'ENFERMEIRO',
                 'totalCount': 0,
                 'total': 0
             },
@@ -89,6 +84,7 @@ class ProfessionalsGroup():
                 'total': 0
             },
         }
+        self.professionals_dict = dict(sorted(professionals_dict.items()))
 
     def get_professionals_count(self, data_frame) -> List:
         def _parse_professionals(cbo):

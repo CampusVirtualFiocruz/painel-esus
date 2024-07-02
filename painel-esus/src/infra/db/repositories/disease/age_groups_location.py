@@ -123,16 +123,15 @@ class AgeGroupsLocationDF:
             'co_dim_tipo_localizacao'] = 'Rural'
         faixas.loc[
             faixas['co_dim_tipo_localizacao'] == nao_informado,
-            'co_dim_tipo_localizacao'] = 'Não Informado'
+            'co_dim_tipo_localizacao'] = 'Nao Informado'
         return data_frame, faixas
 
     def age_group_location(self, data_frame: DataFrame):
+        
         data_frame = self.parse_date(data_frame)
         data_frame = data_frame[data_frame['idade'].notna()]
         data_frame['idade'] = data_frame['idade'].astype(
             str).astype(float).astype(int)
-        print(data_frame['co_dim_tipo_localizacao'].unique())
-
         data_frame, faixas = self._parse_age_group(data_frame)
 
         result = self._create_age_groups_items()

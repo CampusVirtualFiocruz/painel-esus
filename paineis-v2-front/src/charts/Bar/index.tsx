@@ -5,6 +5,7 @@ type Faixa = {
   NaN?: number;
   Rural?: string;
   Urbano?: number;
+  "Nao Informado"?: number;
 };
 
 type BarData = {
@@ -22,12 +23,14 @@ export function Bar({ data, titulo }: BarData) {
 
     if (
       !objFaixa.hasOwnProperty("Rural") ||
-      !objFaixa.hasOwnProperty("Urbano")
+      !objFaixa.hasOwnProperty("Urbano") ||
+      !objFaixa.hasOwnProperty("Nao Informado")
     ) {
       return {
         NaN: objFaixa.NaN,
         Rural: 0,
         Urbano: 0,
+        "Nao Informado": 0,
       };
     }
 
@@ -39,10 +42,20 @@ export function Bar({ data, titulo }: BarData) {
   let dataUrbano = arrData.map((obj: Faixa) => {
     return obj.Urbano;
   });
-
+  let dataNaoInformado = arrData.map((obj: Faixa) => {
+    return obj["Nao Informado"];
+  });
+  console.log("dataNaoInformado", dataNaoInformado);
   const options = {
     legend: {
       bottom: "0%",
+    },
+    tooltip: {
+      trigger: "item",
+      formatter: function (params: any) {
+        console.log(params);
+        return `${params.name} <br />${params.seriesName}: ${params.value}`;
+      },
     },
     xAxis: {
       data: faixaEtaria,
@@ -60,6 +73,7 @@ export function Bar({ data, titulo }: BarData) {
       },
     },
     yAxis: {
+      type: "value",
       axisLabel: {
         show: true,
         fontSize: 16,
@@ -85,7 +99,8 @@ export function Bar({ data, titulo }: BarData) {
         name: "Área Rural",
         type: "bar",
         stack: "one",
-        barWidth: "50%",
+        barMinHeight: 10,
+        barWidth: "33%",
         itemStyle: {
           color: "#84aaff",
         },
@@ -95,11 +110,23 @@ export function Bar({ data, titulo }: BarData) {
         name: "Área Urbana",
         type: "bar",
         stack: "one",
-        barWidth: "50%",
+        barMinHeight: 10,
+        barWidth: "33%",
         itemStyle: {
           color: "#0069d0",
         },
         data: dataUrbano,
+      },
+      {
+        name: "Não Informado",
+        type: "bar",
+        stack: "one",
+        barMinHeight: 10,
+        barWidth: "33%",
+        itemStyle: {
+          color: "#e9ecef",
+        },
+        data: dataNaoInformado,
       },
     ],
   };
