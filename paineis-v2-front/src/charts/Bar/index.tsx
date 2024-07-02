@@ -94,9 +94,6 @@ export function Bar({ data, titulo }: BarData) {
       left: 50,
       bottom: 150,
     },
-    tooltip: {
-      trigger: "item",
-    },
     series: [
       {
         name: "Área Rural",
@@ -119,7 +116,7 @@ export function Bar({ data, titulo }: BarData) {
         data: dataUrbano,
       },
       {
-        name: "Não Definido",
+        name: "Não Informado",
         type: "bar",
         stack: "one",
         barWidth: "33%",

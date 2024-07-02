@@ -117,7 +117,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
         results = results + [
             [
-                "Não Definido",
+                "Não Informado",
                 {
                     "com_consulta": consultas,
                     "com_consulta_abs": int((total)),

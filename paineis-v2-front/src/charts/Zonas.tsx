@@ -7,7 +7,7 @@ export function Zonas({ data }: any) {
   let dados = [
     { value: data?.urbano ?? 0, name: "Zona Urbana" },
     { value: data?.rural ?? 0, name: "Zona Rural" },
-    { value: 0, name: "Não informado" },
+    { value: data?.nao_definido ?? 0, name: "Não informado" },
   ];
 
   function onChartClick(params: any) {
