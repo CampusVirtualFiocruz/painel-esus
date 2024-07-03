@@ -1,3 +1,5 @@
+import { BarChart, DonutChart, PieChart } from "./charts.types";
+
 type MockRelatorioTabagismo = {
   "proporcao-tabagistas-acompanhadas": DonutChart;
   "proporcao-fatores-riscos-por-dant": BarChart;

@@ -35,7 +35,7 @@ type PercentualChart = {
 //
 // Tipos finais de gráficos
 //
-type BarChart = LinearChart;
-type LineChart = LinearChart;
-type PieChart = PercentualChart;
-type DonutChart = PercentualChart;
+export type BarChart = LinearChart;
+export type LineChart = LinearChart;
+export type PieChart = PercentualChart;
+export type DonutChart = PercentualChart;
