@@ -34,7 +34,7 @@ const ReportWrapper = ({
           backgroundColor: "white",
         }}
       >
-        <center>
+        <>
           <div
             style={{
               marginTop: "50px",
@@ -63,7 +63,7 @@ const ReportWrapper = ({
           >
             {subtitle}
           </p>
-        </center>
+        </>
         {children}
         <div className="container">
           <div className="row justify-content-center mb-2">

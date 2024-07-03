@@ -39,7 +39,7 @@ type TypeUbs = {
 };
 
 type Lista = {
-  co_dim_unidade_saude_1: number;
+  co_dim_unidade_saude: number;
   no_unidade_saude: string;
   nu_cnes: number;
 };
@@ -77,7 +77,7 @@ export function Diabetes() {
       const listData: TypeUbs[] = data.data.map((ubs) => {
         return {
           label: ubs.no_unidade_saude,
-          value: ubs.nu_cnes,
+          value: ubs.co_seq_dim_unidade_saude,
         };
       });
 

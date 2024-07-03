@@ -67,12 +67,16 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
     def get_age_groups_location(self, cnes: int = None) -> Dict:
         cares = self._retrieve_cares(cnes)
+        cares = cares.groupby('co_seq_fat_atd_ind').first().reset_index()
+        cares = cares.groupby('co_fat_cidadao_pec').first().reset_index()
         age_group = AgeGroupsLocationDF()
         result = age_group.age_group_location(cares)
         return result
 
     def get_age_group_gender(self, cnes: int = None) -> Dict:
         cares = self._retrieve_cares(cnes)
+        cares = cares.groupby('co_seq_fat_atd_ind').first().reset_index()
+        cares = cares.groupby('co_fat_cidadao_pec').first().reset_index()
         age_group = AgeGroupGenderDF()
         result = age_group.age_group_gender(cares)
         return result

@@ -81,7 +81,14 @@ export function BarSexo({ data, titulo }: BarData) {
       bottom: 150,
     },
     tooltip: {
-      trigger: "item",
+      trigger: "axis",
+      formatter: function (params: any) {
+        let description = `${params[0].name}<hr>`;
+        params.forEach((param: any) => {
+          description += `${param.marker}${param.seriesName}: ${param.value}<br />`;
+        });
+        return description;
+      },
     },
     series: [
       {
@@ -89,6 +96,7 @@ export function BarSexo({ data, titulo }: BarData) {
         type: "bar",
         stack: "one",
         barWidth: "50%",
+        barMinHeight: 10,
         itemStyle: {
           color: "#84aaff",
         },
@@ -99,6 +107,7 @@ export function BarSexo({ data, titulo }: BarData) {
         type: "bar",
         stack: "one",
         barWidth: "50%",
+        barMinHeight: 10,
         itemStyle: {
           color: "#0069d0",
         },
