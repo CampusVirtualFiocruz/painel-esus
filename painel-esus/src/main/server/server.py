@@ -29,6 +29,7 @@ from src.main.server.decorators.token_required import token_required
 # from src.main.server.decorators.check_access import check_access
 
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 # tell Flask to use the above defined config
 config = dotenv_values(".env")
 print('ENV ', config["ENV"])
