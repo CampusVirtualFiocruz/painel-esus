@@ -287,7 +287,7 @@ def create_env(
             "DB_USER='" + build_env_str(input_user.get()) + "'\n",
             "DB_PASSWORD='" + build_env_str(input_password.get()) + "'\n",
             "DB_PORT='" + build_env_str(input_port.get()) + "'\n",
-            "CIDADE='" + build_env_str(input_cidade.get()) + "'\n",
+            "CIDADE_IBGE='" + build_env_str(input_cidade.get()) + "'\n",
             "ESTADO='" + build_env_str(input_estado.get()) + "'\n",
             "ADMIN_USERNAME='" + build_env_str(input_user_admin.get()) + "'\n",
             "ADMIN_PASSWORD='" +
@@ -553,7 +553,7 @@ def tabs():
 
     input_cidade = ctk.CTkEntry(
         master=frame_painel,
-        placeholder_text="Cidade:",
+        placeholder_text="Código IBGE da Cidade:",
         width=600,
         height=25,
         corner_radius=10,

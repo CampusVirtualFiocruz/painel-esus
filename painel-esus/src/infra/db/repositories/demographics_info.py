@@ -1,6 +1,6 @@
 # pylint: disable=E0401,W0012
 # pylint: disable=E0501
-# pylint: disable=E0401,C0301,W0612,W0611
+# pylint: disable=E0401,C0301,W0612,W0611,R0912
 from datetime import date
 from datetime import datetime
 from typing import Dict
@@ -265,9 +265,17 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         else:
             feminino_urbano_size = 0
 
+        df = pd.read_csv('ibge.csv', sep=";")
+        ibge = int(env.get("CIDADE_IBGE", 0))
+        if ibge == '-':
+            ibge_population = 0
+        else:
+            df_ibge = df[df['IBGE'] == ibge]
+            ibge_population = df_ibge['POPULACAO'].iloc[0]
+            ibge_population = f'{ibge_population:_.0f}'.replace('_', '.')
         response = {
             "total": data_frame.shape[0],
-            "ibgePopulation": env.get("POPULATION", "-"),
+            "ibgePopulation": ibge_population,
             "ageGroups": age_groups,
             "locationArea": {
                 "rural": int(masculino_rural_size + feminino_rural_size),
