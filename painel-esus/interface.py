@@ -274,10 +274,8 @@ def create_env(
     input_password,
     input_port,
     input_cidade,
-    input_estado,
     input_user_admin,
     input_password_admin,
-    input_populacao,
     input_bridge_login_url,
 ):
     with open(".env", "w", encoding="utf-8") as f:
@@ -288,11 +286,9 @@ def create_env(
             "DB_PASSWORD='" + build_env_str(input_password.get()) + "'\n",
             "DB_PORT='" + build_env_str(input_port.get()) + "'\n",
             "CIDADE_IBGE='" + build_env_str(input_cidade.get()) + "'\n",
-            "ESTADO='" + build_env_str(input_estado.get()) + "'\n",
             "ADMIN_USERNAME='" + build_env_str(input_user_admin.get()) + "'\n",
             "ADMIN_PASSWORD='" +
             build_env_str(input_password_admin.get()) + "'\n",
-            "POPULATION=" + input_populacao.get() + "\n",
             "PASSWORD_SALT='" + "painel" + "'\n",
             "BRIDGE_LOGIN_URL='" +
             build_env_str(input_bridge_login_url.get()) + "'\n",
@@ -562,16 +558,6 @@ def tabs():
         height=25,
         corner_radius=10,
     )
-    input_cidade.pack(pady=10, padx=10)
-
-    input_estado = ctk.CTkEntry(
-        master=frame_painel,
-        placeholder_text="Estado:",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_estado.pack(pady=10, padx=10)
 
     input_user_admin = ctk.CTkEntry(
         master=frame_painel,
@@ -608,23 +594,6 @@ def tabs():
         corner_radius=10,
     )
     input_password_admin.pack(pady=10, padx=10)
-
-    input_populacao = ctk.CTkEntry(
-        master=frame_painel,
-        placeholder_text="Tamanho da população (Ex: 20000):",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_populacao.pack(pady=10, padx=10)
-    input_populacao = ctk.CTkEntry(
-        master=frame_painel,
-        placeholder_text="Tamanho da população (Ex: 20000):",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_populacao.pack(pady=10, padx=10)
 
     input_bridge_login_url = ctk.CTkEntry(
         master=frame_painel,
@@ -651,10 +620,8 @@ def tabs():
             input_password,
             input_port,
             input_cidade,
-            input_estado,
             input_user_admin,
             input_password_admin,
-            input_populacao,
             input_bridge_login_url,
         ]
     )
@@ -667,10 +634,8 @@ def tabs():
             input_password,
             input_port,
             input_cidade,
-            input_estado,
             input_user_admin,
             input_password_admin,
-            input_populacao,
             input_bridge_login_url,
         )
         tabview.destroy()
