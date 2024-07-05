@@ -14,8 +14,10 @@ from src.errors import InvalidArgument
 from src.infra.db.repositories.disease.age_group_gender import AgeGroupGenderDF
 from src.infra.db.repositories.disease.age_groups_location import AgeGroupsLocationDF
 from src.infra.db.repositories.disease.professional_group import ProfessionalsGroup
+from src.infra.db.settings.connection import DBConnectionHandler as DBConnectionHandlerOnline
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
+from ..sqls import get_self_reference_disease
 from ..sqls import LISTA_PESOS_ALTURAS
 
 
@@ -23,6 +25,14 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
     def __init__(self, disease: Disease):
         self.disease = disease
+
+    def _find_auto_referido(self):
+        with DBConnectionHandlerOnline() as db_con:
+            engine = db_con.get_engine()
+            cids = ",".join([f"'%%|{cid}|%%'" for cid in self.disease.target])
+            sql = get_self_reference_disease(
+                self.disease.name, cids)
+            return pd.read_sql_query(sql, con=engine)
 
     def _retrieve_imc_info(self, cnes: int = None):
         if cnes and not isinstance(cnes, int):
@@ -60,9 +70,11 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
     def get_total(self, cnes: int = None) -> DiseaseDashboardTotal:
         cares = self._retrieve_cares(cnes)
+        auto_referido = self._find_auto_referido()
         return {
             "total_atendimentos": int(cares["co_seq_fat_atd_ind"].unique().shape[0]),
-            "total_pacientes": int(cares["co_fat_cidadao_pec"].unique().shape[0])
+            "total_pacientes": int(cares["co_fat_cidadao_pec"].unique().shape[0]),
+            "total_auto_referido": int(auto_referido['qtd'].iloc[0])
         }
 
     def get_age_groups_location(self, cnes: int = None) -> Dict:

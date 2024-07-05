@@ -1,14 +1,16 @@
+# pylint: disable=W0212
 from pprint import pprint
 
 import pytest
-
 from src.domain.entities.hypertension import Hypertension
 from src.domain.entities.hypertension_exams import HypertensionExams
-from src.presentations.validators.dashboard_validator import (
-    age_group_gender_validator, age_group_location_validator,
-    hypertension_complications, professionals_count)
+from src.presentations.validators.dashboard_validator import age_group_gender_validator
+from src.presentations.validators.dashboard_validator import age_group_location_validator
+from src.presentations.validators.dashboard_validator import hypertension_complications
+from src.presentations.validators.dashboard_validator import professionals_count
 
 from .diseases_dashboard import DiseasesDashboardRepository
+from .diseases_dashboard_local import DiseasesDashboardLocalRepository
 
 
 @pytest.fixture
@@ -59,3 +61,10 @@ def test_get_imc(hypertension_factory):
     repo = DiseasesDashboardRepository(hypertension_factory)
     response = repo.get_imc()
     pprint(response, indent=4)
+
+
+@pytest.mark.usefixtures('hypertension_factory')
+def test_auto_referido(hypertension_factory):
+    repo = DiseasesDashboardLocalRepository(hypertension_factory)
+    auto_referido = repo._find_auto_referido()
+    print(auto_referido['qtd'].iloc[0])

@@ -96,7 +96,7 @@ export function GestantesList() {
       const response = await Api.get<ResponseDataListUbs>("get-units");
       const data = response.data;
 
-      const listData: TypeUbs[] = data.data.map((ubs) => {
+      const listData: TypeUbs[] = data.data.map((ubs: any) => {
         return {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,

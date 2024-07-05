@@ -274,7 +274,6 @@ def create_env(
     input_password,
     input_port,
     input_cidade,
-    input_estado,
     input_user_admin,
     input_password_admin,
     input_bridge_login_url,
@@ -287,7 +286,6 @@ def create_env(
             "DB_PASSWORD='" + build_env_str(input_password.get()) + "'\n",
             "DB_PORT='" + build_env_str(input_port.get()) + "'\n",
             "CIDADE_IBGE='" + build_env_str(input_cidade.get()) + "'\n",
-            "ESTADO='" + build_env_str(input_estado.get()) + "'\n",
             "ADMIN_USERNAME='" + build_env_str(input_user_admin.get()) + "'\n",
             "ADMIN_PASSWORD='" +
             build_env_str(input_password_admin.get()) + "'\n",
@@ -548,6 +546,10 @@ def tabs():
         master=frame_painel, text="", font=("arial bold", 20), image=painel_image
     )
     image_label_painel.pack(pady=10)
+    image_label_painel = ctk.CTkLabel(
+        master=frame_painel, text="", font=("arial bold", 20), image=painel_image
+    )
+    image_label_painel.pack(pady=10)
 
     input_cidade = ctk.CTkEntry(
         master=frame_painel,
@@ -556,17 +558,15 @@ def tabs():
         height=25,
         corner_radius=10,
     )
-    input_cidade.pack(pady=10, padx=10)
 
-    input_estado = ctk.CTkEntry(
+    input_user_admin = ctk.CTkEntry(
         master=frame_painel,
-        placeholder_text="Estado:",
+        placeholder_text="Usuário de acesso ao painel-esus:",
         width=600,
         height=25,
         corner_radius=10,
     )
-    input_estado.pack(pady=10, padx=10)
-
+    input_user_admin.pack(pady=10, padx=10)
     input_user_admin = ctk.CTkEntry(
         master=frame_painel,
         placeholder_text="Usuário de acesso ao painel-esus:",
@@ -585,7 +585,24 @@ def tabs():
         corner_radius=10,
     )
     input_password_admin.pack(pady=10, padx=10)
+    input_password_admin = ctk.CTkEntry(
+        master=frame_painel,
+        placeholder_text="Senha de acesso ao painel-esus:",
+        show="*",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_password_admin.pack(pady=10, padx=10)
 
+    input_bridge_login_url = ctk.CTkEntry(
+        master=frame_painel,
+        placeholder_text="Url de login:",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_bridge_login_url.pack(pady=10, padx=10)
     input_bridge_login_url = ctk.CTkEntry(
         master=frame_painel,
         placeholder_text="Url de login:",
@@ -603,7 +620,6 @@ def tabs():
             input_password,
             input_port,
             input_cidade,
-            input_estado,
             input_user_admin,
             input_password_admin,
             input_bridge_login_url,
@@ -618,7 +634,6 @@ def tabs():
             input_password,
             input_port,
             input_cidade,
-            input_estado,
             input_user_admin,
             input_password_admin,
             input_bridge_login_url,
