@@ -30,6 +30,11 @@ import { useInfo } from "../context/infoProvider/useInfo";
 
 import "../styles/painel.scss";
 import { MdInfoOutline } from "react-icons/md";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "../components/ui/Tooltip";
 
 type PainelParams = {
   id: string;
@@ -317,17 +322,35 @@ export function Painel() {
                     <span>{formataNumero(dadosPainel?.total)}</span>
                   </div>
                   <div className="w-50 d-flex flex-column align-items-center justify-content-center">
-                    <h4 className="text-center">
-                      População Apurada
-                      <MdInfoOutline
-                        style={{
-                          cursor: "pointer",
-                          color: "#0069d0",
-                          height: 20,
-                          width: 20,
-                        }}
-                      />
-                    </h4>
+                    <Tooltip>
+                      <TooltipContent className="Tooltip">
+                        <div>
+                          Informação extraída da Relação da População para
+                          publicação no TCU em 2023,
+                          <br /> no site do igbe (Clique para acessar o portal
+                          do IBGE.)
+                        </div>
+                      </TooltipContent>
+                      <a
+                        target="_blank"
+                        href="https://www.ibge.gov.br/estatisticas/sociais/populacao/37734-relacao-da-populacao-dos-municipios-para-publicacao-no-dou.html?=&t=resultados"
+                        rel="noreferrer"
+                      >
+                        <h4 className="text-center">
+                          <TooltipTrigger>
+                            População Apurada&nbsp;
+                            <MdInfoOutline
+                              style={{
+                                cursor: "pointer",
+                                color: "#0069d0",
+                                height: 20,
+                                width: 20,
+                              }}
+                            />
+                          </TooltipTrigger>
+                        </h4>
+                      </a>
+                    </Tooltip>
                     <span>{formataNumero(dadosPainel?.ibgePopulation)}</span>
                   </div>
                 </div>

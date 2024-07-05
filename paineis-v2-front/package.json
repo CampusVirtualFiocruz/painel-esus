@@ -21,7 +21,8 @@
     "reactstrap": "^9.2.2",
     "sass": "^1.49.9",
     "typescript": "^5.2.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "@floating-ui/react": "^0.26.19"
   },
   "scripts": {
     "start": "react-scripts start",
