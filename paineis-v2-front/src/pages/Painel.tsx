@@ -29,6 +29,7 @@ import { Api as Api2 } from "../services/api2";
 import { useInfo } from "../context/infoProvider/useInfo";
 
 import "../styles/painel.scss";
+import { MdInfoOutline } from "react-icons/md";
 
 type PainelParams = {
   id: string;
@@ -309,20 +310,30 @@ export function Painel() {
 
           <div className="container container-cards-principal">
             <div className="row align-items-start">
-              <div className="col-xl-4">
+              <div className="col-xl-3">
                 <div className="container-card d-flex flex-column flex-md-row align-items-center justify-content-center my-2 py-2 px-4">
                   <div className="w-50 d-flex flex-column align-items-center justify-content-center">
                     <h4 className="text-center">Cidadãos Cadastrados</h4>
                     <span>{formataNumero(dadosPainel?.total)}</span>
                   </div>
                   <div className="w-50 d-flex flex-column align-items-center justify-content-center">
-                    <h4 className="text-center">População Estimada</h4>
+                    <h4 className="text-center">
+                      População Apurada
+                      <MdInfoOutline
+                        style={{
+                          cursor: "pointer",
+                          color: "#0069d0",
+                          height: 20,
+                          width: 20,
+                        }}
+                      />
+                    </h4>
                     <span>{formataNumero(dadosPainel?.ibgePopulation)}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="col-xl-4">
+              <div className="col-xl-6">
                 <div className="container-card-alt d-flex flex-column flex-md-row align-items-center justify-content-center my-2">
                   <div className="me-2">
                     <Zonas data={dadosPainel?.locationArea} />
@@ -356,7 +367,7 @@ export function Painel() {
                 </div>
               </div>
 
-              <div className="col-xl-4">
+              <div className="col-xl-3">
                 <div className="container-card d-flex align-items-center justify-content-center my-2 py-1">
                   <div className="d-flex flex-column align-items-center ms-2 me-4">
                     <img className="my-2" src={homem} alt="Homem" width={60} />
