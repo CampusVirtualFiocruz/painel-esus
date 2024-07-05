@@ -10,7 +10,7 @@ def get_oral_health_cares_by_gender(cnes: int = None):
                 faixas as (
                     select *, case 
                         when age <= 2 then '0 a 24 meses' 
-                        when age > 2 and age <= 9 then '0 a 9 anos' 
+                        when age > 2 and age <= 9 then '2 a 9 anos' 
                         when age > 9 and age <= 19 then '10 a 19 anos' 
                         when age > 19 and age <= 59 then '20 a 59 anos' 
                         when age > 59 then '> de 60 anos' 
@@ -28,7 +28,7 @@ def get_oral_health_cares_by_gender(cnes: int = None):
                 faixas as (
                     select *, case 
                         when age <= 2 then '0 a 24 meses' 
-                        when age > 2 and age <= 9 then '0 a 9 anos' 
+                        when age > 2 and age <= 9 then '2 a 9 anos' 
                         when age > 9 and age <= 19 then '10 a 19 anos' 
                         when age > 19 and age <= 59 then '20 a 59 anos' 
                         when age > 59 then '> de 60 anos' 

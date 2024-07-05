@@ -41,14 +41,14 @@ export const BarChart = ({ titulo, data }: BarchartType) => {
     }
   }
   for (let i of Object.keys(dict)) {
-    console.log(i, dict[i]);
+    console.log("->", i, dict[i]);
     series.push({
-      label: i,
+      label: i == "-" ? "Não Informado" : i,
       data: dict[i],
     });
   }
 
-  const legendsColors = ["#0069d0", "#84aaff"];
+  const legendsColors = ["#0069d0", "#84aaff", "#e9ecef"];
   const formatLabel = (val: number) => {
     if (val >= 1000) {
       return `${val / 1000}K`;
@@ -60,8 +60,14 @@ export const BarChart = ({ titulo, data }: BarchartType) => {
       bottom: "0%",
     },
     tooltip: {
-      trigger: "item",
-      formatter: "<strong>{a0}</strong><br/>{b0}: {c0} ",
+      trigger: "axis",
+      formatter: function (params: any) {
+        let description = `${params[0].name}<hr>`;
+        params.forEach((param: any) => {
+          description += `${param.marker}${param.seriesName}: ${param.value}<br />`;
+        });
+        return description;
+      },
     },
     xAxis: {
       data: xAxis,
@@ -79,7 +85,7 @@ export const BarChart = ({ titulo, data }: BarchartType) => {
       },
     },
     yAxis: {
-      type: "log",
+      type: "value",
       axisLabel: {
         show: true,
         fontSize: 14,
@@ -107,6 +113,7 @@ export const BarChart = ({ titulo, data }: BarchartType) => {
         type: "bar",
         stack: "one",
         barWidth: "50%",
+        barMinHeihgt: 10,
         itemStyle: {
           color: legendsColors[index],
         },

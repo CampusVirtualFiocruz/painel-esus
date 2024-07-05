@@ -1,6 +1,7 @@
 import ReactECharts from "echarts-for-react";
 import "./style.scss";
 import { content } from "../../../assets/content/content";
+import { DonutChart } from "../charts.types";
 
 export function Donut(props: DonutChart) {
   const options = {

@@ -9,38 +9,33 @@ from src.infra.db.repositories.enuns import Location
 
 class AgeGroupsLocationDF:
     faixas_dict = {
-        '1': '0 a 5 anos',
-        '2': '6 a 12 anos',
-        '3': '13 a 17 anos',
-        '4': '18 a 29 anos',
-        '5': '30 a 44 anos',
-        '6': '45 a 59 anos',
-        '7': '60 + anos'
+        '1': "0 a 19 anos",
+        '2': "20 a 29 anos",
+        '3': "30 a 39 anos",
+        '4': "40 a 49 anos",
+        '5': "50 a 59 anos",
+        '6': "60 + anos",
     }
 
     def _create_age_groups_items(self) -> Dict:
         return {
-            '0 a 5 anos': {
+            '0 a 19 anos': {
                 'Rural': 0,
                 'Urbano': 0
             },
-            '6 a 12 anos': {
+            '20 a 29 anos': {
                 'Rural': 0,
                 'Urbano': 0
             },
-            '13 a 17 anos': {
+            '30 a 39 anos': {
                 'Rural': 0,
                 'Urbano': 0
             },
-            '18 a 29 anos': {
+            '40 a 49 anos': {
                 'Rural': 0,
                 'Urbano': 0
             },
-            '30 a 44 anos': {
-                'Rural': 0,
-                'Urbano': 0
-            },
-            '45 a 59 anos': {
+            '50 a 59 anos': {
                 'Rural': 0,
                 'Urbano': 0
             },
@@ -87,26 +82,23 @@ class AgeGroupsLocationDF:
                              DataFrame
                          ]):
         data_frame['faixas'] = ''
-        mask_faixa1 = (data_frame['idade'] >= 0) & (data_frame['idade'] <= 5)
+        mask_faixa1 = (data_frame['idade'] >= 0) & (data_frame['idade'] <= 19)
         data_frame.loc[mask_faixa1, 'faixas'] = '1'
 
-        mask_faixa2 = (data_frame['idade'] >= 6) & (data_frame['idade'] <= 12)
+        mask_faixa2 = (data_frame['idade'] >= 20) & (data_frame['idade'] <= 29)
         data_frame.loc[mask_faixa2, 'faixas'] = '2'
 
-        mask_faixa3 = (data_frame['idade'] >= 13) & (data_frame['idade'] <= 17)
+        mask_faixa3 = (data_frame['idade'] >= 30) & (data_frame['idade'] <= 39)
         data_frame.loc[mask_faixa3, 'faixas'] = '3'
 
-        mask_faixa4 = (data_frame['idade'] >= 18) & (data_frame['idade'] <= 29)
+        mask_faixa4 = (data_frame['idade'] >= 40) & (data_frame['idade'] <= 49)
         data_frame.loc[mask_faixa4, 'faixas'] = '4'
 
-        mask_faixa5 = (data_frame['idade'] >= 30) & (data_frame['idade'] <= 44)
+        mask_faixa5 = (data_frame['idade'] >= 40) & (data_frame['idade'] <= 49)
         data_frame.loc[mask_faixa5, 'faixas'] = '5'
 
-        mask_faixa6 = (data_frame['idade'] >= 45) & (data_frame['idade'] <= 59)
+        mask_faixa6 = data_frame['idade'] >= 60
         data_frame.loc[mask_faixa6, 'faixas'] = '6'
-
-        mask_faixa7 = data_frame['idade'] >= 60
-        data_frame.loc[mask_faixa7, 'faixas'] = '7'
 
         faixas = data_frame.groupby(
             by=['co_dim_tipo_localizacao', 'faixas']
@@ -127,11 +119,12 @@ class AgeGroupsLocationDF:
         return data_frame, faixas
 
     def age_group_location(self, data_frame: DataFrame):
-        
         data_frame = self.parse_date(data_frame)
         data_frame = data_frame[data_frame['idade'].notna()]
         data_frame['idade'] = data_frame['idade'].astype(
             str).astype(float).astype(int)
+        print(data_frame['co_dim_tipo_localizacao'].unique())
+
         data_frame, faixas = self._parse_age_group(data_frame)
 
         result = self._create_age_groups_items()

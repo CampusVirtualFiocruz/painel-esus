@@ -51,10 +51,13 @@ export function Bar({ data, titulo }: BarData) {
       bottom: "0%",
     },
     tooltip: {
-      trigger: "item",
+      trigger: "axis",
       formatter: function (params: any) {
-        console.log(params);
-        return `${params.name} <br />${params.seriesName}: ${params.value}`;
+        let description = `${params[0].name}<hr>`;
+        params.forEach((param: any) => {
+          description += `${param.marker}${param.seriesName}: ${param.value}<br />`;
+        });
+        return description;
       },
     },
     xAxis: {
