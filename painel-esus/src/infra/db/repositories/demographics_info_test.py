@@ -3,24 +3,23 @@
 # pylint: disable=redefined-outer-name
 # pylint: disable=E0401
 from typing import Dict
-from pandas import DataFrame
-import pytest
 
-from src.domain.entities.hypertension import Hypertension
-from src.domain.entities.diabetes import Diabetes
-from src.domain.entities.pregnancy import Pregnants
-from src.errors import InvalidArgument
+import pandas as pd
+import pytest
+from pandas import DataFrame
+from src.data.use_cases.tests.data_frame_mocks.atendimento_individual_df import atendimento_individual_df
+from src.data.use_cases.tests.data_frame_mocks.atendimento_individual_df import atendimento_individual_df_empty
+from src.data.use_cases.tests.data_frame_mocks.atendimento_individual_df import atendimento_individual_df_no_rurals
+from src.data.use_cases.tests.data_frame_mocks.atendimento_individual_df import atendimento_individual_df_only_rurals
 from src.data.use_cases.tests.data_frame_mocks.calc_age_data_frame import calc_age_df
-from src.data.use_cases.tests.data_frame_mocks.demographics_info_df import (
-    demographics_info_df,
-    demographics_info_df_empty
-)
-from src.data.use_cases.tests.data_frame_mocks.atendimento_individual_df import (
-    atendimento_individual_df,
-    atendimento_individual_df_no_rurals,
-    atendimento_individual_df_only_rurals,
-    atendimento_individual_df_empty
-)
+from src.data.use_cases.tests.data_frame_mocks.demographics_info_df import demographics_info_df
+from src.data.use_cases.tests.data_frame_mocks.demographics_info_df import demographics_info_df_empty
+from src.domain.entities.diabetes import Diabetes
+from src.domain.entities.hypertension import Hypertension
+from src.domain.entities.pregnancy import Pregnants
+from src.env.conf import env
+from src.errors import InvalidArgument
+
 from .demographics_info import DemographicsInfoRepository
 
 
@@ -263,3 +262,16 @@ def test_get_demographics_info_invalid_argument():
     with pytest.raises(InvalidArgument) as exc:
         demographics.get_demographics_info('1')
         assert exc.message == 'CNES must be int'
+
+
+def test_ibge_number():
+    df = pd.read_csv('ibge.csv', sep=";")
+    ibge = int(env.get("CIDADE_IBGE", 0))
+    if ibge == '-':
+        ibge_population = 0
+    else:
+        df_ibge = df[df['IBGE'] == ibge]
+        ibge_population = df_ibge['POPULACAO'].iloc[0]
+        ibge_population = f'{ibge_population:_.0f}'.replace('_', '.')
+
+    assert ibge_population == '6.877'
