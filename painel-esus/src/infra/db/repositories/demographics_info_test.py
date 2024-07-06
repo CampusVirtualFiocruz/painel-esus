@@ -2,6 +2,8 @@
 # pylint: disable=unused-import
 # pylint: disable=redefined-outer-name
 # pylint: disable=E0401
+import os
+from pathlib import Path
 from typing import Dict
 
 import pandas as pd
@@ -11,7 +13,8 @@ from src.data.use_cases.tests.data_frame_mocks.atendimento_individual_df import 
 from src.data.use_cases.tests.data_frame_mocks.atendimento_individual_df import atendimento_individual_df_empty
 from src.data.use_cases.tests.data_frame_mocks.atendimento_individual_df import atendimento_individual_df_no_rurals
 from src.data.use_cases.tests.data_frame_mocks.atendimento_individual_df import atendimento_individual_df_only_rurals
-from src.data.use_cases.tests.data_frame_mocks.calc_age_data_frame import calc_age_df
+from src.data.use_cases.tests.data_frame_mocks.calc_age_data_frame import \
+    calc_age_df
 from src.data.use_cases.tests.data_frame_mocks.demographics_info_df import demographics_info_df
 from src.data.use_cases.tests.data_frame_mocks.demographics_info_df import demographics_info_df_empty
 from src.domain.entities.diabetes import Diabetes
@@ -275,3 +278,11 @@ def test_ibge_number():
         ibge_population = f'{ibge_population:_.0f}'.replace('_', '.')
 
     assert ibge_population == '6.877'
+
+
+def test_path_csv():
+
+    path = os.getcwd()
+    path = Path(path)
+    path = os.path.join(path, 'ibge.csv')
+    print(path)

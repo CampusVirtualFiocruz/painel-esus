@@ -1,16 +1,17 @@
 # pylint: disable=E0401,W0012
 # pylint: disable=E0501
 # pylint: disable=E0401,C0301,W0612,W0611,R0912
+import os
 from datetime import date
 from datetime import datetime
+from pathlib import Path
 from typing import Dict
 
 import pandas as pd
 from pandas import DataFrame
 from pandas import Series
-from src.data.interfaces.demographics_info import (
-    DemographicsInfoRepository as DemographicsInfoRepositoryInterface,
-)
+from src.data.interfaces.demographics_info import \
+    DemographicsInfoRepository as DemographicsInfoRepositoryInterface
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
 from src.domain.entities.pregnancy import Pregnants
@@ -265,7 +266,10 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         else:
             feminino_urbano_size = 0
 
-        df = pd.read_csv('ibge.csv', sep=";")
+        path = os.getcwd()
+        path = Path(path)
+        path = os.path.join(path, 'ibge.csv')
+        df = pd.read_csv(path, sep=";")
         ibge = int(env.get("CIDADE_IBGE", 0))
         if ibge == '-':
             ibge_population = 0
