@@ -1,13 +1,14 @@
+# pylint: disable=W0719,W0108,R1710,R1705,W0622,W0613,W1308
+from datetime import timedelta
 from typing import Dict
 
 import pandas as pd
-from datetime import timedelta
-
-from src.infra.db.settings.connection import DBConnectionHandler
 from src.domain.entities.disease import Disease
-from .sqls.pregnancy_base import PREGNANCY_BASE
 from src.infra.db.repositories.sqls import (
     MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL)
+from src.infra.db.settings.connection import DBConnectionHandler
+
+from .sqls.pregnancy_base import PREGNANCY_BASE
 
 
 class PregnancyBaserepository():
@@ -58,7 +59,6 @@ class PregnancyBaserepository():
 
         if current_time is not None:
             if current_time > dum_294:
-                print("MAX", max)
                 return max
             else:
                 return min

@@ -1,4 +1,4 @@
-# pylint: disable=E0401,W0012
+# pylint: disable=E0401,W0012,R0915
 # pylint: disable=E0501
 # pylint: disable=E0401,C0301,W0612,W0611,R0912
 import os
@@ -17,6 +17,7 @@ from src.domain.entities.hypertension import Hypertension
 from src.domain.entities.pregnancy import Pregnants
 from src.env.conf import env
 from src.errors import InvalidArgument
+from src.errors.logging import logging
 from src.infra.db.repositories.enuns.individual_cares import IndividualCare
 from src.infra.db.settings.connection import DBConnectionHandler
 
@@ -94,7 +95,6 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
 
     def __hidrate_age_groups(self, row: Series, age_group: Dict) -> None:
         if row["faixas"]:
-            print(row)
             key = self.faixas_dict[str(row["faixas"])]
             gender = row["co_dim_sexo"]
             location = row["co_dim_tipo_localizacao"]
@@ -160,9 +160,6 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
 
         mask_faixa17 = data_frame["idade"] >= 80
         data_frame.loc[mask_faixa17, "faixas"] = "17"
-
-        print("---->")
-        print(data_frame[data_frame["co_dim_tipo_localizacao"] == 1])
 
         faixas = (
             data_frame.groupby(
@@ -270,13 +267,18 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         path = Path(path)
         path = os.path.join(path, 'ibge.csv')
         df = pd.read_csv(path, sep=";")
+
         ibge = int(env.get("CIDADE_IBGE", 0))
         if ibge == '-':
             ibge_population = 0
         else:
-            df_ibge = df[df['IBGE'] == ibge]
-            ibge_population = df_ibge['POPULACAO'].iloc[0]
-            ibge_population = f'{ibge_population:_.0f}'.replace('_', '.')
+            try:
+                df_ibge = df[df['IBGE'] == ibge]
+                ibge_population = df_ibge['POPULACAO'].iloc[0]
+                ibge_population = f'{ibge_population:_.0f}'.replace('_', '.')
+            except Exception as exc:
+                logging.exception(exc)
+                ibge_population = 0
         response = {
             "total": data_frame.shape[0],
             "ibgePopulation": ibge_population,

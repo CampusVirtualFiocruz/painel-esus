@@ -39,7 +39,6 @@ class DiseasesDashboardRepository(DiseasesDashboardRepositoryInterface):
             disease = self.disease
             cids = ",".join([f"'%%|{i}|%%'" for i in self.disease.target])
             sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS(cids)
-            print(sql)
             # sql += """
             #         where
             #             dt_registro between '{}'::DATE - interval '12 month' and '{}' and codigo in ({})

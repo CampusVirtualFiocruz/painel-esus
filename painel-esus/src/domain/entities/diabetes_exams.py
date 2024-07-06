@@ -60,7 +60,6 @@ class DiabetesExams(DiseaseExams):
         for atd_id in id_maps.items():
             item = atd_id[1]
             for exam in self.list:
-                print(exam)
                 exam.check_presence(item['evaluated'], item['requested'])
         response = []
         for exam in self.list:

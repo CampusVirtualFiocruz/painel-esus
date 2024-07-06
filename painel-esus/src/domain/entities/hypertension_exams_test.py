@@ -1,7 +1,8 @@
 # pylint: disable=E0401
 import pandas as pd
 
-from .hypertension_exams import HypertensionExams, IndividualHypertensionExams
+from .hypertension_exams import HypertensionExams
+from .hypertension_exams import IndividualHypertensionExams
 
 
 def test_hypertension_exams():

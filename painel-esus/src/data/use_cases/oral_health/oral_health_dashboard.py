@@ -1,7 +1,7 @@
-from src.domain.use_cases.oral_health_dashboard_use_case import \
-    OralHealthDashboardUseCaseInterface
 from src.data.interfaces.oral_health_dashboard_repository import \
     OralHealthDashboardRepositoryInterface
+from src.domain.use_cases.oral_health_dashboard_use_case import \
+    OralHealthDashboardUseCaseInterface
 from src.errors import InvalidArgument
 
 
@@ -19,7 +19,6 @@ class OralHealthDashboardUseCase(OralHealthDashboardUseCaseInterface):
     def get_cares_by_line_of_services(self,  cnes: int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument('CNES must be int')
-        print('OralHealthDashboardUseCase', cnes)
         response = self._repository.get_cares_by_line_of_services(cnes=cnes)
         return response
 
