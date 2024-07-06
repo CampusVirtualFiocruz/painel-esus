@@ -112,6 +112,17 @@ export default function Piramide({ data }: any) {
         barWidth: "20px",
         stack: "masculino",
         z: 3,
+        xAxisIndex: 0,
+        yAxisIndex: 0,
+        data: Object.keys(result[0].nao_informado).map(function (key) {
+          return result[0].nao_informado[key];
+        }),
+      },
+      {
+        type: "bar",
+        barWidth: "20px",
+        stack: "masculino",
+        z: 3,
         style: {
           font: "28px sans-serif",
         },
@@ -132,18 +143,18 @@ export default function Piramide({ data }: any) {
           return result[0].areaRural[key];
         }),
       },
+
       {
         type: "bar",
         barWidth: "20px",
-        stack: "masculino",
+        stack: "feminino",
         z: 3,
-        xAxisIndex: 0,
-        yAxisIndex: 0,
-        data: Object.keys(result[0].nao_informado).map(function (key) {
-          return result[0].nao_informado[key];
+        xAxisIndex: 1,
+        yAxisIndex: 1,
+        data: Object.keys(result[1].nao_informado).map(function (key) {
+          return result[1].nao_informado[key];
         }),
       },
-
       {
         type: "bar",
         barWidth: "20px",
@@ -164,17 +175,6 @@ export default function Piramide({ data }: any) {
         yAxisIndex: 1,
         data: Object.keys(result[1].areaRural).map(function (key) {
           return result[1].areaRural[key];
-        }),
-      },
-      {
-        type: "bar",
-        barWidth: "20px",
-        stack: "feminino",
-        z: 3,
-        xAxisIndex: 1,
-        yAxisIndex: 1,
-        data: Object.keys(result[1].nao_informado).map(function (key) {
-          return result[1].nao_informado[key];
         }),
       },
     ],
