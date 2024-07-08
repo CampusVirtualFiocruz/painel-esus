@@ -1,13 +1,11 @@
-import * as React from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { Api } from "../../../services/api";
-import { PieChart, TPieChart } from "../../../charts/Pie";
 import ReactECharts from "echarts-for-react";
-import { formatAsPercent } from "../../../utils";
-import "./style.scss";
-import { STALE_TIME } from "../../../config/stale-time";
+import { Api } from "../../../services/api";
 import AsyncDataLoad from "../async-data-load";
+import { STALE_TIME } from "../../../config/stale-time";
+import { Typography } from "../../../components/ui/Typography";
+import "./style.scss";
 
 type PainelParams = {
   id: string;
@@ -126,7 +124,9 @@ const Exodontia = () => {
   );
   return (
     <AsyncDataLoad {...{ isLoading, error }}>
-      <h2>Proporção de exodontia por procedimento</h2>
+      <Typography.Subtitle>
+        Proporção de exodontia por procedimento
+      </Typography.Subtitle>
       <div className="col-12 dflex">
         {!isLoading && exodontiaResponse && (
           <ExodontiaPie {...exodontiaResponse} />

@@ -406,12 +406,11 @@ export function Hipertensao() {
               <div className="row">
                 <div className="col-6">
                   <div className="painel-lateral">
-                    <h4
-                      className="mt-5 mb-4 text-center "
-                      style={{ height: 50 }}
-                    >
-                      Nº de pessoas com Hipertensão (CID/CIAP)
-                    </h4>
+                    <div className="mt-5 mb-4">
+                      <Typography.Subtitle>
+                        Nº de pessoas com Hipertensão (CID/CIAP)
+                      </Typography.Subtitle>
+                    </div>
 
                     <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                       <div>
@@ -450,13 +449,11 @@ export function Hipertensao() {
                 </div>
                 <div className="col-6">
                   <div className="painel-lateral">
-                    <h4
-                      className="mt-5 mb-4 text-center"
-                      style={{ height: 50 }}
-                    >
-                      Nº de pessoas com Hipertensão (autoreferido)
-                    </h4>
-
+                    <div className="mt-5 mb-4">
+                      <Typography.Subtitle>
+                        Nº de pessoas com Hipertensão (autoreferido)
+                      </Typography.Subtitle>
+                    </div>
                     <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                       <div>
                         <div className="container-atendimentos">

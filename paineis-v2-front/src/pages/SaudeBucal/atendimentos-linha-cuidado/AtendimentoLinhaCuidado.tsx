@@ -1,8 +1,8 @@
-import * as React from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Api } from "../../../services/api";
 import { PieChart, TPieChart } from "../../../charts/Pie";
+import { Typography } from "../../../components/ui/Typography";
 import AsyncDataLoad from "../async-data-load";
 
 type PainelParams = {
@@ -14,6 +14,7 @@ type LinhaCuidadoResponse = {
   total: number;
   value: number;
 };
+
 const AtendimentoLinhaCuidado = () => {
   const { id } = useParams<PainelParams>();
   const { data, isLoading, error } = useQuery<LinhaCuidadoResponse[]>(
@@ -28,7 +29,9 @@ const AtendimentoLinhaCuidado = () => {
   const activeList = ["#5cd2c8", "#3996c1"];
   return (
     <AsyncDataLoad {...{ isLoading, error }}>
-      <h2>Atendimentos por linha de cuidado</h2>
+      <Typography.Subtitle>
+        Atendimentos por linha de cuidado
+      </Typography.Subtitle>
       <div className="col-12 chart-container" style={{ display: "flex" }}>
         {isLoading && <h1>Carregando</h1>}
         {!isLoading &&

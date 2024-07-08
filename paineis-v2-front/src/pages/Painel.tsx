@@ -35,6 +35,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "../components/ui/Tooltip";
+import { Typography } from "../components/ui/Typography";
 
 type PainelParams = {
   id: string;
@@ -411,9 +412,11 @@ export function Painel() {
             </div>
           </div>
 
-          <h3 className="my-5">
-            Proporção de indivíduos cadastrados segundo sexo e idade
-          </h3>
+          <div className="my-5">
+            <Typography.Subtitle>
+              Proporção de indivíduos cadastrados segundo sexo e idade
+            </Typography.Subtitle>
+          </div>
 
           {dadosPainel !== undefined &&
           dadosPainel.ageGroups &&
@@ -458,10 +461,12 @@ export function Painel() {
             </h6>
           )}
 
-          <h3 className="my-5">
-            Condição de saúde dos indivíduos cadastrados no município nos
-            últimos 12 meses
-          </h3>
+          <div className="my-5">
+            <Typography.Subtitle>
+              Condição de saúde dos indivíduos cadastrados no município nos
+              últimos 12 meses
+            </Typography.Subtitle>
+          </div>
 
           <div className="container">
             <div className="row container-cards-condicoes">

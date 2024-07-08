@@ -1,10 +1,10 @@
 const Subtitle = ({ children }: { children: string }) => {
   return (
-    <div style={{ marginTop: "3rem" }}>
+    <center style={{ marginTop: "3rem" }}>
       <h4>
         <b>{children}</b>
       </h4>
-    </div>
+    </center>
   );
 };
 

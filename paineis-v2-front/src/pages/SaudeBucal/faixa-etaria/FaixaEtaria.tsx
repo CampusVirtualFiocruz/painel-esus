@@ -6,6 +6,7 @@ import { Api } from "../../../services/api";
 import { STALE_TIME } from "../../../config/stale-time";
 import "./style.scss";
 import AsyncDataLoad from "../async-data-load";
+import { Typography } from "../../../components/ui/Typography";
 
 export type PainelParams = {
   id: string;
@@ -160,7 +161,9 @@ const FaixaEtaria = () => {
   return (
     <AsyncDataLoad {...{ isLoading, error }}>
       <div className="col-12">
-        <h2>Atendimentos em Saúde Bucal por faixa etária</h2>
+        <Typography.Subtitle>
+          Atendimentos em Saúde Bucal por faixa etária
+        </Typography.Subtitle>
         {!isLoading && faixaEtariaResponse && (
           <BarChart
             {...{ data: faixaEtariaResponse, titulo: "Total de atendimentos" }}
