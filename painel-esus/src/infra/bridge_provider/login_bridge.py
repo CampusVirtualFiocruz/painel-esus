@@ -17,7 +17,8 @@ class LoginBridgeRepository(LoginRepositoryInterface):
 
     def check_credentials(self, username: str, password: str) -> UserPayload:
         session = requests.Session()
-        url = env.get("BRIDGE_LOGIN_URL", "")
+        url_login = env.get("BRIDGE_LOGIN_URL", "")
+        url = f"{url_login}/api/graphql"
         payload = (
             "{\"query\":\"mutation mutation_login {\\n  login(input: {username: \\\"\
                 "+username +
