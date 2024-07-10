@@ -390,37 +390,85 @@ export function Diabetes() {
                   </div>
                 </div>
               </div>
-              <div className="painel-lateral">
-                <h4 className="mt-5 mb-4 text-center">
-                  Total de pessoas diagnosticadas com Hipertensão nos últimos 12
-                  meses
-                </h4>
+              <div className="row">
+                <div className="col-6">
+                  <div className="painel-lateral">
+                    <h4
+                      className="mt-5 mb-4 text-center "
+                      style={{ height: 50 }}
+                    >
+                      Nº de pessoas com Diabetes (CID/CIAP)
+                    </h4>
 
-                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                  <div>
-                    <div className="container-atendimentos">
-                      <div className="titulo d-flex align-items-center">
-                        <img
-                          src={info}
-                          alt="Total de atendimento nos últimos 12 meses"
-                          className="info mx-2"
-                        />
+                    <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                      <div>
+                        <div className="container-atendimentos">
+                          <div className="titulo d-flex align-items-center">
+                            <img
+                              src={info}
+                              alt="Total de atendimento nos últimos 12 meses"
+                              className="info mx-2"
+                            />
+                          </div>
+                          <span className="total-trimestre ms-4">
+                            {isLoadingTotalDiabetes ? (
+                              <div className="d-flex align-items-center justify-content-center">
+                                <Spinner
+                                  size="sm"
+                                  type="grow"
+                                  className="me-2"
+                                />
+                                0
+                              </div>
+                            ) : errorTotalDiabetes ? (
+                              <div className="d-flex align-items-center justify-content-center">
+                                <Alert color="danger">
+                                  Erro ao carregar dados.
+                                </Alert>
+                              </div>
+                            ) : (
+                              dataTotalDiabetes.total_pacientes
+                            )}
+                          </span>
+                        </div>
                       </div>
-                      <span className="total-trimestre ms-4">
-                        {isLoadingTotalDiabetes ? (
-                          <div className="d-flex align-items-center justify-content-center">
-                            <Spinner size="sm" type="grow" className="me-2" />0
-                          </div>
-                        ) : errorTotalDiabetes ? (
-                          <div className="d-flex align-items-center justify-content-center">
-                            <Alert color="danger">
-                              Erro ao carregar dados.
-                            </Alert>
-                          </div>
-                        ) : (
-                          dataTotalDiabetes.total_pacientes
-                        )}
-                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-6">
+                  <div className="painel-lateral">
+                    <h4
+                      className="mt-5 mb-4 text-center"
+                      style={{ height: 50 }}
+                    >
+                      Nº de pessoas com Diabetes (autoreferido)
+                    </h4>
+
+                    <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                      <div>
+                        <div className="container-atendimentos">
+                          <span className="total-trimestre ms-4">
+                            {isLoadingTotalDiabetes ? (
+                              <div className="d-flex align-items-center justify-content-center">
+                                <Spinner
+                                  size="sm"
+                                  type="grow"
+                                  className="me-2"
+                                />
+                                0
+                              </div>
+                            ) : errorTotalDiabetes ? (
+                              <div className="d-flex align-items-center justify-content-center">
+                                <Alert color="danger">
+                                  Erro ao carregar dados.
+                                </Alert>
+                              </div>
+                            ) : (
+                              dataTotalDiabetes.total_auto_referido
+                            )}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
