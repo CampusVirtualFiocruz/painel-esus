@@ -19,7 +19,7 @@ ds_filtro_cids not like all (array[{ciaps}])
 
 def get_self_reference_disease(disease, ciaps):
     if disease == 'diabetes':
-        return get_auto_referidos_disease('st_diabetes', ciaps)
+        return get_auto_referidos_disease('st_diabete', ciaps)
     if disease == 'hipertensao':
         return get_auto_referidos_disease('st_hipertensao_arterial', ciaps)
     raise Exception("No disease found")
