@@ -11,7 +11,7 @@ const ReportWrapper = ({
   ...props
 }: {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   children: ReactNode;
 } & HTMLProps<HTMLDivElement>) => {
   const navigate = useNavigate();
@@ -56,15 +56,19 @@ const ReportWrapper = ({
           >
             {title}
           </h1>
-          <p
-            style={{
-              display: "inline-block",
-            }}
-          >
-            {subtitle}
-          </p>
+          {Boolean(subtitle) && (
+            <p
+              style={{
+                display: "inline-block",
+              }}
+            >
+              {subtitle}
+            </p>
+          )}
         </>
-        {children}
+        <div className="container" style={{ marginTop: "80px" }}>
+          <div className="row justify-content-center">{children}</div>
+        </div>
         <div className="container">
           <div className="row justify-content-center mb-2">
             <div className="col-12 col-md-8 containerButtons d-flex justify-content-center my-5">

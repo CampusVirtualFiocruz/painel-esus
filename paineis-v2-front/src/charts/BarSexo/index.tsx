@@ -98,7 +98,7 @@ export function BarSexo({ data, titulo }: BarData) {
         barWidth: "50%",
         barMinHeight: 10,
         itemStyle: {
-          color: "#84aaff",
+          color: "#02786D",
         },
         data: dataFeminino,
       },
@@ -109,7 +109,7 @@ export function BarSexo({ data, titulo }: BarData) {
         barWidth: "50%",
         barMinHeight: 10,
         itemStyle: {
-          color: "#0069d0",
+          color: "#9BE1D8",
         },
         data: dataMasculino,
       },

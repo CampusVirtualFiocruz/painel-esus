@@ -1,27 +1,24 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Alert, Progress, Spinner } from "reactstrap";
+import { Button } from "bold-ui";
 
 import { Footer } from "../components/Footer";
-import { getUserLocalStorage } from "../context/AuthProvider/util";
-
 import { Modal } from "../components/Modal";
-
+import { Header } from "../components/Header";
+import { Typography } from "../components/ui/Typography";
 import info from "../assets/images/people.svg";
-
 import "../styles/diabetesHipertensao.scss";
 import { Api } from "../services/api";
-import { Header } from "../components/Header";
-
 import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
 import { Pie } from "../charts/Pie";
-import { capitalize, getNomeUbs } from "../utils";
-import { useState } from "react";
+import { capitalize } from "../utils";
 import { BarSexo } from "../charts/BarSexo";
-import { Button } from "bold-ui";
 import { useInfo } from "../context/infoProvider/useInfo";
-import { Typography } from "../components/ui/Typography";
+import { randomHexColorCode, wait } from "../utils/reports";
+import { ReportFooter } from "../components/ui/ReportFooter";
 
 type TModal = {
   loaded: number;
@@ -33,63 +30,18 @@ type PainelParams = {
   id: string;
 };
 
-type TypeUbs = {
-  label: string;
-  value: number | string;
-};
-
-type Lista = {
-  co_dim_unidade_saude_1: number;
-  no_unidade_saude: string;
-  nu_cnes: number;
-};
-
-type ResponseDataListUbs = {
-  data: Lista[];
-};
-
 export function Hipertensao() {
-  let navigate = useNavigate();
-  const user = getUserLocalStorage();
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<TModal>({ loaded: 0 });
-  const { cityInformation, city } = useInfo();
+  const { cityInformation } = useInfo();
 
-  console.log("cityInformation", cityInformation);
   let paramRoute = id ? id : "all";
-
-  const wait = (milliseconds: number) => {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  };
 
   const getData = async (idModal: number, tipo?: string) => {
     await wait(100);
     setData({ loaded: idModal, tipo, cnes: id });
   };
-
-  //get nome ubs
-  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
-    "ubs",
-    async () => {
-      const response = await Api.get<ResponseDataListUbs>("get-units");
-      const data = response.data;
-
-      const listData: TypeUbs[] = data.data.map((ubs) => {
-        return {
-          label: ubs.no_unidade_saude,
-          value: ubs.nu_cnes,
-        };
-      });
-
-      return listData;
-    },
-    {
-      staleTime: 1000 * 60 * 10, //10 minutos
-    }
-  );
-
-  // const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : "-";
 
   const {
     data: dataTotalHipertensao,
@@ -238,43 +190,19 @@ export function Hipertensao() {
     }
   );
 
-  function handleToPainelUbs() {
-    navigate(`/painel/${id}`);
-  }
-
-  function handleToPainelMunicipio() {
-    navigate("/painelx");
-  }
-
   const handleClick = (idModal: number) => {
     setData({ loaded: 0 });
     setShowModal(true);
     getData(idModal);
   };
 
-  const random_hex_color_code = () => {
-    let n = (Math.random() * 0x361949 * 1000000).toString(16);
-    return "#" + n.slice(0, 6);
-  };
-
-  const handleToHipertensosList = () => {
-    navigate("/hipertensos");
-  };
   return (
     <div id="page-painel">
       <Header />
-
       <div className="contentWrapper">
         <hr className="linha my-4" />
-
-        <h2>
-          {isLoadingUbs
-            ? "Carregando..."
-            : cityInformation?.municipio + " - " + cityInformation?.uf}
-        </h2>
-
+        <h2>{cityInformation?.municipio + " - " + cityInformation?.uf}</h2>
         {showModal && <Modal data={data} setShowModal={setShowModal} />}
-
         <div className="container-fluid">
           <div className="row gx-5">
             <div className="col-12 col-lg-5">
@@ -298,7 +226,6 @@ export function Hipertensao() {
                   />
                 )}
               </div>
-
               <div className="painel-lateral">
                 <Typography.Subtitle>
                   Pessoas com hipertensão por sexo
@@ -319,12 +246,10 @@ export function Hipertensao() {
                   />
                 )}
               </div>
-
               <div className="painel-lateral situacao-exames">
                 <Typography.Subtitle>
                   Situação dos exames nos últimos 12 meses
                 </Typography.Subtitle>
-
                 <div className="row gx-4 my-3">
                   <div className="col-5 col-lg-6"></div>
                   <div className="col col-lg-3">
@@ -338,7 +263,6 @@ export function Hipertensao() {
                     </div>
                   </div>
                 </div>
-
                 {isLoadingExamsTable ? (
                   <div className="d-flex align-items-center justify-content-center">
                     <Spinner size="sm" type="grow" className="me-2" />
@@ -371,13 +295,11 @@ export function Hipertensao() {
                 )}
               </div>
             </div>
-
             <div className="col-12 col-lg-7 d-flex flex-column">
               <div className="painel-lateral">
                 <Typography.Subtitle>
                   Total de atendimento nos últimos 12 meses
                 </Typography.Subtitle>
-
                 <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                   <div>
                     <div
@@ -408,10 +330,9 @@ export function Hipertensao() {
                   <div className="painel-lateral">
                     <div className="mt-5 mb-4">
                       <Typography.Subtitle>
-                        Nº de pessoas com Hipertensão (CID/CIAP)
+                        Nº de pessoas com Hipertensão <br /> (CID/CIAP)
                       </Typography.Subtitle>
                     </div>
-
                     <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                       <div>
                         <div className="container-atendimentos">
@@ -451,7 +372,7 @@ export function Hipertensao() {
                   <div className="painel-lateral">
                     <div className="mt-5 mb-4">
                       <Typography.Subtitle>
-                        Nº de pessoas com Hipertensão (autoreferido)
+                        Nº de pessoas com Hipertensão <br /> (autoreferido)
                       </Typography.Subtitle>
                     </div>
                     <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
@@ -483,12 +404,10 @@ export function Hipertensao() {
                   </div>
                 </div>
               </div>
-
               <div className="painel-secundario my-2">
                 <Typography.Subtitle>
                   Frequência de complicações relacionadas à hipertensão
                 </Typography.Subtitle>
-
                 <div className="d-flex flex-wrap flex-xl-nowrap justify-content-center">
                   {isLoadingHipertensaoIndicators ? (
                     <div className="d-flex align-items-center justify-content-center">
@@ -509,19 +428,16 @@ export function Hipertensao() {
                     </>
                   )}
                 </div>
-
                 <div className="mt-5">
                   <Button kind="primary" onClick={() => handleClick(5)}>
                     Boas práticas na assistência a pessoas com hipertensão
                   </Button>
                 </div>
               </div>
-
               <div className="painel-secundario">
                 <Typography.Subtitle>
                   Adultos com hipertensão de acordo com o IMC
                 </Typography.Subtitle>
-
                 <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
                   {isLoadingHipertensaoFactors ? (
                     <div className="d-flex align-items-center justify-content-center">
@@ -543,7 +459,6 @@ export function Hipertensao() {
                   )}
                 </div>
               </div>
-
               <div className="painel-secundario">
                 <Typography.Subtitle>
                   Extratificação de atendimentos por profissional
@@ -573,7 +488,7 @@ export function Hipertensao() {
                               value={item.total}
                               className="w-75"
                               barStyle={{
-                                backgroundColor: random_hex_color_code(),
+                                backgroundColor: randomHexColorCode(),
                               }}
                             />
                           </div>
@@ -586,31 +501,9 @@ export function Hipertensao() {
               </div>
             </div>
           </div>
-          {/* id && (<div className="row my-5 text-center">
-            <div className="col-12">
-              <button
-                type="button"
-                onClick={() => handleToHipertensosList()}
-                className="btn btn-secondary my-2"
-              >
-                Ver todos Hipertensos
-              </button>
-            </div>
-          </div>)*/}
         </div>
-
-        <div className="d-flex flex-column align-items-center mt-5 gap-3">
-          {id && (
-            <Button onClick={handleToPainelUbs}>
-              Voltar para o Painel da UBS
-            </Button>
-          )}
-          <Button onClick={handleToPainelMunicipio}>
-            Visualizar dados do painel do Município
-          </Button>
-        </div>
+        <ReportFooter />
       </div>
-
       <Footer />
     </div>
   );

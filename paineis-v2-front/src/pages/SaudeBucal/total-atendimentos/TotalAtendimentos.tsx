@@ -28,6 +28,7 @@ const TotalAtendimentos = () => {
       return response.data;
     }
   );
+
   return (
     <>
       <AsyncDataLoad {...{ isLoading, error }}>

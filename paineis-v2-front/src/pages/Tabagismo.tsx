@@ -54,38 +54,32 @@ const Tabagismo = () => {
       title="UBS Sérgio Arouca / Painel Tabagismo"
       subtitle="(últimos 12 meses)"
     >
-      <div className="container" style={{ marginTop: "80px" }}>
-        <div className="row justify-content-center">
-          {reportSections.map((chartList: any) => (
-            <div className="col-12 col-md-6">
-              {Object.keys(chartList).map((chartKey) => {
-                const CustomChart = chartList?.[chartKey]?.Chart;
-                const chartConfigs = chartList?.[chartKey]?.config;
-                const data = (tabagismoCharts as any)?.[chartKey]?.data;
+      {reportSections.map((chartList: any) => (
+        <div className="col-12 col-md-6">
+          {Object.keys(chartList).map((chartKey) => {
+            const CustomChart = chartList?.[chartKey]?.Chart;
+            const chartConfigs = chartList?.[chartKey]?.config;
+            const data = (tabagismoCharts as any)?.[chartKey]?.data;
 
-                if (chartConfigs) {
-                  const xAxisNames = data?.map(
-                    (d: any) => content?.[d?.tag] ?? d?.tag
-                  );
-                  console.log(xAxisNames);
+            if (chartConfigs) {
+              const xAxisNames = data?.map(
+                (d: any) => content?.[d?.tag] ?? d?.tag
+              );
+              chartConfigs.xAxis = {};
+              chartConfigs.xAxis.data = xAxisNames;
+            }
 
-                  chartConfigs.xAxis = {};
-                  chartConfigs.xAxis.data = xAxisNames;
-                }
-
-                return (
-                  <div style={{ marginBottom: "70px" }}>
-                    <h4 style={{ fontWeight: "bold", textAlign: "center" }}>
-                      {content?.[chartKey] || chartKey}
-                    </h4>
-                    <CustomChart data={data} config={chartConfigs} />
-                  </div>
-                );
-              })}
-            </div>
-          ))}
+            return (
+              <div style={{ marginBottom: "70px" }}>
+                <h4 style={{ fontWeight: "bold", textAlign: "center" }}>
+                  {content?.[chartKey] || chartKey}
+                </h4>
+                <CustomChart data={data} config={chartConfigs} />
+              </div>
+            );
+          })}
         </div>
-      </div>
+      ))}
     </ReportWrapper>
   );
 };

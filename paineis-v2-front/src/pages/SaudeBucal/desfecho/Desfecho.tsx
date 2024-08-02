@@ -1,24 +1,24 @@
 import { useParams } from "react-router-dom";
-import { PainelParams } from "../faixa-etaria/FaixaEtaria";
+import { Progress } from "reactstrap";
 import { useQuery } from "react-query";
+
+import AsyncDataLoad from "../async-data-load";
+import { PainelParams } from "../faixa-etaria/FaixaEtaria";
 import { Api } from "../../../services/api";
 import { STALE_TIME } from "../../../config/stale-time";
-import "./style.scss";
-import { Progress } from "reactstrap";
-import AsyncDataLoad from "../async-data-load";
 import { Typography } from "../../../components/ui/Typography";
+import { randomHexColorCode } from "../../../utils/reports";
+import "./style.scss";
 
 type DesfechResponse = {
   label: string;
   value: number;
   percent: number;
 };
-const random_hex_color_code = () => {
-  let n = (Math.random() * 0x361949 * 1000000).toString(16);
-  return "#" + n.slice(0, 6);
-};
+
 const Desfecho = () => {
   const { id } = useParams<PainelParams>();
+
   const {
     data: desfechoResponse,
     isLoading,
@@ -35,6 +35,7 @@ const Desfecho = () => {
       staleTime: STALE_TIME,
     }
   );
+
   return (
     <AsyncDataLoad {...{ isLoading, error }}>
       <div className="col-12">
@@ -54,7 +55,7 @@ const Desfecho = () => {
                     <Progress
                       value={item.percent}
                       className="w-75 hprogess"
-                      barStyle={{ backgroundColor: random_hex_color_code() }}
+                      barStyle={{ backgroundColor: randomHexColorCode() }}
                     />
                   </div>
                 </div>

@@ -1,26 +1,22 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-
 import { Alert, Spinner } from "reactstrap";
+import { Button } from "bold-ui";
 
 import { Modal } from "../components/Modal";
 import { ModalList } from "../components/ModalList";
-
 import { Footer } from "../components/Footer";
 import { getUserLocalStorage } from "../context/AuthProvider/util";
-
 import info from "../assets/images/info-circle.svg";
-
-import "../styles/gestantes.scss";
 import { Api } from "../services/api";
 import { Header } from "../components/Header";
-
 import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
 import { Pie } from "../charts/Pie";
 import { getNomeUbs, showValuePerTrimester, showValuePerWeeks } from "../utils";
-import { Button } from "bold-ui";
+import { wait } from "../utils/reports";
+import "../styles/gestantes.scss";
 
 type PainelParams = {
   id: string;
@@ -54,9 +50,6 @@ export function Gestantes() {
 
   let paramRoute = id ? id : "all";
 
-  const wait = (milliseconds: number) => {
-    return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  };
   const [showModal, setShowModal] = useState(false);
   const [showModalList, setShowModalList] = useState(false);
   const [data, setData] = useState<TModal>({ loaded: 0 });

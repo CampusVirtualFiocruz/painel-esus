@@ -1,4 +1,4 @@
-const Subtitle = ({ children }: { children: string }) => {
+const Subtitle = ({ children }: { children: any }) => {
   return (
     <center style={{ marginTop: "3rem" }}>
       <h4>
