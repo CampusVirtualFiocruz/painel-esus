@@ -226,7 +226,6 @@ export function Hipertensao() {
   return (
     <div id="page-painel-diabetes-hipertensao">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
-      {/* <h2>{cityInformation?.municipio + " - " + cityInformation?.uf}</h2> */}
       <ReportWrapper title={title}>
         <TwoColumnSection>
           <TwoColumnSection.Col>
