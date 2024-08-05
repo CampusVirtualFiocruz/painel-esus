@@ -9,7 +9,7 @@ export class TPieChart {
   constructor(
     public nome: string,
     public dataGraphic: TPieData[],
-    public colorActive: string = "#5cd2c8"
+    public colorActive: string = "#0069d0"
   ) {
     this.nome = nome;
     this.dataGraphic = dataGraphic;
@@ -60,12 +60,7 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
   };
 
   return (
-    <div
-      className="pie-chart"
-      style={{
-        width: "100%",
-      }}
-    >
+    <div style={{ textAlign: "center" }}>
       <ReactECharts
         option={options}
         style={{
@@ -74,11 +69,9 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
         }}
         opts={{ renderer: "svg" }}
       />
-      <div className="data-info d-flex flex-column align-items-center">
-        <span className="porcentagem">
-          {dataGraphic[0].value + `(${formatAsPercent(ativo.toString())})`}
-        </span>
-      </div>
+      <span className="porcentagem">
+        {dataGraphic[0].value + `(${formatAsPercent(ativo.toString())})`}
+      </span>
     </div>
   );
 }
@@ -134,7 +127,15 @@ export function Pie({ data }: any) {
         }}
         opts={{ renderer: "svg" }}
       />
-      <div className="data-info d-flex flex-column align-items-center">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-around",
+          alignItems: "center",
+          width: "126px",
+        }}
+      >
         <span className="porcentagem">{formatAsPercent(comConsulta)}</span>
         <span className="nomeGrafico">{data[0]}</span>
         <span className="nomeGrafico">{limite}</span>

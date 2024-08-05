@@ -8,8 +8,8 @@ const TwoColumnSection = ({
       className="row gx-5"
       style={{ justifyContent: "center", padding: "50px 0" }}
     >
-      {children[0] && <div className="col-12 col-lg-5">{children[0]}</div>}
-      {children[1] && <div className="col-12 col-lg-5">{children[1]}</div>}
+      {children[0] && <div className="col-12 col-lg-6">{children[0]}</div>}
+      {children[1] && <div className="col-12 col-lg-6">{children[1]}</div>}
     </div>
   </div>
 );

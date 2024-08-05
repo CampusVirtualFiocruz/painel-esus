@@ -1,38 +1,39 @@
 .pie {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 138px;
+  display: flex;
+  flex-direction: column;
+  align-items: start !important;
+  width: 126px;
 
-    .porcentagem {
-        margin-top: 0.5rem;
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #343131;
-    }
+  .porcentagem {
+    margin-top: 0.5rem;
+    font-size: 1.8rem !important;
+    font-weight: 700;
+    color: #343131;
+  }
 
-    .nomeGrafico {
-        font-size: 1.125rem;
-        font-weight: 500;
-        text-align: center;
-    }
+  .nomeGrafico {
+    font-size: 1.2rem !important;
+    font-weight: 500;
+    text-align: center;
+  }
 }
-.pie-chart{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 138px;
 
-    .porcentagem {
-        margin-top: 0.5rem;
-        font-size: 2rem;
-        font-weight: 700;
-        color: #343131;
-    }
+.pie-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: start !important;
+  width: 126px;
 
-    .nomeGrafico {
-        font-size: 1.125rem;
-        font-weight: 500;
-        text-align: center;
-    }
+  .porcentagem {
+    margin-top: 0.5rem;
+    font-size: 1.8rem !important;
+    font-weight: 700;
+    color: #343131;
+  }
+
+  .nomeGrafico {
+    font-size: 1.2rem !important;
+    font-weight: 500;
+    text-align: center;
+  }
 }

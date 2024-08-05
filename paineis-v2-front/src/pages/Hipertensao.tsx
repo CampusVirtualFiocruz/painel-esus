@@ -4,9 +4,7 @@ import { useQuery } from "react-query";
 import { Alert, Progress, Spinner } from "reactstrap";
 import { Button } from "bold-ui";
 
-import { Footer } from "../components/Footer";
 import { Modal } from "../components/Modal";
-import { Header } from "../components/Header";
 import { Typography } from "../components/ui/Typography";
 import info from "../assets/images/people.svg";
 import "../styles/diabetesHipertensao.scss";
@@ -14,11 +12,13 @@ import { Api } from "../services/api";
 import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
 import { Pie } from "../charts/Pie";
-import { capitalize } from "../utils";
+import { capitalize, getNomeUbs } from "../utils";
 import { BarSexo } from "../charts/BarSexo";
 import { useInfo } from "../context/infoProvider/useInfo";
 import { randomHexColorCode, wait } from "../utils/reports";
 import { ReportFooter } from "../components/ui/ReportFooter";
+import ReportWrapper from "../components/ui/ReportWrapper";
+import TwoColumnSection from "../components/ui/TwoColumnSection";
 
 type TModal = {
   loaded: number;
@@ -196,315 +196,340 @@ export function Hipertensao() {
     getData(idModal);
   };
 
+  const { city } = useInfo();
+
+  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
+    "ubs",
+    async () => {
+      const response = await Api.get<any>("get-units");
+      const data = response.data;
+
+      const listData: any[] = data.data.map((ubs: any) => {
+        return {
+          label: ubs.no_unidade_saude,
+          value: ubs.co_seq_dim_unidade_saude,
+          id: ubs.co_seq_dim_unidade_saude,
+        };
+      });
+
+      return listData;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
+
+  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
+  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
+  const title = `${UBS} / Hipertensão`;
+
   return (
-    <div id="page-painel">
-      <Header />
-      <div className="contentWrapper">
-        <hr className="linha my-4" />
-        <h2>{cityInformation?.municipio + " - " + cityInformation?.uf}</h2>
-        {showModal && <Modal data={data} setShowModal={setShowModal} />}
-        <div className="container-fluid">
-          <div className="row gx-5">
-            <div className="col-12 col-lg-5">
-              <div className="painel-lateral">
-                <Typography.Subtitle>
-                  Pessoas com hipertensão por faixa etária
-                </Typography.Subtitle>
-                {isLoadingHipertensao ? (
-                  <div className="d-flex align-items-center justify-content-center">
-                    <Spinner size="sm" type="grow" className="me-2" />
-                    Carregando...
+    <div id="page-painel-diabetes-hipertensao">
+      {showModal && <Modal data={data} setShowModal={setShowModal} />}
+      {/* <h2>{cityInformation?.municipio + " - " + cityInformation?.uf}</h2> */}
+      <ReportWrapper title={title}>
+        <TwoColumnSection>
+          <TwoColumnSection.Col>
+            <div className="painel-lateral">
+              <Typography.Subtitle>
+                Pessoas com hipertensão por faixa etária
+              </Typography.Subtitle>
+              {isLoadingHipertensao ? (
+                <div className="d-flex align-items-center justify-content-center">
+                  <Spinner size="sm" type="grow" className="me-2" />
+                  Carregando...
+                </div>
+              ) : errorHipertensao ? (
+                <div className="d-flex align-items-center justify-content-center">
+                  <Alert color="danger">Erro ao carregar dados.</Alert>
+                </div>
+              ) : (
+                <Bar
+                  data={dataHipertensao}
+                  titulo="Total de pessoas com hipertensão no município"
+                />
+              )}
+            </div>
+            <div className="painel-lateral">
+              <Typography.Subtitle>
+                Pessoas com hipertensão por sexo
+              </Typography.Subtitle>
+              {isLoadingHipertensaoAgeGroupGender ? (
+                <div className="d-flex align-items-center justify-content-center">
+                  <Spinner size="sm" type="grow" className="me-2" />
+                  Carregando...
+                </div>
+              ) : errorHipertensaoAgeGroupGender ? (
+                <div className="d-flex align-items-center justify-content-center">
+                  <Alert color="danger">Erro ao carregar dados.</Alert>
+                </div>
+              ) : (
+                <BarSexo
+                  data={dataHipertensaoAgeGroupGender}
+                  titulo="Total de pessoas com hipertensão no município"
+                />
+              )}
+            </div>
+            <div className="painel-lateral situacao-exames">
+              <Typography.Subtitle>
+                Situação dos exames nos últimos 12 meses
+              </Typography.Subtitle>
+              <div className="row gx-4 my-3">
+                <div className="col-5 col-lg-6"></div>
+                <div className="col col-lg-3">
+                  <div className="tipo p-2 text-center">
+                    Solicitação pendente
                   </div>
-                ) : errorHipertensao ? (
-                  <div className="d-flex align-items-center justify-content-center">
-                    <Alert color="danger">Erro ao carregar dados.</Alert>
-                  </div>
-                ) : (
-                  <Bar
-                    data={dataHipertensao}
-                    titulo="Total de pessoas com hipertensão no município"
-                  />
-                )}
+                </div>
+                <div className="col col-lg-3">
+                  <div className="tipo p-2 text-center">Avaliação pendente</div>
+                </div>
               </div>
-              <div className="painel-lateral">
-                <Typography.Subtitle>
-                  Pessoas com hipertensão por sexo
-                </Typography.Subtitle>
-                {isLoadingHipertensaoAgeGroupGender ? (
-                  <div className="d-flex align-items-center justify-content-center">
-                    <Spinner size="sm" type="grow" className="me-2" />
-                    Carregando...
-                  </div>
-                ) : errorHipertensaoAgeGroupGender ? (
-                  <div className="d-flex align-items-center justify-content-center">
-                    <Alert color="danger">Erro ao carregar dados.</Alert>
-                  </div>
-                ) : (
-                  <BarSexo
-                    data={dataHipertensaoAgeGroupGender}
-                    titulo="Total de pessoas com hipertensão no município"
-                  />
-                )}
-              </div>
-              <div className="painel-lateral situacao-exames">
-                <Typography.Subtitle>
-                  Situação dos exames nos últimos 12 meses
-                </Typography.Subtitle>
-                <div className="row gx-4 my-3">
-                  <div className="col-5 col-lg-6"></div>
-                  <div className="col col-lg-3">
-                    <div className="tipo p-2 text-center">
-                      Solicitação pendente
+              {isLoadingExamsTable ? (
+                <div className="d-flex align-items-center justify-content-center">
+                  <Spinner size="sm" type="grow" className="me-2" />
+                  Carregando...
+                </div>
+              ) : errorExamsTable ? (
+                <div className="d-flex align-items-center justify-content-center">
+                  <Alert color="danger">Erro ao carregar dados.</Alert>
+                </div>
+              ) : (
+                <>
+                  {dataExamsTable?.map((situacao: any, i: number) => (
+                    <div key={i} className="row gx-4 my-3">
+                      <div className="col-5 col-lg-6">
+                        <div className="tipo p-2 bordas">{situacao.tipo}</div>
+                      </div>
+                      <div className="col col-lg-3">
+                        <div className="tipo p-2 text-center bordas">
+                          {situacao.solicitados}
+                        </div>
+                      </div>
+                      <div className="col col-lg-3">
+                        <div className="tipo p-2 text-center bordas">
+                          {situacao.avaliados}
+                        </div>
+                      </div>
                     </div>
+                  ))}
+                </>
+              )}
+            </div>
+          </TwoColumnSection.Col>
+          <TwoColumnSection.Col>
+            <div className="painel-lateral">
+              <Typography.Subtitle>
+                Total de atendimento nos últimos 12 meses
+              </Typography.Subtitle>
+              <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                <div>
+                  <div
+                    className="container-atendimentos"
+                    style={{ width: "221px" }}
+                  >
+                    <span className="total-trimestre">
+                      {isLoadingTotalHipertensao ? (
+                        <div className="d-flex align-items-center justify-content-center">
+                          <Spinner size="sm" type="grow" className="me-2" />0
+                        </div>
+                      ) : errorTotalHipertensao ? (
+                        <div className="d-flex align-items-center justify-content-center">
+                          <Alert color="danger">Erro ao carregar dados.</Alert>
+                        </div>
+                      ) : (
+                        dataTotalHipertensao.total_atendimentos
+                      )}
+                    </span>
                   </div>
-                  <div className="col col-lg-3">
-                    <div className="tipo p-2 text-center">
-                      Avaliação pendente
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-6">
+                <div className="painel-lateral">
+                  <div className="mt-5 mb-4">
+                    <Typography.Subtitle>
+                      Nº de pessoas com Hipertensão <br /> (CID/CIAP)
+                    </Typography.Subtitle>
+                  </div>
+                  <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                    <div>
+                      <div className="container-atendimentos">
+                        <div className="titulo d-flex align-items-center">
+                          <img
+                            src={info}
+                            alt="Total de atendimento nos últimos 12 meses"
+                            className="info mx-2"
+                          />
+                        </div>
+                        <span className="total-trimestre ms-4">
+                          {isLoadingTotalHipertensao ? (
+                            <div className="d-flex align-items-center justify-content-center">
+                              <Spinner size="sm" type="grow" className="me-2" />
+                              0
+                            </div>
+                          ) : errorTotalHipertensao ? (
+                            <div className="d-flex align-items-center justify-content-center">
+                              <Alert color="danger">
+                                Erro ao carregar dados.
+                              </Alert>
+                            </div>
+                          ) : (
+                            dataTotalHipertensao.total_pacientes
+                          )}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-                {isLoadingExamsTable ? (
+              </div>
+              <div className="col-6">
+                <div className="painel-lateral">
+                  <div className="mt-5 mb-4">
+                    <Typography.Subtitle>
+                      Nº de pessoas com Hipertensão <br /> (autoreferido)
+                    </Typography.Subtitle>
+                  </div>
+                  <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                    <div>
+                      <div className="container-atendimentos">
+                        <span className="total-trimestre ms-4">
+                          {isLoadingTotalHipertensao ? (
+                            <div className="d-flex align-items-center justify-content-center">
+                              <Spinner size="sm" type="grow" className="me-2" />
+                              0
+                            </div>
+                          ) : errorTotalHipertensao ? (
+                            <div className="d-flex align-items-center justify-content-center">
+                              <Alert color="danger">
+                                Erro ao carregar dados.
+                              </Alert>
+                            </div>
+                          ) : (
+                            dataTotalHipertensao.total_auto_referido
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="painel-secundario my-2">
+              <Typography.Subtitle>
+                Frequência de complicações relacionadas à hipertensão
+              </Typography.Subtitle>
+              <div className="d-flex flex-wrap flex-xl-nowrap justify-content-center">
+                {isLoadingHipertensaoIndicators ? (
                   <div className="d-flex align-items-center justify-content-center">
                     <Spinner size="sm" type="grow" className="me-2" />
                     Carregando...
                   </div>
-                ) : errorExamsTable ? (
+                ) : errorHipertensaoIndicators ? (
+                  <div className="d-flex align-items-center justify-content-center">
+                    <Alert color="danger">Erro ao carregar dados.</Alert>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "start",
+                      flexGrow: 0,
+                    }}
+                  >
+                    {dataHipertensaoIndicators?.map(
+                      (indicador: any, i: number) => (
+                        <Donut key={i} data={indicador} />
+                      )
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="mt-5">
+                <Button kind="primary" onClick={() => handleClick(5)}>
+                  Boas práticas na assistência a pessoas com hipertensão
+                </Button>
+              </div>
+            </div>
+            <div className="painel-secundario">
+              <Typography.Subtitle>
+                Adultos com hipertensão de acordo com o IMC
+              </Typography.Subtitle>
+              <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                {isLoadingHipertensaoFactors ? (
+                  <div className="d-flex align-items-center justify-content-center">
+                    <Spinner size="sm" type="grow" className="me-2" />
+                    Carregando...
+                  </div>
+                ) : errorHipertensaoFactors ? (
+                  <div className="d-flex align-items-center justify-content-center">
+                    <Alert color="danger">Erro ao carregar dados.</Alert>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "start",
+                      flexGrow: 0,
+                    }}
+                  >
+                    {dataHipertensaoFactors?.map((diabete: any, i: number) => (
+                      <Pie key={i} data={diabete} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="painel-secundario">
+              <Typography.Subtitle>
+                Extratificação de atendimentos por profissional
+              </Typography.Subtitle>
+              <div className="w-100">
+                {isLoadingProfessionals ? (
+                  <div className="d-flex align-items-center justify-content-center">
+                    <Spinner size="sm" type="grow" className="me-2" />
+                    Carregando...
+                  </div>
+                ) : errorProfessionals ? (
                   <div className="d-flex align-items-center justify-content-center">
                     <Alert color="danger">Erro ao carregar dados.</Alert>
                   </div>
                 ) : (
                   <>
-                    {dataExamsTable?.map((situacao: any, i: number) => (
-                      <div key={i} className="row gx-4 my-3">
-                        <div className="col-5 col-lg-6">
-                          <div className="tipo p-2 bordas">{situacao.tipo}</div>
+                    {dataProfessionals?.map((item: any, i: number) => (
+                      <div key={i} className="d-flex align-items-center mt-2">
+                        <div className="container-extratificacao-atendimentos">
+                          <span className="profissao-nome">
+                            {capitalize(
+                              item.profissao.split("-").join(" "),
+                              true
+                            )}
+                          </span>
+                          <Progress
+                            value={item.total}
+                            className="w-75"
+                            barStyle={{
+                              backgroundColor: randomHexColorCode(),
+                            }}
+                          />
                         </div>
-                        <div className="col col-lg-3">
-                          <div className="tipo p-2 text-center bordas">
-                            {situacao.solicitados}
-                          </div>
-                        </div>
-                        <div className="col col-lg-3">
-                          <div className="tipo p-2 text-center bordas">
-                            {situacao.avaliados}
-                          </div>
-                        </div>
+                        <span className="total ms-2">{item.total}%</span>
                       </div>
                     ))}
                   </>
                 )}
               </div>
             </div>
-            <div className="col-12 col-lg-7 d-flex flex-column">
-              <div className="painel-lateral">
-                <Typography.Subtitle>
-                  Total de atendimento nos últimos 12 meses
-                </Typography.Subtitle>
-                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                  <div>
-                    <div
-                      className="container-atendimentos"
-                      style={{ width: "221px" }}
-                    >
-                      <span className="total-trimestre ms-4">
-                        {isLoadingTotalHipertensao ? (
-                          <div className="d-flex align-items-center justify-content-center">
-                            <Spinner size="sm" type="grow" className="me-2" />0
-                          </div>
-                        ) : errorTotalHipertensao ? (
-                          <div className="d-flex align-items-center justify-content-center">
-                            <Alert color="danger">
-                              Erro ao carregar dados.
-                            </Alert>
-                          </div>
-                        ) : (
-                          dataTotalHipertensao.total_atendimentos
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-6">
-                  <div className="painel-lateral">
-                    <div className="mt-5 mb-4">
-                      <Typography.Subtitle>
-                        Nº de pessoas com Hipertensão <br /> (CID/CIAP)
-                      </Typography.Subtitle>
-                    </div>
-                    <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                      <div>
-                        <div className="container-atendimentos">
-                          <div className="titulo d-flex align-items-center">
-                            <img
-                              src={info}
-                              alt="Total de atendimento nos últimos 12 meses"
-                              className="info mx-2"
-                            />
-                          </div>
-                          <span className="total-trimestre ms-4">
-                            {isLoadingTotalHipertensao ? (
-                              <div className="d-flex align-items-center justify-content-center">
-                                <Spinner
-                                  size="sm"
-                                  type="grow"
-                                  className="me-2"
-                                />
-                                0
-                              </div>
-                            ) : errorTotalHipertensao ? (
-                              <div className="d-flex align-items-center justify-content-center">
-                                <Alert color="danger">
-                                  Erro ao carregar dados.
-                                </Alert>
-                              </div>
-                            ) : (
-                              dataTotalHipertensao.total_pacientes
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-6">
-                  <div className="painel-lateral">
-                    <div className="mt-5 mb-4">
-                      <Typography.Subtitle>
-                        Nº de pessoas com Hipertensão <br /> (autoreferido)
-                      </Typography.Subtitle>
-                    </div>
-                    <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                      <div>
-                        <div className="container-atendimentos">
-                          <span className="total-trimestre ms-4">
-                            {isLoadingTotalHipertensao ? (
-                              <div className="d-flex align-items-center justify-content-center">
-                                <Spinner
-                                  size="sm"
-                                  type="grow"
-                                  className="me-2"
-                                />
-                                0
-                              </div>
-                            ) : errorTotalHipertensao ? (
-                              <div className="d-flex align-items-center justify-content-center">
-                                <Alert color="danger">
-                                  Erro ao carregar dados.
-                                </Alert>
-                              </div>
-                            ) : (
-                              dataTotalHipertensao.total_auto_referido
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="painel-secundario my-2">
-                <Typography.Subtitle>
-                  Frequência de complicações relacionadas à hipertensão
-                </Typography.Subtitle>
-                <div className="d-flex flex-wrap flex-xl-nowrap justify-content-center">
-                  {isLoadingHipertensaoIndicators ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Spinner size="sm" type="grow" className="me-2" />
-                      Carregando...
-                    </div>
-                  ) : errorHipertensaoIndicators ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Alert color="danger">Erro ao carregar dados.</Alert>
-                    </div>
-                  ) : (
-                    <>
-                      {dataHipertensaoIndicators?.map(
-                        (indicador: any, i: number) => (
-                          <Donut key={i} data={indicador} />
-                        )
-                      )}
-                    </>
-                  )}
-                </div>
-                <div className="mt-5">
-                  <Button kind="primary" onClick={() => handleClick(5)}>
-                    Boas práticas na assistência a pessoas com hipertensão
-                  </Button>
-                </div>
-              </div>
-              <div className="painel-secundario">
-                <Typography.Subtitle>
-                  Adultos com hipertensão de acordo com o IMC
-                </Typography.Subtitle>
-                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                  {isLoadingHipertensaoFactors ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Spinner size="sm" type="grow" className="me-2" />
-                      Carregando...
-                    </div>
-                  ) : errorHipertensaoFactors ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Alert color="danger">Erro ao carregar dados.</Alert>
-                    </div>
-                  ) : (
-                    <>
-                      {dataHipertensaoFactors?.map(
-                        (diabete: any, i: number) => (
-                          <Pie key={i} data={diabete} />
-                        )
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-              <div className="painel-secundario">
-                <Typography.Subtitle>
-                  Extratificação de atendimentos por profissional
-                </Typography.Subtitle>
-                <div className="w-100">
-                  {isLoadingProfessionals ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Spinner size="sm" type="grow" className="me-2" />
-                      Carregando...
-                    </div>
-                  ) : errorProfessionals ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Alert color="danger">Erro ao carregar dados.</Alert>
-                    </div>
-                  ) : (
-                    <>
-                      {dataProfessionals?.map((item: any, i: number) => (
-                        <div key={i} className="d-flex align-items-center mt-2">
-                          <div className="container-extratificacao-atendimentos">
-                            <span className="profissao-nome">
-                              {capitalize(
-                                item.profissao.split("-").join(" "),
-                                true
-                              )}
-                            </span>
-                            <Progress
-                              value={item.total}
-                              className="w-75"
-                              barStyle={{
-                                backgroundColor: randomHexColorCode(),
-                              }}
-                            />
-                          </div>
-                          <span className="total ms-2">{item.total}%</span>
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          </TwoColumnSection.Col>
+        </TwoColumnSection>
+
         <ReportFooter />
-      </div>
-      <Footer />
+      </ReportWrapper>
     </div>
   );
 }

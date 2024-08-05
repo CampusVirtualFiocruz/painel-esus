@@ -34,7 +34,14 @@ const ReportWrapper = ({
           backgroundColor: "white",
         }}
       >
-        <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <div
             style={{
               marginTop: "50px",
@@ -65,8 +72,8 @@ const ReportWrapper = ({
               {subtitle}
             </p>
           )}
-        </>
-        <div className="container" style={{ marginTop: "80px" }}>
+        </div>
+        <div className="container" style={{ marginTop: "20px" }}>
           <div className="row justify-content-center">{children}</div>
         </div>
         <div className="container">

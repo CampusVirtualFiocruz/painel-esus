@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Api } from "../../../services/api";
 import AsyncDataLoad from "../async-data-load";
 import { Typography } from "../../../components/ui/Typography";
-import "./style.css";
+import "./style.scss";
 
 type PainelParams = {
   id: string;
@@ -30,16 +30,18 @@ const TotalAtendimentos = () => {
   );
 
   return (
-    <>
+    <div id="total-atendimentos">
       <AsyncDataLoad {...{ isLoading, error }}>
         <div className="col-12 chart-container total-atd-container">
           <Typography.Subtitle>Total de atendimentos</Typography.Subtitle>
           <div className="total-atd">
-            {dataTotal?.total.toLocaleString("pt-BR")}
+            <span className="total-trimestre">
+              {dataTotal?.total.toLocaleString("pt-BR")}
+            </span>
           </div>
         </div>
       </AsyncDataLoad>
-    </>
+    </div>
   );
 };
 

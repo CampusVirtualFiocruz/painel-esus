@@ -25,7 +25,7 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
   }));
 
   const options = {
-    color: ["#09406a", "#84aaff", "#78a4d0", "#e4e4e4"],
+    color: ["#84aaff", "#0069d0", "#5c7ea0", "#e4e4e4"],
     tooltip: {
       trigger: "item",
       formatter: "{b0}: {c0}({d}%)",
@@ -93,7 +93,7 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
       <ReactECharts
         option={options}
         style={{
-          width: "80vw",
+          width: "100%",
           minWidth: "316px",
           // height: '40vh'
         }}
@@ -127,7 +127,7 @@ const Exodontia = () => {
       <Typography.Subtitle>
         Proporção de exodontia por procedimento
       </Typography.Subtitle>
-      <div className="col-12 dflex">
+      <div>
         {!isLoading && exodontiaResponse && (
           <ExodontiaPie {...exodontiaResponse} />
         )}

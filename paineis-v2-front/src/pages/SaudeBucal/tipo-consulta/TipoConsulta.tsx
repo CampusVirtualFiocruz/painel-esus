@@ -29,7 +29,6 @@ const TipoConsulta = () => {
         value: item.value,
         name: item.label,
       }));
-      console.log(res);
       return res;
     },
     {

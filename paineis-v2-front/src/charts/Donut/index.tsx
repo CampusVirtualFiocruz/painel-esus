@@ -52,7 +52,15 @@ export function Donut({ data }: any) {
         }}
         opts={{ renderer: "svg" }}
       />
-      <div className="w-50 d-flex flex-column justify-content-center align-items-center">
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "116px",
+        }}
+      >
         <span className="porcentagem">{formatAsPercent(comConsulta)}</span>
         <span className="nomeGrafico">{data[0]}</span>
       </div>
@@ -80,7 +88,7 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
   const ativo = (dataGraphic[0].value / total) * 100;
 
   const options = {
-    color: [colorActive, "#09406a"],
+    color: ["#84aaff", "#0069d0", "#e9ecef", "#08315b"],
     tooltip: {
       trigger: "item",
       formatter: "{b0}: {c0}({d}%)",
@@ -94,15 +102,13 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
         label: {
           show: true,
           overflow: "break",
-          fontSize: "16",
-          fontWeight: "bold",
+          fontSize: "14",
           width: 110,
         },
         emphasis: {
           label: {
             show: true,
-            fontSize: "16",
-            fontWeight: "bold",
+            fontSize: "14",
           },
         },
         labelLine: {

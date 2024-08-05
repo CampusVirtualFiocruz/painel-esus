@@ -294,6 +294,7 @@ export function Painel() {
       navigate("/saude-bucal");
     }
   }
+
   return (
     <div id="page-painel">
       <Header />

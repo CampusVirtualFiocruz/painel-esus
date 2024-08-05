@@ -9,7 +9,7 @@ import { Api } from "../services/api";
 import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
 import { Pie } from "../charts/Pie";
-import { capitalize } from "../utils";
+import { capitalize, getNomeUbs } from "../utils";
 import { BarSexo } from "../charts/BarSexo";
 import { useInfo } from "../context/infoProvider/useInfo";
 import { Modal } from "../components/Modal";
@@ -185,10 +185,35 @@ export function Diabetes() {
     getData(idModal);
   };
 
-  const title = cityInformation?.municipio + " - " + cityInformation?.uf;
+  const { city } = useInfo();
+
+  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
+    "ubs",
+    async () => {
+      const response = await Api.get<any>("get-units");
+      const data = response.data;
+
+      const listData: any[] = data.data.map((ubs: any) => {
+        return {
+          label: ubs.no_unidade_saude,
+          value: ubs.co_seq_dim_unidade_saude,
+          id: ubs.co_seq_dim_unidade_saude,
+        };
+      });
+
+      return listData;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
+
+  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
+  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
+  const title = `${UBS} / Diabetes`;
 
   return (
-    <>
+    <div id="page-painel-diabetes-hipertensao">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
       <ReportWrapper title={title}>
         <TwoColumnSection>
@@ -233,7 +258,7 @@ export function Diabetes() {
                 />
               )}
             </div>
-            <div>
+            <div className="painel-lateral situacao-exames">
               <Typography.Subtitle>
                 Situação dos exames nos últimos 12 meses
               </Typography.Subtitle>
@@ -291,7 +316,7 @@ export function Diabetes() {
                     className="container-atendimentos"
                     style={{ width: "221px" }}
                   >
-                    <span className="total-trimestre ms-4">
+                    <span className="total-trimestre">
                       {isLoadingTotalDiabetes ? (
                         <div className="d-flex align-items-center justify-content-center">
                           <Spinner size="sm" type="grow" className="me-2" />0
@@ -308,57 +333,76 @@ export function Diabetes() {
                 </div>
               </div>
             </div>
-            <div>
-              <Typography.Subtitle>
-                Nº de pessoas com Diabetes <br /> (CID/CIAP)
-              </Typography.Subtitle>
-              <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                <div>
-                  <div className="container-atendimentos">
-                    <div className="titulo d-flex align-items-center">
-                      <img
-                        src={info}
-                        alt="Total de atendimento nos últimos 12 meses"
-                        className="info mx-2"
-                      />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-around",
+              }}
+            >
+              <div>
+                <Typography.Subtitle>
+                  Nº de pessoas com Diabetes <br /> (CID/CIAP)
+                </Typography.Subtitle>
+                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                  <div>
+                    <div className="container-atendimentos">
+                      <div className="titulo d-flex align-items-center">
+                        <img
+                          src={info}
+                          alt="Total de atendimento nos últimos 12 meses"
+                          className="info mx-2"
+                        />
+                      </div>
+                      <span className="total-trimestre ms-4">
+                        {isLoadingTotalDiabetes ? (
+                          <div className="d-flex align-items-center justify-content-center">
+                            <Spinner size="sm" type="grow" className="me-2" />0
+                          </div>
+                        ) : errorTotalDiabetes ? (
+                          <div className="d-flex align-items-center justify-content-center">
+                            <Alert color="danger">
+                              Erro ao carregar dados.
+                            </Alert>
+                          </div>
+                        ) : (
+                          dataTotalDiabetes.total_pacientes
+                        )}
+                      </span>
                     </div>
-                    <span className="total-trimestre ms-4">
-                      {isLoadingTotalDiabetes ? (
-                        <div className="d-flex align-items-center justify-content-center">
-                          <Spinner size="sm" type="grow" className="me-2" />0
-                        </div>
-                      ) : errorTotalDiabetes ? (
-                        <div className="d-flex align-items-center justify-content-center">
-                          <Alert color="danger">Erro ao carregar dados.</Alert>
-                        </div>
-                      ) : (
-                        dataTotalDiabetes.total_pacientes
-                      )}
-                    </span>
                   </div>
                 </div>
               </div>
-            </div>
-            <div>
-              <Typography.Subtitle>
-                Nº de pessoas com Diabetes <br /> (autoreferido)
-              </Typography.Subtitle>
-              <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                <div>
-                  <div className="container-atendimentos">
-                    <span className="total-trimestre ms-4">
-                      {isLoadingTotalDiabetes ? (
-                        <div className="d-flex align-items-center justify-content-center">
-                          <Spinner size="sm" type="grow" className="me-2" />0
-                        </div>
-                      ) : errorTotalDiabetes ? (
-                        <div className="d-flex align-items-center justify-content-center">
-                          <Alert color="danger">Erro ao carregar dados.</Alert>
-                        </div>
-                      ) : (
-                        dataTotalDiabetes.total_auto_referido
-                      )}
-                    </span>
+              <div>
+                <Typography.Subtitle>
+                  Nº de pessoas com Diabetes <br /> (autoreferido)
+                </Typography.Subtitle>
+                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                  <div>
+                    <div className="container-atendimentos">
+                      <div className="titulo d-flex align-items-center">
+                        <img
+                          src={info}
+                          alt="Total de atendimento nos últimos 12 meses"
+                          className="info mx-2"
+                        />
+                      </div>
+                      <span className="total-trimestre ms-4">
+                        {isLoadingTotalDiabetes ? (
+                          <div className="d-flex align-items-center justify-content-center">
+                            <Spinner size="sm" type="grow" className="me-2" />0
+                          </div>
+                        ) : errorTotalDiabetes ? (
+                          <div className="d-flex align-items-center justify-content-center">
+                            <Alert color="danger">
+                              Erro ao carregar dados.
+                            </Alert>
+                          </div>
+                        ) : (
+                          dataTotalDiabetes.total_auto_referido
+                        )}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -378,16 +422,24 @@ export function Diabetes() {
                     <Alert color="danger">Erro ao carregar dados.</Alert>
                   </div>
                 ) : (
-                  <>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "start",
+                      flexGrow: 0,
+                    }}
+                  >
                     {dataDiabetesIndicators?.map(
                       (indicador: any, i: number) => (
                         <Donut key={i} data={indicador} />
                       )
                     )}
-                  </>
+                  </div>
                 )}
               </div>
-              <div className="mt-5">
+              <div className="mt-5" style={{ textAlign: "center" }}>
                 <Button kind="primary" onClick={() => handleClick(5)}>
                   Boas práticas na assistência a pessoa com diabetes
                 </Button>
@@ -397,7 +449,7 @@ export function Diabetes() {
               <Typography.Subtitle>
                 Adultos com diabetes de acordo com o IMC
               </Typography.Subtitle>
-              <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+              <div className="d-flex flex-wrap flex-lg-nowrap">
                 {isLoadingDiabetesFactors ? (
                   <div className="d-flex align-items-center justify-content-center">
                     <Spinner size="sm" type="grow" className="me-2" />
@@ -408,15 +460,23 @@ export function Diabetes() {
                     <Alert color="danger">Erro ao carregar dados.</Alert>
                   </div>
                 ) : (
-                  <>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "start",
+                      flexGrow: 0,
+                    }}
+                  >
                     {dataDiabetesFactors?.map((diabete: any, i: number) => (
                       <Pie key={i} data={diabete} />
                     ))}
-                  </>
+                  </div>
                 )}
               </div>
             </div>
-            <div>
+            <div className="painel-secundario">
               <Typography.Subtitle>
                 Extratificação de atendimentos por profissional
               </Typography.Subtitle>
@@ -460,6 +520,6 @@ export function Diabetes() {
         </TwoColumnSection>
         <ReportFooter />
       </ReportWrapper>
-    </>
+    </div>
   );
 }

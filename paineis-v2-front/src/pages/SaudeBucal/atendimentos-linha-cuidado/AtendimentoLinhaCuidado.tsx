@@ -26,28 +26,34 @@ const AtendimentoLinhaCuidado = () => {
       return response.data;
     }
   );
-  const activeList = ["#5cd2c8", "#3996c1"];
+  const activeList = ["#84aaff", "#0069d0"];
+
   return (
     <AsyncDataLoad {...{ isLoading, error }}>
       <Typography.Subtitle>
         Atendimentos por linha de cuidado
       </Typography.Subtitle>
-      <div className="col-12 chart-container" style={{ display: "flex" }}>
+      <div
+        className="chart-container"
+        style={{
+          display: "flex",
+          justifyContent: "space-evenly",
+          alignItems: "center",
+        }}
+      >
         {isLoading && <h1>Carregando</h1>}
         {!isLoading &&
           data &&
           data?.map((item: any, index: number) => {
             return (
-              <div key={index} className="col-5 col-lg-5">
-                <PieChart
-                  key={index}
-                  {...new TPieChart(
-                    item.label,
-                    [{ value: item.value }, { value: item.total }],
-                    activeList[index]
-                  )}
-                />
-              </div>
+              <PieChart
+                key={index}
+                {...new TPieChart(
+                  item.label,
+                  [{ value: item.value }, { value: item.total }],
+                  activeList[index]
+                )}
+              />
             );
           })}
       </div>
