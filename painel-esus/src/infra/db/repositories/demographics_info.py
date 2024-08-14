@@ -47,7 +47,7 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             "14": "65 a 69 anos",
             "15": "70 a 74 anos",
             "16": "75 a 79 anos",
-            "17": "80 anos",
+            "17": "+80 anos",
         }
 
     def parse_date(self, data_frame: DataFrame) -> DataFrame:
@@ -84,7 +84,7 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             "65 a 69 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
             "70 a 74 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
             "75 a 79 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-            "80 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "+80 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
         }
 
     def __create_age_groups(self) -> Dict:

@@ -1,0 +1,21 @@
+services:
+  painel_esus: 
+    image: "painelsaudefiocruz/demo:backend-1.0.13"
+    environment:
+      RELOAD_BASE_SCHELDULE: '4:00'
+      DB_USER: 'postgres'
+      DB_PASSWORD: 'DoCTrH1MJ#re?X0qBlmzUVlLWoUM'
+      DB_HOST: '186.232.197.254'
+      DB_PORT: '5433'
+      DB_DATABASE: 'livramento'
+      CIDADE_IBGE: 2508505
+      ESTADO: 'FC'
+      ADMIN_USERNAME: 'admin'
+      ADMIN_PASSWORD: 'FCadmin23'
+      POPULATION: 20000
+      SECRET_TOKEN: 111111111111111111111
+      PASSWORD_SALT: 'painel'
+      BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
+      ENV: linux
+    ports:
+      - 5001:5001

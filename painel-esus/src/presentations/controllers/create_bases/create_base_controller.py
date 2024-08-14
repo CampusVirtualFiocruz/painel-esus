@@ -29,7 +29,7 @@ class CreateBasesController:
             path = Path(path.split('/painel-esus')[0])
             path = os.path.join(path, 'painel_esus.db')
             path = os.path.relpath(path)
-        os.remove(path)
+        # os.remove(path)
         logging.info("Starting base generation")
         _list = [
             CreateDiabetesBasesRepository(),
