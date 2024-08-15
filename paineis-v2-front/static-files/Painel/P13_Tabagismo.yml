@@ -1,0 +1,34 @@
+perfil:
+  Painel_version: 1.0.5
+  nome_indicador: Abordagem individual do tabagismo
+  codigo_indicador: P13
+  data: 2024-11-27
+  fichas: 
+    - atendimento individual
+  tipo: cobertura proporcional
+  meses: 12
+  descrição: >
+    Indica se as pessoas fumantes estão recebendo abordagem individualizada.
+
+denominador:
+  fonte: atendimento individual
+  co_fat_cidadao_pec: NOT_NULL
+  filtro_cids: 
+    - F17
+    - Z71.6
+    - Z72.0
+  filtro_ciaps: 
+    - P17
+    - ABP011
+  procedimentos_solicitados:
+  procedimentos_avaliados: 
+
+
+condição_A:
+  descrição: Abordagem individual do tabagismo registrado nos atendimentos
+  fonte: atendimento individual
+  profissional: medico, enfermeiro
+  procedimentos_solicitados: 
+  procedimentos_avaliados: 
+    - 0301010099
+  valor_min: 1

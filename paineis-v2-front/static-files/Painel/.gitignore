@@ -1,0 +1,22 @@
+Cidade_X/.DS_Store
+Cidade_X/.Rhistory
+Cidade_X/2024-01-22 preparar_atendimentos.R
+Cidade_X/atendimentos.csv
+Cidade_X/atendimentos.feather
+Cidade_X/atendimentos.parquet
+Cidade_X/preparar_atendimentos.R
+Cidade_X/tb_dim_cbo.csv
+Cidade_X/tb_dim_cbo.gsheet
+Cidade_X/tb_dim_municipio.csv
+Cidade_X/tb_dim_unidade_saude.csv
+Cidade_X/tb_fat_atendimento_individual.csv
+Cidade_X/tb_fat_atendimento_odonto.csv
+Cidade_X/tb_fat_cad_domiciliar.csv
+Cidade_X/tb_fat_cad_individual.csv
+Cidade_X/tb_fat_cidadao_pec.csv
+Cidade_X/tb_fat_cidadao_territorio.csv
+Cidade_X/tb_fat_familia_territorio.csv
+Cidade_X/testar_atendimentos_parquet.R
+Cidade_X/Untitled.tad
+painel_esus.db
+P13.html
