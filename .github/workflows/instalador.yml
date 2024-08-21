@@ -1,25 +1,35 @@
-name: Package Application with Pyinstaller and Inno Setup
+name: Build and Deploy to Private Docker Hub
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [release/*]
 
 jobs:
-  creating-pyinstaller-exe:
-
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Package Application
-      uses: JackMcKew/pyinstaller-action-windows@main
-      with:
-        path: painel-esus
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16" # Ajuste para a versão do Node.js que você está usando
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: name-of-artifact
-        path: dist/windows
+      - name: Install dependencies
+        working-directory: ./paineis-v2-front
+        run: npm install
+
+      - name: Build React project
+        working-directory: ./paineis-v2-front
+        run: npm run build --prod
+
+      - name: Log in to Docker Hub
+        run: echo "painelsaudefiocruz" | docker login -u "Losartan-trata-Covid-19" --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t docker build . -t painelsaudefiocruz/demo:backend-1.0.0 .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push docker build . -t painelsaudefiocruz/demo:backend-1.0.0
