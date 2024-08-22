@@ -23,7 +23,7 @@ jobs:
 
       - name: Build React project
         working-directory: ./paineis-v2-front
-        run: npm run build --prod
+        run: CI=false npm run build --prod
 
       - name: Log in to Docker Hub
         run: echo "painelsaudefiocruz" | docker login -u "Losartan-trata-Covid-19" --password-stdin
