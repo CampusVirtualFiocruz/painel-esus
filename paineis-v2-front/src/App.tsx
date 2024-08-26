@@ -11,7 +11,7 @@ import { Gestante } from "./pages/Gestante";
 import { GestantesList } from "./pages/GestantesList";
 import { Diabetes } from "./pages/Diabetes";
 import { Hipertensao } from "./pages/Hipertensao";
-import { HipertensosList } from "./pages/HipertensosList";
+import HipertensosList from "./pages/HipertensosList";
 import { DiabeticosList } from "./pages/DiabeticosList";
 import { SindromesAgudas } from "./pages/SindromesAgudas/SindromesAgudas";
 import { SelecionarUbs } from "./pages/SelecionarUbs";
