@@ -63,19 +63,19 @@ export const SaudeBucal = () => {
   const title = `${UBS} / Painel Saúde Bucal`;
 
   return (
-    <ReportWrapper title={title} subtitle="(últimos 12 meses)">
+    <ReportWrapper title={title} subtitle="(referente aos últimos 12 meses)">
       <TwoColumnSection>
         <TwoColumnSection.Col>
           <TotalAtendimentos />
           <TipoConsulta />
           <FaixaEtaria />
-          <Desfecho />
+          <LocalAtendimento />
         </TwoColumnSection.Col>
         <TwoColumnSection.Col>
           <AtendimentoLinhaCuidado />
           <Exodontia />
           <Sexo />
-          <LocalAtendimento />
+          <Desfecho />
         </TwoColumnSection.Col>
       </TwoColumnSection>
       <ReportFooter />

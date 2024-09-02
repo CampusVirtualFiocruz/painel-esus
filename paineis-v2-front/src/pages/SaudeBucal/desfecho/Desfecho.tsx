@@ -36,6 +36,8 @@ const Desfecho = () => {
     }
   );
 
+  const defaultColors = ["#0069d0", "#84aaff", "#5c7ea0"];
+
   return (
     <AsyncDataLoad {...{ isLoading, error }}>
       <div className="col-12">
@@ -48,16 +50,17 @@ const Desfecho = () => {
             (item: DesfechResponse, i: number) => (
               <div key={i} className="d-flex align-items-center mt-2">
                 <div className="desfecho d-flex">
-                  <div className="container-extratificacao-atendimentos w70 d-flex">
-                    <span className="profissao-nome">{item.label}</span>
-                  </div>
-                  <div className="w30 d-flex hprogess">
-                    <Progress
-                      value={item.percent}
-                      className="w-75 hprogess"
-                      barStyle={{ backgroundColor: randomHexColorCode() }}
-                    />
-                  </div>
+                  <span className="profissao-nome">{item.label}</span>
+                  <Progress
+                    value={item.percent}
+                    className="w-75"
+                    barStyle={{
+                      backgroundColor:
+                        i > defaultColors.length
+                          ? randomHexColorCode()
+                          : defaultColors[i],
+                    }}
+                  />
                 </div>
                 <span className="total ms-2 wpercent">{item.percent}%</span>
               </div>

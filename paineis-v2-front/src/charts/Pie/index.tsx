@@ -21,36 +21,61 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
   const ativo = (dataGraphic[0].value / total) * 100;
 
   const options = {
-    color: [colorActive, "#e4e4e4"],
+    color: ["#e4e4e4", "#0069d0", "#84aaff", "#5c7ea0"],
     tooltip: {
       trigger: "item",
-      formatter: "({d}%)",
+      formatter: "{b0}: {c0}({d}%)",
     },
     title: {
-      text: nome,
+      text: "",
       left: "center",
       top: "0",
+      bottom: "auto",
       textStyle: {
         fontSize: 16,
         overflow: "break",
-        width: 120,
+        width: 100,
       },
     },
     series: [
       {
-        name: nome,
+        name: "",
         type: "pie",
-        radius: "80%",
+        radius: "40%",
         center: ["50%", "50%"],
-        animationDuration: 1000,
-
+        animationDuration: 800,
+        avoidLabelOverlap: false,
         label: {
           show: true,
-          position: "center",
+          position: "outside",
+          overflow: "break",
           fontSize: "16",
           fontWeight: "bold",
+          width: 120,
+          formatter: "{b|{d}%} \n\n{a|{b}}",
+          rich: {
+            a: {
+              color: "#262729",
+              fontWeight: "400",
+              fontSize: 12,
+              align: "center",
+            },
+            b: {
+              color: "#262729",
+              fontWeight: "bold",
+              fontSize: 25,
+              align: "center",
+            },
+          },
+          distanceToLabelLine: -4,
         },
-        itemStyle: {},
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: "16",
+            fontWeight: "bold",
+          },
+        },
         labelLine: {
           show: false,
         },
@@ -64,14 +89,11 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
       <ReactECharts
         option={options}
         style={{
-          width: "126px",
+          minWidth: "300px",
           height: "186px",
         }}
         opts={{ renderer: "svg" }}
       />
-      <span className="porcentagem">
-        {dataGraphic[0].value + `(${formatAsPercent(ativo.toString())})`}
-      </span>
     </div>
   );
 }
@@ -85,7 +107,7 @@ export function Pie({ data }: any) {
   let dataGraphic = [{ value: comConsulta }, { value: semConsulta }];
 
   const options = {
-    color: ["#84aaff", "#0069d0"],
+    color: ["#e4e4e4", "#0069d0"],
     tooltip: {
       trigger: "item",
       formatter: "({d}%)",

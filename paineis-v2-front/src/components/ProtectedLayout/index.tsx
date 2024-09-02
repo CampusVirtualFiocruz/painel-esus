@@ -8,7 +8,6 @@ export const ProtectedLayout = ({ children }: { children: JSX.Element }) => {
     return (
       <>
         <h1>Você não tem permissão para acessar esta página.</h1>
-
         <Link to="/">Fazer login</Link>
       </>
     );

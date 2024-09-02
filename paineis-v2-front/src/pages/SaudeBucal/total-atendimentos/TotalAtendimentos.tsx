@@ -1,9 +1,10 @@
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { Api } from "../../../services/api";
-import AsyncDataLoad from "../async-data-load";
 import { Typography } from "../../../components/ui/Typography";
-import "./style.scss";
+import Card from "../../../components/ui/Card";
+import AsyncDataLoad from "../async-data-load";
+import Medkit from "../../../assets/images/medkit.png";
 
 type PainelParams = {
   id: string;
@@ -30,18 +31,37 @@ const TotalAtendimentos = () => {
   );
 
   return (
-    <div id="total-atendimentos">
+    <Card>
       <AsyncDataLoad {...{ isLoading, error }}>
-        <div className="col-12 chart-container total-atd-container">
-          <Typography.Subtitle>Total de atendimentos</Typography.Subtitle>
-          <div className="total-atd">
-            <span className="total-trimestre">
+        <div style={{ display: "flex", width: "100%" }}>
+          <Typography.Details style={{ flex: "2" }}>
+            Total de atendimentos
+            <br />
+            nos últimos 12 meses
+          </Typography.Details>
+          <div
+            style={{
+              display: "flex",
+              flex: "1",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              justifyItems: "center",
+              gap: "10px",
+            }}
+          >
+            <img
+              src={Medkit}
+              width="24px"
+              alt="Ícone de kit médico de emergência"
+            />
+            <Typography.Subtitle style={{ width: "initial" }}>
               {dataTotal?.total.toLocaleString("pt-BR")}
-            </span>
+            </Typography.Subtitle>
           </div>
         </div>
       </AsyncDataLoad>
-    </div>
+    </Card>
   );
 };
 

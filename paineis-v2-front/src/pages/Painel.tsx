@@ -15,9 +15,9 @@ import masculino from "../assets/images/masculino.svg";
 import feminino from "../assets/images/feminino.svg";
 import homem from "../assets/images/homem.svg";
 import mulher from "../assets/images/mulher.svg";
-import diabetes from "../assets/images/diabetes.svg";
-import hipertensao from "../assets/images/hipertensao.svg";
-import thooth from "../assets/images/theeth.svg";
+import diabetes from "../assets/images/menu/diabetes.png";
+import hipertensao from "../assets/images/menu/hipertensao.png";
+import thooth from "../assets/images/menu/bucal.png";
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
@@ -534,12 +534,7 @@ export function Painel() {
                   </h4>
 
                   <div className="d-flex align-items-center">
-                    <img
-                      src={thooth}
-                      alt="Saúde Bucal"
-                      className="mx-2"
-                      width="72px"
-                    />
+                    <img src={thooth} alt="Saúde Bucal" className="mx-2" />
                     <Condicao
                       data={{
                         rural: dataOralHealth["rural"].total,

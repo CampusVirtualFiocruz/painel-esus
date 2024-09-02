@@ -25,8 +25,10 @@ export type FaixaEtariaResponse = {
 export type BarchartType = {
   titulo: string;
   data: any[];
+  colors?: any[];
 };
-export const BarChart = ({ titulo, data }: BarchartType) => {
+
+export const BarChart = ({ titulo, data, colors }: BarchartType) => {
   const xAxis = data?.map((item: any) => item.label);
   const series: any = [];
   const dict: any = {};
@@ -49,7 +51,7 @@ export const BarChart = ({ titulo, data }: BarchartType) => {
     });
   }
 
-  const legendsColors = ["#0069d0", "#84aaff", "#e9ecef"];
+  const chartColors = colors || ["#0069d0", "#84aaff", "#e9ecef"];
   const formatLabel = (val: number) => {
     if (val >= 1000) {
       return `${val / 1000}K`;
@@ -116,7 +118,7 @@ export const BarChart = ({ titulo, data }: BarchartType) => {
         barWidth: "50%",
         barMinHeihgt: 10,
         itemStyle: {
-          color: legendsColors[index],
+          color: chartColors[index],
         },
         data: i.data,
       };

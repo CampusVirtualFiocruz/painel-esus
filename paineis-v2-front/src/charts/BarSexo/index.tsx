@@ -119,7 +119,6 @@ export function BarSexo({ data, titulo }: BarData) {
   return (
     <div className="bar">
       <div className="vertical ms-1 me-4">{titulo}</div>
-
       <ReactECharts
         option={options}
         style={{

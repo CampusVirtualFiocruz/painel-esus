@@ -81,6 +81,7 @@ const ReportWrapper = ({
             <div className="col-12 col-md-8 containerButtons d-flex justify-content-center my-5">
               <Button
                 type="button"
+                kind="primary"
                 onClick={() => {
                   navigate(-1);
                 }}

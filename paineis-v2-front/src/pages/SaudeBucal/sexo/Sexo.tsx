@@ -38,6 +38,7 @@ const Sexo = () => {
         </Typography.Subtitle>
         {!isLoading && sexoResponse && (
           <BarChart
+            colors={["#02786D", "#9BE1D8"]}
             {...{ data: sexoResponse, titulo: "Total de atendimentos" }}
           />
         )}

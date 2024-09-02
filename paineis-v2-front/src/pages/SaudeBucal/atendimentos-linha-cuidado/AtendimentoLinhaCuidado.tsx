@@ -34,10 +34,9 @@ const AtendimentoLinhaCuidado = () => {
         Atendimentos por linha de cuidado
       </Typography.Subtitle>
       <div
-        className="chart-container"
         style={{
           display: "flex",
-          justifyContent: "space-evenly",
+          flexDirection: "row",
           alignItems: "center",
         }}
       >
@@ -46,14 +45,23 @@ const AtendimentoLinhaCuidado = () => {
           data &&
           data?.map((item: any, index: number) => {
             return (
-              <PieChart
-                key={index}
-                {...new TPieChart(
-                  item.label,
-                  [{ value: item.value }, { value: item.total }],
-                  activeList[index]
-                )}
-              />
+              <div>
+                <Typography.Details> {item.label}</Typography.Details>
+                <PieChart
+                  key={index}
+                  {...new TPieChart(
+                    item.label,
+                    [
+                      { value: item.value, name: "Valor específico" } as any,
+                      {
+                        value: item.total,
+                        name: "Valor total",
+                      } as any,
+                    ],
+                    activeList[index]
+                  )}
+                />
+              </div>
             );
           })}
       </div>
