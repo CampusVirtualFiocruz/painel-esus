@@ -448,7 +448,7 @@ export function Hipertensao() {
                 )}
               </div>
               <div className="mt-5">
-                <Button kind="primary" onClick={() => handleClick(5)}>
+                <Button kind="primary" onClick={() => handleClick(6)}>
                   Boas práticas na assistência a pessoas com hipertensão
                 </Button>
               </div>
