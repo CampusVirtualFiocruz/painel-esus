@@ -445,10 +445,13 @@ export function Diabetes() {
                 </Button>
               </div>
             </div>
-            <div>
+            <div style={{ textAlign: "center" }}>
               <Typography.Subtitle>
                 Adultos com diabetes de acordo com o IMC
               </Typography.Subtitle>
+              (IMC de pessoas com 20 anos ou mais e menores de 60 anos)
+              <br />
+              <br />
               <div className="d-flex flex-wrap flex-lg-nowrap">
                 {isLoadingDiabetesFactors ? (
                   <div className="d-flex align-items-center justify-content-center">
