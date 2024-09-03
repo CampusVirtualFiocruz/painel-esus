@@ -4,3 +4,12 @@
 .red {
   fill: #d01e29;
 }
+.legend {
+  padding-top: 15px;
+  font-size: 80%;
+  color: var(--gray-200);
+
+  p {
+    padding-left: 15px;
+  }
+}

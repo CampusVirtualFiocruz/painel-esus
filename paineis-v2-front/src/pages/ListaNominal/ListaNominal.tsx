@@ -1,17 +1,14 @@
-import * as React from "react";
 import { useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
-import { Alert, Spinner } from "reactstrap";
 import {
   AiFillExclamationCircle,
   AiFillCheckCircle,
   AiFillCloseCircle,
 } from "react-icons/ai";
-import { DataTable, } from "bold-ui";
+import { PagedTable } from "bold-ui";
 
 import { Modal } from "../../components/Modal";
-import Pagination from "../../components/Pagination";
 import { ReportFooter } from "../../components/ui/ReportFooter";
 import ReportWrapper from "../../components/ui/ReportWrapper";
 import { useInfo } from "../../context/infoProvider/useInfo";
@@ -34,6 +31,21 @@ type PainelParams = {
   id: string;
 };
 
+interface RowType {
+  nome: string;
+  nomeSocialSelecionado: boolean;
+  zonaUrbana: boolean;
+  zonaRural: boolean;
+  possuiAlertas: boolean;
+  cpf: string;
+  cns: string;
+  idade: number;
+  diagnostico: string;
+  sexo: string;
+  equipe: string;
+  microarea: string;
+}
+
 const ListaNominal = () => {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
@@ -44,18 +56,17 @@ const ListaNominal = () => {
     setData({ loaded: idModal, tipo, cnes: id });
   };
 
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const condicao = queryParams.get('condicao');
-
   const handleClick = (idModal: number) => {
     setData({ loaded: 0 });
     setShowModal(true);
     getData(idModal);
   };
 
-  const { city } = useInfo();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const condicao = queryParams.get('condicao');
 
+  const { city } = useInfo();
   const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
     "ubs",
     async () => {
@@ -76,40 +87,51 @@ const ListaNominal = () => {
       staleTime: 1000 * 60 * 10, //10 minutos
     }
   );
-
   const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
   const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
   const title = `${UBS} / Lista Nominal / ${condicao}`;
   const subtitle = "(referente aos últimos 12 meses)";
 
-  const [currentPage, setCurrentPage] = React.useState<any>(1);
-  const [totalPages, setTotalPages] = React.useState<any>(1);
-  const [response, setResponse] = React.useState<any>(null);
-
-  const error = false;
-  const isLoading = false;
   const list: any = listMock;
 
-  const [sort, setSort] = React.useState(["id"]);
+  const [params, setParams] = useState({
+    page: 0,
+    size: 10,
+    totalElements: list.length,
+    totalPages: Math.ceil(list.length / 30),
+    sort: ["name"]
+  })
+
+  const handleSortChange = (sort: string[]) => setParams(state => ({ ...state, sort }))
+  const handlePageChange = (page: number) => setParams(state => ({ ...state, page }))
+  const handleSizeChange = (size: number) =>
+    setParams(state => ({ ...state, size, totalPages: Math.max(1, Math.ceil(state.totalElements / size)) }))
 
   const rows = list.sort((a: any, b: any) => {
-    if (sort[0] === "nome") {
+    if (params.sort[0] === "nome") {
       return a?.nome.localeCompare(b?.nome);
     }
-    if (sort[0] === "-nome") {
+    if (params.sort[0] === "-nome") {
       return b?.nome.localeCompare(a?.nome);
     }
     return 0;
-  });
+  })
+    .slice(params.page * params.size, params.page * params.size + params.size)
 
   return (
     <div id="page-painel">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
       <ReportWrapper title={title} subtitle={subtitle}>
-      <DataTable<any>
+      <PagedTable<RowType>
                 rows={rows}
-                sort={sort}
-                onSortChange={setSort}
+                sort={params.sort}
+                page={params.page}
+                size={params.size}
+                totalElements={params.totalElements}
+                totalPages={params.totalPages}
+                onSortChange={handleSortChange}
+                onPageChange={handlePageChange}
+                onSizeChange={handleSizeChange}
                 loading={false}
                 columns={[
                   {
@@ -156,20 +178,14 @@ const ListaNominal = () => {
                   },
                   {
                     name: "microarea",
-                    header: "Microarea",
+                    header: "Microárea",
                     render: (item) => item.microarea,
                   },
                 ]}
               />
-              <Pagination
-              className="pagination-bar"
-              currentPage={currentPage}
-              totalCount={totalPages}
-              pageSize={10}
-              onPageChange={(page) => {
-                setCurrentPage(page);
-              }}
-            />
+              <div className="legend">
+                <p>*Nome Social</p>
+              </div>
       <ReportFooter />
       </ReportWrapper>
     </div>
