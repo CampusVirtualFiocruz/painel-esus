@@ -1,11 +1,6 @@
 import { useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
-import {
-  AiFillExclamationCircle,
-  AiFillCheckCircle,
-  AiFillCloseCircle,
-} from "react-icons/ai";
 import { PagedTable, TextField } from "bold-ui";
 
 import { Modal } from "../../components/Modal";
@@ -16,10 +11,10 @@ import { capitalize, getNomeUbs } from "../../utils";
 import { wait } from "../../utils/reports";
 import { Api } from "../../services/api";
 
-import listMock from "./HipertensosList.mock.json";
-
 import "../../styles/gestanteList.scss";
 import "../../styles/listaNominal.scss";
+
+import listMock from "./HipertensosList.mock.json";
 
 type TModal = {
   loaded: number;
@@ -96,7 +91,7 @@ const ListaNominal = () => {
 
   const [params, setParams] = useState({
     page: 0,
-    size: 10,
+    size: 30,
     totalElements: list.length,
     totalPages: Math.ceil(list.length / 30),
     sort: ["name", "alert", "zone"],
@@ -144,15 +139,15 @@ const ListaNominal = () => {
     <div id="page-painel">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
       <ReportWrapper title={title} subtitle={subtitle}>
-        <TextField
-          name="iconized"
-          id="iconized"
-          placeholder="Busca por nome, CPF ou CNS"
-          icon="zoomOutline"
-          required
-        />
-        <br />
-        <br />
+        <div className="search">
+          <TextField
+            name="iconized"
+            id="iconized"
+            placeholder="Busca por nome, CPF ou CNS"
+            icon="zoomOutline"
+            required
+          />
+        </div>
         <PagedTable<RowType>
           rows={rows}
           sort={params.sort}

@@ -47,7 +47,7 @@
 }
 
 [data-name="nome"] {
-  span {
+  svg {
     margin-top: 5px;
   }
 }
@@ -63,4 +63,12 @@
 .iconAlerta {
   background-color: #d01e29;
   ;
+}
+
+#iconized {
+  width: 450px;
+}
+
+.search {
+  margin-bottom: 20px;
 }
