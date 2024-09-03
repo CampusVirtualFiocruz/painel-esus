@@ -99,7 +99,7 @@ const ListaNominal = () => {
     size: 10,
     totalElements: list.length,
     totalPages: Math.ceil(list.length / 30),
-    sort: ["name"]
+    sort: ["name", "alert", "zone"]
   })
 
   const handleSortChange = (sort: string[]) => setParams(state => ({ ...state, sort }))
@@ -108,11 +108,18 @@ const ListaNominal = () => {
     setParams(state => ({ ...state, size, totalPages: Math.max(1, Math.ceil(state.totalElements / size)) }))
 
   const rows = list.sort((a: any, b: any) => {
-    if (params.sort[0] === "nome") {
-      return a?.nome.localeCompare(b?.nome);
+    const [sortField, sortOrder] = params.sort[0].startsWith('-') ? [params.sort[0].substring(1), 'desc'] : [params.sort[0], 'asc'];
+
+    if (sortField === "nome") {
+      return sortOrder === 'asc' ? a?.nome.localeCompare(b?.nome) : b?.nome.localeCompare(a?.nome);
     }
-    if (params.sort[0] === "-nome") {
-      return b?.nome.localeCompare(a?.nome);
+    if (sortField === "alert") {
+      return sortOrder === 'asc' ? a?.possuiAlertas - b?.possuiAlertas : b?.possuiAlertas - a?.possuiAlertas;
+    }
+    if (sortField === "zone") {
+      const zoneA = a.zonaUrbana ? 'Urbana' : a.zonaRural ? 'Rural' : '';
+      const zoneB = b.zonaUrbana ? 'Urbana' : b.zonaRural ? 'Rural' : '';
+      return sortOrder === 'asc' ? zoneA.localeCompare(zoneB) : zoneB.localeCompare(zoneA);
     }
     return 0;
   })
@@ -145,6 +152,28 @@ const ListaNominal = () => {
                         }`}
                       </u>
                     ),
+                  },
+                  {
+                    name: "alert",
+                    header: <div className="iconHeader iconAlerta ms-2"></div>,
+                    sortable: true,
+                    render: (item) => {
+                      if (item.possuiAlertas) {
+                        return <span className="iconCircle iconAlerta ms-2" title="Possui Alertas">!</span>;
+                      }
+                    },
+                  },
+                  {
+                    name: "zone",
+                    header: <div className="headerZone ms-2"><div className="iconHeader iconRural"></div><div className="iconHeader iconUrbano"></div></div>,
+                    sortable: true,
+                    render: (item) => {
+                      if (item.zonaUrbana) {
+                        return <span className="iconCircle iconUrbano ms-2" title="Zona Urbana">U</span>;
+                      } else if (item.zonaRural) {
+                        return <span className="iconCircle iconRural ms-2" title="Zona Rural">R</span>;
+                      }
+                    },
                   },
                   {
                     name: "cpf",
@@ -184,7 +213,23 @@ const ListaNominal = () => {
                 ]}
               />
               <div className="legend">
-                <p>*Nome Social</p>
+                <div>
+                  <p>* Nome Social</p>
+                </div>
+                <div className="legend-icons">
+                  <p>
+                    <span className="iconCircle iconUrbano ms-2">U</span>
+                    Zona Urbana
+                  </p>
+                  <p>
+                    <span className="iconCircle iconRural ms-2">R</span>
+                    Zona Rural
+                  </p>
+                  <p>
+                    <span className="iconCircle iconAlerta ms-2">!</span>
+                    Possui Alertas
+                  </p>
+                </div>
               </div>
       <ReportFooter />
       </ReportWrapper>
