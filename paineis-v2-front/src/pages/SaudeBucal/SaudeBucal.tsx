@@ -69,12 +69,14 @@ export const SaudeBucal = () => {
           <TotalAtendimentos />
           <TipoConsulta />
           <FaixaEtaria />
+          <div style={{ height: "20px" }} />
           <LocalAtendimento />
         </TwoColumnSection.Col>
         <TwoColumnSection.Col>
           <AtendimentoLinhaCuidado />
           <Exodontia />
           <Sexo />
+          <div style={{ height: "20px" }} />
           <Desfecho />
         </TwoColumnSection.Col>
       </TwoColumnSection>

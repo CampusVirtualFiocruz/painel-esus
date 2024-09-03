@@ -98,32 +98,32 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
         name: nome,
         type: "pie",
         radius: ["40%", "80%"],
-        avoidLabelOverlap: false,
+        avoidLabelOverlap: true,
         label: {
           show: true,
           overflow: "break",
           width: 110,
-          formatter: "{a|{b}}\n\n{b|{c}}\n\n{c|({d})%}",
+          formatter: "{b|{d}%}\n\n{a|{b}}\n\n{c|({c})}",
           rich: {
             a: {
               color: "#262729",
               fontWeight: "400",
-              fontSize: 12,
+              fontSize: 10,
               align: "right",
             },
             b: {
               color: "#262729",
               fontWeight: "bold",
-              fontSize: 20,
+              fontSize: 22,
               align: "right",
             },
             c: {
               color: "#262729",
               fontWeight: "bold",
-              fontSize: 12,
+              fontSize: 10,
               align: "right",
             },
-            distanceToLabelLine: 2,
+            distanceToLabelLine: 50,
           },
         },
         emphasis: {

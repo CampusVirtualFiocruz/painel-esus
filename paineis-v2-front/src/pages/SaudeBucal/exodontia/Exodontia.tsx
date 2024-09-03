@@ -62,13 +62,13 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
             a: {
               color: "#262729",
               fontWeight: "400",
-              fontSize: 12,
+              fontSize: 10,
               align: "center",
             },
             b: {
               color: "#262729",
               fontWeight: "bold",
-              fontSize: 25,
+              fontSize: 22,
               align: "center",
             },
           },
