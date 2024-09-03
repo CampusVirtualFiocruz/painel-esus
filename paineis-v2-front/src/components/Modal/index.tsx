@@ -106,6 +106,14 @@ export function bodyBoasPraticasCuidadoPessoasHipertensao() {
     );
 }
 
+export function bodyListaCadastro() {
+    return (
+        <div className="d-flex flex-column mb-4">
+            <h1 className="mb-4">Nome</h1>
+        </div>
+    );
+}
+
 export const Modal = ({ data, setShowModal }: IModal) => {
     // close the modal when clicking outside the modal.
     const modalRef = useRef<HTMLDivElement | null>(null);
@@ -127,7 +135,7 @@ export const Modal = ({ data, setShowModal }: IModal) => {
                 {data && data.loaded === 3 && bodyTerceiroTrimestre()}
                 {data && data.loaded === 4 && bodyBoasPraticasAssistenciaPreNatal()}
                 {data && data.loaded === 5 && bodyBoasPraticasAssistenciaPessoaDiabetes()}
-                {data && data.loaded === 6 && bodyBoasPraticasCuidadoPessoasHipertensao()}
+                {data && data.loaded === 6 && bodyListaCadastro()}
 
                 <CgClose size={'1.5rem'} onClick={() => setShowModal(false)} className="closeButton" />
             </div>

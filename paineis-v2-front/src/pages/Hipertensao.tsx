@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Alert, Progress, Spinner } from "reactstrap";
 import { Button } from "bold-ui";
@@ -195,6 +195,12 @@ export function Hipertensao() {
     setShowModal(true);
     getData(idModal);
   };
+
+  let navigate = useNavigate();
+
+  function handleListaNominal() {
+    navigate(`/lista-nominal?condicao=Hipertensão`);
+  }
 
   const { city } = useInfo();
 
@@ -483,6 +489,11 @@ export function Hipertensao() {
                   </div>
                 )}
               </div>
+            </div>
+            <div className="mt-5" style={{ textAlign: "center" }}>
+                <Button kind="primary" onClick={handleListaNominal}>
+                Ver a relação das pessoas com hipertensão da UBS
+                </Button>
             </div>
             <div className="painel-secundario">
               <Typography.Subtitle>

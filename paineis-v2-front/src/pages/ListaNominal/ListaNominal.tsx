@@ -1,24 +1,87 @@
 import * as React from "react";
+import { useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
-import { Header } from "../../components/Header";
 import { Alert, Spinner } from "reactstrap";
 import {
   AiFillExclamationCircle,
   AiFillCheckCircle,
   AiFillCloseCircle,
 } from "react-icons/ai";
+import { DataTable, } from "bold-ui";
 
-import { Footer } from "../../components/Footer";
+import { Modal } from "../../components/Modal";
 import Pagination from "../../components/Pagination";
+import { ReportFooter } from "../../components/ui/ReportFooter";
+import ReportWrapper from "../../components/ui/ReportWrapper";
+import { useInfo } from "../../context/infoProvider/useInfo";
+import { capitalize, getNomeUbs } from "../../utils";
+import { wait } from "../../utils/reports";
 import { Api } from "../../services/api";
-import "../../styles/gestanteList.scss";
-import "../../styles/hipertensosList.scss";
-import { Button, DataTable, Icon, Table } from "bold-ui";
 
 import listMock from "./HipertensosList.mock.json";
-import { capitalize } from "../../utils";
 
-const HipertensosList = () => {
+import "../../styles/gestanteList.scss";
+import "../../styles/ListaNominal.scss";
+
+type TModal = {
+  loaded: number;
+  tipo?: string;
+  cnes?: string | undefined;
+};
+
+type PainelParams = {
+  id: string;
+};
+
+const ListaNominal = () => {
+  const { id } = useParams<PainelParams>();
+  const [showModal, setShowModal] = useState(false);
+  const [data, setData] = useState<TModal>({ loaded: 0 });
+
+  const getData = async (idModal: number, tipo?: string) => {
+    await wait(100);
+    setData({ loaded: idModal, tipo, cnes: id });
+  };
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const condicao = queryParams.get('condicao');
+
+  const handleClick = (idModal: number) => {
+    setData({ loaded: 0 });
+    setShowModal(true);
+    getData(idModal);
+  };
+
+  const { city } = useInfo();
+
+  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
+    "ubs",
+    async () => {
+      const response = await Api.get<any>("get-units");
+      const data = response.data;
+
+      const listData: any[] = data.data.map((ubs: any) => {
+        return {
+          label: ubs.no_unidade_saude,
+          value: ubs.co_seq_dim_unidade_saude,
+          id: ubs.co_seq_dim_unidade_saude,
+        };
+      });
+
+      return listData;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
+
+  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
+  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
+  const title = `${UBS} / Lista Nominal / ${condicao}`;
+  const subtitle = "(referente aos últimos 12 meses)";
+
   const [currentPage, setCurrentPage] = React.useState<any>(1);
   const [totalPages, setTotalPages] = React.useState<any>(1);
   const [response, setResponse] = React.useState<any>(null);
@@ -31,26 +94,19 @@ const HipertensosList = () => {
 
   const rows = list.sort((a: any, b: any) => {
     if (sort[0] === "nome") {
-      return a?.nome - b?.nome;
+      return a?.nome.localeCompare(b?.nome);
     }
     if (sort[0] === "-nome") {
-      return b?.nome - a?.nome;
+      return b?.nome.localeCompare(a?.nome);
     }
     return 0;
   });
 
   return (
     <div id="page-painel">
-      <Header />
-
-      <div className="contentWrapper">
-        <hr className="linha my-4" />
-
-        <h2>Lista de Hipertensos</h2>
-        <div className="container my-5">
-          <>
-            <div className="table-responsive-md">
-              <DataTable<any>
+      {showModal && <Modal data={data} setShowModal={setShowModal} />}
+      <ReportWrapper title={title} subtitle={subtitle}>
+      <DataTable<any>
                 rows={rows}
                 sort={sort}
                 onSortChange={setSort}
@@ -61,7 +117,7 @@ const HipertensosList = () => {
                     header: "Nome",
                     sortable: true,
                     render: (item) => (
-                      <u>
+                      <u onClick={() => handleClick(6)} style={{ cursor: 'pointer' }}>
                         {`${item.nome} ${
                           item?.nomeSocialSelecionado ? "*" : ""
                         }`}
@@ -103,19 +159,9 @@ const HipertensosList = () => {
                     header: "Microarea",
                     render: (item) => item.microarea,
                   },
-                  /*  {
-                    name: "actions",
-                    align: "right",
-                    render: (item) => (
-                      <Button size="small" skin="ghost">
-                        <Icon icon="penOutline" />
-                      </Button>
-                    ),
-                  }, */
                 ]}
               />
-            </div>
-            <Pagination
+              <Pagination
               className="pagination-bar"
               currentPage={currentPage}
               totalCount={totalPages}
@@ -124,11 +170,10 @@ const HipertensosList = () => {
                 setCurrentPage(page);
               }}
             />
-          </>
-        </div>
-      </div>
+      <ReportFooter />
+      </ReportWrapper>
     </div>
   );
 };
 
-export default HipertensosList;
+export default ListaNominal;
