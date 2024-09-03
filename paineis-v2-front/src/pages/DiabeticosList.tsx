@@ -12,7 +12,7 @@ import { Footer } from "../components/Footer";
 import Pagination from "../components/Pagination";
 import { Api } from "../services/api";
 import "../styles/gestanteList.scss";
-import "../styles/ListaNominal.scss";
+import "../styles/diabeticosList.scss";
 type TDiabetico = {
   Glicemia: number[];
   "Hemoglobina glicada": number[];
