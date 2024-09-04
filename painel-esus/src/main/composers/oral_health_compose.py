@@ -2,13 +2,15 @@ from src.data.use_cases.oral_health.oral_health_dashboard import \
     OralHealthDashboardUseCase
 from src.infra.db.repositories.odonto.oral_health_dashboard_repository import \
     OralHealthDashboardRepository
-from src.presentations.controllers.oral_health import (
-    OralHealthGetAllCaresByPlaceController,
-    OralHealthGetCaresByAgeRangeController,
-    OralHealthGetCaresByGenderController,
-    OralHealthGetCaresByLineOfServicesController,
-    OralHealthGetCaresByOutcomeController, OralHealthGetCaresByPlaceController,
-    OralHealthGetCaresByTypeOfServicesController, OralHealthGetTotalController)
+from src.presentations.controllers.oral_health import OralHealthGetAllCaresByPlaceController
+from src.presentations.controllers.oral_health import OralHealthGetCaresByAgeRangeController
+from src.presentations.controllers.oral_health import OralHealthGetCaresByGenderController
+from src.presentations.controllers.oral_health import OralHealthGetCaresByLineOfServicesController
+from src.presentations.controllers.oral_health import OralHealthGetCaresByOutcomeController
+from src.presentations.controllers.oral_health import OralHealthGetCaresByPlaceController
+from src.presentations.controllers.oral_health import OralHealthGetCaresByTypeOfServicesController
+from src.presentations.controllers.oral_health import OralHealthGetExtractionProceduresProportionController
+from src.presentations.controllers.oral_health import OralHealthGetTotalController
 
 
 def oral_health_dashboard_get_total():
@@ -38,7 +40,8 @@ def oral_health_dashboard_get_cares_by_type_of_services():
 def oral_health_get_extraction_procedures_proportion():
     repository = OralHealthDashboardRepository()
     use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByTypeOfServicesController(use_case)
+    controller = OralHealthGetExtractionProceduresProportionController(
+        use_case)
 
     return controller.handle
 
