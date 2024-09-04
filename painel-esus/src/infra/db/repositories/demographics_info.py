@@ -47,7 +47,11 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             "14": "65 a 69 anos",
             "15": "70 a 74 anos",
             "16": "75 a 79 anos",
-            "17": "+80 anos",
+            "17": "80 a 84 anos",
+            "18": "85 a 89 anos",
+            "19": "90 a 94 anos",
+            "20": "95 a 99 anos",
+            "21": "100 ou mais",
         }
 
     def parse_date(self, data_frame: DataFrame) -> DataFrame:
@@ -84,7 +88,11 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             "65 a 69 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
             "70 a 74 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
             "75 a 79 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-            "+80 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "80 a 84 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "85 a 89 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "90 a 94 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "95 a 99 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "100 ou mais": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
         }
 
     def __create_age_groups(self) -> Dict:
@@ -158,9 +166,24 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             data_frame["idade"] <= 79)
         data_frame.loc[mask_faixa16, "faixas"] = "16"
 
-        mask_faixa17 = data_frame["idade"] >= 80
+        mask_faixa17 = (data_frame["idade"] >= 80) & (
+            data_frame["idade"] <= 84)
         data_frame.loc[mask_faixa17, "faixas"] = "17"
 
+        mask_faixa18 = (data_frame["idade"] >= 85) & (
+            data_frame["idade"] <= 89)
+        data_frame.loc[mask_faixa18, "faixas"] = "18"
+
+        mask_faixa19 = (data_frame["idade"] >= 90) & (
+            data_frame["idade"] <= 94)
+        data_frame.loc[mask_faixa19, "faixas"] = "19"
+
+        mask_faixa20 = (data_frame["idade"] >= 95) & (
+            data_frame["idade"] <= 99)
+        data_frame.loc[mask_faixa20, "faixas"] = "20"
+
+        mask_faixa21 = data_frame["idade"] >= 100
+        data_frame.loc[mask_faixa21, "faixas"] = "21"
         faixas = (
             data_frame.groupby(
                 by=["co_dim_sexo", "co_dim_tipo_localizacao", "faixas"])
