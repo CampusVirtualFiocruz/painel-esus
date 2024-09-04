@@ -14,9 +14,9 @@ class ImcModel():
 
     def __init__(self):
         self.list = [
-            IMCHeighWeight(),
             IMCLowWeight(),
             IMCNormal(),
+            IMCHeighWeight(),
             IMCObesity(),
         ]
         self.other = IMCOthers()

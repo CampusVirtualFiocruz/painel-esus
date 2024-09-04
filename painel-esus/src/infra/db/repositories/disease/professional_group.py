@@ -78,13 +78,15 @@ class ProfessionalsGroup():
                 'totalCount': 0,
                 'total': 0
             },
-            'OUTROS': {
-                'profissao': 'OUTROS',
-                'totalCount': 0,
-                'total': 0
-            },
         }
-        self.professionals_dict = dict(sorted(professionals_dict.items()))
+        professionals_dict = dict(sorted(professionals_dict.items()))
+        professionals_dict['OUTROS'] = {
+            'profissao': 'OUTROS',
+            'totalCount': 0,
+            'total': 0
+        }
+        self.professionals_dict = professionals_dict
+        print(self.professionals_dict)
 
     def get_professionals_count(self, data_frame) -> List:
         def _parse_professionals(cbo):
