@@ -344,7 +344,7 @@ export function Painel() {
                             <MdInfoOutline
                               style={{
                                 cursor: "pointer",
-                                color: "#0069d0",
+                                color: "#ffffff",
                                 height: 20,
                                 width: 20,
                               }}
