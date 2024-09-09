@@ -4,7 +4,6 @@ import { useQuery } from "react-query";
 import { Alert, Progress, Spinner } from "reactstrap";
 import { Button } from "bold-ui";
 
-import info from "../assets/images/people.svg";
 import { Api } from "../services/api";
 import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
@@ -19,6 +18,8 @@ import ReportWrapper from "../components/ui/ReportWrapper";
 import TwoColumnSection from "../components/ui/TwoColumnSection";
 import { randomHexColorCode, wait } from "../utils/reports";
 import "../styles/diabetesHipertensao.scss";
+import Card from "../components/ui/Card";
+import RenderSingleValue from "../components/ui/RenderSingleValue";
 
 type TModal = {
   loaded: number;
@@ -310,111 +311,36 @@ export function Diabetes() {
             </div>
           </TwoColumnSection.Col>
           <TwoColumnSection.Col>
-            <div>
-              <Typography.Subtitle>
-                Total de atendimento nos últimos 12 meses
-              </Typography.Subtitle>
-              <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                <div>
-                  <div
-                    className="container-atendimentos"
-                    style={{ width: "221px" }}
-                  >
-                    <span className="total-trimestre">
-                      {isLoadingTotalDiabetes ? (
-                        <div className="d-flex align-items-center justify-content-center">
-                          <Spinner size="sm" type="grow" className="me-2" />0
-                        </div>
-                      ) : errorTotalDiabetes ? (
-                        <div className="d-flex align-items-center justify-content-center">
-                          <Alert color="danger">Erro ao carregar dados.</Alert>
-                        </div>
-                      ) : (
-                        dataTotalDiabetes.total_atendimentos
-                      )}
-                    </span>
-                  </div>
+            <div style={{ display: "flex", flexDirection: "row", gap: "10px" }}>
+              <Card style={{ flex: 1 }}>
+                <RenderSingleValue
+                  icon="medkit"
+                  title="Total de atendimentos nos últimos 12 meses"
+                  value={dataTotalDiabetes?.total_atendimentos}
+                />
+              </Card>
+              <Card style={{ flex: 2 }}>
+                <div
+                  style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+                >
+                  <RenderSingleValue
+                    icon="people"
+                    title="Nº de pessoas com diabetes (CID/CIAP)"
+                    value={dataTotalDiabetes?.total_pacientes}
+                  />
+                  <RenderSingleValue
+                    icon="people"
+                    title="Nº de pessoas com diabetes (autoreferido)"
+                    value={dataTotalDiabetes?.total_auto_referido}
+                  />
                 </div>
-              </div>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-              }}
-            >
-              <div>
-                <Typography.Subtitle>
-                  Nº de pessoas com Diabetes <br /> (CID/CIAP)
-                </Typography.Subtitle>
-                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                  <div>
-                    <div className="container-atendimentos">
-                      <div className="titulo d-flex align-items-center">
-                        <img
-                          src={info}
-                          alt="Total de atendimento nos últimos 12 meses"
-                          className="info mx-2"
-                        />
-                      </div>
-                      <span className="total-trimestre ms-4">
-                        {isLoadingTotalDiabetes ? (
-                          <div className="d-flex align-items-center justify-content-center">
-                            <Spinner size="sm" type="grow" className="me-2" />0
-                          </div>
-                        ) : errorTotalDiabetes ? (
-                          <div className="d-flex align-items-center justify-content-center">
-                            <Alert color="danger">
-                              Erro ao carregar dados.
-                            </Alert>
-                          </div>
-                        ) : (
-                          dataTotalDiabetes.total_pacientes
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <Typography.Subtitle>
-                  Nº de pessoas com Diabetes <br /> (autoreferido)
-                </Typography.Subtitle>
-                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
-                  <div>
-                    <div className="container-atendimentos">
-                      <div className="titulo d-flex align-items-center">
-                        <img
-                          src={info}
-                          alt="Total de atendimento nos últimos 12 meses"
-                          className="info mx-2"
-                        />
-                      </div>
-                      <span className="total-trimestre ms-4">
-                        {isLoadingTotalDiabetes ? (
-                          <div className="d-flex align-items-center justify-content-center">
-                            <Spinner size="sm" type="grow" className="me-2" />0
-                          </div>
-                        ) : errorTotalDiabetes ? (
-                          <div className="d-flex align-items-center justify-content-center">
-                            <Alert color="danger">
-                              Erro ao carregar dados.
-                            </Alert>
-                          </div>
-                        ) : (
-                          dataTotalDiabetes.total_auto_referido
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              </Card>
             </div>
             <div>
               <Typography.Subtitle>
                 Frequência de complicações relacionadas à diabetes
               </Typography.Subtitle>
+              <div style={{ marginBottom: "30px" }} />
               <div className="d-flex flex-wrap flex-xl-nowrap justify-content-center">
                 {isLoadingDiabetesIndicators ? (
                   <div className="d-flex align-items-center justify-content-center">
