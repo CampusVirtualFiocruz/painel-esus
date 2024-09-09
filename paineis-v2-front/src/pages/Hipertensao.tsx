@@ -295,23 +295,27 @@ export function Hipertensao() {
                 </div>
               ) : (
                 <>
-                  {dataExamsTable?.map((situacao: any, i: number) => (
-                    <div key={i} className="row gx-4 my-3">
-                      <div className="col-5 col-lg-6">
-                        <div className="tipo p-2 bordas">{situacao.tipo}</div>
-                      </div>
-                      <div className="col col-lg-3">
-                        <div className="tipo p-2 text-center bordas">
-                          {situacao.solicitados}
+                  {dataExamsTable
+                    ?.filter(
+                      (situacao: any) => situacao?.tipo !== "Aferição de PA"
+                    )
+                    ?.map((situacao: any, i: number) => (
+                      <div key={i} className="row gx-4 my-3">
+                        <div className="col-5 col-lg-6">
+                          <div className="tipo p-2 bordas">{situacao.tipo}</div>
+                        </div>
+                        <div className="col col-lg-3">
+                          <div className="tipo p-2 text-center bordas">
+                            {situacao.solicitados}
+                          </div>
+                        </div>
+                        <div className="col col-lg-3">
+                          <div className="tipo p-2 text-center bordas">
+                            {situacao.avaliados}
+                          </div>
                         </div>
                       </div>
-                      <div className="col col-lg-3">
-                        <div className="tipo p-2 text-center bordas">
-                          {situacao.avaliados}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </>
               )}
             </div>
