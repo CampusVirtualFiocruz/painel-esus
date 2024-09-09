@@ -432,7 +432,6 @@ export function Painel() {
               Proporção de indivíduos cadastrados segundo sexo e idade
             </Typography.Subtitle>
           </div>
-
           {dadosPainel !== undefined &&
           dadosPainel.ageGroups &&
           Object.keys(dadosPainel.ageGroups).length !== 4 ? (
@@ -450,16 +449,13 @@ export function Painel() {
                     <img src={feminino} className="img-fluid" alt="Feminino" />
                   </div>
                 </div>
-
                 <Piramide data={dadosPainel.ageGroups} />
               </div>
-
               <div className="d-flex align-items-center justify-content-between mt-5">
                 <div className="d-flex align-items-center mx-3">
                   <div className="box-container-light me-2"></div>
                   <h5 className="mb-0">Área Urbana</h5>
                 </div>
-
                 <div className="d-flex align-items-center mx-3">
                   <div className="box-container-dark me-2"></div>
                   <h5 className="mb-0">Área Rural</h5>
@@ -475,14 +471,12 @@ export function Painel() {
               Sem dados de proporção de indivíduos cadastrados.
             </h6>
           )}
-
           <div className="my-5">
             <Typography.Subtitle>
-              Condição de saúde dos indivíduos cadastrados no município nos
-              últimos 12 meses
+              Número de indivíduos acompanhados nos últimos 12 meses por
+              condição de saúde
             </Typography.Subtitle>
           </div>
-
           <div className="container">
             <div className="row container-cards-condicoes">
               <div className="card-condicao p-2" onClick={handleToDiabetes}>
@@ -494,18 +488,14 @@ export function Painel() {
                   <Condicao data={dadosPainel?.indicators.diabetes} />
                 </div>
               </div>
-
               <div className="card-condicao p-2" onClick={handleToHipertensao}>
                 <span className="nome-condicao">Hipertensão</span>
-
                 <h4>{somaIndicador(dadosPainel?.indicators.hipertensao)}</h4>
-
                 <div className="d-flex align-items-center">
                   <img src={hipertensao} alt="Hipertensão" className="mx-2" />
                   <Condicao data={dadosPainel?.indicators.hipertensao} />
                 </div>
               </div>
-
               {/* <div className="card-condicao p-2" onClick={handleToGestante}>
                                 <span className="nome-condicao">Gestantes</span>
                                 <h4>{somaIndicador(dadosPainel?.indicators.gestantes)}</h4>
