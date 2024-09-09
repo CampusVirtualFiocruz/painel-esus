@@ -359,39 +359,53 @@ export function Painel() {
               </div>
 
               <div className="col-xl-6">
-                <div className="container-card-alt d-flex flex-column flex-md-row align-items-center justify-content-center my-2">
-                  <div className="me-2">
-                    <Zonas data={dadosPainel?.locationArea} />
-                  </div>
-
-                  <div className="container-dados-zona">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="box-container-light me-2"></div>
-                      <h4>Zona Urbana</h4>
+                <div className="container-card-alt ">
+                  <div className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2">
+                    <div className="me-2">
+                      <Zonas data={dadosPainel?.locationArea} />
                     </div>
-                    <span>
-                      {formataNumero(dadosPainel?.locationArea.urbano)}
-                    </span>
-                  </div>
-
-                  <div className="container-dados-zona">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="box-container-dark me-2"></div>
-                      <h4>Zona Rural</h4>
+                    <div>
+                      <Typography.Details>
+                        Cidadãos Cadastrados
+                      </Typography.Details>
+                      <div
+                        className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2"
+                        style={{ gap: "15px" }}
+                      >
+                        <div className="container-dados-zona">
+                          <div className="d-flex align-items-center mb-2">
+                            <div className="box-container-light me-2"></div>
+                            <h4>Zona Urbana</h4>
+                          </div>
+                          <span>
+                            {formataNumero(dadosPainel?.locationArea.urbano)}
+                          </span>
+                        </div>
+                        <div className="container-dados-zona">
+                          <div className="d-flex align-items-center mb-2">
+                            <div className="box-container-dark me-2"></div>
+                            <h4>Zona Rural</h4>
+                          </div>
+                          <span>
+                            {formataNumero(dadosPainel?.locationArea.rural)}
+                          </span>
+                        </div>
+                        <div className="container-dados-zona">
+                          <div className="d-flex align-items-center mb-2">
+                            <div className="box-container-nonactive me-2"></div>
+                            <h4>Não informado</h4>
+                          </div>
+                          <span>
+                            {formataNumero(
+                              dadosPainel?.locationArea.nao_definido
+                            )}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <span>
-                      {formataNumero(dadosPainel?.locationArea.rural)}
-                    </span>
                   </div>
-                </div>
-                <div className="container-dados-nao-definidos ">
-                  <p>
-                    *Não informado:{" "}
-                    {formataNumero(dadosPainel?.locationArea.nao_definido)}
-                  </p>
                 </div>
               </div>
-
               <div className="col-xl-3">
                 <div className="container-card d-flex align-items-center justify-content-center my-2 py-1">
                   <div className="d-flex flex-column align-items-center ms-2 me-4">
