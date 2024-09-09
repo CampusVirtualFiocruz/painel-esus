@@ -485,7 +485,7 @@ export function Diabetes() {
             </div>
             <div className="painel-secundario">
               <Typography.Subtitle>
-                Extratificação de atendimentos por profissional
+                Estratificação de atendimentos por profissional
               </Typography.Subtitle>
               <div className="w-100">
                 {isLoadingProfessionals ? (
