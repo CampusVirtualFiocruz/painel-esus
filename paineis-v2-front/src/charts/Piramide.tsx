@@ -31,6 +31,7 @@ export default function Piramide({ data }: any) {
       orient: "horizontal",
       right: 10,
       top: "center",
+      icon: "rect",
     },
     grid: [
       {

@@ -60,6 +60,7 @@ export const BarChart = ({ titulo, data, colors }: BarchartType) => {
   };
   const options = {
     legend: {
+      icon: "rect",
       bottom: "0%",
     },
     tooltip: {

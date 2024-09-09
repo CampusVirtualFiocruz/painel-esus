@@ -49,6 +49,7 @@ export function Bar({ data, titulo }: BarData) {
   const options = {
     legend: {
       bottom: "0%",
+      icon: "rect",
     },
     tooltip: {
       trigger: "axis",

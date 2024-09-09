@@ -116,6 +116,7 @@ export function Pie({ data }: any) {
       bottom: 10,
       left: "center",
       data: ["CityA", "CityB"],
+      icon: "rect",
     },
     series: [
       {

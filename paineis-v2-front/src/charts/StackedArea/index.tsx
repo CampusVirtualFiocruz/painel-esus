@@ -71,6 +71,7 @@ export function StackedArea(props: TStackData) {
     },
     legend: {
       data: legends,
+      icon: "rect",
     },
     toolbox: {
       feature: {

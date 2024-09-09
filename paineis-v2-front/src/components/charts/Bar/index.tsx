@@ -39,6 +39,7 @@ export function Bar(props: BarChart) {
     legend: {
       bottom: "0%",
       borderRadius: 0,
+      icon: "rect",
     },
     grid: {
       width: "auto",

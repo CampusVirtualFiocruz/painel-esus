@@ -42,6 +42,7 @@ export function BarSexo({ data, titulo }: BarData) {
 
   const options = {
     legend: {
+      icon: "rect",
       bottom: "0%",
     },
     xAxis: {
