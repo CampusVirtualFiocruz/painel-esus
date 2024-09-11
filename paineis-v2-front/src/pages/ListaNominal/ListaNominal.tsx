@@ -45,6 +45,7 @@ const ListaNominal = () => {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<TModal>({ loaded: 0 });
+  const [searchTerm, setSearchTerm] = useState("");
 
   const getData = async (idModal: number, tipo?: string) => {
     await wait(100);
@@ -91,7 +92,7 @@ const ListaNominal = () => {
 
   const [params, setParams] = useState({
     page: 0,
-    size: 30,
+    size: 100,
     totalElements: list.length,
     totalPages: Math.ceil(list.length / 30),
     sort: ["name", "alert", "zone"],
@@ -108,7 +109,16 @@ const ListaNominal = () => {
       totalPages: Math.max(1, Math.ceil(state.totalElements / size)),
     }));
 
-  const rows = list
+  const filteredList = list.filter((item: RowType) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      item.nome.toLowerCase().includes(search) ||
+      item.cpf.toLowerCase().includes(search) ||
+      item.cns.toLowerCase().includes(search)
+    );
+  });
+
+  const rows = filteredList
     .sort((a: any, b: any) => {
       const [sortField, sortOrder] = params.sort[0].startsWith("-")
         ? [params.sort[0].substring(1), "desc"]
@@ -146,6 +156,8 @@ const ListaNominal = () => {
             placeholder="Busca por nome, CPF ou CNS"
             icon="zoomOutline"
             required
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <PagedTable<RowType>

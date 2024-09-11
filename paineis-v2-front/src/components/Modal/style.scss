@@ -130,3 +130,51 @@
     transform: scaleY(2);
   }
 }
+
+/* DETALHES CADASTRO */
+
+.container-modal .modal {
+  max-width: fit-content;
+}
+
+.user-details {
+  font-size: 15px;
+
+  .address {
+    display: flex;
+    flex-direction: row;
+
+    span {
+      margin-top: 5px;
+      margin-right: 10px;
+      margin-left: 0 !important;
+    }
+
+    p {
+      margin-bottom: 0 !important;
+    }
+  }
+
+  .health-condition {
+    padding: .5em;
+    margin: 2em 0;
+    text-align: center;
+    border: 2px solid #ccc;
+
+    p {
+      margin: 0 !important;
+    }
+  }
+
+  .latest-checkups {
+    div {
+      display: flex;
+      flex-direction: row;
+
+      span {
+        margin-top: 2px;
+      }
+    }
+  }
+}
+

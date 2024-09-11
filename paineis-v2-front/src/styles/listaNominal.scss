@@ -29,7 +29,7 @@
   height: 18px;
   border-radius: 50%;
   color: #ffffff;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
 }
 
 .iconHeader {
@@ -71,4 +71,12 @@
 
 .search {
   margin-bottom: 20px;
+
+  span {
+    right: auto;
+  }
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #f0f0f5;
 }
