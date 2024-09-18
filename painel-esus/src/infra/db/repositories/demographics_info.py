@@ -1,6 +1,6 @@
 # pylint: disable=E0401,W0012,R0915
 # pylint: disable=E0501
-# pylint: disable=E0401,C0301,W0612,W0611,R0912
+# pylint: disable=E0401,C0301,W0612,W0611,R0912,W0613
 import json
 import os
 from datetime import date
@@ -11,8 +11,9 @@ from typing import Dict
 import pandas as pd
 from pandas import DataFrame
 from pandas import Series
-from src.data.interfaces.demographics_info import \
-    DemographicsInfoRepository as DemographicsInfoRepositoryInterface
+from src.data.interfaces.demographics_info import (
+    DemographicsInfoRepository as DemographicsInfoRepositoryInterface,
+)
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
 from src.domain.entities.pregnancy import Pregnants
@@ -21,8 +22,9 @@ from src.errors import InvalidArgument
 from src.errors.logging import logging
 from src.infra.db.repositories.enuns.individual_cares import IndividualCare
 from src.infra.db.settings.connection import DBConnectionHandler
-from src.infra.db.settings.connection_local import \
-    DBConnectionHandler as LocalDBConnectionHandler
+from src.infra.db.settings.connection_local import (
+    DBConnectionHandler as LocalDBConnectionHandler,
+)
 
 from .sqls import ATENDIMENTO_INDIVIDUAL_CID_CIAPS_LOCAL
 from .sqls import LILSTAGEM_FCI_LOCAL
@@ -60,8 +62,7 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
 
     def parse_date(self, data_frame: DataFrame) -> DataFrame:
         data_frame["idade"] = data_frame["co_dim_tempo_nascimento"].apply(
-            lambda x: self.__calculate_age(
-                datetime.strptime(str(x), "%Y-%m-%d").date())
+            lambda x: self.__calculate_age(datetime.strptime(str(x), "%Y-%m-%d").date())
         )
         return data_frame
 
@@ -142,55 +143,43 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         mask_faixa9 = (data_frame["idade"] >= 40) & (data_frame["idade"] <= 44)
         data_frame.loc[mask_faixa9, "faixas"] = "9"
 
-        mask_faixa10 = (data_frame["idade"] >= 45) & (
-            data_frame["idade"] <= 49)
+        mask_faixa10 = (data_frame["idade"] >= 45) & (data_frame["idade"] <= 49)
         data_frame.loc[mask_faixa10, "faixas"] = "10"
 
-        mask_faixa11 = (data_frame["idade"] >= 50) & (
-            data_frame["idade"] <= 54)
+        mask_faixa11 = (data_frame["idade"] >= 50) & (data_frame["idade"] <= 54)
         data_frame.loc[mask_faixa11, "faixas"] = "11"
 
-        mask_faixa12 = (data_frame["idade"] >= 55) & (
-            data_frame["idade"] <= 59)
+        mask_faixa12 = (data_frame["idade"] >= 55) & (data_frame["idade"] <= 59)
         data_frame.loc[mask_faixa12, "faixas"] = "12"
 
-        mask_faixa13 = (data_frame["idade"] >= 60) & (
-            data_frame["idade"] <= 64)
+        mask_faixa13 = (data_frame["idade"] >= 60) & (data_frame["idade"] <= 64)
         data_frame.loc[mask_faixa13, "faixas"] = "13"
 
-        mask_faixa14 = (data_frame["idade"] >= 65) & (
-            data_frame["idade"] <= 69)
+        mask_faixa14 = (data_frame["idade"] >= 65) & (data_frame["idade"] <= 69)
         data_frame.loc[mask_faixa14, "faixas"] = "14"
 
-        mask_faixa15 = (data_frame["idade"] >= 70) & (
-            data_frame["idade"] <= 74)
+        mask_faixa15 = (data_frame["idade"] >= 70) & (data_frame["idade"] <= 74)
         data_frame.loc[mask_faixa15, "faixas"] = "15"
 
-        mask_faixa16 = (data_frame["idade"] >= 75) & (
-            data_frame["idade"] <= 79)
+        mask_faixa16 = (data_frame["idade"] >= 75) & (data_frame["idade"] <= 79)
         data_frame.loc[mask_faixa16, "faixas"] = "16"
 
-        mask_faixa17 = (data_frame["idade"] >= 80) & (
-            data_frame["idade"] <= 84)
+        mask_faixa17 = (data_frame["idade"] >= 80) & (data_frame["idade"] <= 84)
         data_frame.loc[mask_faixa17, "faixas"] = "17"
 
-        mask_faixa18 = (data_frame["idade"] >= 85) & (
-            data_frame["idade"] <= 89)
+        mask_faixa18 = (data_frame["idade"] >= 85) & (data_frame["idade"] <= 89)
         data_frame.loc[mask_faixa18, "faixas"] = "18"
 
-        mask_faixa19 = (data_frame["idade"] >= 90) & (
-            data_frame["idade"] <= 94)
+        mask_faixa19 = (data_frame["idade"] >= 90) & (data_frame["idade"] <= 94)
         data_frame.loc[mask_faixa19, "faixas"] = "19"
 
-        mask_faixa20 = (data_frame["idade"] >= 95) & (
-            data_frame["idade"] <= 99)
+        mask_faixa20 = (data_frame["idade"] >= 95) & (data_frame["idade"] <= 99)
         data_frame.loc[mask_faixa20, "faixas"] = "20"
 
         mask_faixa21 = data_frame["idade"] >= 100
         data_frame.loc[mask_faixa21, "faixas"] = "21"
         faixas = (
-            data_frame.groupby(
-                by=["co_dim_sexo", "co_dim_tipo_localizacao", "faixas"])
+            data_frame.groupby(by=["co_dim_sexo", "co_dim_tipo_localizacao", "faixas"])
             .size()
             .reset_index(name="qtd")
         )
@@ -202,10 +191,8 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         masculino = IndividualCare.get_("Masculino")
         feminino = IndividualCare.get_("Feminino")
 
-        faixas.loc[faixas["co_dim_sexo"] ==
-                   masculino, "co_dim_sexo"] = "Masculino"
-        faixas.loc[faixas["co_dim_sexo"] ==
-                   feminino, "co_dim_sexo"] = "Feminino"
+        faixas.loc[faixas["co_dim_sexo"] == masculino, "co_dim_sexo"] = "Masculino"
+        faixas.loc[faixas["co_dim_sexo"] == feminino, "co_dim_sexo"] = "Feminino"
         faixas.loc[
             faixas["co_dim_tipo_localizacao"] == urbano_value, "co_dim_tipo_localizacao"
         ] = "Urbano"
@@ -226,8 +213,7 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         data_frame, faixas = self.__parse_age_group(data_frame)
 
         age_groups = self.__create_age_groups()
-        faixas.apply(lambda x: self.__hidrate_age_groups(
-            x, age_groups), axis=1)
+        faixas.apply(lambda x: self.__hidrate_age_groups(x, age_groups), axis=1)
 
         _age_groups = dict()
         gender = ["Masculino", "Feminino"]
@@ -292,17 +278,17 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
 
         path = os.getcwd()
         path = Path(path)
-        path = os.path.join(path, 'ibge.csv')
+        path = os.path.join(path, "ibge.csv")
         df = pd.read_csv(path, sep=";")
 
         ibge = int(env.get("CIDADE_IBGE", 0))
-        if ibge == '-':
+        if ibge == "-":
             ibge_population = 0
         else:
             try:
-                df_ibge = df[df['IBGE'] == ibge]
-                ibge_population = df_ibge['POPULACAO'].iloc[0]
-                ibge_population = f'{ibge_population:_.0f}'.replace('_', '.')
+                df_ibge = df[df["IBGE"] == ibge]
+                ibge_population = df_ibge["POPULACAO"].iloc[0]
+                ibge_population = f"{ibge_population:_.0f}".replace("_", ".")
             except Exception as exc:
                 logging.exception(exc)
                 ibge_population = 0
@@ -315,8 +301,8 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
                 "urbano": int(masculino_urbano_size + feminino_urbano_size),
                 "nao_definido": int(
                     data_frame[
-                        (data_frame["co_dim_tipo_localizacao"].isnull()) |
-                        (data_frame["co_dim_tipo_localizacao"] == 1)
+                        (data_frame["co_dim_tipo_localizacao"].isnull())
+                        | (data_frame["co_dim_tipo_localizacao"] == 1)
                     ].shape[0]
                 ),
             },
@@ -329,14 +315,14 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
         return response
 
     def parse_indicators(
-        self, diabetes: DataFrame, hipertensao: DataFrame, gestantes: DataFrame
+        self, diabetes: DataFrame, hipertensao: DataFrame, gestantes: DataFrame = None
     ) -> None:
         if not isinstance(diabetes, DataFrame):
             raise InvalidArgument("diabetes must be a DataFrame instance")
         if not isinstance(hipertensao, DataFrame):
             raise InvalidArgument("hipertensao must be a DataFrame instance")
-        if not isinstance(gestantes, DataFrame):
-            raise InvalidArgument("gestantes must be a DataFrame instance")
+        # if not isinstance(gestantes, DataFrame):
+        #     raise InvalidArgument("gestantes must be a DataFrame instance")
 
         self.indicators = {
             "diabetes": {
@@ -356,28 +342,6 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
                     diabetes[diabetes["co_dim_tipo_localizacao"] == 1]["valor"]
                 ),
             },
-            "gestantes": {
-                "rural": int(
-                    len(
-                        gestantes[
-                            gestantes["co_dim_tipo_localizacao"]
-                            == IndividualCare.get_("rural")
-                        ]["co_fat_cidadao_pec"]
-                        .unique()
-                        .tolist()
-                    )
-                ),
-                "urbano": int(
-                    len(
-                        gestantes[
-                            gestantes["co_dim_tipo_localizacao"]
-                            == IndividualCare.get_("urbano")
-                        ]["co_fat_cidadao_pec"]
-                        .unique()
-                        .tolist()
-                    )
-                ),
-            },
             "hipertensao": {
                 "rural": int(
                     hipertensao[
@@ -392,8 +356,9 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
                     ]["valor"].iloc[0]
                 ),
                 "nao_informado": int(
-                    hipertensao[hipertensao["co_dim_tipo_localizacao"]
-                                == 1]["valor"].iloc[0]
+                    hipertensao[hipertensao["co_dim_tipo_localizacao"] == 1][
+                        "valor"
+                    ].iloc[0]
                 ),
             },
         }
@@ -440,19 +405,18 @@ class DemographicsInfoRepository(DemographicsInfoRepositoryInterface):
             atendimento_individual = pd.read_sql_query(sql, con=engine)
 
             hypertension = Hypertension()
-            hypertension_df = hypertension.filter_registers_sql(
-                "hipertensao", cnes)
+            hypertension_df = hypertension.filter_registers_sql("hipertensao", cnes)
 
             diabetes = Diabetes()
             diabetes_df = diabetes.filter_registers_sql("diabetes", cnes)
 
-            gestantes = Pregnants()
-            gestantes_df = gestantes.filter_registers(atendimento_individual)
+            # gestantes = Pregnants()
+            # gestantes_df = gestantes.filter_registers(atendimento_individual)
 
             self.parse_indicators(
                 diabetes=diabetes_df,
                 hipertensao=hypertension_df,
-                gestantes=gestantes_df,
+                # gestantes=gestantes_df,
             )
 
             response = self.retrieve_demographics_info(cidadao_pec)

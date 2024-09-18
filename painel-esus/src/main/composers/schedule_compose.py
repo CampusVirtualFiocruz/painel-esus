@@ -6,9 +6,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from src.data.use_cases.create_bases.create_cache import CreateCacheUseCase
 from src.env.conf import env
 from src.errors.logging import logging
-from src.presentations.controllers.create_bases.create_base_controller import (
-    CreateBasesController,
-)
+from src.presentations.controllers.create_bases.create_base_controller import \
+    CreateBasesController
 
 
 def generate_base_scheduled(scheduler: BackgroundScheduler):
