@@ -3,6 +3,7 @@ import ReactDom from "react-dom";
 import { CgClose } from "react-icons/cg";
 
 import "./style.scss";
+import "../../styles/listaNominal.scss";
 
 interface IModal {
   data: {
@@ -143,6 +144,100 @@ export function bodyBoasPraticasCuidadoPessoasHipertensao() {
   );
 }
 
+export function bodyDetalhesCadastroDiabetes() {
+  return (
+    <div className="d-flex flex-column mb-4">
+      <div className="user-details">
+        <h1>Maria da Fonseca e Silva</h1>
+        <p>689.282.522-69</p>
+
+        <div className="address">
+          <span className="iconCircle iconRural ms-2" title="Zona Rural">
+            R
+          </span>
+          <p>
+            Rua Cardeal da Silva nº 34, Apartamento 519
+            <br />
+            Bairro Rio Vermelho, Salvador, BAHIA
+            <br />
+            CEP: 81995-030
+            <br />
+            Telefone de contato: (85) 98167-9034
+          </p>
+        </div>
+
+        <div className="health-condition">
+          <p>Condição de saúde: CID 76</p>
+          <p>Primeiro diagnóstico: 15/04/2023</p>
+        </div>
+
+        <div className="latest-checkups">
+          <p>
+            <strong>Última glicemia capilar realizada</strong>
+            <div>
+              <p>20/07/2024</p>
+              <span
+                className="iconCircle iconAlerta ms-2"
+                title="Possui Alertas"
+              >
+                !
+              </span>
+            </div>
+          </p>
+          <p>
+            <strong>Última avaliação hemoglobina glicada</strong>
+            <div>
+              <p>13/11/2023 </p>
+              <span
+                className="iconCircle iconAlerta ms-2"
+                title="Possui Alertas"
+              >
+                !
+              </span>
+            </div>
+          </p>
+          <p>
+            <strong>Última consulta médico/enf.</strong>
+            <div>
+              <p>29/12/2023</p>
+              <span
+                className="iconCircle iconAlerta ms-2"
+                title="Possui Alertas"
+              >
+                !
+              </span>
+            </div>
+          </p>
+          <p>
+            <strong>Total consultas médico/enf (últimos 12 meses)</strong>
+            <div>
+              <p>5 consultas</p>
+              <span
+                className="iconCircle iconAlerta ms-2"
+                title="Possui Alertas"
+              >
+                !
+              </span>
+            </div>
+          </p>
+          <p>
+            <strong>Última visita realizada ao cidadão</strong>
+            <div>
+              <p>11/07/2024</p>
+              <span
+                className="iconCircle iconAlerta ms-2"
+                title="Possui Alertas"
+              >
+                !
+              </span>
+            </div>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const Modal = ({ data, setShowModal }: IModal) => {
   // close the modal when clicking outside the modal.
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -169,6 +264,7 @@ export const Modal = ({ data, setShowModal }: IModal) => {
         {data &&
           data.loaded === 6 &&
           bodyBoasPraticasCuidadoPessoasHipertensao()}
+        {data && data.loaded === 7 && bodyDetalhesCadastroDiabetes()}
 
         <CgClose
           size={"1.5rem"}

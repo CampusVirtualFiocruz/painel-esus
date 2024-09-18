@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Alert, Progress, Spinner } from "reactstrap";
 import { Button } from "bold-ui";
@@ -185,6 +185,12 @@ export function Diabetes() {
     setShowModal(true);
     getData(idModal);
   };
+
+  let navigate = useNavigate();
+
+  function handleListaNominal() {
+    navigate(`/lista-nominal?condicao=Diabetes`);
+  }
 
   const { city } = useInfo();
 
@@ -414,6 +420,11 @@ export function Diabetes() {
                   </div>
                 )}
               </div>
+            </div>
+            <div className="mt-5" style={{ textAlign: "center" }}>
+                <Button kind="primary" onClick={handleListaNominal}>
+                Ver a relação das pessoas com diabetes da UBS
+                </Button>
             </div>
             <div className="painel-secundario">
               <Typography.Subtitle>
