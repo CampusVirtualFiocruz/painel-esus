@@ -39,6 +39,7 @@ class DiseasesDashboardRepository(DiseasesDashboardRepositoryInterface):
             disease = self.disease
             cids = ",".join([f"'%%|{i}|%%'" for i in self.disease.target])
             sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS(cids)
+
             # sql += """
             #         where
             #             dt_registro between '{}'::DATE - interval '12 month' and '{}' and codigo in ({})
@@ -77,8 +78,7 @@ class DiseasesDashboardRepository(DiseasesDashboardRepositoryInterface):
                     where
                         dt_registro between '{}'::DATE - interval '12 month' and '{}' and codigo in ({})
                 """.format(
-                max_date, max_date, ", ".join(
-                    [f"'{cid}'" for cid in disease.target])
+                max_date, max_date, ", ".join([f"'{cid}'" for cid in disease.target])
             )
             if cnes:
                 sql += f""" AND atd.co_dim_unidade_saude = {cnes} """
