@@ -12,7 +12,7 @@ export default function Piramide({ data }: any) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.globalAlpha = 0.08;
-    ctx.font = "20px Microsoft Yahei";
+    ctx.font = "18px Microsoft Yahei";
     ctx.translate(50, 50);
     ctx.rotate(-Math.PI / 4);
     ctx.fillText(waterMarkText, 0, 0);
@@ -109,7 +109,7 @@ export default function Piramide({ data }: any) {
     series: [
       {
         type: "bar",
-        barWidth: "20px",
+        barWidth: "18px",
         stack: "masculino",
         z: 3,
         xAxisIndex: 0,
@@ -120,7 +120,7 @@ export default function Piramide({ data }: any) {
       },
       {
         type: "bar",
-        barWidth: "20px",
+        barWidth: "18px",
         stack: "masculino",
         z: 3,
         style: {
@@ -134,7 +134,7 @@ export default function Piramide({ data }: any) {
       },
       {
         type: "bar",
-        barWidth: "20px",
+        barWidth: "18px",
         stack: "masculino",
         z: 3,
         xAxisIndex: 0,
@@ -146,7 +146,7 @@ export default function Piramide({ data }: any) {
 
       {
         type: "bar",
-        barWidth: "20px",
+        barWidth: "18px",
         stack: "feminino",
         z: 3,
         xAxisIndex: 1,
@@ -157,7 +157,7 @@ export default function Piramide({ data }: any) {
       },
       {
         type: "bar",
-        barWidth: "20px",
+        barWidth: "18px",
         stack: "feminino",
         z: 3,
         xAxisIndex: 1,
@@ -168,7 +168,7 @@ export default function Piramide({ data }: any) {
       },
       {
         type: "bar",
-        barWidth: "20px",
+        barWidth: "18px",
         stack: "feminino",
         z: 3,
         xAxisIndex: 1,
@@ -186,7 +186,7 @@ export default function Piramide({ data }: any) {
         option={options}
         style={{
           width: "100%",
-          height: "400px",
+          height: "600px",
         }}
         className="my-5"
         opts={{ renderer: "svg" }}
