@@ -28,14 +28,17 @@ class CreateBasesController:
             path = os.path.join(path, "painel_esus.db")
             path = os.path.relpath(path)
         # os.remove(path)
-        logging.info("Starting base generation")
-        _list = [
-            CreateLocalDatabaseFactory.demographics_factory(),
-            CreateLocalDatabaseFactory.atendimento_individual_filtro_factory(),
-            CreateLocalDatabaseFactory.units(),
-            CreateDiabetesBasesRepository(),
-            CreateHypertensionBasesRepository(),
-            CreateOralHealthBasesRepository(),
-        ]
-        usecase = CreateBasesUseCase(bases_generators=_list)
-        usecase.create_bases()
+        if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
+            logging.info("Starting base generation")
+            _list = [
+                CreateLocalDatabaseFactory.demographics_factory(),
+                CreateLocalDatabaseFactory.atendimento_individual_filtro_factory(),
+                CreateLocalDatabaseFactory.units(),
+                CreateDiabetesBasesRepository(),
+                CreateHypertensionBasesRepository(),
+                CreateOralHealthBasesRepository(),
+            ]
+            usecase = CreateBasesUseCase(bases_generators=_list)
+            usecase.create_bases()
+        else:
+            logging.info("Skipping base generation")

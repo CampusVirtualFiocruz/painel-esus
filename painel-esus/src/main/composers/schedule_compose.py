@@ -1,5 +1,6 @@
 # pylint: disable=W0612
 from datetime import datetime
+from datetime import timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from src.data.use_cases.create_bases.create_cache import CreateCacheUseCase
@@ -8,8 +9,6 @@ from src.errors.logging import logging
 from src.presentations.controllers.create_bases.create_base_controller import (
     CreateBasesController,
 )
-
-# from datetime import timedelta
 
 
 def generate_base_scheduled(scheduler: BackgroundScheduler):
@@ -36,7 +35,10 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
         end_time = datetime.now()
         text = "Finish base generator. time spent: {}".format(end_time - start_time)
         logging.info(text)
-        # cache_init()
+        if "GENERATE_CACHE" in env and env["GENERATE_CACHE"] == "True":
+            cache_init()
+        else:
+            logging.info("skipping base Cache generation.")
 
     scheduler.add_job(
         init,
@@ -45,7 +47,8 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
         minute=minute,
     )
     init()
-
-    # now = datetime.now()
-    # now_plus_10 = now + timedelta(minutes=10)
-    # scheduler.add_job(cache_init, 'date', run_date=now_plus_10)
+    if "GENERATE_CACHE" in env and env["GENERATE_CACHE"] == "True":
+        logging.info("Scheduling chache generator")
+        now = datetime.now()
+        now_plus_10 = now + timedelta(minutes=10)
+        scheduler.add_job(cache_init, "date", run_date=now_plus_10)
