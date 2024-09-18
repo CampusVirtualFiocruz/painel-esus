@@ -76,7 +76,7 @@ const ReportWrapper = ({
         <div className="container" style={{ marginTop: "20px" }}>
           <div className="row justify-content-center">{children}</div>
         </div>
-        <div className="container">
+        {/* <div className="container">
           <div className="row justify-content-center mb-2">
             <div className="col-12 col-md-8 containerButtons d-flex justify-content-center my-5">
               <Button
@@ -90,7 +90,7 @@ const ReportWrapper = ({
               </Button>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
       <Footer />
     </div>

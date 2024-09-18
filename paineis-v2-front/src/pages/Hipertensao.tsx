@@ -434,9 +434,9 @@ export function Hipertensao() {
               </div>
             </div>
             <div className="mt-5" style={{ textAlign: "center" }}>
-                <Button kind="primary" onClick={handleListaNominal}>
+              <Button kind="primary" onClick={handleListaNominal}>
                 Ver a relação das pessoas com hipertensão da UBS
-                </Button>
+              </Button>
             </div>
             <div className="painel-secundario">
               <Typography.Subtitle>
@@ -481,7 +481,7 @@ export function Hipertensao() {
           </TwoColumnSection.Col>
         </TwoColumnSection>
 
-        <ReportFooter />
+        <ReportFooter chaveListaNominal="Hipertensão" />
       </ReportWrapper>
     </div>
   );

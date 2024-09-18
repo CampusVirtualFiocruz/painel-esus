@@ -422,9 +422,9 @@ export function Diabetes() {
               </div>
             </div>
             <div className="mt-5" style={{ textAlign: "center" }}>
-                <Button kind="primary" onClick={handleListaNominal}>
+              <Button kind="primary" onClick={handleListaNominal}>
                 Ver a relação das pessoas com diabetes da UBS
-                </Button>
+              </Button>
             </div>
             <div className="painel-secundario">
               <Typography.Subtitle>
@@ -468,7 +468,7 @@ export function Diabetes() {
             </div>
           </TwoColumnSection.Col>
         </TwoColumnSection>
-        <ReportFooter />
+        <ReportFooter chaveListaNominal="Diabetes" />
       </ReportWrapper>
     </div>
   );

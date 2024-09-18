@@ -1,26 +1,84 @@
-import { Button } from "bold-ui";
+import { Button, Link } from "bold-ui";
 import { useNavigate } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
 
 const content = {
-  buttonBackToCity: "Visualizar dados do painel do Município",
+  buttonViewList: "Ver lista nominal",
+  buttonBackToCity: "Visualizar dados do Município",
+  buttonBackToUbs: "Voltar página dados da UBS",
 };
 
 export type PainelParams = {
   id: string;
 };
 
-export const ReportFooter = () => {
+export const ReportFooter = ({
+  chaveListaNominal,
+}: {
+  chaveListaNominal?: "Hipertensão" | "Diabetes";
+}) => {
   const navigate = useNavigate();
+
+  const handleToViewList = () => {
+    navigate("/lista-nominal?condicao=" + chaveListaNominal);
+  };
 
   const handleToPainelMunicipio = () => {
     navigate("/painelx");
   };
 
+  const handleToPainelUBS = () => {
+    navigate(-1);
+  };
+
   return (
-    <div className="d-flex flex-column align-items-center mt-5 gap-3">
-      <Button onClick={handleToPainelMunicipio}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "20px",
+        marginTop: "30px",
+        marginBottom: "120px",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          gap: "20px",
+        }}
+      >
+        {chaveListaNominal && (
+          <Button
+            style={{
+              backgroundColor: "#343131",
+              color: "white",
+              width: "250px",
+            }}
+            onClick={handleToViewList}
+          >
+            <FaUser style={{ marginRight: "10px" }} />
+
+            {content.buttonViewList}
+          </Button>
+        )}
+        <Button
+          kind="primary"
+          onClick={handleToPainelUBS}
+          style={{
+            width: "250px",
+          }}
+        >
+          {content.buttonBackToUbs}
+        </Button>
+      </div>
+
+      <Link onClick={handleToPainelMunicipio} style={{ color: "#343131" }}>
         {content.buttonBackToCity}
-      </Button>
+      </Link>
     </div>
   );
 };

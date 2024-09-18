@@ -571,7 +571,7 @@ export function Gestantes() {
           </div>
         </div>
 
-        <div className="d-flex flex-column align-items-center mt-5 gap-3">
+        {/*  <div className="d-flex flex-column align-items-center mt-5 gap-3">
           {id && (
             <Button onClick={handleToPainelUbs}>
               Voltar para o Painel da UBS
@@ -581,7 +581,7 @@ export function Gestantes() {
           <Button onClick={handleToPainelMunicipio}>
             Visualizar dados do painel do Município
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <Footer />
