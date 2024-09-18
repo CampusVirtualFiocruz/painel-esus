@@ -1,4 +1,7 @@
 UNITS_LIST = """
+select * from unidades
+"""
+UNITS_LIST_GEN = """
 select 
 	a.co_seq_dim_unidade_saude,
 	a.nu_cnes,

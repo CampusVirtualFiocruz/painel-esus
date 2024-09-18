@@ -32,6 +32,7 @@ class CreateBasesController:
         _list = [
             CreateLocalDatabaseFactory.demographics_factory(),
             CreateLocalDatabaseFactory.atendimento_individual_filtro_factory(),
+            CreateLocalDatabaseFactory.units(),
             CreateDiabetesBasesRepository(),
             CreateHypertensionBasesRepository(),
             CreateOralHealthBasesRepository(),
