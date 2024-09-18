@@ -8,13 +8,13 @@
     "cpf": "11122233344",
     "cns": "123456789012345",
     "idade": "30",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "01"
   },
   {
-    "nome": "Maria Oliveira",
+    "nome": "Luciana Dantas Soares Alves ",
     "nomeSocialSelecionado": false,
     "zonaUrbana": false,
     "zonaRural": true,
@@ -22,7 +22,7 @@
     "cpf": "22233344455",
     "cns": "234567890123456",
     "idade": "45",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "02"
@@ -36,7 +36,7 @@
     "cpf": "33344455566",
     "cns": "345678901234567",
     "idade": "55",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "03"
@@ -50,7 +50,7 @@
     "cpf": "44455566677",
     "cns": "456789012345678",
     "idade": "28",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "04"
@@ -64,7 +64,7 @@
     "cpf": "55566677788",
     "cns": "567890123456789",
     "idade": "65",
-    "diagnostico": "doença cardíaca",
+    "diagnostico": "Autorreferido",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "05"
@@ -78,7 +78,7 @@
     "cpf": "66677788899",
     "cns": "678901234567890",
     "idade": "35",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "06"
@@ -92,7 +92,7 @@
     "cpf": "77788899900",
     "cns": "789012345678901",
     "idade": "40",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "07"
@@ -106,7 +106,7 @@
     "cpf": "88899900011",
     "cns": "890123456789012",
     "idade": "60",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "08"
@@ -120,7 +120,7 @@
     "cpf": "99900011122",
     "cns": "901234567890123",
     "idade": "22",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "09"
@@ -134,7 +134,7 @@
     "cpf": "00011122233",
     "cns": "012345678901234",
     "idade": "32",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "10"
@@ -148,7 +148,7 @@
     "cpf": "11122233344",
     "cns": "123456789012345",
     "idade": "27",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "11"
@@ -162,7 +162,7 @@
     "cpf": "22233344455",
     "cns": "234567890123456",
     "idade": "29",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "12"
@@ -176,7 +176,7 @@
     "cpf": "33344455566",
     "cns": "345678901234567",
     "idade": "33",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "13"
@@ -190,7 +190,7 @@
     "cpf": "44455566677",
     "cns": "456789012345678",
     "idade": "37",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "14"
@@ -204,7 +204,7 @@
     "cpf": "55566677788",
     "cns": "567890123456789",
     "idade": "50",
-    "diagnostico": "doença cardíaca",
+    "diagnostico": "Autorreferido",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "15"
@@ -218,7 +218,7 @@
     "cpf": "66677788899",
     "cns": "678901234567890",
     "idade": "48",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "16"
@@ -232,7 +232,7 @@
     "cpf": "77788899900",
     "cns": "789012345678901",
     "idade": "53",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "17"
@@ -246,7 +246,7 @@
     "cpf": "11122233344",
     "cns": "123456789012345",
     "idade": "30",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "01"
@@ -260,7 +260,7 @@
     "cpf": "22233344455",
     "cns": "234567890123456",
     "idade": "45",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "02"
@@ -274,7 +274,7 @@
     "cpf": "33344455566",
     "cns": "345678901234567",
     "idade": "55",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "03"
@@ -288,7 +288,7 @@
     "cpf": "44455566677",
     "cns": "456789012345678",
     "idade": "28",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "04"
@@ -302,7 +302,7 @@
     "cpf": "55566677788",
     "cns": "567890123456789",
     "idade": "65",
-    "diagnostico": "doença cardíaca",
+    "diagnostico": "Autorreferido",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "05"
@@ -316,7 +316,7 @@
     "cpf": "66677788899",
     "cns": "678901234567890",
     "idade": "35",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "06"
@@ -330,7 +330,7 @@
     "cpf": "77788899900",
     "cns": "789012345678901",
     "idade": "40",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "07"
@@ -344,7 +344,7 @@
     "cpf": "88899900011",
     "cns": "890123456789012",
     "idade": "60",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "08"
@@ -358,7 +358,7 @@
     "cpf": "99900011122",
     "cns": "901234567890123",
     "idade": "22",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "09"
@@ -372,7 +372,7 @@
     "cpf": "00011122233",
     "cns": "012345678901234",
     "idade": "32",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "10"
@@ -386,7 +386,7 @@
     "cpf": "11122233344",
     "cns": "123456789012345",
     "idade": "27",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "11"
@@ -400,7 +400,7 @@
     "cpf": "22233344455",
     "cns": "234567890123456",
     "idade": "29",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "12"
@@ -414,7 +414,7 @@
     "cpf": "33344455566",
     "cns": "345678901234567",
     "idade": "33",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "13"
@@ -428,7 +428,7 @@
     "cpf": "44455566677",
     "cns": "456789012345678",
     "idade": "37",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "14"
@@ -442,7 +442,7 @@
     "cpf": "55566677788",
     "cns": "567890123456789",
     "idade": "50",
-    "diagnostico": "doença cardíaca",
+    "diagnostico": "Autorreferido",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "15"
@@ -456,7 +456,7 @@
     "cpf": "66677788899",
     "cns": "678901234567890",
     "idade": "48",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "16"
@@ -470,7 +470,7 @@
     "cpf": "77788899900",
     "cns": "789012345678901",
     "idade": "53",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "17"
@@ -484,7 +484,7 @@
     "cpf": "11122233344",
     "cns": "123456789012345",
     "idade": "30",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "01"
@@ -498,7 +498,7 @@
     "cpf": "22233344455",
     "cns": "234567890123456",
     "idade": "45",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "02"
@@ -512,7 +512,7 @@
     "cpf": "33344455566",
     "cns": "345678901234567",
     "idade": "55",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "03"
@@ -526,7 +526,7 @@
     "cpf": "44455566677",
     "cns": "456789012345678",
     "idade": "28",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "04"
@@ -540,7 +540,7 @@
     "cpf": "55566677788",
     "cns": "567890123456789",
     "idade": "65",
-    "diagnostico": "doença cardíaca",
+    "diagnostico": "Autorreferido",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "05"
@@ -554,7 +554,7 @@
     "cpf": "66677788899",
     "cns": "678901234567890",
     "idade": "35",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "06"
@@ -568,7 +568,7 @@
     "cpf": "77788899900",
     "cns": "789012345678901",
     "idade": "40",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "07"
@@ -582,7 +582,7 @@
     "cpf": "88899900011",
     "cns": "890123456789012",
     "idade": "60",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "08"
@@ -596,7 +596,7 @@
     "cpf": "99900011122",
     "cns": "901234567890123",
     "idade": "22",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "09"
@@ -610,7 +610,7 @@
     "cpf": "00011122233",
     "cns": "012345678901234",
     "idade": "32",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "10"
@@ -624,7 +624,7 @@
     "cpf": "11122233344",
     "cns": "123456789012345",
     "idade": "27",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "11"
@@ -638,7 +638,7 @@
     "cpf": "22233344455",
     "cns": "234567890123456",
     "idade": "29",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "12"
@@ -652,7 +652,7 @@
     "cpf": "33344455566",
     "cns": "345678901234567",
     "idade": "33",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "13"
@@ -666,7 +666,7 @@
     "cpf": "44455566677",
     "cns": "456789012345678",
     "idade": "37",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "14"
@@ -680,7 +680,7 @@
     "cpf": "55566677788",
     "cns": "567890123456789",
     "idade": "50",
-    "diagnostico": "doença cardíaca",
+    "diagnostico": "Autorreferido",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "15"
@@ -694,7 +694,7 @@
     "cpf": "66677788899",
     "cns": "678901234567890",
     "idade": "48",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "16"
@@ -708,7 +708,7 @@
     "cpf": "77788899900",
     "cns": "789012345678901",
     "idade": "53",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "17"
@@ -722,7 +722,7 @@
     "cpf": "11122233344",
     "cns": "123456789012345",
     "idade": "30",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "01"
@@ -736,7 +736,7 @@
     "cpf": "22233344455",
     "cns": "234567890123456",
     "idade": "45",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "02"
@@ -750,7 +750,7 @@
     "cpf": "33344455566",
     "cns": "345678901234567",
     "idade": "55",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "03"
@@ -764,7 +764,7 @@
     "cpf": "44455566677",
     "cns": "456789012345678",
     "idade": "28",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "04"
@@ -778,7 +778,7 @@
     "cpf": "55566677788",
     "cns": "567890123456789",
     "idade": "65",
-    "diagnostico": "doença cardíaca",
+    "diagnostico": "Autorreferido",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "05"
@@ -792,7 +792,7 @@
     "cpf": "66677788899",
     "cns": "678901234567890",
     "idade": "35",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "06"
@@ -806,7 +806,7 @@
     "cpf": "77788899900",
     "cns": "789012345678901",
     "idade": "40",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "07"
@@ -820,7 +820,7 @@
     "cpf": "88899900011",
     "cns": "890123456789012",
     "idade": "60",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "08"
@@ -834,7 +834,7 @@
     "cpf": "99900011122",
     "cns": "901234567890123",
     "idade": "22",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "09"
@@ -848,7 +848,7 @@
     "cpf": "00011122233",
     "cns": "012345678901234",
     "idade": "32",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "10"
@@ -862,7 +862,7 @@
     "cpf": "11122233344",
     "cns": "123456789012345",
     "idade": "27",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "11"
@@ -876,7 +876,7 @@
     "cpf": "22233344455",
     "cns": "234567890123456",
     "idade": "29",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "12"
@@ -890,7 +890,7 @@
     "cpf": "33344455566",
     "cns": "345678901234567",
     "idade": "33",
-    "diagnostico": "asma",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "13"
@@ -904,7 +904,7 @@
     "cpf": "44455566677",
     "cns": "456789012345678",
     "idade": "37",
-    "diagnostico": "gestante",
+    "diagnostico": "Autorreferido",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "14"
@@ -918,7 +918,7 @@
     "cpf": "55566677788",
     "cns": "567890123456789",
     "idade": "50",
-    "diagnostico": "doença cardíaca",
+    "diagnostico": "Autorreferido",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "15"
@@ -932,7 +932,7 @@
     "cpf": "66677788899",
     "cns": "678901234567890",
     "idade": "48",
-    "diagnostico": "hipertensão",
+    "diagnostico": "CID/CIAP",
     "sexo": "feminino",
     "equipe": "esf",
     "microarea": "16"
@@ -946,7 +946,7 @@
     "cpf": "77788899900",
     "cns": "789012345678901",
     "idade": "53",
-    "diagnostico": "diabetes",
+    "diagnostico": "CID/CIAP",
     "sexo": "masculino",
     "equipe": "nasf",
     "microarea": "17"
