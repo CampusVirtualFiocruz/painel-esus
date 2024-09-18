@@ -346,7 +346,7 @@ export function Hipertensao() {
                   />
                   <RenderSingleValue
                     icon="people"
-                    title="Nº de pessoas com hipertensão (autoreferido)"
+                    title="Nº de pessoas com hipertensão (autorreferido)"
                     value={dataTotalHipertensao?.total_auto_referido?.toLocaleString(
                       "pt-BR"
                     )}

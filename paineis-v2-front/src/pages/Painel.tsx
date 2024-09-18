@@ -330,7 +330,7 @@ export function Painel() {
                         <div>
                           Informação extraída da Relação da População para
                           publicação no TCU em 2023,
-                          <br /> no site do igbe (Clique para acessar o portal
+                          <br /> no site do IBGE (Clique para acessar o portal
                           do IBGE.)
                         </div>
                       </TooltipContent>
@@ -480,11 +480,8 @@ export function Painel() {
               Sem dados de proporção de indivíduos cadastrados.
             </h6>
           )}
-          <div className="my-5">
-            <Typography.Subtitle>
-              Número de indivíduos acompanhados nos últimos 12 meses por
-              condição de saúde
-            </Typography.Subtitle>
+          <div style={{ marginTop: "60px", marginBottom: "20px" }}>
+            <Typography.Subtitle>Relatórios Temáticos</Typography.Subtitle>
           </div>
           <div className="container">
             <div className="row container-cards-condicoes">

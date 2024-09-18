@@ -48,7 +48,7 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
         radius: "40%",
         center: ["50%", "50%"],
         animationDuration: 800,
-        avoidLabelOverlap: false,
+        avoidLabelOverlap: true,
         label: {
           show: true,
           position: "outside",

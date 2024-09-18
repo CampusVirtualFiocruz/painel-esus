@@ -334,7 +334,7 @@ export function Diabetes() {
                   />
                   <RenderSingleValue
                     icon="people"
-                    title="Nº de pessoas com diabetes (autoreferido)"
+                    title="Nº de pessoas com diabetes (autorreferido)"
                     value={Number(
                       dataTotalDiabetes?.total_auto_referido
                     )?.toLocaleString("pt-BR")}
