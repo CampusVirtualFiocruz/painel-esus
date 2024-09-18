@@ -264,6 +264,7 @@ export const Modal = ({ data, setShowModal }: IModal) => {
         {data &&
           data.loaded === 6 &&
           bodyBoasPraticasCuidadoPessoasHipertensao()}
+        {data && data.loaded === 7 && bodyDetalhesCadastroDiabetes()}
 
         <CgClose
           size={"1.5rem"}

@@ -178,7 +178,7 @@ const ListaNominal = () => {
               sortable: true,
               render: (item) => (
                 <span
-                  onClick={() => handleClick(6)}
+                  onClick={() => handleClick(7)}
                   style={{ marginLeft: "16px", cursor: "pointer" }}
                 >
                   {`${item.nome} ${item?.nomeSocialSelecionado ? "*" : ""}`}
