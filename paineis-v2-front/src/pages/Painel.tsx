@@ -36,6 +36,7 @@ import {
   TooltipTrigger,
 } from "../components/ui/Tooltip";
 import { Typography } from "../components/ui/Typography";
+import Card from "../components/ui/Card";
 
 type PainelParams = {
   id: string;
@@ -359,7 +360,10 @@ export function Painel() {
               </div>
 
               <div className="col-xl-6">
-                <div className="container-card-alt ">
+                <Card
+                  className="container-card-alt"
+                  style={{ padding: 0, marginTop: "8px" }}
+                >
                   <div className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2">
                     <div className="me-2">
                       <Zonas data={dadosPainel?.locationArea} />
@@ -404,18 +408,23 @@ export function Painel() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Card>
               </div>
               <div className="col-xl-3">
                 <div className="container-card d-flex align-items-center justify-content-center my-2 py-1">
                   <div className="d-flex flex-column align-items-center ms-2 me-4">
-                    <img className="my-2" src={homem} alt="Homem" width={60} />
+                    <img
+                      className="my-2 force-white"
+                      src={homem}
+                      alt="Homem"
+                      width={60}
+                    />
                     <span>{formataNumero(dadosPainel?.gender.masculino)}</span>
                   </div>
 
                   <div className="d-flex flex-column align-items-center ms-4 me-2">
                     <img
-                      className="my-2"
+                      className="my-2 force-white"
                       src={mulher}
                       alt="Mulher"
                       width={60}

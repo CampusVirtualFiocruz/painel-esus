@@ -97,31 +97,31 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
       {
         name: nome,
         type: "pie",
-        radius: ["40%", "80%"],
-        avoidLabelOverlap: true,
+        radius: ["30%", "60%"],
+        avoidLabelOverlap: false,
         label: {
           show: true,
           overflow: "break",
           width: 110,
-          formatter: "{b|{d}%}\n\n{a|{b}}\n\n{c|({c})}",
+          formatter: "{b|{d}%}\n\n{a|{b}}",
           rich: {
             a: {
               color: "#262729",
               fontWeight: "400",
               fontSize: 10,
-              align: "right",
+              align: "center",
             },
             b: {
               color: "#262729",
               fontWeight: "bold",
               fontSize: 22,
-              align: "right",
+              align: "center",
             },
             c: {
               color: "#262729",
               fontWeight: "bold",
               fontSize: 10,
-              align: "right",
+              align: "center",
             },
             distanceToLabelLine: 50,
           },
@@ -154,7 +154,7 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
         style={{
           width: "100%",
           minWidth: "316px",
-          height: "216px",
+          height: "316px",
         }}
         opts={{ renderer: "svg" }}
       />

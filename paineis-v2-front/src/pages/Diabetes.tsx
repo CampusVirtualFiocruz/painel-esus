@@ -316,22 +316,28 @@ export function Diabetes() {
                 <RenderSingleValue
                   icon="medkit"
                   title="Total de atendimentos nos últimos 12 meses"
-                  value={dataTotalDiabetes?.total_atendimentos}
+                  value={Number(
+                    dataTotalDiabetes?.total_atendimentos
+                  )?.toLocaleString("pt-BR")}
                 />
               </Card>
               <Card style={{ flex: 2 }}>
                 <div
-                  style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+                  style={{ display: "flex", flexDirection: "row", gap: "20px" }}
                 >
                   <RenderSingleValue
                     icon="people"
                     title="Nº de pessoas com diabetes (CID/CIAP)"
-                    value={dataTotalDiabetes?.total_pacientes}
+                    value={Number(
+                      dataTotalDiabetes?.total_pacientes
+                    )?.toLocaleString("pt-BR")}
                   />
                   <RenderSingleValue
                     icon="people"
                     title="Nº de pessoas com diabetes (autoreferido)"
-                    value={dataTotalDiabetes?.total_auto_referido}
+                    value={Number(
+                      dataTotalDiabetes?.total_auto_referido
+                    )?.toLocaleString("pt-BR")}
                   />
                 </div>
               </Card>

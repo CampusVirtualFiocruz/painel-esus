@@ -328,22 +328,28 @@ export function Hipertensao() {
                 <RenderSingleValue
                   icon="medkit"
                   title="Total de atendimentos nos últimos 12 meses"
-                  value={dataTotalHipertensao?.total_atendimentos}
+                  value={Number(
+                    dataTotalHipertensao?.total_atendimentos
+                  )?.toLocaleString("pt-BR")}
                 />
               </Card>
               <Card style={{ flex: 2 }}>
                 <div
-                  style={{ display: "flex", flexDirection: "row", gap: "6px" }}
+                  style={{ display: "flex", flexDirection: "row", gap: "20px" }}
                 >
                   <RenderSingleValue
                     icon="people"
                     title="Nº de pessoas com hipertensão (CID/CIAP)"
-                    value={dataTotalHipertensao?.total_pacientes}
+                    value={dataTotalHipertensao?.total_pacientes?.toLocaleString(
+                      "pt-BR"
+                    )}
                   />
                   <RenderSingleValue
                     icon="people"
                     title="Nº de pessoas com hipertensão (autoreferido)"
-                    value={dataTotalHipertensao?.total_auto_referido}
+                    value={dataTotalHipertensao?.total_auto_referido?.toLocaleString(
+                      "pt-BR"
+                    )}
                   />
                 </div>
               </Card>

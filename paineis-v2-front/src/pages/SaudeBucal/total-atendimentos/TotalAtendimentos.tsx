@@ -31,7 +31,7 @@ const TotalAtendimentos = () => {
   );
 
   return (
-    <Card>
+    <Card style={{ margin: "0 auto", maxWidth: "450px" }}>
       <AsyncDataLoad {...{ isLoading, error }}>
         <div style={{ display: "flex", width: "100%" }}>
           <Typography.Details style={{ flex: "2" }}>
