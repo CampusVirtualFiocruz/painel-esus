@@ -15,11 +15,7 @@ type TipoAtentimentoResponse = {
 
 const TipoConsulta = () => {
   const { id } = useParams<PainelParams>();
-  const {
-    data: tipoResponse,
-    isLoading,
-    error,
-  } = useQuery(
+  const { data, isLoading, error } = useQuery(
     ["saude-bucal-tipo-consulta", id],
     async () => {
       const url = "oral-health/cares-by-type-of-services";
@@ -36,14 +32,14 @@ const TipoConsulta = () => {
     }
   );
   return (
-    <AsyncDataLoad {...{ isLoading, error }}>
-      <div className="col-12 chart-container total-atd-container">
-        <Typography.Subtitle>
-          Cuidado em saude bucal por tipo de consulta
-        </Typography.Subtitle>
-        <DonutChart {...new TDonutChart("", tipoResponse || [], "#5cd2c8")} />
-      </div>
-    </AsyncDataLoad>
+    <>
+      <Typography.Subtitle>
+        Cuidado em saude bucal por tipo de consulta
+      </Typography.Subtitle>
+      <AsyncDataLoad {...{ isLoading, error }}>
+        <DonutChart {...new TDonutChart("", data || [], "#5cd2c8")} />
+      </AsyncDataLoad>
+    </>
   );
 };
 

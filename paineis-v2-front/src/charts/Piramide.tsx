@@ -19,7 +19,6 @@ export default function Piramide({ data }: any) {
   }
 
   const result: any = ageGroupParser({ ageGroups: data });
-  console.log(result);
   const options = {
     tooltip: {
       trigger: "item",
@@ -32,6 +31,7 @@ export default function Piramide({ data }: any) {
       orient: "horizontal",
       right: 10,
       top: "center",
+      icon: "rect",
     },
     grid: [
       {

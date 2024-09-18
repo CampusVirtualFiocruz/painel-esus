@@ -5,7 +5,6 @@ import { Api } from "../../../services/api";
 import AsyncDataLoad from "../async-data-load";
 import { STALE_TIME } from "../../../config/stale-time";
 import { Typography } from "../../../components/ui/Typography";
-import "./style.scss";
 
 type PainelParams = {
   id: string;
@@ -19,6 +18,7 @@ type ExodontiaResponse = {
 
 const ExodontiaPie = (props: ExodontiaResponse[]) => {
   props = Object.values(props);
+
   const data = props?.map((i: ExodontiaResponse) => ({
     value: i.value,
     name: i.label,
@@ -38,16 +38,16 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
       textStyle: {
         fontSize: 16,
         overflow: "break",
-        width: 120,
+        width: 100,
       },
     },
     series: [
       {
         name: "",
         type: "pie",
-        radius: "70%",
+        radius: "40%",
         center: ["50%", "50%"],
-        animationDuration: 1000,
+        animationDuration: 800,
         avoidLabelOverlap: false,
         label: {
           show: true,
@@ -60,19 +60,19 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
           formatter: "{b|{d}%} \n\n{a|{b}}",
           rich: {
             a: {
-              color: "#6E7079",
-              fontWeight: "bold",
-              fontSize: 14,
+              color: "#262729",
+              fontWeight: "400",
+              fontSize: 10,
               align: "center",
             },
             b: {
-              color: "#6E7079",
+              color: "#262729",
               fontWeight: "bold",
-              fontSize: 25,
+              fontSize: 22,
               align: "center",
             },
           },
-          distanceToLabelLine: 5,
+          distanceToLabelLine: -4,
         },
         emphasis: {
           label: {
@@ -88,19 +88,13 @@ const ExodontiaPie = (props: ExodontiaResponse[]) => {
       },
     ],
   };
+
   return (
-    <div className="pie-chart">
-      <ReactECharts
-        option={options}
-        style={{
-          width: "100%",
-          minWidth: "316px",
-          // height: '40vh'
-        }}
-        opts={{ renderer: "svg" }}
-      />
-      <div className="data-info d-flex flex-column align-items-center"></div>
-    </div>
+    <ReactECharts
+      option={options}
+      style={{ width: "100%", height: "230px" }}
+      opts={{ renderer: "svg" }}
+    />
   );
 };
 const Exodontia = () => {
@@ -127,11 +121,9 @@ const Exodontia = () => {
       <Typography.Subtitle>
         Proporção de exodontia por procedimento
       </Typography.Subtitle>
-      <div>
-        {!isLoading && exodontiaResponse && (
-          <ExodontiaPie {...exodontiaResponse} />
-        )}
-      </div>
+      <center>
+        <ExodontiaPie {...(exodontiaResponse || [])} />
+      </center>
     </AsyncDataLoad>
   );
 };

@@ -15,9 +15,9 @@ import masculino from "../assets/images/masculino.svg";
 import feminino from "../assets/images/feminino.svg";
 import homem from "../assets/images/homem.svg";
 import mulher from "../assets/images/mulher.svg";
-import diabetes from "../assets/images/diabetes.svg";
-import hipertensao from "../assets/images/hipertensao.svg";
-import thooth from "../assets/images/theeth.svg";
+import diabetes from "../assets/images/menu/diabetes.png";
+import hipertensao from "../assets/images/menu/hipertensao.png";
+import thooth from "../assets/images/menu/bucal.png";
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
@@ -344,7 +344,7 @@ export function Painel() {
                             <MdInfoOutline
                               style={{
                                 cursor: "pointer",
-                                color: "#0069d0",
+                                color: "#ffffff",
                                 height: 20,
                                 width: 20,
                               }}
@@ -359,39 +359,53 @@ export function Painel() {
               </div>
 
               <div className="col-xl-6">
-                <div className="container-card-alt d-flex flex-column flex-md-row align-items-center justify-content-center my-2">
-                  <div className="me-2">
-                    <Zonas data={dadosPainel?.locationArea} />
-                  </div>
-
-                  <div className="container-dados-zona">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="box-container-light me-2"></div>
-                      <h4>Zona Urbana</h4>
+                <div className="container-card-alt ">
+                  <div className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2">
+                    <div className="me-2">
+                      <Zonas data={dadosPainel?.locationArea} />
                     </div>
-                    <span>
-                      {formataNumero(dadosPainel?.locationArea.urbano)}
-                    </span>
-                  </div>
-
-                  <div className="container-dados-zona">
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="box-container-dark me-2"></div>
-                      <h4>Zona Rural</h4>
+                    <div>
+                      <Typography.Details>
+                        Cidadãos Cadastrados
+                      </Typography.Details>
+                      <div
+                        className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2"
+                        style={{ gap: "15px" }}
+                      >
+                        <div className="container-dados-zona">
+                          <div className="d-flex align-items-center mb-2">
+                            <div className="box-container-light me-2"></div>
+                            <h4>Zona Urbana</h4>
+                          </div>
+                          <span>
+                            {formataNumero(dadosPainel?.locationArea.urbano)}
+                          </span>
+                        </div>
+                        <div className="container-dados-zona">
+                          <div className="d-flex align-items-center mb-2">
+                            <div className="box-container-dark me-2"></div>
+                            <h4>Zona Rural</h4>
+                          </div>
+                          <span>
+                            {formataNumero(dadosPainel?.locationArea.rural)}
+                          </span>
+                        </div>
+                        <div className="container-dados-zona">
+                          <div className="d-flex align-items-center mb-2">
+                            <div className="box-container-nonactive me-2"></div>
+                            <h4>Não informado</h4>
+                          </div>
+                          <span>
+                            {formataNumero(
+                              dadosPainel?.locationArea.nao_definido
+                            )}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <span>
-                      {formataNumero(dadosPainel?.locationArea.rural)}
-                    </span>
                   </div>
-                </div>
-                <div className="container-dados-nao-definidos ">
-                  <p>
-                    *Não informado:{" "}
-                    {formataNumero(dadosPainel?.locationArea.nao_definido)}
-                  </p>
                 </div>
               </div>
-
               <div className="col-xl-3">
                 <div className="container-card d-flex align-items-center justify-content-center my-2 py-1">
                   <div className="d-flex flex-column align-items-center ms-2 me-4">
@@ -418,7 +432,6 @@ export function Painel() {
               Proporção de indivíduos cadastrados segundo sexo e idade
             </Typography.Subtitle>
           </div>
-
           {dadosPainel !== undefined &&
           dadosPainel.ageGroups &&
           Object.keys(dadosPainel.ageGroups).length !== 4 ? (
@@ -436,16 +449,13 @@ export function Painel() {
                     <img src={feminino} className="img-fluid" alt="Feminino" />
                   </div>
                 </div>
-
                 <Piramide data={dadosPainel.ageGroups} />
               </div>
-
               <div className="d-flex align-items-center justify-content-between mt-5">
                 <div className="d-flex align-items-center mx-3">
                   <div className="box-container-light me-2"></div>
                   <h5 className="mb-0">Área Urbana</h5>
                 </div>
-
                 <div className="d-flex align-items-center mx-3">
                   <div className="box-container-dark me-2"></div>
                   <h5 className="mb-0">Área Rural</h5>
@@ -461,14 +471,12 @@ export function Painel() {
               Sem dados de proporção de indivíduos cadastrados.
             </h6>
           )}
-
           <div className="my-5">
             <Typography.Subtitle>
-              Condição de saúde dos indivíduos cadastrados no município nos
-              últimos 12 meses
+              Número de indivíduos acompanhados nos últimos 12 meses por
+              condição de saúde
             </Typography.Subtitle>
           </div>
-
           <div className="container">
             <div className="row container-cards-condicoes">
               <div className="card-condicao p-2" onClick={handleToDiabetes}>
@@ -480,18 +488,14 @@ export function Painel() {
                   <Condicao data={dadosPainel?.indicators.diabetes} />
                 </div>
               </div>
-
               <div className="card-condicao p-2" onClick={handleToHipertensao}>
                 <span className="nome-condicao">Hipertensão</span>
-
                 <h4>{somaIndicador(dadosPainel?.indicators.hipertensao)}</h4>
-
                 <div className="d-flex align-items-center">
                   <img src={hipertensao} alt="Hipertensão" className="mx-2" />
                   <Condicao data={dadosPainel?.indicators.hipertensao} />
                 </div>
               </div>
-
               {/* <div className="card-condicao p-2" onClick={handleToGestante}>
                                 <span className="nome-condicao">Gestantes</span>
                                 <h4>{somaIndicador(dadosPainel?.indicators.gestantes)}</h4>
@@ -534,12 +538,7 @@ export function Painel() {
                   </h4>
 
                   <div className="d-flex align-items-center">
-                    <img
-                      src={thooth}
-                      alt="Saúde Bucal"
-                      className="mx-2"
-                      width="72px"
-                    />
+                    <img src={thooth} alt="Saúde Bucal" className="mx-2" />
                     <Condicao
                       data={{
                         rural: dataOralHealth["rural"].total,

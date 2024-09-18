@@ -13,6 +13,7 @@ export function Donut(props: DonutChart) {
       },
     },
     legend: {
+      icon: "rect",
       data: [],
     },
     series: [

@@ -92,9 +92,7 @@ export function bodyBoasPraticasAssistenciaPreNatal() {
 export function bodyBoasPraticasAssistenciaPessoaDiabetes() {
   return (
     <div className="d-flex flex-column mb-4">
-      <h1 className="mb-4">
-        Boas práticas no cuidado de pessoas com diabetes:
-      </h1>
+      <h1 className="mb-4">Boas práticas no cuidado da pessoa com diabetes:</h1>
       <ul className="ms-4">
         <li className="mb-1">
           - Orientar sobre efeitos deletérios do tabagismo
@@ -124,7 +122,7 @@ export function bodyBoasPraticasCuidadoPessoasHipertensao() {
   return (
     <div className="d-flex flex-column mb-4">
       <h1 className="mb-4">
-        Boas práticas no cuidado de pessoas com hipertensão:
+        Boas práticas no cuidado da pessoa com hipertensão:
       </h1>
       <ul className="ms-4">
         <li className="mb-1">
@@ -263,7 +261,9 @@ export const Modal = ({ data, setShowModal }: IModal) => {
         {data &&
           data.loaded === 5 &&
           bodyBoasPraticasAssistenciaPessoaDiabetes()}
-        {data && data.loaded === 6 && bodyDetalhesCadastroDiabetes()}
+        {data &&
+          data.loaded === 6 &&
+          bodyBoasPraticasCuidadoPessoasHipertensao()}
 
         <CgClose
           size={"1.5rem"}

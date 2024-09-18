@@ -10,10 +10,8 @@ export function Pie(props: PieChart) {
       trigger: "item",
     },
     legend: {
+      icon: "rect",
       top: "5%",
-
-      //data: [],
-      // left: "center",
     },
     series: [
       {

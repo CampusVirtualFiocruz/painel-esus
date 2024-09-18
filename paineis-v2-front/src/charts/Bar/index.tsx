@@ -45,10 +45,11 @@ export function Bar({ data, titulo }: BarData) {
   let dataNaoInformado = arrData.map((obj: Faixa) => {
     return obj["Nao Informado"];
   });
-  console.log("dataNaoInformado", dataNaoInformado);
+
   const options = {
     legend: {
       bottom: "0%",
+      icon: "rect",
     },
     tooltip: {
       trigger: "axis",
@@ -70,7 +71,7 @@ export function Bar({ data, titulo }: BarData) {
       },
       axisLabel: {
         show: true,
-        fontSize: 16,
+        fontSize: 14,
         margin: 10,
         rotate: 90,
       },
@@ -79,7 +80,7 @@ export function Bar({ data, titulo }: BarData) {
       type: "value",
       axisLabel: {
         show: true,
-        fontSize: 16,
+        fontSize: 14,
         margin: 6,
       },
       splitLine: {

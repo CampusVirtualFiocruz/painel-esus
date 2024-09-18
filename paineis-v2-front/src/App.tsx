@@ -18,9 +18,11 @@ import { SelecionarUbs } from "./pages/SelecionarUbs";
 import Tabagismo from "./pages/Tabagismo";
 import FeridaVascular from "./pages/FeridaVascular";
 import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
+import BarraBrasil from "./components/BarraBrasil";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
+
   useLayoutEffect(() => {
     document.documentElement.scrollTo(0, 0);
   }, [location.pathname]);
@@ -32,6 +34,7 @@ function App() {
     <AuthProvider>
       <InfoProvider>
         <BrowserRouter>
+          <BarraBrasil />
           <Wrapper>
             <Routes>
               <Route path="/" element={<Login />} />
