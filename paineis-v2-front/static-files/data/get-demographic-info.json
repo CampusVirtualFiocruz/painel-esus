@@ -1,0 +1,79 @@
+{
+    "data": {
+        "ageGroups": {
+            "Feminino": [
+                {
+                    "Faixa et\u00e1ria 0 a 17 anos": {
+                        "Rural": 55,
+                        "Urbano": 512
+                    },
+                    "Faixa et\u00e1ria 18 a 29 anos": {
+                        "Rural": 118,
+                        "Urbano": 869
+                    },
+                    "Faixa et\u00e1ria 30 a 44 anos": {
+                        "Rural": 75,
+                        "Urbano": 507
+                    },
+                    "Faixa et\u00e1ria 45 a 59 anos": {
+                        "Rural": 299,
+                        "Urbano": 2188
+                    },
+                    "Faixa et\u00e1ria 60 + anos": {
+                        "Rural": 388,
+                        "Urbano": 3010
+                    }
+                }
+            ],
+            "Masculino": [
+                {
+                    "Faixa et\u00e1ria 0 a 17 anos": {
+                        "Rural": 47,
+                        "Urbano": 512
+                    },
+                    "Faixa et\u00e1ria 18 a 29 anos": {
+                        "Rural": 124,
+                        "Urbano": 937
+                    },
+                    "Faixa et\u00e1ria 30 a 44 anos": {
+                        "Rural": 88,
+                        "Urbano": 457
+                    },
+                    "Faixa et\u00e1ria 45 a 59 anos": {
+                        "Rural": 91,
+                        "Urbano": 804
+                    },
+                    "Faixa et\u00e1ria 60 + anos": {
+                        "Rural": 125,
+                        "Urbano": 908
+                    }
+                }
+            ]
+        },
+        "gender": {
+            "feminino": 16352,
+            "masculino": 8297
+        },
+        "ibgePopulation": "20000",
+        "indicators": {
+            "diabetes": {
+                "rural": 191,
+                "urbano": 1706
+            },
+            "gestantes": {
+                "rural": 125,
+                "urbano": 1197
+            },
+            "hipertensao": {
+                "rural": 636,
+                "urbano": 5025
+            }
+        },
+        "locationArea": {
+            "rural": 2644,
+            "urbano": 18928
+        },
+        "total": 24649
+    },
+    "message": "successfully fetched"
+}

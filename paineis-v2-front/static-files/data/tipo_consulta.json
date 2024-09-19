@@ -1,0 +1,17 @@
+[
+    {
+        "label": "Primeira consulta odontológica programática",
+        "value": 159,
+        "total": 264
+    },
+    {
+        "label": "Consulta de retorno em odontologia",
+        "value": 66,
+        "total": 264
+    },
+    {
+        "label": "Consulta de manutenção em odontologia",
+        "value": 96,
+        "total": 264
+    }
+]

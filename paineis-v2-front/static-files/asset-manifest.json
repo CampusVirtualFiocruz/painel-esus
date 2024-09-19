@@ -1,0 +1,39 @@
+{
+  "files": {
+    "main.css": "/static/css/main.baa908e6.chunk.css",
+    "main.js": "/static/js/main.255bf1ad.chunk.js",
+    "main.js.map": "/static/js/main.255bf1ad.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.ed5b9c0e.js",
+    "runtime-main.js.map": "/static/js/runtime-main.ed5b9c0e.js.map",
+    "static/css/2.66772492.chunk.css": "/static/css/2.66772492.chunk.css",
+    "static/js/2.dbbf4979.chunk.js": "/static/js/2.dbbf4979.chunk.js",
+    "static/js/2.dbbf4979.chunk.js.map": "/static/js/2.dbbf4979.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.66772492.chunk.css.map": "/static/css/2.66772492.chunk.css.map",
+    "static/css/main.baa908e6.chunk.css.map": "/static/css/main.baa908e6.chunk.css.map",
+    "static/js/2.dbbf4979.chunk.js.LICENSE.txt": "/static/js/2.dbbf4979.chunk.js.LICENSE.txt",
+    "static/media/diabetes.6e66b9c8.svg": "/static/media/diabetes.6e66b9c8.svg",
+    "static/media/feminino.54a41d66.svg": "/static/media/feminino.54a41d66.svg",
+    "static/media/gestantes.563dfbd4.svg": "/static/media/gestantes.563dfbd4.svg",
+    "static/media/hipertensao.597a14dc.svg": "/static/media/hipertensao.597a14dc.svg",
+    "static/media/homem.ba6cdbdb.svg": "/static/media/homem.ba6cdbdb.svg",
+    "static/media/info-circle.94844c6c.svg": "/static/media/info-circle.94844c6c.svg",
+    "static/media/logo.249e7cbd.svg": "/static/media/logo.249e7cbd.svg",
+    "static/media/logout.13301abe.svg": "/static/media/logout.13301abe.svg",
+    "static/media/masculino.71f137d8.svg": "/static/media/masculino.71f137d8.svg",
+    "static/media/mulher.ccf0ef11.svg": "/static/media/mulher.ccf0ef11.svg",
+    "static/media/password.67c5c045.svg": "/static/media/password.67c5c045.svg",
+    "static/media/people.de7100bd.svg": "/static/media/people.de7100bd.svg",
+    "static/media/report.fac73564.svg": "/static/media/report.fac73564.svg",
+    "static/media/tosse.be7a29a5.svg": "/static/media/tosse.be7a29a5.svg",
+    "static/media/user-alt.d34f519d.svg": "/static/media/user-alt.d34f519d.svg",
+    "static/media/user.845c8903.svg": "/static/media/user.845c8903.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.ed5b9c0e.js",
+    "static/css/2.66772492.chunk.css",
+    "static/js/2.dbbf4979.chunk.js",
+    "static/css/main.baa908e6.chunk.css",
+    "static/js/main.255bf1ad.chunk.js"
+  ]
+}

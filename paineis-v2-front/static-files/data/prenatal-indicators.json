@@ -1,0 +1,25 @@
+{
+    "data": {
+        "com 1\u00aa consulta at\u00e9 12 semanas": {
+            "com_consulta": 21.22,
+            "sem_consulta": 78.78
+        },
+        "com 6 ou mais consultas": {
+            "com_consulta": 65.9,
+            "sem_consulta": 34.1
+        },
+        "com atendimento odontol\u00f3gico": {
+            "com_consulta": 19.580000000000002,
+            "sem_consulta": 80.42
+        },
+        "com exames VDRL e HIV": {
+            "com_consulta": 100.0,
+            "sem_consulta": 0.0
+        },
+        "esquema vacinal completo": {
+            "com_consulta": 13.969999999999999,
+            "sem_consulta": 86.03
+        }
+    },
+    "message": "successfully fetched"
+}

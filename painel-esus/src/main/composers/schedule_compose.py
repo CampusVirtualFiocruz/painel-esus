@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+# pylint: disable=W0611
+from datetime import datetime  # , timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from src.data.use_cases.create_bases.create_cache import CreateCacheUseCase
@@ -13,14 +14,14 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
     hour = int(env_time[0])
     minute = int(env_time[1])
 
-    def cache_init():
-        try:
-            logging.info('Start cache generator.')
-            create_cache = CreateCacheUseCase()
-            create_cache.generate_cache()
-            logging.info('End cache generator.')
-        except Exception:
-            logging.info('Server not running yet.')
+    # def cache_init():
+    #     try:
+    #         logging.info('Start cache generator.')
+    #         create_cache = CreateCacheUseCase()
+    #         create_cache.generate_cache()
+    #         logging.info('End cache generator.')
+    #     except Exception:
+    #         logging.info('Server not running yet.')
 
     def init():
 
@@ -33,7 +34,7 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
         text = 'Finish base generator. time spent: {}'.format(
             end_time - start_time)
         logging.info(text)
-        cache_init()
+        # cache_init()
 
     scheduler.add_job(
         init,
@@ -43,6 +44,6 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
     )
     init()
 
-    now = datetime.now()
-    now_plus_10 = now + timedelta(minutes=10)
-    scheduler.add_job(cache_init, 'date', run_date=now_plus_10)
+    # now = datetime.now()
+    # now_plus_10 = now + timedelta(minutes=10)
+    # scheduler.add_job(cache_init, 'date', run_date=now_plus_10)
