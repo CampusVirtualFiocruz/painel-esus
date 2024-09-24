@@ -49,6 +49,53 @@ jobs:
       # - name: Push Docker image to Docker Hub
       #   run: docker push painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}
 
+  conncet-vpn-ssh-aws:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Set up Pritunl profile and store client ID for later use
+      - name: Setup Pritunl Profile
+        id: pritunl-connection # A `Setup Step ID` has been added as a reference identifier for the output `client-id`.
+        uses: nathanielvarona/pritunl-client-github-action@v1
+        with:
+          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
+          start-connection: false # Do not establish a connection in this step.
+
+      # Start VPN connection using stored client ID and password (if available)
+      - name: Start VPN Connection Manually
+        shell: bash
+        run: |
+          pritunl-client start ${{ steps.pritunl-connection.outputs.client-id }} \
+            --password ${{ secrets.PRITUNL_PROFILE_PIN || '' }}
+          # Wait for 10 seconds to allow the connection to establish
+          sleep 10
+
+      # Display VPN connection status
+      - name: Show VPN Connection Status Manually
+        shell: bash
+        run: |
+          pritunl-client list -j | jq 'sort_by(.name) | .[0] | { "Profile Name": .name, "Client Address": .client_address }'
+          # Show the profile name and client address
+
+      - name: Deploy Docker Swarm
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.AWS_HOST}}
+          key: ${{secrets.AWS_KEY}}
+          username: ${{ secrets.AWS_USERNAME }}
+          script: |
+            echo 'INICIOU PROCESSO DE DEPLOY DOCKER SWARM'
+            echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+            echo 'PASSOU O LOGIN'
+
+      # Stop VPN connection using stored client ID (always run, even on failure)
+      - name: Stop VPN Connection Manually
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          pritunl-client stop ${{ steps.pritunl-connection.outputs.client-id }}
+          # Stop the VPN connectio
+
   deploy-docker-swarm:
     needs: build
     runs-on: ubuntu-latest
