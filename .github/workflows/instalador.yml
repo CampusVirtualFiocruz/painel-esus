@@ -27,7 +27,6 @@ jobs:
           cat <<EOF > .env
           ${{ vars.ENV_FRONT }}
           EOF
-          ls -la
           CI=false npm run build --prod
 
       - name: Create backend environment
@@ -36,7 +35,6 @@ jobs:
           cat <<EOF > .env
           ${{ vars.ENV_BACK }}
           EOF
-          ls -la
 
       - name: Log in to Docker Hub
         run: echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
