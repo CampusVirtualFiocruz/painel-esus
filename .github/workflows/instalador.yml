@@ -95,7 +95,7 @@ jobs:
             version: "3.3"
             services:
               painel_esus:
-                image: "painelsaudefiocruz/demo:backend-1.0.13"
+                image: "painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}"
                 environment:
                   RELOAD_BASE_SCHELDULE: '4:00'
                   DB_USER: 'postgres'
