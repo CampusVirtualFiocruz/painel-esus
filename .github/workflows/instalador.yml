@@ -85,8 +85,41 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           script: |
             echo 'INICIOU PROCESSO DE DEPLOY DOCKER SWARM'
+            echo ${{ env.RELEASE_VERSION }}
             echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
             echo 'PASSOU O LOGIN'
+            cd /livramento 
+            echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
+            sudo rm docker-compose.yml || true
+            cat <<EOF > docker-compose.yml
+            version: "3.3"
+            services:
+              painel_esus:
+                image: "painelsaudefiocruz/demo:backend-1.0.13"
+                environment:
+                  RELOAD_BASE_SCHELDULE: '4:00'
+                  DB_USER: 'postgres'
+                  DB_PASSWORD: 'DoCTrH1MJ#re?X0qBlmzUVlLWoUM'
+                  DB_HOST: '186.232.197.254'
+                  DB_PORT: '5433'
+                  DB_DATABASE: 'livramento'
+                  CIDADE_IBGE: 2508505
+                  ESTADO: 'FC'
+                  ADMIN_USERNAME: 'admin'
+                  ADMIN_PASSWORD: 'FCadmin23'
+                  POPULATION: 20000
+                  SECRET_TOKEN: 111111111111111111111
+                  PASSWORD_SALT: 'painel'
+                  BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
+                  ENV: linux
+                ports:
+                  - 5002:5001
+            networks:
+              default:
+                external:
+                  name: painel-esus-network            
+            EOF
+            cat docker-compose.yml
 
       # Stop VPN connection using stored client ID (always run, even on failure)
       - name: Stop VPN Connection Manually
@@ -95,21 +128,6 @@ jobs:
         run: |
           pritunl-client stop ${{ steps.pritunl-connection.outputs.client-id }}
           # Stop the VPN connectio
-
-  deploy-docker-swarm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy Docker Swarm
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{secrets.AWS_HOST}}
-          key: ${{secrets.AWS_KEY}}
-          username: ${{ secrets.AWS_USERNAME }}
-          script: |
-            echo 'INICIOU PROCESSO DE DEPLOY DOCKER SWARM'
-            echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-            echo 'PASSOU O LOGIN'
 
       # - name: Log in to Docker Hub
       #   run: echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
