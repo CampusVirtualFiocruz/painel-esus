@@ -17,29 +17,8 @@ jobs:
         with:
           node-version: "20"
 
-      # - name: Install dependencies
-      #   working-directory: ./paineis-v2-front
-      #   run: yarn
-
-      # - name: Build React project
-      #   working-directory: ./paineis-v2-front
-      #   run: |
-      #     cat <<EOF > .env
-      #     ${{ vars.ENV_FRONT }}
-      #     EOF
-      #     ls -la
-      #     CI=false npm run build --prod
-
-      # - name: Create backend environment
-      #   working-directory: ./painel-esus
-      #   run: |
-      #     cat <<EOF > .env
-      #     ${{ vars.ENV_BACK }}
-      #     EOF
-      #     ls -la
-
       - name: Log in to Docker Hub
-        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_ACCESS_TOKEN }}
+        run: echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       # - name: Build Docker image
       #   run: docker build -t docker build . -t painelsaudefiocruz/demo:backend-1.0.0 .
