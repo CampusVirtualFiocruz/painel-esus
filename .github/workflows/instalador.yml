@@ -30,7 +30,7 @@ jobs:
           ls -la
           CI=false npm run build --prod
 
-      - name: Build React project
+      - name: Create backend environment
         working-directory: ./painel-esus
         run: |
           cat <<EOF > .env
@@ -38,11 +38,11 @@ jobs:
           EOF
           ls -la
 
-      # - name: Log in to Docker Hub
-      #   run: echo ${{ secrets.DOCKER_USERNAME }} | docker login -u ${{ secrets.DOCKER_ACCESS_TOKEN }} --password-stdin
+      - name: Log in to Docker Hub
+        run: echo ${{ secrets.DOCKER_USERNAME }} | docker login -u ${{ secrets.DOCKER_ACCESS_TOKEN }} --password-stdin
 
-      # - name: Build Docker image
-      #   run: docker build -t docker build . -t painelsaudefiocruz/demo:backend-1.0.0 .
+      - name: Build Docker image
+        run: docker build -t docker build . -t painelsaudefiocruz/demo:backend-1.0.0 .
 
-      # - name: Push Docker image to Docker Hub
-      #   run: docker push docker build . -t painelsaudefiocruz/demo:backend-1.0.0
+      - name: Push Docker image to Docker Hub
+        run: docker push docker build . -t painelsaudefiocruz/demo:backend-1.0.0
