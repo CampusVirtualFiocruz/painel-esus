@@ -21,6 +21,7 @@ customtkinter==5.2.2
 darkdetect==0.8.0
 dill==0.3.7
 distlib==0.3.7
+duckdb==1.1.0
 engineering-notation==0.10.0
 exceptiongroup==1.1.3
 filelock==3.12.4
@@ -48,7 +49,7 @@ pandas==2.0.3
 pathspec==0.12.1
 platformdirs==3.10.0
 pluggy==1.3.0
-polars==1.5.0
+polars==1.7.1
 pre-commit==3.4.0
 psycopg2-binary==2.9.7
 pyarrow==17.0.0
