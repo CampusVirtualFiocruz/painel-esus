@@ -85,10 +85,10 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           script: |
             echo 'INICIOU PROCESSO DE DEPLOY DOCKER SWARM'
-            echo ${{ env.RELEASE_VERSION }}
+            echo $RELEASE_VERSION
             echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
             echo 'PASSOU O LOGIN'
-            cd /livramento 
+            cd livramento
             echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
             sudo rm docker-compose.yml || true
             cat <<EOF > docker-compose.yml
