@@ -82,6 +82,7 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
       - name: Deploy Docker Swarm
+
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.AWS_HOST}}
