@@ -21,20 +21,20 @@ jobs:
         working-directory: ./paineis-v2-front
         run: yarn
 
-      # - name: Build React project
-      #   working-directory: ./paineis-v2-front
-      #   run: |
-      #     cat <<EOF > .env
-      #     ${{ vars.ENV_FRONT }}
-      #     EOF
-      #     CI=false npm run build --prod
+      - name: Build React project
+        working-directory: ./paineis-v2-front
+        run: |
+          cat <<EOF > .env
+          ${{ vars.ENV_FRONT }}
+          EOF
+          CI=false npm run build --prod
 
-      # - name: Create backend environment
-      #   working-directory: ./painel-esus
-      #   run: |
-      #     cat <<EOF > .env
-      #     ${{ vars.ENV_BACK }}
-      #     EOF
+      - name: Create backend environment
+        working-directory: ./painel-esus
+        run: |
+          cat <<EOF > .env
+          ${{ vars.ENV_BACK }}
+          EOF
 
       - name: Extract version from branch name
         id: extract_version
@@ -89,10 +89,7 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           script: |
             echo 'INICIOU PROCESSO DE DEPLOY DOCKER SWARM'
-            echo ${{ env.RELEASE_VERSION }}
             echo RELEASE VERSION: ${{ env.RELEASE_VERSION }}
-            echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-            echo 'PASSOU O LOGIN'
             cd livramento
             echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
             sudo rm docker-compose.yml || true
@@ -100,7 +97,7 @@ jobs:
             version: "3.3"
             services:
               painel_esus:
-                image: "painelsaudefiocruz/demo:backend-$RELEASE_VERSION"
+                image: "painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}"
                 environment:
                   RELOAD_BASE_SCHELDULE: '4:00'
                   DB_USER: 'postgres'
@@ -118,13 +115,20 @@ jobs:
                   BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
                   ENV: linux
                 ports:
-                  - 5002:5001
+                  - 5004:5003
             networks:
               default:
                 external:
                   name: painel-esus-network            
             EOF
             cat docker-compose.yml
+            export DOCKER_IMAGE='painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}'
+            docker images -q | xargs docker rmi
+            echo 'LIMPOU IMAGENS OBSOLETAS'
+            docker stack deploy -c docker-compose.yml --resolve-image changed livramento-stack  
+            echo 'DEPLOY SWARM'
+            docker pull $DOCKER_IMAGE
+            echo 'DOCKER PULL'
 
       # Stop VPN connection using stored client ID (always run, even on failure)
       - name: Stop VPN Connection Manually
@@ -132,13 +136,4 @@ jobs:
         shell: bash
         run: |
           pritunl-client stop ${{ steps.pritunl-connection.outputs.client-id }}
-          # Stop the VPN connectio
-
-      # - name: Log in to Docker Hub
-      #   run: echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-
-      # - name: Build Docker image
-      #   run: docker build -t painelsaudefiocruz/demo:backend-1.0.0 .
-
-      # - name: Push Docker image to Docker Hub
-      #   run: docker push painelsaudefiocruz/demo:backend-1.0.0
+          # Stop the VPN connection
