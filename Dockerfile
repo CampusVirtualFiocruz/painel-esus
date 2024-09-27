@@ -10,6 +10,6 @@ COPY ./paineis-v2-front/static-files ./paineis-v2-front/static-files
 WORKDIR /painel-esus
 RUN pip3 install -r requirements.txt
 
-EXPOSE 5001
+EXPOSE 5003
 
 CMD [ "python", "run.py" ] ls
