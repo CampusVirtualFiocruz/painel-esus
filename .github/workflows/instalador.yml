@@ -116,7 +116,7 @@ jobs:
                   BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
                   ENV: linux
                 ports:
-                  - 5003:5003
+                  - 5003:5001
             networks:
               default:
                 external:
