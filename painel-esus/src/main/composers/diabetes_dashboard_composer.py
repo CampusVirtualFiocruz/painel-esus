@@ -1,16 +1,21 @@
-
+from src.data.use_cases.diseases_dashboard.diabetes_nominal_list import DiabetesNominalListUseCase
 from src.data.use_cases.diseases_dashboard.disease_dashboard import \
     DiseaseUseCase
 from src.domain.entities.diabetes import Diabetes
-from src.domain.entities.diabetes_exams import (DiabetesExams,
-                                                IndividualDiabetesExams)
+from src.domain.entities.diabetes_exams import DiabetesExams
+from src.domain.entities.diabetes_exams import IndividualDiabetesExams
 from src.infra.db.repositories.disease.diseases_dashboard_local import \
     DiseasesDashboardLocalRepository as DiseasesDashboardRepository
-from src.presentations.controllers.diabetes import (
-    DiabetesDashboardGetAgeGroupGender, DiabetesDashboardGetAgeGroupsLocation,
-    DiabetesDashboardGetComplications, DiabetesDashboardGetExamsCount,
-    DiabetesDashboardGetIMC, DiabetesDashboardGetIndividualExamsCount,
-    DiabetesDashboardGetProfessionalsCount, DiabetesDashboardGetTotal)
+from src.infra.db.repositories.disease.nominal_list.diabetes_nominal_list_repository import DiabetesNominalListRepository
+from src.presentations.controllers.diabetes import DiabetesDashboardGetAgeGroupGender
+from src.presentations.controllers.diabetes import DiabetesDashboardGetAgeGroupsLocation
+from src.presentations.controllers.diabetes import DiabetesDashboardGetComplications
+from src.presentations.controllers.diabetes import DiabetesDashboardGetExamsCount
+from src.presentations.controllers.diabetes import DiabetesDashboardGetIMC
+from src.presentations.controllers.diabetes import DiabetesDashboardGetIndividualExamsCount
+from src.presentations.controllers.diabetes import DiabetesDashboardGetProfessionalsCount
+from src.presentations.controllers.diabetes import DiabetesDashboardGetTotal
+from src.presentations.controllers.diabetes.diabetes_dashboard_get_nominal_list import DiabetesDashboardGetNominalList
 
 
 def diabetes_dashboard_get_total():
@@ -85,5 +90,14 @@ def diabetes_dashboard_get_individual_exams_count():
     use_case = DiseaseUseCase(repository)
     controller = DiabetesDashboardGetIndividualExamsCount(
         use_case, diabetes_exams)
+
+    return controller.handle
+
+
+def diabetes_dashboard_get_nominal_list():
+    repository = DiabetesNominalListRepository()
+    use_case = DiabetesNominalListUseCase(repository)
+    controller = DiabetesDashboardGetNominalList(
+        use_case)
 
     return controller.handle

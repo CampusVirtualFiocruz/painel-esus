@@ -11,6 +11,8 @@ from src.infra.create_base.create_diabetes_bases_repository import (
 from src.infra.create_base.create_hypertension_bases_repository import (
     CreateHypertensionBasesRepository,
 )
+from src.infra.create_base.create_nominal_lists_bases_repository import CreateDiabetesNominalListRepository
+from src.infra.create_base.create_nominal_lists_bases_repository import CreateHypertensionNominalListRepository
 from src.infra.create_base.create_oral_health_bases_repository import (
     CreateOralHealthBasesRepository,
 )
@@ -30,12 +32,17 @@ class CreateBasesController:
             path = os.path.join(path, 'painel_esus.db')
             path = os.path.relpath(path)
         # os.remove(path)
-        logging.info("Starting base generation")
-        _list = [
-            CreateDiabetesBasesRepository(),
-            CreateHypertensionBasesRepository(),
-            CreateOralHealthBasesRepository(),
-            # CreateSmokingBasesRepository()
-        ]
-        usecase = CreateBasesUseCase(bases_generators=_list)
-        usecase.create_bases()
+        if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
+            logging.info("Starting base generation")
+            _list = [
+                # CreateDiabetesBasesRepository(),
+                # CreateHypertensionBasesRepository(),
+                # CreateOralHealthBasesRepository(),
+                CreateDiabetesNominalListRepository(),
+                CreateHypertensionNominalListRepository()
+                # CreateSmokingBasesRepository()
+            ]
+            usecase = CreateBasesUseCase(bases_generators=_list)
+            usecase.create_bases()
+        else:
+            logging.info("Skipping base generation")

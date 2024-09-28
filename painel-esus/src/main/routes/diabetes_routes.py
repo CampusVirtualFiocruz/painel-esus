@@ -1,14 +1,21 @@
 # pylint: disable=W0613
-from flask import Blueprint, jsonify, request
+from flask import Blueprint
+from flask import jsonify
+from flask import request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
-from src.main.composers.diabetes_dashboard_composer import (
-    diabetes_dashboard_get_age_group_gender,
-    diabetes_dashboard_get_age_groups_location,
-    diabetes_dashboard_get_complications, diabetes_dashboard_get_exams_count,
-    diabetes_dashboard_get_imc, diabetes_dashboard_get_individual_exams_count,
-    diabetes_dashboard_get_professionals_count, diabetes_dashboard_get_total)
+from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_age_group_gender
+from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_age_groups_location
+from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_complications
+from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_exams_count
+from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_imc
+from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_individual_exams_count
+from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_nominal_list
+from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_professionals_count
+from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_total
 from src.main.server.cache import cache
+from src.presentations.validators.base_validation import _validation
+from src.presentations.validators.schema.nominal_list import schema
 
 diabetes_bp = Blueprint("diabetes", __name__)
 
@@ -24,6 +31,8 @@ class DiabetesPath:
         'exams': '/exams',
         'professionals': '/professionals',
         'get_diabetes_list': '/get-diabetes-list',
+        'get_nominal_list': '/get-nominal-list'
+
     }
 
 
@@ -186,3 +195,28 @@ def get_diabetes_list(cnes=None):
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
+
+
+@diabetes_bp.route(f"{urls['get_nominal_list']}", methods=['GET'],
+                   endpoint='get_nominal_list')
+@diabetes_bp.route(f"{urls['get_nominal_list']}/<cnes>", methods=['GET'],
+                   endpoint='get_nominal_list_id')
+# @cache.cached()
+def get_nominal_list(cnes=None):
+    if cnes:
+        request.view_args['cnes'] = int(request.view_args['cnes'])
+
+    http_response = None
+    response = None
+
+    try:
+        _validation(request.args.to_dict(), schema)
+        http_response = request_adapter(
+            request, diabetes_dashboard_get_nominal_list())
+        response = jsonify(http_response.body)
+
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, 200
