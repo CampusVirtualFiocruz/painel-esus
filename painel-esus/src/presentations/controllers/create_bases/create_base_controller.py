@@ -35,9 +35,9 @@ class CreateBasesController:
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
             logging.info("Starting base generation")
             _list = [
-                # CreateDiabetesBasesRepository(),
-                # CreateHypertensionBasesRepository(),
-                # CreateOralHealthBasesRepository(),
+                CreateDiabetesBasesRepository(),
+                CreateHypertensionBasesRepository(),
+                CreateOralHealthBasesRepository(),
                 CreateDiabetesNominalListRepository(),
                 CreateHypertensionNominalListRepository()
                 # CreateSmokingBasesRepository()
