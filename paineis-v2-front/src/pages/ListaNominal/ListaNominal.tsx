@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
-import { PagedTable, TextField } from "bold-ui";
+import { DataTable, PagedTable, TextField } from "bold-ui";
 
 import { Modal } from "../../components/Modal";
 import { ReportFooter } from "../../components/ui/ReportFooter";
@@ -15,12 +15,6 @@ import "../../styles/gestanteList.scss";
 import "../../styles/listaNominal.scss";
 
 import listMock from "./HipertensosList.mock.json";
-
-type TModal = {
-  loaded: number;
-  tipo?: string;
-  cnes?: string | undefined;
-};
 
 type PainelParams = {
   id: string;
@@ -44,23 +38,18 @@ interface RowType {
 const ListaNominal = () => {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
-  const [data, setData] = useState<TModal>({ loaded: 0 });
+  const [data, setData] = useState<any>({ loaded: 7 });
   const [searchTerm, setSearchTerm] = useState("");
 
-  const getData = async (idModal: number, tipo?: string) => {
-    await wait(100);
-    setData({ loaded: idModal, tipo, cnes: id });
-  };
-
-  const handleClick = (idModal: number) => {
-    setData({ loaded: 0 });
+  const handleClick = (item: any) => {
+    console.log("seleciona!! ", item);
+    setData({ loaded: 7, ...item });
     setShowModal(true);
-    getData(idModal);
   };
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const condicao = queryParams.get("condicao");
+  const condicao = String(queryParams.get("condicao"));
 
   const { city } = useInfo();
   const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
@@ -84,6 +73,11 @@ const ListaNominal = () => {
     }
   );
 
+  const pathToReport = {
+    Diabetes: "diabetes",
+    Hipertensão: "arterial-hypertension",
+  } as any;
+
   const {
     data: info,
     isLoading: isLoadingInfo,
@@ -91,7 +85,7 @@ const ListaNominal = () => {
   } = useQuery(
     ["diabetes-list", {}],
     async () => {
-      let path = `diabetes/get-nominal-list/${id}`;
+      let path = `${pathToReport?.[condicao]}/get-nominal-list/${id}`;
       const response = await Api.get(path, {
         params: {
           itemsPerPage: 9999,
@@ -173,7 +167,7 @@ const ListaNominal = () => {
     <div id="page-painel">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
       <ReportWrapper title={title} subtitle={subtitle}>
-        <div className="search">
+        {/*  <div className="search">
           <TextField
             name="iconized"
             id="iconized"
@@ -183,29 +177,32 @@ const ListaNominal = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        </div>
-        <PagedTable<RowType>
+        </div> */}
+        <DataTable<RowType>
           rows={info?.items || []}
           sort={params.sort}
-          page={params.page}
-          size={params.size}
-          totalElements={params.totalElements}
-          totalPages={params.totalPages}
+          // page={params.page}
+          //   size={params.size}
+          // totalElements={params.totalElements}
+          //totalPages={params.totalPages}
           onSortChange={handleSortChange}
-          onPageChange={handlePageChange}
-          onSizeChange={handleSizeChange}
+          //onPageChange={handlePageChange}
+          //onSizeChange={handleSizeChange}
           loading={false}
           columns={[
             {
               name: "nome",
               header: "Nome",
               sortable: true,
-              render: (item) => (
+              render: (item: any) => (
                 <span
-                  onClick={() => handleClick(7)}
+                  onClick={() => handleClick(item)}
                   style={{ marginLeft: "16px", cursor: "pointer" }}
                 >
-                  {`${item.nome} ${item?.nomeSocialSelecionado ? "*" : ""}`}
+                  {item?.nomeSocialSelecionado &&
+                  item?.nomeSocialSelecionado !== "-"
+                    ? `${item?.nomeSocialSelecionado} *`
+                    : item?.nome}
                 </span>
               ),
             },
@@ -260,7 +257,7 @@ const ListaNominal = () => {
             {
               name: "cpf",
               header: "CPF",
-              render: (item) => item.cpf,
+              render: (item) => <b>{item.cpf}</b>,
             },
             {
               name: "cns",

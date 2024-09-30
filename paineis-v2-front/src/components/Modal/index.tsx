@@ -4,6 +4,7 @@ import { CgClose } from "react-icons/cg";
 
 import "./style.scss";
 import "../../styles/listaNominal.scss";
+import { capitalize } from "../../utils";
 
 interface IModal {
   data: {
@@ -144,95 +145,59 @@ export function bodyBoasPraticasCuidadoPessoasHipertensao() {
   );
 }
 
-export function bodyDetalhesCadastroDiabetes() {
+export function bodyDetalhesCadastroDiabetes(item: any) {
   return (
     <div className="d-flex flex-column mb-4">
       <div className="user-details">
-        <h1>Maria da Fonseca e Silva</h1>
-        <p>689.282.522-69</p>
-
+        {/* {JSON.stringify(item)} */}
+        <h1>
+          {item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
+            ? item?.nomeSocialSelecionado
+            : item?.nome}
+        </h1>
+        <p>{item?.cpf}</p>
         <div className="address">
-          <span className="iconCircle iconRural ms-2" title="Zona Rural">
-            R
-          </span>
           <p>
-            Rua Cardeal da Silva nº 34, Apartamento 519
+            {item?.endereco}
             <br />
-            Bairro Rio Vermelho, Salvador, BAHIA
+            CEP: {item?.cep}
             <br />
-            CEP: 81995-030
-            <br />
-            Telefone de contato: (85) 98167-9034
+            Telefone de contato: {item?.telefone}
           </p>
         </div>
-
-        <div className="health-condition">
-          <p>Condição de saúde: CID 76</p>
-          <p>Primeiro diagnóstico: 15/04/2023</p>
-        </div>
-
-        <div className="latest-checkups">
-          <p>
-            <strong>Última glicemia capilar realizada</strong>
-            <div>
-              <p>20/07/2024</p>
-              <span
-                className="iconCircle iconAlerta ms-2"
-                title="Possui Alertas"
-              >
-                !
-              </span>
-            </div>
-          </p>
-          <p>
-            <strong>Última avaliação hemoglobina glicada</strong>
-            <div>
-              <p>13/11/2023 </p>
-              <span
-                className="iconCircle iconAlerta ms-2"
-                title="Possui Alertas"
-              >
-                !
-              </span>
-            </div>
-          </p>
-          <p>
-            <strong>Última consulta médico/enf.</strong>
-            <div>
-              <p>29/12/2023</p>
-              <span
-                className="iconCircle iconAlerta ms-2"
-                title="Possui Alertas"
-              >
-                !
-              </span>
-            </div>
-          </p>
-          <p>
-            <strong>Total consultas médico/enf (últimos 12 meses)</strong>
-            <div>
-              <p>5 consultas</p>
-              <span
-                className="iconCircle iconAlerta ms-2"
-                title="Possui Alertas"
-              >
-                !
-              </span>
-            </div>
-          </p>
-          <p>
-            <strong>Última visita realizada ao cidadão</strong>
-            <div>
-              <p>11/07/2024</p>
-              <span
-                className="iconCircle iconAlerta ms-2"
-                title="Possui Alertas"
-              >
-                !
-              </span>
-            </div>
-          </p>
-        </div>
+        {Array.isArray(item?.detalhesCondicaoSaude) &&
+          item?.detalhesCondicaoSaude.map((condicao: any) => (
+            <>
+              <div className="health-condition">
+                <p>
+                  Condição de saúde: CID {condicao?.cidCondicaoSaude.join(", ")}
+                </p>
+                <p>Primeiro diagnóstico: {condicao?.primeiroDiagnostico}</p>
+              </div>
+              {Array.isArray(condicao?.registros) &&
+                condicao?.registros.map((registro: any) => (
+                  <div className="latest-checkups">
+                    <p>
+                      <strong>
+                        {registro?.descricao
+                          .split("-")
+                          .map((s: string) => capitalize(s))
+                          .join(" ")}
+                      </strong>
+                      <div>
+                        <p>{registro?.data}</p>
+                        <span
+                          className="iconCircle iconAlerta ms-2"
+                          title="Possui Alertas"
+                        >
+                          !
+                        </span>
+                      </div>
+                    </p>
+                  </div>
+                ))}
+            </>
+          ))}
       </div>
     </div>
   );
@@ -264,7 +229,7 @@ export const Modal = ({ data, setShowModal }: IModal) => {
         {data &&
           data.loaded === 6 &&
           bodyBoasPraticasCuidadoPessoasHipertensao()}
-        {data && data.loaded === 7 && bodyDetalhesCadastroDiabetes()}
+        {data && data.loaded === 7 && bodyDetalhesCadastroDiabetes(data)}
 
         <CgClose
           size={"1.5rem"}
