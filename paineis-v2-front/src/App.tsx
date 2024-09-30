@@ -160,7 +160,7 @@ function App() {
                 }
               />
               <Route
-                path="/lista-nominal"
+                path="/lista-nominal/:id"
                 element={
                   <ProtectedLayout>
                     <ListaNominal />

@@ -83,6 +83,30 @@ const ListaNominal = () => {
       staleTime: 1000 * 60 * 10, //10 minutos
     }
   );
+
+  const {
+    data: info,
+    isLoading: isLoadingInfo,
+    error: listError,
+  } = useQuery(
+    ["diabetes-list", {}],
+    async () => {
+      let path = `diabetes/get-nominal-list/${id}`;
+      const response = await Api.get(path, {
+        params: {
+          itemsPerPage: 9999,
+          page: 0,
+        },
+      });
+      return response?.data;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
+
+  console.log({ info });
+
   const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
   const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
   const title = `${UBS} / Lista Nominal / ${condicao}`;
@@ -91,8 +115,8 @@ const ListaNominal = () => {
   const list: any = listMock;
 
   const [params, setParams] = useState({
-    page: 0,
-    size: 100,
+    page: 1,
+    size: 9999,
     totalElements: list.length,
     totalPages: Math.ceil(list.length / 30),
     sort: ["name", "alert", "zone"],
@@ -161,7 +185,7 @@ const ListaNominal = () => {
           />
         </div>
         <PagedTable<RowType>
-          rows={rows}
+          rows={info?.items || []}
           sort={params.sort}
           page={params.page}
           size={params.size}

@@ -1,5 +1,5 @@
 import { Button, Link } from "bold-ui";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 
 const content = {
@@ -17,19 +17,15 @@ export const ReportFooter = ({
 }: {
   chaveListaNominal?: "Hipertensão" | "Diabetes";
 }) => {
+  const { id } = useParams<PainelParams>();
   const navigate = useNavigate();
 
-  const handleToViewList = () => {
-    navigate("/lista-nominal?condicao=" + chaveListaNominal);
-  };
+  const handleToViewList = () =>
+    navigate(`/lista-nominal/${id}?condicao=${chaveListaNominal}`);
 
-  const handleToPainelMunicipio = () => {
-    navigate("/painelx");
-  };
+  const handleToPainelMunicipio = () => navigate("/painelx");
 
-  const handleToPainelUBS = () => {
-    navigate(-1);
-  };
+  const handleToPainelUBS = () => navigate(-1);
 
   return (
     <div
@@ -51,7 +47,7 @@ export const ReportFooter = ({
           gap: "20px",
         }}
       >
-        {chaveListaNominal && (
+        {chaveListaNominal && id && (
           <Button
             style={{
               backgroundColor: "#343131",
@@ -61,7 +57,6 @@ export const ReportFooter = ({
             onClick={handleToViewList}
           >
             <FaUser style={{ marginRight: "10px" }} />
-
             {content.buttonViewList}
           </Button>
         )}
