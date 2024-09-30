@@ -34,3 +34,17 @@ class DiabetesDashboardGetNominalList(ControllerInterface):
             status_code=200,
             body=response
         )
+
+
+class DiabetesDashboardGetNominalListDownload():
+    def __init__(self, use_case: DiabetesNominalListUseCase):
+        self.__use_case = use_case
+
+    def handle(self, cnes=None):
+        if cnes is not None:
+            cnes = int(cnes)
+
+        response = self.__use_case.get_nominal_list_download(
+            cnes)
+
+        return response

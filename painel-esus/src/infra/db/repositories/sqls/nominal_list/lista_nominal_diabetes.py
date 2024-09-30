@@ -29,7 +29,7 @@ cad_individual as (
 ),
 cadastro_individual as (
 	select 
-	distinct lci.co_fat_cidadao_pec,
+	distinct tfci.co_fat_cidadao_pec,
 	tc.no_cidadao,
 	tc.nu_cns,
 	tc.nu_cpf,

@@ -1,7 +1,10 @@
 # pylint: disable=W0613
+import io
+
 from flask import Blueprint
 from flask import jsonify
 from flask import request
+from flask import Response
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.hypertension_dashboard_composer import hypertension_dashboard_get_age_group_gender
@@ -11,6 +14,7 @@ from src.main.composers.hypertension_dashboard_composer import hypertension_dash
 from src.main.composers.hypertension_dashboard_composer import hypertension_dashboard_get_imc
 from src.main.composers.hypertension_dashboard_composer import hypertension_dashboard_get_individual_exams_count
 from src.main.composers.hypertension_dashboard_composer import hypertension_dashboard_get_nominal_list
+from src.main.composers.hypertension_dashboard_composer import hypertension_dashboard_get_nominal_list_download
 from src.main.composers.hypertension_dashboard_composer import hypertension_dashboard_get_professionals_count
 from src.main.composers.hypertension_dashboard_composer import hypertension_dashboard_get_total
 from src.main.server.cache import cache
@@ -197,8 +201,6 @@ def get_hypertenses_list(cnes=None):
     return response, http_response.status_code
 
 
-@hypertension_bp.route(f"{urls['get_nominal_list']}", methods=['GET'],
-                       endpoint='get_nominal_list')
 @hypertension_bp.route(f"{urls['get_nominal_list']}/<cnes>", methods=['GET'],
                        endpoint='get_nominal_list_id')
 # @cache.cached()
@@ -214,6 +216,36 @@ def get_nominal_list(cnes=None):
         http_response = request_adapter(
             request, hypertension_dashboard_get_nominal_list())
         response = jsonify(http_response.body)
+
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, http_response.body
+
+
+@hypertension_bp.route(f"{urls['get_nominal_list']}/download/<cnes>", methods=['GET'],
+                       endpoint='get_nominal_list_id_download')
+# @cache.cached()
+def get_nominal_list_download(cnes=None):
+    if cnes:
+        request.view_args['cnes'] = int(request.view_args['cnes'])
+
+    http_response = None
+    response = None
+
+    try:
+        _validation(request.args.to_dict(), schema)
+        response = hypertension_dashboard_get_nominal_list_download(cnes)
+
+        buffer = io.BytesIO()
+        response.to_excel(buffer)
+
+        headers = {
+            'Content-Disposition': 'attachment; filename=output.xlsx',
+            'Content-type': 'application/vnd.ms-excel'
+        }
+        return Response(buffer.getvalue(), mimetype='application/vnd.ms-excel', headers=headers,)
 
     except Exception as exception:
         http_response = handle_errors(exception)

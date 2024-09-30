@@ -13,4 +13,8 @@ schema = {
         'type': 'string',
         "required": False, "empty": True,
     },
+    "cpf": {
+        'type': 'string',
+        "required": False, "empty": True,
+    },
 }

@@ -20,3 +20,10 @@ class HypertensionNominalListUseCase:
             "itemsPerPage": page_size,
             "items": [HypertensionNominalListAdapter(r).to_dict() for r in response]
         }
+
+    def get_nominal_list_download(self, cnes: int = None):
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument('CNES must be int')
+        response = self.__repository.find_all_download(
+            cnes)
+        return response

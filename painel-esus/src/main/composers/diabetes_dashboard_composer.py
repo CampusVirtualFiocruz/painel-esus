@@ -16,6 +16,7 @@ from src.presentations.controllers.diabetes import DiabetesDashboardGetIndividua
 from src.presentations.controllers.diabetes import DiabetesDashboardGetProfessionalsCount
 from src.presentations.controllers.diabetes import DiabetesDashboardGetTotal
 from src.presentations.controllers.diabetes.diabetes_dashboard_get_nominal_list import DiabetesDashboardGetNominalList
+from src.presentations.controllers.diabetes.diabetes_dashboard_get_nominal_list import DiabetesDashboardGetNominalListDownload
 
 
 def diabetes_dashboard_get_total():
@@ -101,3 +102,12 @@ def diabetes_dashboard_get_nominal_list():
         use_case)
 
     return controller.handle
+
+
+def diabetes_dashboard_get_nominal_list_download(cnes):
+    repository = DiabetesNominalListRepository()
+    use_case = DiabetesNominalListUseCase(repository)
+    controller = DiabetesDashboardGetNominalListDownload(
+        use_case)
+
+    return controller.handle(cnes)

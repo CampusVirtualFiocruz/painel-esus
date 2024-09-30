@@ -16,6 +16,7 @@ from src.presentations.controllers.hypertension import HypertensionDashboardGetI
 from src.presentations.controllers.hypertension import HypertensionDashboardGetProfessionalsCount
 from src.presentations.controllers.hypertension import HypertensionDashboardGetTotal
 from src.presentations.controllers.hypertension.hypertension_dashboard_get_nominal_list import HypertensionDashboardGetNominalList
+from src.presentations.controllers.hypertension.hypertension_dashboard_get_nominal_list import HypertensionDashboardGetNominalListDownload
 
 
 def hypertension_dashboard_get_total():
@@ -101,3 +102,12 @@ def hypertension_dashboard_get_nominal_list():
         use_case)
 
     return controller.handle
+
+
+def hypertension_dashboard_get_nominal_list_download(cnes):
+    repository = HypertensionNominalListRepository()
+    use_case = HypertensionNominalListUseCase(repository)
+    controller = HypertensionDashboardGetNominalListDownload(
+        use_case)
+
+    return controller.handle(cnes)

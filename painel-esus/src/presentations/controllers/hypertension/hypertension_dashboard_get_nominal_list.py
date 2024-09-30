@@ -34,3 +34,16 @@ class HypertensionDashboardGetNominalList(ControllerInterface):
             status_code=200,
             body=response
         )
+
+
+class HypertensionDashboardGetNominalListDownload():
+    def __init__(self, use_case: HypertensionNominalListUseCase):
+        self.__use_case = use_case
+
+    def handle(self, cnes=None):
+        if cnes is not None:
+            cnes = int(cnes)
+
+        response = self.__use_case.get_nominal_list_download(cnes)
+
+        return response

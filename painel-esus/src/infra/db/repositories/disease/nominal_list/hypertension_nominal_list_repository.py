@@ -1,6 +1,7 @@
 # pylint: disable=R0913
 from typing import Dict
 
+import pandas as pd
 from src.infra.db.entities.hipertensao_nominal import HipertensaoNominal
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
@@ -16,6 +17,12 @@ class HypertensionNominalListRepository:
                 .all()
             )
             return users
+
+    def find_all_download(self, cnes: int = None) -> Dict:
+        with DBConnectionHandler() as db_con:
+            response = pd.read_sql_query(con=db_con.get_engine(),
+                                         sql=f"select * from hipertensao_nominal where co_dim_unidade_saude = {cnes} order by no_cidadao")
+            return response
 
     def find_by_nome(self, nome: str):
         with DBConnectionHandler() as db_con:
