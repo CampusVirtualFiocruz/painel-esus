@@ -118,8 +118,10 @@ const ListaNominal = () => {
 
   const handleSortChange = (sort: string[]) =>
     setParams((state) => ({ ...state, sort }));
+
   const handlePageChange = (page: number) =>
     setParams((state) => ({ ...state, page }));
+
   const handleSizeChange = (size: number) =>
     setParams((state) => ({
       ...state,
@@ -178,6 +180,48 @@ const ListaNominal = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div> */}
+        <div className="legend">
+          <div>
+            <p>* Nome Social</p>
+          </div>
+          <div className="legend-icons">
+            <p>
+              <span className="iconCircle iconUrbano ms-2">U</span>
+              Zona Urbana
+            </p>
+            <p>
+              <span className="iconCircle iconRural ms-2">R</span>
+              Zona Rural
+            </p>
+            <p>
+              <span className="iconCircle iconAlerta ms-2">!</span>
+              Possui Alertas
+            </p>
+            <p
+              onClick={async () => {
+                let path = `${pathToReport?.[condicao]}/get-nominal-list/download/${id}`;
+                const response: any = await Api.get(path, {
+                  headers: {
+                    "Content-Type": "application/vnd.ms-excel",
+                  },
+                  responseType: "blob",
+                });
+
+                const downloadUrl = URL.createObjectURL(response?.data);
+
+                const a = document.createElement("a");
+                a.href = downloadUrl;
+                a.download = "arquivo_baixado"; // Nome do arquivo a ser baixado
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+              }}
+              style={{ cursor: "pointer", color: "#0069d0" }}
+            >
+              Exportar lista
+            </p>
+          </div>
+        </div>
         <DataTable<RowType>
           rows={info?.items || []}
           sort={params.sort}
@@ -291,25 +335,6 @@ const ListaNominal = () => {
             },
           ]}
         />
-        <div className="legend">
-          <div>
-            <p>* Nome Social</p>
-          </div>
-          <div className="legend-icons">
-            <p>
-              <span className="iconCircle iconUrbano ms-2">U</span>
-              Zona Urbana
-            </p>
-            <p>
-              <span className="iconCircle iconRural ms-2">R</span>
-              Zona Rural
-            </p>
-            <p>
-              <span className="iconCircle iconAlerta ms-2">!</span>
-              Possui Alertas
-            </p>
-          </div>
-        </div>
         <ReportFooter />
       </ReportWrapper>
     </div>
