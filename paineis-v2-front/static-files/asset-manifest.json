@@ -1,13 +1,10 @@
 {
   "files": {
-    "main.css": "/static/css/main.01c01cb7.css",
-    "main.js": "/static/js/main.91ec842a.js",
+    "main.css": "/static/css/main.d8ada34c.css",
+    "main.js": "/static/js/main.e3f4786e.js",
     "static/media/ReguaLogosPainel.png": "/static/media/ReguaLogosPainel.3d06e51aab1dee04761e.png",
-    "static/media/diabetes.svg": "/static/media/diabetes.6e66b9c8ee69ed7c3c984fdf67703e56.svg",
-    "static/media/hipertensao.svg": "/static/media/hipertensao.597a14dc7273d6204c63e9e7be3d732c.svg",
     "static/media/password.svg": "/static/media/password.67c5c0453240b30c4e247d20327ab12b.svg",
     "static/media/mulher.svg": "/static/media/mulher.3916a092b7a6d839cae0ea399caf701f.svg",
-    "static/media/theeth.svg": "/static/media/theeth.d2dad270939eedd7af77412dca443055.svg",
     "static/media/homem.svg": "/static/media/homem.6a8974395b91ca5aa6e87b6c8f50a1bc.svg",
     "static/media/user.svg": "/static/media/user.845c89030c28a0aad898ab69b667571d.svg",
     "static/media/masculino.svg": "/static/media/masculino.71f137d82998d369b7e7452cbbf3f36b.svg",
@@ -18,11 +15,11 @@
     "static/media/user-alt.svg": "/static/media/user-alt.ef4c8de05b0ebc1a51cc14873ffec075.svg",
     "static/media/logo.svg": "/static/media/logo.249e7cbdd09a9677e7ae69861990b457.svg",
     "static/media/logout.svg": "/static/media/logout.bdb34d976f11ea095e83f713db0160bb.svg",
-    "main.01c01cb7.css.map": "/static/css/main.01c01cb7.css.map",
-    "main.91ec842a.js.map": "/static/js/main.91ec842a.js.map"
+    "main.d8ada34c.css.map": "/static/css/main.d8ada34c.css.map",
+    "main.e3f4786e.js.map": "/static/js/main.e3f4786e.js.map"
   },
   "entrypoints": [
-    "static/css/main.01c01cb7.css",
-    "static/js/main.91ec842a.js"
+    "static/css/main.d8ada34c.css",
+    "static/js/main.e3f4786e.js"
   ]
 }
