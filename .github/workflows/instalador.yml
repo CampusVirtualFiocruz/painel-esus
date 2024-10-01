@@ -102,6 +102,7 @@ jobs:
             docker images -q | xargs docker rmi
             echo 'LIMPOU IMAGENS OBSOLETAS'
             docker pull $DOCKER_IMAGE
+            docker rm $(docker ps -a -q)
             echo 'DOCKER PULL'
             docker stack deploy -c docker-compose.yml --resolve-image changed livramento-stack  
             echo 'DEPLOY SWARM'
