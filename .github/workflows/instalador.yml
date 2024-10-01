@@ -95,18 +95,41 @@ jobs:
             echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
             sudo rm docker-compose.yml || true
             cat <<EOF > docker-compose.yml
-            ${{vars.ENV_DOCKER_COMPOSE}}           
+            version: "3.3"
+            services:
+              painel_esus:
+                image: "painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}"
+                environment:
+                  RELOAD_BASE_SCHELDULE: '4:00'
+                  DB_USER: '${{ secrets.DATABASE_USER }}'
+                  DB_PASSWORD: '${{ secrets.DATABASE_PASSWORD }}'
+                  DB_HOST: '${{ secrets.DATABASE_HOST  }}'
+                  DB_PORT: '${{ secrets.DATABASE_PORT }}'
+                  DB_DATABASE: '${{ secrets.DATABASE_NAME }}'
+                  CIDADE_IBGE: 2508505
+                  ESTADO: 'FC'
+                  ADMIN_USERNAME: '${{ secrets.ADMIN_USERNAME }}'
+                  ADMIN_PASSWORD: '${{ secrets.ADMIN_PASSWORD }}'
+                  POPULATION: 20000
+                  SECRET_TOKEN: 111111111111111111111
+                  PASSWORD_SALT: 'painel'
+                  BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
+                  ENV: linux
+                ports:
+                  - 5003:5001
+            networks:
+              default:
+                external:
+                  name: painel-esus-network            
             EOF
             cat docker-compose.yml
             export DOCKER_IMAGE='painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}'
             docker images -q | xargs docker rmi
             echo 'LIMPOU IMAGENS OBSOLETAS'
-            docker pull $DOCKER_IMAGE
-            docker rm $(docker ps -a -q)
-            echo 'DOCKER PULL'
             docker stack deploy -c docker-compose.yml --resolve-image changed livramento-stack  
             echo 'DEPLOY SWARM'
-            
+            docker pull $DOCKER_IMAGE
+            echo 'DOCKER PULL'
 
       # Stop VPN connection using stored client ID (always run, even on failure)
       - name: Stop VPN Connection Manually
