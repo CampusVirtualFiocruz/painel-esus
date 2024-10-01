@@ -1,25 +1,140 @@
-name: Package Application with Pyinstaller and Inno Setup
+name: Build and Deploy to Private Docker Hub
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [release/*]
 
 jobs:
-  creating-pyinstaller-exe:
-
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Package Application
-      uses: JackMcKew/pyinstaller-action-windows@main
-      with:
-        path: painel-esus
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
 
-    - uses: actions/upload-artifact@v2
-      with:
-        name: name-of-artifact
-        path: dist/windows
+      - name: Install dependencies
+        working-directory: ./paineis-v2-front
+        run: yarn
+
+      - name: Build React project
+        working-directory: ./paineis-v2-front
+        run: |
+          cat <<EOF > .env
+          ${{ vars.ENV_FRONT }}
+          EOF
+          CI=false npm run build --prod
+
+      - name: Create backend environment
+        working-directory: ./painel-esus
+        run: |
+          cat <<EOF > .env
+          ${{ vars.ENV_BACK }}
+          EOF
+
+      - name: Extract version from branch name
+        id: extract_version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
+
+      - name: Build Docker image
+        run: docker build -t painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }} .
+
+      - name: Log in to Docker Hub
+        run: echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Push Docker image to Docker Hub
+        run: docker push painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}
+
+  conncet-vpn-ssh-aws:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Set up Pritunl profile and store client ID for later use
+      - name: Setup Pritunl Profile
+        id: pritunl-connection # A `Setup Step ID` has been added as a reference identifier for the output `client-id`.
+        uses: nathanielvarona/pritunl-client-github-action@v1
+        with:
+          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
+          start-connection: false # Do not establish a connection in this step.
+
+      # Start VPN connection using stored client ID and password (if available)
+      - name: Start VPN Connection Manually
+        shell: bash
+        run: |
+          pritunl-client start ${{ steps.pritunl-connection.outputs.client-id }} \
+            --password ${{ secrets.PRITUNL_PROFILE_PIN || '' }}
+          # Wait for 10 seconds to allow the connection to establish
+          sleep 10
+
+      # Display VPN connection status
+      - name: Show VPN Connection Status Manually
+        shell: bash
+        run: |
+          pritunl-client list -j | jq 'sort_by(.name) | .[0] | { "Profile Name": .name, "Client Address": .client_address }'
+          # Show the profile name and client address
+
+      - name: Extract version from branch name
+        id: extract_version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
+
+      - name: Deploy Docker Swarm
+
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.AWS_HOST}}
+          key: ${{secrets.AWS_KEY}}
+          username: ${{ secrets.AWS_USERNAME }}
+          script: |
+            echo 'INICIOU PROCESSO DE DEPLOY DOCKER SWARM'
+            echo RELEASE VERSION: ${{ env.RELEASE_VERSION }}
+            cd livramento
+            echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
+            sudo rm docker-compose.yml || true
+            cat <<EOF > docker-compose.yml
+            version: "3.3"
+            services:
+              painel_esus:
+                image: "painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}"
+                environment:
+                  RELOAD_BASE_SCHELDULE: '4:00'
+                  DB_USER: 'postgres'
+                  DB_PASSWORD: 'DoCTrH1MJ#re?X0qBlmzUVlLWoUM'
+                  DB_HOST: '186.232.197.254'
+                  DB_PORT: '5433'
+                  DB_DATABASE: 'livramento'
+                  CIDADE_IBGE: 2508505
+                  ESTADO: 'FC'
+                  ADMIN_USERNAME: 'admin'
+                  ADMIN_PASSWORD: 'FCadmin23'
+                  POPULATION: 20000
+                  SECRET_TOKEN: 111111111111111111111
+                  PASSWORD_SALT: 'painel'
+                  BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
+                  ENV: linux
+                ports:
+                  - 5003:5001
+            networks:
+              default:
+                external:
+                  name: painel-esus-network            
+            EOF
+            cat docker-compose.yml
+            export DOCKER_IMAGE='painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}'
+            docker images -q | xargs docker rmi
+            echo 'LIMPOU IMAGENS OBSOLETAS'
+            docker stack deploy -c docker-compose.yml --resolve-image changed livramento-stack  
+            echo 'DEPLOY SWARM'
+            docker pull $DOCKER_IMAGE
+            echo 'DOCKER PULL'
+
+      # Stop VPN connection using stored client ID (always run, even on failure)
+      - name: Stop VPN Connection Manually
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          pritunl-client stop ${{ steps.pritunl-connection.outputs.client-id }}
+          # Stop the VPN connection
