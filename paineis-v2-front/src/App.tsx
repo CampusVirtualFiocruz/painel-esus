@@ -34,19 +34,32 @@ export function getProfile() {
   const user = getUserLocalStorage();
   const parts = user?.token.split(".");
   if (parts.length !== 3) {
-    throw new Error("Token JWT inválido");
+    console.error("Token JWT inválido");
+    return;
   }
-  const payload = parts[1];
+  const payload = parts?.[1];
+
+  if (!payload) {
+    return;
+  }
+
   const decodedPayload = atob(payload);
   return JSON.parse(decodedPayload)?.profiles[0];
 }
 export function getUBS() {
   const user = getUserLocalStorage();
   const parts = user?.token.split(".");
-  if (parts.length !== 3) {
-    throw new Error("Token JWT inválido");
+
+  if (parts && parts.length !== 3) {
+    console.error("Token JWT inválido");
+    return;
   }
-  const payload = parts[1];
+  const payload = parts?.[1];
+
+  if (!payload) {
+    return;
+  }
+
   const decodedPayload = atob(payload);
   return JSON.parse(decodedPayload)?.ubs;
 }
@@ -54,10 +67,17 @@ export function getUBS() {
 export function userCanSelectUBS() {
   const user = getUserLocalStorage();
   const parts = user?.token.split(".");
-  if (parts.length !== 3) {
-    throw new Error("Token JWT inválido");
+
+  if (parts && parts.length !== 3) {
+    console.error("Token JWT inválido");
+    return;
   }
-  const payload = parts[1];
+  const payload = parts?.[1];
+
+  if (!payload) {
+    return;
+  }
+
   const decodedPayload = atob(payload);
 
   return (
@@ -69,9 +89,15 @@ export function isUserFromUBS() {
   const user = getUserLocalStorage();
   const parts = user?.token.split(".");
   if (parts.length !== 3) {
-    throw new Error("Token JWT inválido");
+    console.error("Token JWT inválido");
+    return;
   }
-  const payload = parts[1];
+  const payload = parts?.[1];
+
+  if (!payload) {
+    return;
+  }
+
   const decodedPayload = atob(payload);
 
   return !Number.isNaN(Number(String(JSON.parse(decodedPayload)?.ubs)));

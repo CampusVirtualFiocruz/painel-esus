@@ -87,7 +87,9 @@ export function SelecionarUbs() {
   useEffect(() => {
     if (!canSelect) {
       const selectedUBS = getUBS();
-      navigate(`/painel/${Number(String(selectedUBS))}`);
+      if (selectedUBS) {
+        navigate(`/painel/${Number(String(selectedUBS))}`);
+      }
     }
   }, [canSelect]);
 
@@ -98,10 +100,6 @@ export function SelecionarUbs() {
   const onChangeSelection = (e: any) => {
     navigate(`/painel/${e.value}`);
   };
-
-  if (!canSelect) {
-    return null;
-  }
 
   return (
     <div id="page-selecionar-ubs">
