@@ -35,6 +35,8 @@ class DiabetesNominalListRepository:
             return users
 
     def find_filter(self, cnes: int, page: int = 0, pagesize: int = 10, nome: str = None, cpf: str = None):
+        page = int(page) if page is not None else 0
+        pagesize = int(pagesize) if pagesize is not None else 0
         with DBConnectionHandler() as db_con:
             users = (
                 db_con.session
@@ -48,5 +50,14 @@ class DiabetesNominalListRepository:
             if cpf is not None:
                 users = users.filter(
                     DiabetesNominal.nu_cpf.ilike(f"%{cpf}%"))
-            users = users.offset(max(0, page-1)).limit(pagesize)
-            return users
+            total = users.count()
+            users = users.offset(
+                max(0, ((page-1) * pagesize))
+            ).limit(pagesize)
+            return {
+                "itemsCount": total,
+                "itemsPerPage": pagesize,
+                "page": page,
+                "pagesCount": round(total/pagesize),
+                "items": list(users)
+            }

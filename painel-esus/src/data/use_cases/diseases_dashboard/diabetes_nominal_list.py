@@ -14,12 +14,10 @@ class DiabetesNominalListUseCase:
         response = self.__repository.find_filter(
             cnes, page, page_size, nome, cpf)
 
-        return {
-            "page": page,
-            "itemsPerPage": page_size,
-            "items": [DiabetesNominalListAdapter(r).to_dict() for r in response]
-        }
-        
+        response['items'] = [DiabetesNominalListAdapter(
+            r).to_dict() for r in response['items']]
+        return response
+
     def get_nominal_list_download(self, cnes: int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument('CNES must be int')

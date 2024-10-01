@@ -35,6 +35,8 @@ class HypertensionNominalListRepository:
             return users
 
     def find_filter(self, cnes: int, page: int = 0, pagesize: int = 10, nome: str = None, cpf: str = None,):
+        page = int(page) if page is not None else 0
+        pagesize = int(pagesize) if pagesize is not None else 0
         with DBConnectionHandler() as db_con:
             users = (
                 db_con.session
@@ -55,6 +57,6 @@ class HypertensionNominalListRepository:
                 "itemsCount": total,
                 "itemsPerPage": pagesize,
                 "page": page,
-                "pagesCount": (total//pagesize),
+                "pagesCount": round(total/pagesize),
                 "items": list(users)
             }
