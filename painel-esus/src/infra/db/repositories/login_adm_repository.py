@@ -46,7 +46,7 @@ class LoginAdmRepository(LoginRepositoryInterface):
                 cns="0000000000",
                 uf="",
                 municipio="",
-                profiles=["user"],
+                profiles=["admin"],
             )
             return user_raw_data
         return None
