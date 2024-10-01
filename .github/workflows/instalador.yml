@@ -101,10 +101,11 @@ jobs:
             export DOCKER_IMAGE='painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}'
             docker images -q | xargs docker rmi
             echo 'LIMPOU IMAGENS OBSOLETAS'
-            docker stack deploy -c docker-compose.yml --resolve-image changed livramento-stack  
-            echo 'DEPLOY SWARM'
             docker pull $DOCKER_IMAGE
             echo 'DOCKER PULL'
+            docker stack deploy -c docker-compose.yml --resolve-image changed livramento-stack  
+            echo 'DEPLOY SWARM'
+            
 
       # Stop VPN connection using stored client ID (always run, even on failure)
       - name: Stop VPN Connection Manually
