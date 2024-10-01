@@ -27,8 +27,8 @@ def test_adapter():
 
 def test_filter():
     repo = HypertensionNominalListRepository()
-    users = repo.find_filter('LEONEL', '00886961890')
-    assert len(users) > 0
+    users = repo.find_filter(25, 0, 10)
+    assert len(users['items']) > 0
 
-    users = repo.find_filter('LEONEL', '00886961891')
-    assert len(users) == 0
+    users = repo.find_filter(25, 0, 10)
+    assert len(users['items']) == 10

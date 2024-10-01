@@ -14,12 +14,9 @@ class HypertensionNominalListUseCase:
             raise InvalidArgument('CNES must be int')
         response = self.__repository.find_filter(
             cnes, page, page_size, nome, cpf)
-
-        return {
-            "page": page,
-            "itemsPerPage": page_size,
-            "items": [HypertensionNominalListAdapter(r).to_dict() for r in response]
-        }
+        response['items'] = [HypertensionNominalListAdapter(
+            r).to_dict() for r in response['items']]
+        return response
 
     def get_nominal_list_download(self, cnes: int = None):
         if cnes and not isinstance(cnes, int):

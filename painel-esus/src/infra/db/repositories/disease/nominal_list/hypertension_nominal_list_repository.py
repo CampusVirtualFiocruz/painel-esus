@@ -48,5 +48,13 @@ class HypertensionNominalListRepository:
             if cpf is not None:
                 users = users.filter(
                     HipertensaoNominal.nu_cpf.ilike(f"%{cpf}%"))
-            users = users.offset(max(0, page-1)).limit(pagesize)
-            return users
+            total = users.count()
+            users = users.offset(max(0, ((page-1) * pagesize))).limit(pagesize)
+
+            return {
+                "itemsCount": total,
+                "itemsPerPage": pagesize,
+                "page": page,
+                "pagesCount": (total//pagesize),
+                "items": list(users)
+            }
