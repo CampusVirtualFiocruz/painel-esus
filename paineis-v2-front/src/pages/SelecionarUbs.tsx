@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from "reactstrap";
 import { useQuery } from "react-query";
 
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect } from "react";
 import Select, { StylesConfig } from "react-select";
 
 import { Api } from "../services/api";
@@ -13,6 +13,7 @@ import { Footer } from "../components/Footer";
 import "../styles/selecionarubs.scss";
 import variables from "../styles/_exports.module.scss";
 import { Button } from "bold-ui";
+import { getUBS, userCanSelectUBS } from "../App";
 
 type Lista = {
   co_seq_dim_unidade_saude: number;
@@ -81,6 +82,15 @@ export function SelecionarUbs() {
     }
   );
 
+  const canSelect = userCanSelectUBS();
+
+  useEffect(() => {
+    if (!canSelect) {
+      const selectedUBS = getUBS();
+      navigate(`/painel/${Number(String(selectedUBS))}`);
+    }
+  }, [canSelect]);
+
   function handleToPainel() {
     navigate("/painelx");
   }
@@ -88,6 +98,10 @@ export function SelecionarUbs() {
   const onChangeSelection = (e: any) => {
     navigate(`/painel/${e.value}`);
   };
+
+  if (!canSelect) {
+    return null;
+  }
 
   return (
     <div id="page-selecionar-ubs">
