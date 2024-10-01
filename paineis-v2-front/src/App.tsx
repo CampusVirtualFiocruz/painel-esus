@@ -51,6 +51,20 @@ export function getUBS() {
   return JSON.parse(decodedPayload)?.ubs;
 }
 
+export function userCanSelectUBS() {
+  const user = getUserLocalStorage();
+  const parts = user?.token.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Token JWT inválido");
+  }
+  const payload = parts[1];
+  const decodedPayload = atob(payload);
+
+  return (
+    String(JSON.parse(decodedPayload)?.profiles[0]).toUpperCase() === "ADMIN"
+  );
+}
+
 export function isUserFromUBS() {
   const user = getUserLocalStorage();
   const parts = user?.token.split(".");
