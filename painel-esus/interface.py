@@ -314,11 +314,10 @@ class Field:
             "DB_USER": 2,
             "DB_PASSWORD": 3,
             "DB_PORT": 4,
-            "CIDADE": 5,
-            "ESTADO": 6,
-            "ADMIN_USERNAME": 7,
-            "ADMIN_PASSWORD": 8,
-            "POPULATION": 9,
+            "CIDADE_IBGE": 5,
+            "ADMIN_USERNAME": 6,
+            "ADMIN_PASSWORD": 7,
+            "BRIDGE_LOGIN_URL": 8,
         }
         split = self.field.split("=")
         if len(split) > 1:
@@ -430,8 +429,11 @@ def tabs():
     tabview.pack()
     tabview.add("Banco de dados")
     tabview.add("Painel E-sus")
+    # tabview.add("Responsável")
+    
     tabview.tab("Banco de dados").grid_columnconfigure(0, weight=1)
     tabview.tab("Painel E-sus").grid_columnconfigure(0, weight=1)
+    # tabview.tab("Responsável").grid_columnconfigure(0, weight=1)
 
     # --------------------------------CONFIGURAÇÃO BANCO DE DADOS--------------------------------
     frame = ctk.CTkFrame(tabview.tab("Banco de dados"), height=780, width=580)
@@ -546,10 +548,6 @@ def tabs():
         master=frame_painel, text="", font=("arial bold", 20), image=painel_image
     )
     image_label_painel.pack(pady=10)
-    image_label_painel = ctk.CTkLabel(
-        master=frame_painel, text="", font=("arial bold", 20), image=painel_image
-    )
-    image_label_painel.pack(pady=10)
 
     input_cidade = ctk.CTkEntry(
         master=frame_painel,
@@ -558,15 +556,8 @@ def tabs():
         height=25,
         corner_radius=10,
     )
+    input_cidade.pack(pady=10)
 
-    input_user_admin = ctk.CTkEntry(
-        master=frame_painel,
-        placeholder_text="Usuário de acesso ao painel-esus:",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_user_admin.pack(pady=10, padx=10)
     input_user_admin = ctk.CTkEntry(
         master=frame_painel,
         placeholder_text="Usuário de acesso ao painel-esus:",
@@ -585,15 +576,6 @@ def tabs():
         corner_radius=10,
     )
     input_password_admin.pack(pady=10, padx=10)
-    input_password_admin = ctk.CTkEntry(
-        master=frame_painel,
-        placeholder_text="Senha de acesso ao painel-esus:",
-        show="*",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_password_admin.pack(pady=10, padx=10)
 
     input_bridge_login_url = ctk.CTkEntry(
         master=frame_painel,
@@ -603,14 +585,58 @@ def tabs():
         corner_radius=10,
     )
     input_bridge_login_url.pack(pady=10, padx=10)
-    input_bridge_login_url = ctk.CTkEntry(
-        master=frame_painel,
-        placeholder_text="Url de login:",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_bridge_login_url.pack(pady=10, padx=10)
+
+    # --------------------------------RESPONSÁVEL--------------------------------
+    # frame_painel = ctk.CTkFrame(tabview.tab(
+    #     "Responsável"), height=780, width=580)
+    # frame_painel.pack(fill="both", expand=True)
+
+    # image_path_painel = os.getcwd()
+    # image_path_painel = os.path.join(image_path_painel, "icon/user.png")
+    # painel_image = ctk.CTkImage(
+    #     light_image=Image.open(image_path_painel),
+    #     dark_image=Image.open(image_path_painel),
+    #     size=(100, 100),
+    # )
+
+    # label_config_painel = ctk.CTkLabel(
+    #     master=frame_painel, text="Dados do responsável:", font=("arial bold", 25)
+    # )
+    # label_config_painel.pack(pady=12, padx=10)
+
+    # label_info_painel = ctk.CTkLabel(
+    #     master=frame_painel,
+    #     text="Preencha os dados do responsável pela instalação do Painel E-sus.",
+    #     font=("arial bold", 15),
+    # )
+    # label_info_painel.pack(pady=12, padx=10)
+
+    # image_label_painel = ctk.CTkLabel(
+    #     master=frame_painel, text="", font=("arial bold", 20), image=painel_image
+    # )
+    # image_label_painel.pack(pady=10)
+
+    # input_owner_name = ctk.CTkEntry(
+    #     master=frame_painel,
+    #     placeholder_text="Nome do responsável:",
+    #     width=600,
+    #     height=25,
+    #     corner_radius=10,
+    # )
+    # input_owner_name.pack(pady=10)
+
+    # input_owner_email = ctk.CTkEntry(
+    #     master=frame_painel,
+    #     placeholder_text="Email do responsável:",
+    #     width=600,
+    #     height=25,
+    #     corner_radius=10,
+    # )
+    # input_owner_email.pack(pady=10, padx=10)
+
+# ---------------------------------------------------------------
+
+
 
     fill_input_fields(
         [
