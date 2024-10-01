@@ -19,6 +19,7 @@ import { useQuery } from "react-query";
 import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
 import { Button } from "bold-ui";
+import { getUBS } from "../App";
 
 interface CityResponse {
   cep: string;
@@ -72,7 +73,13 @@ export function Login() {
     if (validateForm()) {
       try {
         await auth.authenticate(username, password);
-        navigate("/selecionarubs");
+
+        const selectedUBS = getUBS();
+        if (Number.isNaN(Number(String(selectedUBS)))) {
+          navigate("/selecionarubs");
+        } else {
+          navigate("/painel/" + selectedUBS);
+        }
       } catch (error) {
         setSomeStateOpen(true);
         setLoading(false);

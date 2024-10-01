@@ -61,7 +61,7 @@ const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
 
 export function SelecionarUbs() {
   let navigate = useNavigate();
-  console.log(variables);
+
   const { data, isLoading, error } = useQuery(
     "ubs",
     async () => {

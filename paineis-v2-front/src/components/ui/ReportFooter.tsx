@@ -1,6 +1,7 @@
 import { Button, Link } from "bold-ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
+import { isUserFromUBS } from "../../App";
 
 const content = {
   buttonViewList: "Ver lista nominal",
@@ -71,9 +72,11 @@ export const ReportFooter = ({
         </Button>
       </div>
 
-      <Link onClick={handleToPainelMunicipio} style={{ color: "#343131" }}>
-        {content.buttonBackToCity}
-      </Link>
+      {!isUserFromUBS() && (
+        <Link onClick={handleToPainelMunicipio} style={{ color: "#343131" }}>
+          {content.buttonBackToCity}
+        </Link>
+      )}
     </div>
   );
 };

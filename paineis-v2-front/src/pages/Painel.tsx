@@ -37,6 +37,7 @@ import {
 } from "../components/ui/Tooltip";
 import { Typography } from "../components/ui/Typography";
 import Card from "../components/ui/Card";
+import { isUserFromUBS } from "../App";
 
 type PainelParams = {
   id: string;
@@ -575,9 +576,11 @@ export function Painel() {
 
           <div className="my-5">
             {id ? (
-              <Button onClick={handleToPainelMunicipio}>
-                Visualizar dados do painel do Município
-              </Button>
+              !isUserFromUBS() ? (
+                <Button onClick={handleToPainelMunicipio}>
+                  Visualizar dados do painel do Município
+                </Button>
+              ) : null
             ) : (
               <>
                 {isLoadingUbs ? (

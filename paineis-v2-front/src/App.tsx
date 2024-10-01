@@ -19,6 +19,7 @@ import Tabagismo from "./pages/Tabagismo";
 import FeridaVascular from "./pages/FeridaVascular";
 import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
 import BarraBrasil from "./components/BarraBrasil";
+import { getUserLocalStorage } from "./context/AuthProvider/util";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -28,6 +29,39 @@ const Wrapper = ({ children }: { children: JSX.Element }) => {
   }, [location.pathname]);
   return children;
 };
+
+export function getProfile() {
+  const user = getUserLocalStorage();
+  const parts = user?.token.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Token JWT inválido");
+  }
+  const payload = parts[1];
+  const decodedPayload = atob(payload);
+  return JSON.parse(decodedPayload)?.profiles[0];
+}
+export function getUBS() {
+  const user = getUserLocalStorage();
+  const parts = user?.token.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Token JWT inválido");
+  }
+  const payload = parts[1];
+  const decodedPayload = atob(payload);
+  return JSON.parse(decodedPayload)?.ubs;
+}
+
+export function isUserFromUBS() {
+  const user = getUserLocalStorage();
+  const parts = user?.token.split(".");
+  if (parts.length !== 3) {
+    throw new Error("Token JWT inválido");
+  }
+  const payload = parts[1];
+  const decodedPayload = atob(payload);
+
+  return !Number.isNaN(Number(String(JSON.parse(decodedPayload)?.ubs)));
+}
 
 function App() {
   return (
