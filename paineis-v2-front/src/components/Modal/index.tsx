@@ -14,6 +14,23 @@ interface IModal {
   setShowModal: (status: boolean) => void;
 }
 
+function parseText(text: string): number | string {
+  // Verifica se o texto pode ser convertido em número
+  const parsedNumber = Number(text);
+  if (!isNaN(parsedNumber)) {
+    return parsedNumber;
+  }
+
+  // Verifica se o texto é uma data válida
+  const parsedDate = new Date(text);
+  if (!isNaN(parsedDate.getTime())) {
+    // Retorna a data formatada para o padrão localizado
+    return parsedDate.toLocaleDateString();
+  }
+
+  throw new Error("O texto não é nem um número nem uma data válida.");
+}
+
 export function bodyPrimeiroTrimestre() {
   return (
     <div className="d-flex flex-column">
@@ -182,10 +199,13 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
                         {registro?.descricao
                           .split("-")
                           .map((s: string) => capitalize(s))
-                          .join(" ")}
+                          .join(" ")
+                          .replace("Ultimo", "Último")
+                          .replace("Ultima", "Última")
+                          .replace("Medico", "Médico")}
                       </strong>
                       <div>
-                        <p>{registro?.data}</p>
+                        <p>{parseText(registro?.data)}</p>
                         <span
                           className="iconCircle iconAlerta ms-2"
                           title="Possui Alertas"

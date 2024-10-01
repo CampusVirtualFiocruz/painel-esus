@@ -83,7 +83,7 @@ const ListaNominal = () => {
     isLoading: isLoadingInfo,
     error: listError,
   } = useQuery(
-    ["diabetes-list", {}],
+    ["diabetes-list", { condicao, id, pathToReport }],
     async () => {
       let path = `${pathToReport?.[condicao]}/get-nominal-list/${id}`;
       const response = await Api.get(path, {
