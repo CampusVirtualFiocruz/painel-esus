@@ -73,13 +73,7 @@ export function Login() {
     if (validateForm()) {
       try {
         await auth.authenticate(username, password);
-
-        const selectedUBS = getUBS();
-        if (Number.isNaN(Number(String(selectedUBS)))) {
-          navigate("/selecionarubs");
-        } else {
-          navigate("/painel/" + selectedUBS);
-        }
+        navigate("/selecionarubs");
       } catch (error) {
         setSomeStateOpen(true);
         setLoading(false);
