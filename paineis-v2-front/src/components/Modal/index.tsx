@@ -22,10 +22,12 @@ function parseText(text: string): number | string {
   }
 
   // Verifica se o texto é uma data válida
-  const parsedDate = new Date(text);
+  const parsedDate = new Date(
+    new Date(text).toISOString().replace(".000Z", "")
+  );
   if (!isNaN(parsedDate.getTime())) {
     // Retorna a data formatada para o padrão localizado
-    return parsedDate.toLocaleDateString();
+    return parsedDate.toLocaleDateString('pt-BR');
   }
 
   throw new Error("O texto não é nem um número nem uma data válida.");
@@ -189,7 +191,9 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
                 <p>
                   Condição de saúde: CID {condicao?.cidCondicaoSaude.join(", ")}
                 </p>
-                <p>Primeiro diagnóstico: {condicao?.primeiroDiagnostico}</p>
+                <p>
+                  Primeiro diagnóstico: {parseText(condicao?.primeiroDiagnostico)}
+                </p>
               </div>
               {Array.isArray(condicao?.registros) &&
                 condicao?.registros.map((registro: any) => (

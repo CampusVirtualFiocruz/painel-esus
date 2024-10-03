@@ -12,6 +12,10 @@ QUERY_SESSAO = """{
                     id
                     bloqueado
                 }
+                acessos{
+                    id
+                    tipo
+                }
                 endereco {
                     uf {
                         id

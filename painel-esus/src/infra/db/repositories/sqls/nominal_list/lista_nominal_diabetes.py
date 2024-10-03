@@ -1,5 +1,11 @@
 LISTA_NOMINAL_DIABETES = """
 with 
+codigos_relevantes as (
+		select unnest (array['K86','K87','W81','I10','I11','I110','I119','I12',
+			'I120','I129','I13','I130','I131','I132','I139','I15',
+			'I150','I151','I152','I158','I159','I270','I272','O10',
+			'O100','O101','O102','O103','O104','O109','ABP005']) as codigo
+	),
  atendimento_individual as (
 	select 
 		tfai.co_seq_fat_atd_ind, tfai.co_fat_cidadao_pec, tfai.co_dim_equipe_1, tfai.co_dim_unidade_saude_1 , tfai.co_dim_cbo_1, cbo.no_cbo, cbo.nu_cbo,
@@ -8,9 +14,18 @@ with
 	left join tb_dim_cbo cbo on cbo.co_seq_dim_cbo = tfai.co_dim_cbo_1
 	where 
 	(
-		tfai.ds_filtro_cids  like any(array['%|T89|%', '%|T90|%', '%|W85|%', '%|E10|%', '%|E100|%', '%|E101|%', '%|E102|%', '%|E103|%', '%|E104|%', '%|E105|%', '%|E106|%', '%|E107|%', '%|E108|%', '%|E109|%', '%|E11|%', '%|E110|%', '%|E111|%', '%|E112|%', '%|E113|%', '%|E114|%', '%|E115|%', '%|E116|%', '%|E117|%', '%|E118|%', '%|E119|%', '%|E12|%', '%|E120|%', '%|E121|%', '%|E122|%', '%|E123|%', '%|E124|%', '%|E125|%', '%|E126|%', '%|E127|%', '%|E128|%', '%|E129|%', '%|E13|%', '%|E130|%', '%|E131|%', '%|E132|%', '%|E133|%', '%|E134|%', '%|E135|%', '%|E136|%', '%|E137|%', '%|E138|%', '%|E139|%', '%|E14|%', '%|E140|%', '%|E141|%', '%|E142|%', '%|E143|%', '%|E144|%', '%|E145|%', '%|E146|%', '%|E147|%', '%|E148|%', '%|E149|%', '%|O24|%', '%|O240|%', '%|O241|%', '%|O242|%', '%|O243|%', '%|O244|%', '%|O249|%', '%|P702|%', '%|ABP006|%']) or 
-		tfai.ds_filtro_ciaps like any(array['%|T89|%', '%|T90|%', '%|W85|%', '%|E10|%', '%|E100|%', '%|E101|%', '%|E102|%', '%|E103|%', '%|E104|%', '%|E105|%', '%|E106|%', '%|E107|%', '%|E108|%', '%|E109|%', '%|E11|%', '%|E110|%', '%|E111|%', '%|E112|%', '%|E113|%', '%|E114|%', '%|E115|%', '%|E116|%', '%|E117|%', '%|E118|%', '%|E119|%', '%|E12|%', '%|E120|%', '%|E121|%', '%|E122|%', '%|E123|%', '%|E124|%', '%|E125|%', '%|E126|%', '%|E127|%', '%|E128|%', '%|E129|%', '%|E13|%', '%|E130|%', '%|E131|%', '%|E132|%', '%|E133|%', '%|E134|%', '%|E135|%', '%|E136|%', '%|E137|%', '%|E138|%', '%|E139|%', '%|E14|%', '%|E140|%', '%|E141|%', '%|E142|%', '%|E143|%', '%|E144|%', '%|E145|%', '%|E146|%', '%|E147|%', '%|E148|%', '%|E149|%', '%|O24|%', '%|O240|%', '%|O241|%', '%|O242|%', '%|O243|%', '%|O244|%', '%|O249|%', '%|P702|%', '%|ABP006|%'])
-	) 
+            EXISTS (
+                SELECT 1 
+                FROM codigos_relevantes cr
+                WHERE tfai.ds_filtro_cids LIKE '%' || cr.codigo || '%'
+            ) 
+            OR 
+            EXISTS (
+                SELECT 1 
+                FROM codigos_relevantes cr
+                WHERE tfai.ds_filtro_ciaps LIKE '%' || cr.codigo || '%'
+            )
+        )
 	and substring(co_dim_tempo::text, 0, 5)<= substring(now()::text, 0, 5)
 	and
 	co_dim_tempo::text::date between (
@@ -20,6 +35,18 @@ with
 			tb_fat_atendimento_individual tfai)::DATE - interval '12 month' and (
 		select
 			max(tfai.co_dim_tempo::text::date) from tb_fat_atendimento_individual tfai)
+),
+date_range as (
+		select ai.co_fat_cidadao_pec, min(ai.co_dim_tempo)::text::date min_date, max(ai.co_dim_tempo)::text::date max_date from atendimento_individual ai group by 1 order by 1 asc
+	),
+todos_cids as (
+	SELECT 
+	    tfai.co_fat_cidadao_pec, 
+		string_agg(distinct tfai.co_dim_unidade_saude_1::text,',') as co_dim_unidade_saude,
+	    regexp_replace(concat(string_agg(tfai.ds_filtro_ciaps,''),string_agg(tfai.ds_filtro_cids,'')), '[||]+','|', 'g') as cids
+    FROM 
+	    tb_fat_atendimento_individual tfai 
+	GROUP BY tfai.co_fat_cidadao_pec
 ),
 cad_individual as (
 	select co_fat_cidadao_pec , max(co_dim_tempo) as co_dim_tempo from tb_fat_cad_individual tfci 
@@ -125,58 +152,64 @@ hemoglobina_glicada as (
 	from 
 	tb_fat_proced_atend where ds_filtro_procedimento like '%|0202010503|%' and co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual) group by 1
 )
-select 
-coalesce(lci.co_fat_cidadao_pec, 0) co_fat_cidadao_pec,
-coalesce(lci.no_cidadao,'-') no_cidadao,
-coalesce(lci.nu_cns,'-') nu_cns,
-coalesce(lci.nu_cpf,'-') nu_cpf,
-coalesce(lci.no_sexo,'-') no_sexo,
-coalesce(lci.no_raca_cor,'-') no_raca_cor,
-coalesce(lci.nu_micro_area ,'-') nu_micro_area,
-coalesce(lci.nu_area ,'-') nu_area,
-lci.dt_nascimento,
-coalesce(lci.ds_logradouro,	'-') ds_logradouro,
-coalesce(lci.no_bairro,'-') no_bairro,
-coalesce(lci.nu_numero,	'-') nu_numero,
-coalesce(lci.ds_cep,'-') ds_cep,
-coalesce(lci.no_localidade ,'-') no_localidade,
-coalesce(lci.no_uf, '-') no_uf,
-coalesce(lci.sg_uf,'-') sg_uf,
-coalesce(lci.no_tipo_logradouro,'-') no_tipo_logradouro,
-coalesce(lci.co_dim_equipe,0) co_dim_equipe,
-coalesce(lci.co_dim_unidade_saude,0) co_dim_unidade_saude,
-lci.co_dim_tempo::text::date,
-coalesce(lci.ds_tipo_localizacao, 'Não Informado') ds_tipo_localizacao,
-lci.equipe,
-vacs.data_ultima_visita::date as data_ultima_visita_acs,
-coalesce((meses_desde_ultima_visita > 6), false) as alerta_visita_acs,
----
-cm.total_consulta_individual_medico as total_consulta_individual_medico,
-coalesce((total_consulta_individual_medico < 2), false) as alerta_total_de_consultas_medico, 
----
-um.ultimo_atendimento_medico::text::date,
-coalesce((meses_desde_ultima_visita_medica > 6), false) as alerta_ultima_consulta_medico,
----
-o.ultimo_atendimento_odonto,
-coalesce((meses_desde_ultima_visita_odontologica > 6), false) as alerta_ultima_consulta_odontologica,
----
-pa.ultima_data_afericao_pa,
-coalesce((meses_ultima_data_afericao_pa > 6), false) as alerta_afericao_pa,
----
-gc.ultima_data_glicemia_capilar,
-coalesce((meses_ultima_data_glicemia_capilar > 6), false) as alerta_ultima_glicemia_capilar,
----
-hg.ultima_data_hemoglobina_glicada,
-coalesce((meses_ultima_data_hemoglobina_glicada > 6), false) as alerta_ultima_hemoglobina_glicada
-from 
-	lista_cad_individual lci
-left join 
-	visita_acs vacs on vacs.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
-left join 
-	consulta_medico cm on cm.co_fat_cidadao_pec = lci.co_fat_cidadao_pec	
-left join ultima_consulta_medica um on um.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
-left join odonto o on o.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
-left join afericao_pa pa on pa.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
-left join glicemia_capilar gc on gc.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
-left join hemoglobina_glicada hg on hg.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+	select 
+	distinct on (lci.co_fat_cidadao_pec)
+	coalesce(lci.co_fat_cidadao_pec, 0) co_fat_cidadao_pec,
+	coalesce(lci.no_cidadao,'-') no_cidadao,
+	coalesce(lci.nu_cns,'-') nu_cns,
+	coalesce(lci.nu_cpf,'-') nu_cpf,
+	coalesce(lci.no_sexo,'-') no_sexo,
+	coalesce(lci.no_raca_cor,'-') no_raca_cor,
+	coalesce(lci.nu_micro_area ,'-') nu_micro_area,
+	coalesce(lci.nu_area ,'-') nu_area,
+	lci.dt_nascimento,
+	extract(year from age(now(),lci.dt_nascimento )) idade,
+	coalesce(lci.ds_logradouro,	'-') ds_logradouro,
+	coalesce(lci.no_bairro,'-') no_bairro,
+	coalesce(lci.nu_numero,	'-') nu_numero,
+	coalesce(lci.ds_cep,'-') ds_cep,
+	coalesce(lci.no_localidade ,'-') no_localidade,
+	coalesce(lci.no_uf, '-') no_uf,
+	coalesce(lci.sg_uf,'-') sg_uf,
+	coalesce(lci.no_tipo_logradouro,'-') no_tipo_logradouro,
+	coalesce(lci.co_dim_equipe,0) co_dim_equipe,
+	tc.co_dim_unidade_saude,
+	lci.co_dim_tempo::text::date,
+	tc.cids,
+	dr.min_date,
+	coalesce(lci.ds_tipo_localizacao, 'Não Informado') ds_tipo_localizacao,
+	lci.equipe,
+	vacs.data_ultima_visita::date as data_ultima_visita_acs,
+	coalesce((meses_desde_ultima_visita > 6), false) as alerta_visita_acs,
+	---
+	cm.total_consulta_individual_medico as total_consulta_individual_medico,
+	coalesce((total_consulta_individual_medico < 2), false) as alerta_total_de_consultas_medico, 
+	---
+	um.ultimo_atendimento_medico::text::date,
+	coalesce((meses_desde_ultima_visita_medica > 6), false) as alerta_ultima_consulta_medico,
+	---
+	o.ultimo_atendimento_odonto,
+	coalesce((meses_desde_ultima_visita_odontologica > 6), false) as alerta_ultima_consulta_odontologica,
+	---
+	pa.ultima_data_afericao_pa,
+	coalesce((meses_ultima_data_afericao_pa > 6), false) as alerta_afericao_pa,
+	---
+	gc.ultima_data_glicemia_capilar,
+	coalesce((meses_ultima_data_glicemia_capilar > 6), false) as alerta_ultima_glicemia_capilar,
+	---
+	hg.ultima_data_hemoglobina_glicada,
+	coalesce((meses_ultima_data_hemoglobina_glicada > 6), false) as alerta_ultima_hemoglobina_glicada
+	from 
+		lista_cad_individual lci
+	left join 
+		visita_acs vacs on vacs.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+	left join 
+		consulta_medico cm on cm.co_fat_cidadao_pec = lci.co_fat_cidadao_pec	
+	left join ultima_consulta_medica um on um.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+	left join odonto o on o.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+	left join afericao_pa pa on pa.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+	left join glicemia_capilar gc on gc.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+	left join hemoglobina_glicada hg on hg.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+	left join todos_cids tc on tc.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+	left join date_range dr on dr.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
 """

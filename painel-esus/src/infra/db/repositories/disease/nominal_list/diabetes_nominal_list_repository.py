@@ -2,6 +2,7 @@
 from typing import Dict
 
 import pandas as pd
+from sqlalchemy import or_
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
@@ -21,7 +22,7 @@ class DiabetesNominalListRepository:
     def find_all_download(self, cnes: int = None) -> Dict:
         with DBConnectionHandler() as db_con:
             response = pd.read_sql_query(con=db_con.get_engine(),
-                                         sql=f"select * from diabetes_nominal  where co_dim_unidade_saude = {cnes} order by no_cidadao")
+                                         sql=f"select * from diabetes_nominal  where co_dim_unidade_saude like any (array['%{cnes},%', '%{cnes}']) order by no_cidadao")
             return response
 
     def find_by_nome(self, nome: str):
@@ -43,7 +44,9 @@ class DiabetesNominalListRepository:
                 .query(DiabetesNominal)
             )
             users = users.filter(
-                DiabetesNominal.co_dim_unidade_saude == cnes)
+                or_(DiabetesNominal.co_dim_unidade_saude.ilike(f"%{cnes},%"),
+                    DiabetesNominal.co_dim_unidade_saude.ilike(f"%{cnes}"),)
+            )
             if nome is not None:
                 users = users.filter(
                     DiabetesNominal.no_cidadao.ilike(f"%{nome}%"))

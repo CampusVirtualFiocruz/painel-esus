@@ -88,7 +88,7 @@ const ListaNominal = () => {
       let path = `${pathToReport?.[condicao]}/get-nominal-list/${id}`;
       const response = await Api.get(path, {
         params: {
-          itemsPerPage: 9999,
+          itemsPerPage: 10,
           page: 0,
         },
       });
@@ -110,7 +110,7 @@ const ListaNominal = () => {
 
   const [params, setParams] = useState({
     page: 1,
-    size: 9999,
+    size: 10,
     totalElements: list.length,
     totalPages: Math.ceil(list.length / 30),
     sort: ["name", "alert", "zone"],
@@ -202,7 +202,8 @@ const ListaNominal = () => {
                 let path = `${pathToReport?.[condicao]}/get-nominal-list/download/${id}`;
                 const response: any = await Api.get(path, {
                   headers: {
-                    "Content-Type": "application/vnd.ms-excel",
+                    "Content-Type":
+                      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                   },
                   responseType: "blob",
                 });
@@ -211,7 +212,7 @@ const ListaNominal = () => {
 
                 const a = document.createElement("a");
                 a.href = downloadUrl;
-                a.download = "arquivo_baixado"; // Nome do arquivo a ser baixado
+                a.download = "lista_nominal.xlsx"; // Nome do arquivo a ser baixado
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
@@ -226,12 +227,12 @@ const ListaNominal = () => {
           rows={info?.items || []}
           sort={params.sort}
           // page={params.page}
-          //   size={params.size}
+          // size={params.size}
           // totalElements={params.totalElements}
-          //totalPages={params.totalPages}
+          // totalPages={params.totalPages}
           onSortChange={handleSortChange}
-          //onPageChange={handlePageChange}
-          //onSizeChange={handleSizeChange}
+          // onPageChange={handlePageChange}
+          // onSizeChange={handleSizeChange}
           loading={false}
           columns={[
             {

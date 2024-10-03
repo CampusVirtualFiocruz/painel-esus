@@ -34,7 +34,7 @@ class HypertensionNominalListAdapter:
         )
         self.cpf = user.nu_cpf
         self.cns = user.nu_cns
-        self.idade = '-'
+        self.idade = user.idade
         self.diagnostico = 'Hipertensao'
         self.sexo = user.no_sexo
         self.equipe = user.equipe
@@ -43,6 +43,8 @@ class HypertensionNominalListAdapter:
         self.cep = user.ds_cep
         self.telefone = '-'
         self.registros = []
+        self.primeiro_registro = user.min_date
+        self.cids = user.cids.split('|')
         if user.alerta_afericao_pa:
             self.registros.append(AlertRecord(
                 data=user.ultima_data_afericao_pa,
@@ -106,8 +108,8 @@ class HypertensionNominalListAdapter:
             "telefone": self.telefone,
             "detalhesCondicaoSaude": [
                 {
-                    "cidCondicaoSaude": ["-", "-"],
-                    "primeiroDiagnostico": "-",
+                    "cidCondicaoSaude": self.cids,
+                    "primeiroDiagnostico": self.primeiro_registro,
                     "registros": [registro.to_dict() for registro in self.registros]
                 }
             ]
@@ -126,7 +128,7 @@ class DiabetesNominalListAdapter:
         )
         self.cpf = user.nu_cpf
         self.cns = user.nu_cns
-        self.idade = '-'
+        self.idade = user.idade
         self.diagnostico = 'Diabetes'
         self.sexo = user.no_sexo
         self.equipe = user.equipe
@@ -135,6 +137,8 @@ class DiabetesNominalListAdapter:
         self.cep = user.ds_cep
         self.telefone = '-'
         self.registros = []
+        self.primeiro_registro = user.min_date
+        self.cids = user.cids.split('|')
         if user.alerta_afericao_pa:
             self.registros.append(AlertRecord(
                 data=user.ultima_data_afericao_pa,
@@ -206,8 +210,8 @@ class DiabetesNominalListAdapter:
             "telefone": self.telefone,
             "detalhesCondicaoSaude": [
                 {
-                    "cidCondicaoSaude": ["-", "-"],
-                    "primeiroDiagnostico": "-",
+                    "cidCondicaoSaude": self.cids,
+                    "primeiroDiagnostico": self.primeiro_registro,
                     "registros": [registro.to_dict() for registro in self.registros]
                 }
             ]

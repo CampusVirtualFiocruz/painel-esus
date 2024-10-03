@@ -160,9 +160,13 @@
     margin: 2em 0;
     text-align: center;
     border: 2px solid #ccc;
+    width: 24vw;
 
     p {
       margin: 0 !important;
+      word-wrap: break-word;
+      white-space: normal;
+
     }
   }
 

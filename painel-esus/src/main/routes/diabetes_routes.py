@@ -244,10 +244,10 @@ def get_nominal_list_download(cnes=None):
         response.to_excel(buffer)
 
         headers = {
-            'Content-Disposition': 'attachment; filename=output.xlsx',
-            'Content-type': 'application/vnd.ms-excel'
+            'Content-Disposition': 'attachment; filename=lista_nominal.xlsx',
+            'Content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         }
-        return Response(buffer.getvalue(), mimetype='application/vnd.ms-excel', headers=headers,)
+        return Response(buffer.getvalue(), mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', headers=headers,)
 
     except Exception as exception:
         http_response = handle_errors(exception)

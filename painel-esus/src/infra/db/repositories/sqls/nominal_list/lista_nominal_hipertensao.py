@@ -1,6 +1,20 @@
 LISTA_NOMINAL_HIPERTENSAO = """
-
 with 
+codigos_relevantes as (
+		select unnest (array['K86','K87','W81','I10','I11','I110','I119','I12',
+			'I120','I129','I13','I130','I131','I132','I139','I15',
+			'I150','I151','I152','I158','I159','I270','I272','O10',
+			'O100','O101','O102','O103','O104','O109','ABP005']) as codigo
+	),
+todos_cids as (
+	SELECT 
+	    tfai.co_fat_cidadao_pec, 
+     	string_agg(distinct tfai.co_dim_unidade_saude_1::text,',') as co_dim_unidade_saude,
+	    regexp_replace(concat(string_agg(tfai.ds_filtro_ciaps,''),string_agg(tfai.ds_filtro_cids,'')), '[||]+','|', 'g') as cids
+    FROM 
+	    tb_fat_atendimento_individual tfai 
+	GROUP BY tfai.co_fat_cidadao_pec
+),
  atendimento_individual as (
 	select 
 		tfai.co_seq_fat_atd_ind, tfai.co_fat_cidadao_pec, tfai.co_dim_equipe_1, tfai.co_dim_unidade_saude_1 , tfai.co_dim_cbo_1, cbo.no_cbo, cbo.nu_cbo,
@@ -9,15 +23,18 @@ with
 	left join tb_dim_cbo cbo on cbo.co_seq_dim_cbo = tfai.co_dim_cbo_1
 	where 
 	(
-		tfai.ds_filtro_cids  like any(array['%|K86|%','%|K87|%','%|W81|%','%|I10|%','%|I11|%','%|I110|%','%|I119|%','%|I12|%',
-'%|I120|%','%|I129|%','%|I13|%','%|I130|%','%|I131|%','%|I132|%','%|I139|%','%|I15|%',
-'%|I150|%','%|I151|%','%|I152|%','%|I158|%','%|I159|%','%|I270|%','%|I272|%','%|O10|%',
-'%|O100|%','%|O101|%','%|O102|%','%|O103|%','%|O104|%','%|O109|%','%|ABP005%|']) or 
-		tfai.ds_filtro_ciaps like any(array['%|K86|%','%|K87|%','%|W81|%','%|I10|%','%|I11|%','%|I110|%','%|I119|%','%|I12|%',
-'%|I120|%','%|I129|%','%|I13|%','%|I130|%','%|I131|%','%|I132|%','%|I139|%','%|I15|%',
-'%|I150|%','%|I151|%','%|I152|%','%|I158|%','%|I159|%','%|I270|%','%|I272|%','%|O10|%',
-'%|O100|%','%|O101|%','%|O102|%','%|O103|%','%|O104|%','%|O109|%','%|ABP005%|'])
-	) 
+            EXISTS (
+                SELECT 1 
+                FROM codigos_relevantes cr
+                WHERE tfai.ds_filtro_cids LIKE '%' || cr.codigo || '%'
+            ) 
+            OR 
+            EXISTS (
+                SELECT 1 
+                FROM codigos_relevantes cr
+                WHERE tfai.ds_filtro_ciaps LIKE '%' || cr.codigo || '%'
+            )
+        )
 	and substring(co_dim_tempo::text, 0, 5)<= substring(now()::text, 0, 5)
 	and
 	co_dim_tempo::text::date between (
@@ -28,6 +45,9 @@ with
 		select
 			max(tfai.co_dim_tempo::text::date) from tb_fat_atendimento_individual tfai)
 ),
+date_range as (
+		select ai.co_fat_cidadao_pec, min(ai.co_dim_tempo)::text::date min_date, max(ai.co_dim_tempo)::text::date max_date from atendimento_individual ai group by 1 order by 1 asc
+	),
 cad_individual as (
 	select co_fat_cidadao_pec , max(co_dim_tempo) as co_dim_tempo from tb_fat_cad_individual tfci 
 	where co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual)
@@ -136,6 +156,7 @@ lci.no_raca_cor,
 lci.nu_micro_area ,
 lci.nu_area ,
 lci.dt_nascimento,
+extract( year from age(now(), lci.dt_nascimento)) idade,
 lci.ds_logradouro,	
 lci.no_bairro,
 lci.nu_numero,	
@@ -145,8 +166,10 @@ lci.no_uf,
 lci.sg_uf,
 lci.no_tipo_logradouro,
 lci.co_dim_equipe,
-lci.co_dim_unidade_saude,
+tc.co_dim_unidade_saude,
 lci.co_dim_tempo::text::date,
+tc.cids,
+dr.min_date,
 coalesce(lci.ds_tipo_localizacao, 'Não Informado') ds_tipo_localizacao,
 coalesce(lci.equipe, 'Não Informado') equipe,
 vacs.data_ultima_visita as data_ultima_visita_acs,
@@ -176,4 +199,6 @@ left join ultima_consulta_medica um on um.co_fat_cidadao_pec = lci.co_fat_cidada
 left join odonto o on o.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
 left join afericao_pa pa on pa.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
 left join creatinina ca on ca.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+left join todos_cids tc on tc.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+left join date_range dr on dr.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
 """

@@ -2,6 +2,7 @@
 # pylint: disable=line-too-long
 # pylint: disable=W0012,R1710, W0611
 import urllib.parse
+from pprint import pprint
 
 import requests
 from sqlalchemy import text
@@ -73,7 +74,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
         return session.request("POST", url, headers=headers, data=payload)
 
     def post_bridge(self, url, head, query_sessao):
-        requests.request(
+        return requests.request(
             "POST", url, headers=head, data=query_sessao, timeout=30)
 
     def check_credentials(self, username: str, password: str) -> UserPayload:
