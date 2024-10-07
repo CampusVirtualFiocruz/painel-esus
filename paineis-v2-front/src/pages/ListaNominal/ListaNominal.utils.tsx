@@ -1,5 +1,6 @@
 import { Api } from "../../services/api";
 import { capitalize } from "../../utils";
+import { Icon } from "bold-ui";
 
 export const columns = ({ handleClick }: any) => [
   {
@@ -136,8 +137,17 @@ export const Footer = ({ pathToReport, condicao, id }: any) => {
             a.click();
             a.remove();
           }}
-          style={{ cursor: "pointer", color: "#0069d0" }}
+          style={{ cursor: "pointer", color: "#0069d0", paddingLeft: "0" }}
         >
+          <span
+            style={{
+              paddingLeft: "15px",
+              marginRight: "0px",
+              marginTop: "-3px",
+            }}
+          >
+            <Icon icon="download" style={{ color: "#0069d0" }} />
+          </span>
           Exportar lista
         </p>
       </div>

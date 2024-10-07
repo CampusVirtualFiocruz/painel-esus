@@ -3,7 +3,6 @@ import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
 import { PagedTable, TextField } from "bold-ui";
 import { Modal } from "../../components/Modal";
-import { ReportFooter } from "../../components/ui/ReportFooter";
 import ReportWrapper from "../../components/ui/ReportWrapper";
 import { useInfo } from "../../context/infoProvider/useInfo";
 import { getNomeUbs } from "../../utils";

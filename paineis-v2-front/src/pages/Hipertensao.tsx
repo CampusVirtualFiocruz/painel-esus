@@ -433,11 +433,6 @@ export function Hipertensao() {
                 )}
               </div>
             </div>
-            <div className="mt-5" style={{ textAlign: "center" }}>
-              <Button kind="primary" onClick={handleListaNominal}>
-                Ver a relação das pessoas com hipertensão da UBS
-              </Button>
-            </div>
             <div className="painel-secundario">
               <Typography.Subtitle>
                 Estratificação de atendimentos por profissional
