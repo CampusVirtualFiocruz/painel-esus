@@ -5,7 +5,7 @@ def filter_by_sexo(cnes: int = None):
 	tus.co_seq_dim_unidade_saude = {cnes} """
 
     return f"""select
-	initcap(tacv.no_sexo_cidadao),
+	lower(tacv.no_sexo_cidadao),
 	count(*) total
 from
 	tb_acomp_cidadaos_vinculados tacv
