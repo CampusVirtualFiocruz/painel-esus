@@ -55,7 +55,7 @@ cad_individual as (
 	order by co_fat_cidadao_pec asc
 ),
 cadastro_individual as (
-	select 
+	select distinct
 	tfci.co_fat_cidadao_pec,
 	tc.no_cidadao,
 	tc.nu_cns,
@@ -90,9 +90,9 @@ cadastro_individual as (
 	left join tb_dim_equipe tde on tde.co_seq_dim_equipe = tfci.co_dim_equipe 
 	where tfci.co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual)
 ),
-lista_cad_individual as ( select tfci.* from cadastro_individual tfci join cad_individual ci on ci.co_fat_cidadao_pec = tfci.co_fat_cidadao_pec and ci.co_dim_tempo = tfci.co_dim_tempo where tfci.co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual) ),
+lista_cad_individual as ( select distinct tfci.* from cadastro_individual tfci join cad_individual ci on ci.co_fat_cidadao_pec = tfci.co_fat_cidadao_pec and ci.co_dim_tempo = tfci.co_dim_tempo where tfci.co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual) ),
 acs as (
-	select 
+	select distinct
 		tfvd.co_fat_cidadao_pec,
 		tcfvd.dt_ficha as dt_registro,
 		(
@@ -145,9 +145,10 @@ creatinina as (
 	extract(year from age(now(), max(co_dim_tempo::text::date) ))*12 + extract(month from age(now(), max(co_dim_tempo::text::date) )) as meses_ultima_data_creatinina
 	from 
 	tb_fat_proced_atend where ds_filtro_procedimento like '%|0202010317|%' and co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual) group by 1
-)
-select 
-distinct lci.co_fat_cidadao_pec,
+), 
+lista as (
+select distinct
+lci.co_fat_cidadao_pec,
 lci.no_cidadao,
 lci.nu_cns,
 lci.nu_cpf,
@@ -166,29 +167,29 @@ lci.no_uf,
 lci.sg_uf,
 lci.no_tipo_logradouro,
 lci.co_dim_equipe,
-tc.co_dim_unidade_saude,
+lci.co_dim_unidade_saude::text,
 lci.co_dim_tempo::text::date,
 tc.cids,
 dr.min_date,
 coalesce(lci.ds_tipo_localizacao, 'Não Informado') ds_tipo_localizacao,
 coalesce(lci.equipe, 'Não Informado') equipe,
 vacs.data_ultima_visita as data_ultima_visita_acs,
-coalesce((meses_desde_ultima_visita > 6), false) as alerta_visita_acs,
----
+coalesce((meses_desde_ultima_visita > 6), true) as alerta_visita_acs,
+-----
 cm.total_consulta_individual_medico as total_consulta_individual_medico,
-coalesce((total_consulta_individual_medico < 2), false) as alerta_total_de_consultas_medico, 
----
+coalesce((total_consulta_individual_medico < 2), true) as alerta_total_de_consultas_medico, 
+-----
 um.ultimo_atendimento_medico::text::date,
-coalesce((meses_desde_ultima_visita_medica > 6), false) as alerta_ultima_consulta_medico,
----
+coalesce((meses_desde_ultima_visita_medica > 6), true) as alerta_ultima_consulta_medico,
+-----
 o.ultimo_atendimento_odonto,
-coalesce((meses_desde_ultima_visita_odontologica > 6), false) as alerta_ultima_consulta_odontologica,
----
+coalesce((meses_desde_ultima_visita_odontologica > 6), true) as alerta_ultima_consulta_odontologica,
+-----
 pa.ultima_data_afericao_pa,
-coalesce((meses_ultima_data_afericao_pa > 6), false) as alerta_afericao_pa,
---
+coalesce((meses_ultima_data_afericao_pa > 6), true) as alerta_afericao_pa,
+----
 ca.ultima_data_creatinina,
-coalesce((meses_ultima_data_creatinina > 6), false) as alerta_creatinina
+coalesce((meses_ultima_data_creatinina > 6), true) as alerta_creatinina
 from 
 	lista_cad_individual lci
 left join 
@@ -201,4 +202,6 @@ left join afericao_pa pa on pa.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
 left join creatinina ca on ca.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
 left join todos_cids tc on tc.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
 left join date_range dr on dr.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+) select * from  
+	lista l
 """

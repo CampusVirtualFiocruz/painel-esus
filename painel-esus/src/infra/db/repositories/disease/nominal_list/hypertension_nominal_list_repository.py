@@ -12,8 +12,7 @@ class HypertensionNominalListRepository:
     def find_all(self, cnes: int = None) -> Dict:
         with DBConnectionHandler() as db_con:
             users = (
-                db_con.session
-                .query(HipertensaoNominal)
+                db_con.session.query(HipertensaoNominal)
                 .filter(HipertensaoNominal.co_dim_unidade_saude == cnes)
                 .all()
             )
@@ -21,8 +20,9 @@ class HypertensionNominalListRepository:
 
     def find_all_download(self, cnes: int = None) -> Dict:
         with DBConnectionHandler() as db_con:
-            response = pd.read_sql_query(con=db_con.get_engine(),
-                                         sql=f"""select co_fat_cidadao_pec as codigo_cidadao,
+            response = pd.read_sql_query(
+                con=db_con.get_engine(),
+                sql=f"""select co_fat_cidadao_pec as codigo_cidadao,
                                          no_cidadao as nome,
                                          nu_cns as cns,
                                          nu_cpf as cpf,
@@ -59,45 +59,55 @@ class HypertensionNominalListRepository:
                                          ultima_data_creatinina,
                                          alerta_creatinina
                                          from hipertensao_nominal where co_dim_unidade_saude like '%{cnes},%' or
-                                         co_dim_unidade_saude  like "%{cnes}" order by nome""")
+                                         co_dim_unidade_saude  like "%{cnes}" order by nome""",
+            )
             return response
 
     def find_by_nome(self, nome: str):
         with DBConnectionHandler() as db_con:
             users = (
-                db_con.session
-                .query(HipertensaoNominal)
+                db_con.session.query(HipertensaoNominal)
                 .filter(HipertensaoNominal.no_cidadao.ilike(f"%{nome}%"))
                 .all()
             )
             return users
 
-    def find_filter(self, cnes: int, page: int = 0, pagesize: int = 10, nome: str = None, cpf: str = None,):
+    def find_filter(
+        self,
+        cnes: int,
+        page: int = 0,
+        pagesize: int = 10,
+        nome: str = None,
+        cpf: str = None,
+    ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
         with DBConnectionHandler() as db_con:
-            users = (
-                db_con.session
-                .query(HipertensaoNominal)
+            users = db_con.session.query(HipertensaoNominal).distinct(
+                HipertensaoNominal.co_fat_cidadao_pec
             )
+
             users = users.filter(
-                or_(HipertensaoNominal.co_dim_unidade_saude.ilike(f"%{cnes},%"),
-                    HipertensaoNominal.co_dim_unidade_saude.ilike(f"%{cnes}"),)
+                or_(
+                    HipertensaoNominal.co_dim_unidade_saude.ilike(f"%{cnes},%"),
+                    HipertensaoNominal.co_dim_unidade_saude.ilike(f"%{cnes}"),
+                )
             )
             if nome is not None:
-                users = users.filter(
-                    HipertensaoNominal.no_cidadao.ilike(f"%{nome}%"))
+                users = users.filter(HipertensaoNominal.no_cidadao.ilike(f"%{nome}%"))
             if cpf is not None:
-                users = users.filter(
-                    HipertensaoNominal.nu_cpf.ilike(f"%{cpf}%"))
+                users = users.filter(HipertensaoNominal.nu_cpf.ilike(f"%{cpf}%"))
             total = users.count()
-            users = users.order_by(HipertensaoNominal.no_cidadao).offset(max(0, ((page-1) * pagesize))
-                                                                         ).limit(pagesize)
+            users = (
+                users.order_by(HipertensaoNominal.no_cidadao)
+                .offset(max(0, ((page - 1) * pagesize)))
+                .limit(pagesize)
+            )
 
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,
                 "page": page,
-                "pagesCount": round(total/pagesize),
-                "items": list(users)
+                "pagesCount": round(total / pagesize),
+                "items": list(users),
             }

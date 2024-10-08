@@ -1,10 +1,73 @@
 LISTA_NOMINAL_DIABETES = """
 with 
 codigos_relevantes as (
-		select unnest (array['K86','K87','W81','I10','I11','I110','I119','I12',
-			'I120','I129','I13','I130','I131','I132','I139','I15',
-			'I150','I151','I152','I158','I159','I270','I272','O10',
-			'O100','O101','O102','O103','O104','O109','ABP005']) as codigo
+		select unnest (array['T89',
+                    'T90',
+                    'W85',
+                    'E10',
+                    'E100',
+                    'E101',
+                    'E102',
+                    'E103',
+                    'E104',
+                    'E105',
+                    'E106',
+                    'E107',
+                    'E108',
+                    'E109',
+                    'E11',
+                    'E110',
+                    'E111',
+                    'E112',
+                    'E113',
+                    'E114',
+                    'E115',
+                    'E116',
+                    'E117',
+                    'E118',
+                    'E119',
+                    'E12',
+                    'E120',
+                    'E121',
+                    'E122',
+                    'E123',
+                    'E124',
+                    'E125',
+                    'E126',
+                    'E127',
+                    'E128',
+                    'E129',
+                    'E13',
+                    'E130',
+                    'E131',
+                    'E132',
+                    'E133',
+                    'E134',
+                    'E135',
+                    'E136',
+                    'E137',
+                    'E138',
+                    'E139',
+                    'E14',
+                    'E140',
+                    'E141',
+                    'E142',
+                    'E143',
+                    'E144',
+                    'E145',
+                    'E146',
+                    'E147',
+                    'E148',
+                    'E149',
+                    'O24',
+                    'O240',
+                    'O241',
+                    'O242',
+                    'O243',
+                    'O244',
+                    'O249',
+                    'P702',
+                    'ABP006']) as codigo
 	),
  atendimento_individual as (
 	select 
@@ -90,9 +153,9 @@ from tb_fat_cad_individual tfci
 	left join tb_dim_equipe tde on tde.co_seq_dim_equipe = tfci.co_dim_equipe 
 where tfci.co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual)
 ),
-lista_cad_individual as ( select tfci.* from cadastro_individual tfci join cad_individual ci on ci.co_fat_cidadao_pec = tfci.co_fat_cidadao_pec and ci.co_dim_tempo = tfci.co_dim_tempo where tfci.co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual) ),
+lista_cad_individual as ( select distinct tfci.* from cadastro_individual tfci join cad_individual ci on ci.co_fat_cidadao_pec = tfci.co_fat_cidadao_pec and ci.co_dim_tempo = tfci.co_dim_tempo where tfci.co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual) ),
 acs as (
-	select 
+	select distinct
 		tfvd.co_fat_cidadao_pec,
 		tcfvd.dt_ficha as dt_registro,
 		(
@@ -151,10 +214,11 @@ hemoglobina_glicada as (
 	extract(year from age(now(), max(co_dim_tempo::text::date) ))*12 + extract(month from age(now(), max(co_dim_tempo::text::date) )) as meses_ultima_data_hemoglobina_glicada
 	from 
 	tb_fat_proced_atend where ds_filtro_procedimento like '%|0202010503|%' and co_fat_cidadao_pec in ( select co_fat_cidadao_pec from atendimento_individual) group by 1
-)
+),
+lista as (
 	select 
-	distinct on (lci.co_fat_cidadao_pec)
-	coalesce(lci.co_fat_cidadao_pec, 0) co_fat_cidadao_pec,
+	distinct 
+	lci.co_fat_cidadao_pec,
 	coalesce(lci.no_cidadao,'-') no_cidadao,
 	coalesce(lci.nu_cns,'-') nu_cns,
 	coalesce(lci.nu_cpf,'-') nu_cpf,
@@ -173,32 +237,32 @@ hemoglobina_glicada as (
 	coalesce(lci.sg_uf,'-') sg_uf,
 	coalesce(lci.no_tipo_logradouro,'-') no_tipo_logradouro,
 	coalesce(lci.co_dim_equipe,0) co_dim_equipe,
-	tc.co_dim_unidade_saude,
+	lci.co_dim_unidade_saude::text,
 	lci.co_dim_tempo::text::date,
 	tc.cids,
 	dr.min_date,
 	coalesce(lci.ds_tipo_localizacao, 'Não Informado') ds_tipo_localizacao,
 	lci.equipe,
 	vacs.data_ultima_visita::date as data_ultima_visita_acs,
-	coalesce((meses_desde_ultima_visita > 6), false) as alerta_visita_acs,
+	coalesce((meses_desde_ultima_visita > 6), true) as alerta_visita_acs,
 	---
 	cm.total_consulta_individual_medico as total_consulta_individual_medico,
-	coalesce((total_consulta_individual_medico < 2), false) as alerta_total_de_consultas_medico, 
+	coalesce((total_consulta_individual_medico < 2), true) as alerta_total_de_consultas_medico, 
 	---
 	um.ultimo_atendimento_medico::text::date,
-	coalesce((meses_desde_ultima_visita_medica > 6), false) as alerta_ultima_consulta_medico,
+	coalesce((meses_desde_ultima_visita_medica > 6), true) as alerta_ultima_consulta_medico,
 	---
 	o.ultimo_atendimento_odonto,
-	coalesce((meses_desde_ultima_visita_odontologica > 6), false) as alerta_ultima_consulta_odontologica,
+	coalesce((meses_desde_ultima_visita_odontologica > 6), true) as alerta_ultima_consulta_odontologica,
 	---
 	pa.ultima_data_afericao_pa,
-	coalesce((meses_ultima_data_afericao_pa > 6), false) as alerta_afericao_pa,
+	coalesce((meses_ultima_data_afericao_pa > 6), true) as alerta_afericao_pa,
 	---
 	gc.ultima_data_glicemia_capilar,
-	coalesce((meses_ultima_data_glicemia_capilar > 6), false) as alerta_ultima_glicemia_capilar,
+	coalesce((meses_ultima_data_glicemia_capilar > 6), true) as alerta_ultima_glicemia_capilar,
 	---
 	hg.ultima_data_hemoglobina_glicada,
-	coalesce((meses_ultima_data_hemoglobina_glicada > 6), false) as alerta_ultima_hemoglobina_glicada
+	coalesce((meses_ultima_data_hemoglobina_glicada > 6), true) as alerta_ultima_hemoglobina_glicada
 	from 
 		lista_cad_individual lci
 	left join 
@@ -212,4 +276,6 @@ hemoglobina_glicada as (
 	left join hemoglobina_glicada hg on hg.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
 	left join todos_cids tc on tc.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
 	left join date_range dr on dr.co_fat_cidadao_pec = lci.co_fat_cidadao_pec
+) select * from  
+	lista l
 """

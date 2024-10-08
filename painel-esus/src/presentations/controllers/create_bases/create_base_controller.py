@@ -25,11 +25,11 @@ class CreateBasesController:
 
     def create_bases(self):
         if os.getenv("ENV") == "instalador":
-            path = 'painel_esus.db'
+            path = "painel_esus.db"
         else:
             path = os.getcwd()
-            path = Path(path.split('/painel-esus')[0])
-            path = os.path.join(path, 'painel_esus.db')
+            path = Path(path.split("/painel-esus")[0])
+            path = os.path.join(path, "painel_esus.db")
             path = os.path.relpath(path)
         # os.remove(path)
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
@@ -39,7 +39,7 @@ class CreateBasesController:
                 CreateHypertensionBasesRepository(),
                 CreateOralHealthBasesRepository(),
                 CreateDiabetesNominalListRepository(),
-                CreateHypertensionNominalListRepository()
+                CreateHypertensionNominalListRepository(),
                 # CreateSmokingBasesRepository()
             ]
             usecase = CreateBasesUseCase(bases_generators=_list)

@@ -145,7 +145,8 @@ select
         coalesce(tfcd.co_dim_tipo_localizacao, 1) co_dim_tipo_localizacao,
         coalesce(tfcp.co_dim_tempo_nascimento, 0) co_dim_tempo_nascimento,
     coalesce(tc.nu_cbo, '0') as cbo,
-    t.dt_registro
+    t.dt_registro,
+    tus.co_seq_dim_unidade_saude as co_dim_unidade_saude_vinc
 from
         atd_individual_filtro_ciaps atd
 left join tb_dim_tempo t on
@@ -156,6 +157,9 @@ left join tb_fat_cad_domiciliar tfcd on
         tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar 
 left join tb_fat_cidadao_pec  tfcp on tfcp.co_seq_fat_cidadao_pec  = atd.co_fat_cidadao_pec 
 left join tb_dim_cbo tc on atd.co_dim_cbo_1 = tc.co_seq_dim_cbo
+left join tb_acomp_cidadaos_vinculados tacv on tacv.co_cidadao = tfcp.co_cidadao
+left join tb_dim_unidade_saude tus on
+	tus.nu_cnes = tacv.nu_cnes_vinc_equipe 
 """
 
 

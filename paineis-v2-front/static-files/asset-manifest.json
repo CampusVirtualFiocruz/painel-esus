@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.d8ada34c.css",
-    "main.js": "/static/js/main.db414134.js",
+    "main.css": "/static/css/main.fed45a59.css",
+    "main.js": "/static/js/main.188985d7.js",
     "static/media/ReguaLogosPainel.png": "/static/media/ReguaLogosPainel.3d06e51aab1dee04761e.png",
     "static/media/password.svg": "/static/media/password.67c5c0453240b30c4e247d20327ab12b.svg",
     "static/media/mulher.svg": "/static/media/mulher.3916a092b7a6d839cae0ea399caf701f.svg",
@@ -15,11 +15,11 @@
     "static/media/user-alt.svg": "/static/media/user-alt.ef4c8de05b0ebc1a51cc14873ffec075.svg",
     "static/media/logo.svg": "/static/media/logo.249e7cbdd09a9677e7ae69861990b457.svg",
     "static/media/logout.svg": "/static/media/logout.bdb34d976f11ea095e83f713db0160bb.svg",
-    "main.d8ada34c.css.map": "/static/css/main.d8ada34c.css.map",
-    "main.db414134.js.map": "/static/js/main.db414134.js.map"
+    "main.fed45a59.css.map": "/static/css/main.fed45a59.css.map",
+    "main.188985d7.js.map": "/static/js/main.188985d7.js.map"
   },
   "entrypoints": [
-    "static/css/main.d8ada34c.css",
-    "static/js/main.db414134.js"
+    "static/css/main.fed45a59.css",
+    "static/js/main.188985d7.js"
   ]
 }
