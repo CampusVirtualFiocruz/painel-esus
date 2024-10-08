@@ -7,7 +7,11 @@
     "python.testing.pytestEnabled": true,
     "codesnap-plus.containerPadding": "4em",
     "[python]": {
-        "editor.defaultFormatter": "ms-python.autopep8",
-        "editor.formatOnSave": true
-    }
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        }
+    },
+    "isort.args": ["--profile", "black"],
 }

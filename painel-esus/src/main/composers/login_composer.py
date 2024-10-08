@@ -16,8 +16,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 def login_composer(request: HttpRequest):
     providers_repositories = [
-        LoginBridgeRepository(),
         LoginAdmRepository(),
+        LoginBridgeRepository(),
         LoginUserRepository(),
     ]
     body = None

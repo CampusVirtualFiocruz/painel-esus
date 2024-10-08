@@ -6,8 +6,9 @@ from pprint import pprint
 
 import requests
 from sqlalchemy import text
-from src.data.interfaces.login_repository import \
-    LoginRepository as LoginRepositoryInterface
+from src.data.interfaces.login_repository import (
+    LoginRepository as LoginRepositoryInterface,
+)
 from src.domain.entities.user_payload import UserPayload
 from src.env import env
 from src.errors.logging import logging
@@ -19,40 +20,42 @@ from .queries.query_sessao import QUERY_SESSAO
 class LoginBridgeRepository(LoginRepositoryInterface):
 
     def check_role(self, response):
-        profissional = response['data']['sessao']['profissional']
-        acessos = profissional['acessos']
-        lotacoes = profissional['lotacoes']
+        profissional = response["data"]["sessao"]["profissional"]
+        acessos = profissional["acessos"]
+        lotacoes = profissional["lotacoes"]
         role = None
         roles_adm = [
-            'GESTOR_ESTADUAL',
-            'GESTOR_MUNICIPAL',
-            'ADMINISTRADOR_GERAL',
-            'ADMINISTRADOR_MUNICIPAL',
+            "GESTOR_ESTADUAL",
+            "GESTOR_MUNICIPAL",
+            "ADMINISTRADOR_GERAL",
+            "ADMINISTRADOR_MUNICIPAL",
         ]
         cbos_list = [
-            '322255',
-            '2516',
-            '2211 ',
-            '2212',
-            '2241',
-            '2235',
-            '2234',
-            '2236',
-            '2238',
-            '225',
-            '2237',
-            '2232',
-            '2515',
-            '2239',
+            "3222",
+            "515105",
+            "131210",
+            "2516",
+            "2211 ",
+            "2212",
+            "2241",
+            "2235",
+            "2234",
+            "2236",
+            "2238",
+            "225",
+            "2237",
+            "2232",
+            "2515",
+            "2239",
         ]
         for acesso in acessos:
-            if acesso['tipo'] in roles_adm:
-                role = ['admin']
+            if acesso["tipo"] in roles_adm:
+                role = ["admin"]
         cbo_unidade = []
         if role is None:
             for lotacao in lotacoes:
-                unidade_saude = lotacao['unidadeSaude']
-                cbo = lotacao['cbo']
+                unidade_saude = lotacao["unidadeSaude"]
+                cbo = lotacao["cbo"]
                 cbo_unidade.append((cbo["id"], unidade_saude["id"]))
 
             with DBConnectionHandler().get_engine().connect() as db_con:
@@ -75,23 +78,25 @@ class LoginBridgeRepository(LoginRepositoryInterface):
 
     def post_bridge(self, url, head, query_sessao):
         return requests.request(
-            "POST", url, headers=head, data=query_sessao, timeout=30)
+            "POST", url, headers=head, data=query_sessao, timeout=30
+        )
 
     def check_credentials(self, username: str, password: str) -> UserPayload:
         session = requests.Session()
         url_login = env.get("BRIDGE_LOGIN_URL", "")
         url = f"{url_login}/api/graphql"
         payload = (
-            "{\"query\":\"mutation mutation_login {\\n  login(input: {username: \\\"\
-                "+username +
-            "\\\", password: \\\""+password +
-            "\\\", force: true}) {\\n    success\\n  }\\n}\",\"variables\":{}}"
+            '{"query":"mutation mutation_login {\\n  login(input: {username: \\"\
+                '
+            + username
+            + '\\", password: \\"'
+            + password
+            + '\\", force: true}) {\\n    success\\n  }\\n}","variables":{}}'
         )
         headers = {
-            'Api-Consumer-Id': 'PAINEIS_FIOCRUZ',
-            'Content-Type': 'application/json',
-            'Cookie':
-            'JSESSIONID=87J4pWjfQUVaO3b_lndd1DQE-8hJ3RZzcHes0uFb; XSRF-TOKEN=25038984-1945-43e2-a990-f62709f4eddd'
+            "Api-Consumer-Id": "PAINEIS_FIOCRUZ",
+            "Content-Type": "application/json",
+            "Cookie": "JSESSIONID=87J4pWjfQUVaO3b_lndd1DQE-8hJ3RZzcHes0uFb; XSRF-TOKEN=25038984-1945-43e2-a990-f62709f4eddd",
         }
 
         response = self.get_reponse_body(session, url, headers, payload)
@@ -100,16 +105,23 @@ class LoginBridgeRepository(LoginRepositoryInterface):
         cookie = session.cookies.get_dict()
 
         response_json = response.json()
-        if 'errors' in response_json and len(response_json['errors']) > 0 and not response_json['data']:
+        if (
+            "errors" in response_json
+            and len(response_json["errors"]) > 0
+            and not response_json["data"]
+        ):
             return None
 
-        if response_json is not None and 'data' in response_json and\
-            'login' in response_json['data'] and\
-            'success' in response_json['data']['login'] and\
-                response_json['data']['login']['success']:
+        if (
+            response_json is not None
+            and "data" in response_json
+            and "login" in response_json["data"]
+            and "success" in response_json["data"]["login"]
+            and response_json["data"]["login"]["success"]
+        ):
             head = {
-                'Api-Consumer-Id': 'PAINEIS_FIOCRUZ',
-                'Content-Type': 'application/json',
+                "Api-Consumer-Id": "PAINEIS_FIOCRUZ",
+                "Content-Type": "application/json",
             }
             head.update({"Cookie": urllib.parse.urlencode(cookie)})
             response = self.post_bridge(url, head, QUERY_SESSAO)
@@ -125,10 +137,14 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                 user_raw_data = UserPayload(
                     username=profissional["nome"],
                     cns=profissional["cns"],
-                    uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"]["uf"]["sigla"],
-                    municipio=profissional["lotacoes"][0]["unidadeSaude"]["endereco"]["uf"]["nome"],
+                    uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"]["uf"][
+                        "sigla"
+                    ],
+                    municipio=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
+                        "uf"
+                    ]["nome"],
                     profiles=[user[0]],
-                    ubs=user[1]
+                    ubs=user[1],
                 )
                 return user_raw_data
         return None
