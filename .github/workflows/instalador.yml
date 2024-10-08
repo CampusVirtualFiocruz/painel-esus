@@ -115,6 +115,7 @@ jobs:
                   PASSWORD_SALT: 'painel'
                   BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
                   ENV: linux
+                  GENERATE_BASE=True
                 ports:
                   - 5003:5001
             networks:
@@ -124,6 +125,8 @@ jobs:
             EOF
             cat docker-compose.yml
             export DOCKER_IMAGE='painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}'
+            docker stop $(docker ps -a -q)
+            docker rm $(docker ps -a -q)
             docker images -q | xargs docker rmi
             echo 'LIMPOU IMAGENS OBSOLETAS'
             docker stack deploy -c docker-compose.yml --resolve-image changed livramento-stack  
