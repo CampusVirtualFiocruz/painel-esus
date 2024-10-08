@@ -54,31 +54,30 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         }
 
     def __create_age_groups_items(self) -> Dict:
-        return OrderedDict(
-            {
-                "0 a 4 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "5 a 9 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "10 a 14 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "15 a 19 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "20 a 24 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "25 a 29 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "30 a 34 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "35 a 39 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "40 a 44 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "45 a 49 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "50 a 54 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "55 a 59 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "60 a 64 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "65 a 69 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "70 a 74 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "75 a 79 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "80 a 84 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "85 a 89 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "90 a 94 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "95 a 99 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-                "100 ou mais": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
-            }
-        )
+        body = {
+            "0 a 4 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "5 a 9 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "10 a 14 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "15 a 19 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "20 a 24 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "25 a 29 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "30 a 34 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "35 a 39 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "40 a 44 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "45 a 49 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "50 a 54 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "55 a 59 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "60 a 64 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "65 a 69 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "70 a 74 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "75 a 79 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "80 a 84 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "85 a 89 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "90 a 94 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "95 a 99 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+            "100 ou mais": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
+        }
+        return OrderedDict(reversed(body.items()))
 
     def __create_age_groups(self, response) -> Dict:
         body = {
