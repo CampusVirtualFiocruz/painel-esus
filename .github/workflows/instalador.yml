@@ -87,6 +87,11 @@ jobs:
           pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
         shell: cmd
 
+      - name: List files in the installer directory
+        run: |
+          dir .
+        shell: cmd
+
   create-installer:
     needs: create-exe-files
     runs-on: windows-latest
