@@ -57,8 +57,7 @@ jobs:
       - name: Extract version from branch name
         id: extract_version
         run: echo "RELEASE_VERSION=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
-    outputs:
-      RELEASE_VERSION: ${{RELEASE_VERSION}}
+
       
 
   create-exe-files:
@@ -126,4 +125,4 @@ jobs:
     steps:
       - name: Notify Slack
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Deploy painel-esus gerado com sucesso! Versão: ${{ needs.build-backend.outputs.RELEASE_VERSION }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Deploy painel-esus gerado com sucesso! Versão: ${{ env.RELEASE_VERSION }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
