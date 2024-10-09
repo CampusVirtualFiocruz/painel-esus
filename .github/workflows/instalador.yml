@@ -92,35 +92,35 @@ jobs:
           dir .\painel-esus\dist
         shell: cmd
 
-  # create-installer:
-  #   needs: create-exe-files
-  #   runs-on: windows-latest
+  create-installer:
+    needs: create-exe-files
+    runs-on: windows-latest
 
-  #   steps:
-  #     - name: Checkout the repository
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
 
-  #     - name: Set up Inno Setup
-  #       run: |
-  #         curl -LO https://jrsoftware.org/download.php/is.exe
-  #         start /wait is.exe /SILENT /VERYSILENT
-  #       shell: cmd
+      - name: Set up Inno Setup
+        run: |
+          curl -LO https://jrsoftware.org/download.php/is.exe
+          start /wait is.exe /SILENT /VERYSILENT
+        shell: cmd
 
-  #     - name: List files in the installer directory 1
-  #       run: |
-  #         dir .
-  #       shell: cmd
+      - name: List files in the installer directory 1
+        run: |
+          dir .
+        shell: cmd
 
-  #     - name: List files in the installer directory 2
-  #       run: |
-  #         dir .\instalador
-  #       shell: cmd
+      - name: List files in the installer directory 2
+        run: |
+          dir .\instalador
+        shell: cmd
 
-  #     - name: Build installer
-  #       run: |
-  #         dir .
-  #         "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
-  #       shell: cmd
+      - name: Build installer
+        run: |
+          dir .
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
+        shell: cmd
 
   # notify-slack:
   #   runs-on: ubuntu-latest
