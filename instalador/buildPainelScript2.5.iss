@@ -13,7 +13,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{91B895F7-3F8C-4B4C-A898-AF39516ADBFC}
+AppId={91B895F7-3F8C-4B4C-A898-AF39516ADBFC}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -26,9 +26,9 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir={src}\output
+OutputDir=D:\a\painel-esus\painel-esus\instalador\output
 OutputBaseFilename=painel-esus-setup2.3
-SetupIconFile=.\painel-esus\icon\Icon_Painel_Purple_ICO.ico
+SetupIconFile=D:\a\painel-esus\painel-esus\painel-esus\icon\Icon_Painel_Purple_ICO.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
