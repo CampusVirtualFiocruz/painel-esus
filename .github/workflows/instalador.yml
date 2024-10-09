@@ -126,12 +126,3 @@ jobs:
         run: |
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
         shell: cmd
-
-  notify-slack:
-    runs-on: ubuntu-latest
-    needs: create-exe-files
-
-    steps:
-      - name: Notify Slack
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Deploy painel-esus gerado com sucesso! Versão: ${{ env.RELEASE_VERSION }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
