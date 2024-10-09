@@ -111,14 +111,9 @@ jobs:
           dir .\instalador
         shell: cmd
 
-      - name: List files in the installer directory 2
-        run: |
-          dir D:\a\painel-esus\painel-esus\instalador\
-        shell: cmd
-
       - name: Build installer
         run: |
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "D:\a\painel-esus\painel-esus\instalador\buildPainelScript2.5.iss"
         shell: cmd
 
   notify-slack:
