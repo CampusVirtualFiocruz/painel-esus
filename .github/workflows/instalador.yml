@@ -58,7 +58,7 @@ jobs:
         id: extract_version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
     outputs:
-      RELEASE_VERSION: ${{GITHUB_REF#refs/heads/release/}}
+      RELEASE_VERSION: ${{RELEASE_VERSION}}
       
 
   create-exe-files:
