@@ -64,5 +64,6 @@ jobs:
     steps:
       - name: Notify Slack
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Deploy painel-esus gerado com sucesso! Versão: ${{ env.RELEASE_VERSION }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          echo  ${env.RELEASE_VERSION}
+          #curl -X POST -H 'Content-type: application/json' --data '{"text":"Deploy painel-esus gerado com sucesso! Versão: ${{ env.RELEASE_VERSION }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
  
