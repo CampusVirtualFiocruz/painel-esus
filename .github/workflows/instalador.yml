@@ -101,6 +101,16 @@ jobs:
           start /wait is.exe /SILENT /VERYSILENT
         shell: cmd
 
+      - name: List files in the installer directory 1
+        run: |
+          dir .
+        shell: cmd
+
+      - name: List files in the installer directory 2
+        run: |
+          dir .\instalador
+        shell: cmd
+
       - name: Build installer
         run: |
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
