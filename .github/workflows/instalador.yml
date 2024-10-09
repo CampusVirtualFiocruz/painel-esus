@@ -113,6 +113,7 @@ jobs:
 
       - name: Build installer
         run: |
+          dir .
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "D:\a\painel-esus\painel-esus\instalador\buildPainelScript2.5.iss"
         shell: cmd
 
