@@ -119,7 +119,7 @@ jobs:
 
   notify-slack:
     runs-on: ubuntu-latest
-    needs: create-exe-files
+    needs: create-installer
 
     steps:
       - name: Notify Slack
