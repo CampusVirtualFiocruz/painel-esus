@@ -95,6 +95,7 @@ jobs:
       - name: Notify Slack
         uses: slackapi/slack-github-action@v1.23.0
         with:
-          slack-message: "Deploy painel-esus gerado com sucesso!"
+          slack-message: |
+            Deploy painel-esus gerado com sucesso! Versão: ${{ env.RELEASE_VERSION }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
