@@ -71,6 +71,10 @@ jobs:
         with:
           python-version: "3.10" # Use the Python version you need
 
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+        shell: cmd
+
       - name: Build EXE config
         working-directory: ./painel-esus
         run: |
@@ -82,3 +86,15 @@ jobs:
         run: |
           pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
         shell: cmd
+
+  notify-slack:
+    runs-on: ubuntu-latest
+    needs: create-exe-files
+
+    steps:
+      - name: Notify Slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          slack-message: "Deploy painel-esus gerado com sucesso!"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
