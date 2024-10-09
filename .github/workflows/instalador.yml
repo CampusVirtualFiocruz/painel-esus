@@ -57,3 +57,28 @@ jobs:
       - name: Extract version from branch name
         id: extract_version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
+
+  create-exe-files:
+    needs: [build-frontend, build-backend]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10" # Use the Python version you need
+
+      - name: Build EXE config
+        working-directory: ./painel-esus
+        run: |
+          pyinstaller --icon=.\icon\config.png -n config --onefile .\interface.py
+        shell: cmd
+
+      - name: Build EXE run
+        working-directory: ./painel-esus
+        run: |
+          pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
+        shell: cmd
