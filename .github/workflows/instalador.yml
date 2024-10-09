@@ -78,7 +78,7 @@ jobs:
       - name: Build EXE config
         working-directory: ./painel-esus
         run: |
-          pyinstaller --icon=.\icon\config.png -n config --onefile .\interface.py
+          pyinstaller --icon=.\icon\config.ico -n config --onefile .\interface.py
         shell: cmd
 
       - name: Build EXE run
