@@ -56,7 +56,9 @@ jobs:
 
       - name: Extract version from branch name
         id: extract_version
-        run: echo "RELEASE_VERSION=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
+        run: |
+          echo "RELEASE_VERSION=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" 
+          echo "RELEASE_VERSION=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
   notify-slack:
     runs-on: ubuntu-latest
     needs: build-backend
