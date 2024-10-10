@@ -12,9 +12,9 @@ jobs:
           curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
             -H 'Content-type: application/json' \
             --data-binary @- << EOF
-{
-    "text": "*Instalador Gerado* :caixa_de_entrada:\n
-O processo de construção do instalador foi finalizado.\n
-Versão: *${{ github.head_ref || github.ref_name }}*"    
-}
-EOF 
+          {
+              "text": "*Instalador Gerado* :caixa_de_entrada:\n
+          O processo de construção do instalador foi finalizado.\n
+          Versão: *${{ github.head_ref || github.ref_name }}*"    
+          }
+          EOF 
