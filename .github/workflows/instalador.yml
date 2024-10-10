@@ -2,7 +2,7 @@ name: Build and Deploy to Private Docker Hub
 
 on:
   push:
-    branches: [v1.0.15.3.1]
+    branches: [vv1.0.15.3.1]
 
 jobs:
   build-frontend:
