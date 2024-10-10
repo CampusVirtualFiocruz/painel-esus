@@ -89,31 +89,10 @@ jobs:
           pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
         shell: cmd
 
-      - name: List dist directory after EXE generation
-        working-directory: ./painel-esus
-        run: |
-          dir .\dist
-        shell: cmd
-
       - name: Set up Inno Setup
         run: |
           curl -LO https://jrsoftware.org/download.php/is.exe
           start /wait is.exe /SILENT /VERYSILENT
-        shell: cmd
-
-      - name: List files in the installer directory 1
-        run: |
-          dir .
-        shell: cmd
-
-      - name: List files in the installer directory 2
-        run: |
-          dir D:\a\painel-esus\painel-esus\painel-esus
-        shell: cmd
-      
-      - name: List files in the installer directory 3
-        run: |
-          dir D:\a\painel-esus\painel-esus\painel-esus\dist
         shell: cmd
 
       - name: Build installer
@@ -121,12 +100,6 @@ jobs:
           dir .
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
         shell: cmd
-        
-      - name: List files in the installer directory 3
-        run: |
-          dir D:\a\painel-esus\painel-esus\painel-esus\dist
-          dir D:\a\painel-esus\painel-esus\instalador\output
-        shell: cmd   
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -137,12 +110,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: painel-esus 
-      - name: List Downloads
-        run: |
-          dir .
-          dir D:\a\painel-esus\painel-esus\painel-esus\
-          dir D:\a\painel-esus\painel-esus\painel-esus\dist
-        shell: cmd
       
 
   # notify-slack:
