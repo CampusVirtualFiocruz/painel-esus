@@ -2,7 +2,7 @@ name: Build and Deploy to Private Docker Hub
 
 on:
   push:
-    branches: [v1.0.15.3]
+    branches: [v1.0.15.3.1]
 
 jobs:
   build-frontend:
@@ -93,14 +93,6 @@ jobs:
           dir .\dist
         shell: cmd
 
-  create-installer:
-    needs: create-exe-files
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
-
       - name: Set up Inno Setup
         run: |
           curl -LO https://jrsoftware.org/download.php/is.exe
@@ -116,11 +108,16 @@ jobs:
         run: |
           dir D:\a\painel-esus\painel-esus\painel-esus
         shell: cmd
+      
+      - name: List files in the installer directory 3
+        run: |
+          dir D:\a\painel-esus\painel-esus\painel-esus
+        shell: cmd
 
       - name: Build installer
         run: |
           dir .
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "..\instalador\buildPainelScript2.5.iss"
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
         shell: cmd
 
   # notify-slack:
