@@ -45,6 +45,7 @@ Source: "D:\a\painel-esus\painel-esus\paineis-v2-front\static-files\*"; DestDir:
 Source: "D:\a\painel-esus\painel-esus\painel-esus\icon\*"; DestDir: "{app}\icon"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "D:\a\painel-esus\painel-esus\painel-esus\dist\config.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\a\painel-esus\painel-esus\painel-esus\dist\painel-esus.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\a\painel-esus\painel-esus\painel-esus\ibge.csv"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: "D:\a\painel-esus\painel-esus\painel-esus\painel_esus.db"; DestDir: "{app}"; Flags: ignoreversion
 ;Source: "D:\a\painel-esus\painel-esus\painel-esus\painel-esus.sqls"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
