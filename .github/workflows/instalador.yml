@@ -123,12 +123,23 @@ jobs:
       - name: List files in the installer directory 3
         run: |
           dir D:\a\painel-esus\painel-esus\painel-esus\dist
-        shell: cmd        
-
+        shell: cmd   
+        
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: painel-esus 
+          path: D:\a\painel-esus\painel-esus\painel-esus\dist\painel-esus.exe
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          path: D:\a\painel-esus\painel-esus\painel-esus\dist\painel-esus.exe
+          name: painel-esus 
+      - name: List Downloads
+        run: |
+          dir .
+          dir D:\a\painel-esus\painel-esus\painel-esus\
+          dir D:\a\painel-esus\painel-esus\painel-esus\dist
+        shell: cmd
       
 
   # notify-slack:
