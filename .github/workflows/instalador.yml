@@ -114,7 +114,7 @@ jobs:
 
       - name: List files in the installer directory 2
         run: |
-          dir .\instalador
+          dir D:\a\painel-esus\painel-esus\painel-esus\dist
         shell: cmd
 
       - name: Build installer
