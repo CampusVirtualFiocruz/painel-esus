@@ -123,13 +123,14 @@ jobs:
       - name: List files in the installer directory 3
         run: |
           dir D:\a\painel-esus\painel-esus\painel-esus\dist
+          dir D:\a\painel-esus\painel-esus\instalador\output
         shell: cmd   
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: painel-esus 
-          path: D:\a\painel-esus\painel-esus\painel-esus\dist\painel-esus.exe
+          path: D:\a\painel-esus\painel-esus\instalador\output
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
