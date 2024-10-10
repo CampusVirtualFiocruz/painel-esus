@@ -9,12 +9,4 @@ jobs:
     steps:
       - name: Notify Slack
         run: |
-          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
-            -H 'Content-type: application/json' \
-            --data-binary @- << EOF
-            {
-                "text": "*Instalador Gerado* :caixa_de_entrada:\n
-            O processo de construção do instalador foi finalizado.\n
-            Versão: *${{ github.head_ref || github.ref_name }}*"    
-            }
-          EOF 
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }}  -H 'Content-type: application/json' --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'
