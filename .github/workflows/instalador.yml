@@ -111,7 +111,7 @@ jobs:
       
       - name: List files in the installer directory 3
         run: |
-          dir D:\a\painel-esus\painel-esus\painel-esus
+          dir D:\a\painel-esus\painel-esus\painel-esus\dist
         shell: cmd
 
       - name: Build installer
@@ -119,6 +119,17 @@ jobs:
           dir .
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
         shell: cmd
+        
+      - name: List files in the installer directory 3
+        run: |
+          dir D:\a\painel-esus\painel-esus\painel-esus\dist
+        shell: cmd        
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          path: D:\a\painel-esus\painel-esus\painel-esus\dist\painel-esus.exe
+      
 
   # notify-slack:
   #   runs-on: ubuntu-latest
