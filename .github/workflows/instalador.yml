@@ -87,9 +87,10 @@ jobs:
           pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
         shell: cmd
 
-      - name: List files in the installer directory
+      - name: List dist directory after EXE generation
+        working-directory: ./painel-esus
         run: |
-          dir .\painel-esus\dist
+          dir .\dist
         shell: cmd
 
   create-installer:
