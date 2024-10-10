@@ -120,7 +120,7 @@ jobs:
       - name: Build installer
         run: |
           dir .
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "..\instalador\buildPainelScript2.5.iss"
         shell: cmd
 
   # notify-slack:
