@@ -61,3 +61,10 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
+[Run]
+Filename: "{app}\{#ConfigExeName}"; Description: "Abrir configuração após a instalação"; Flags: postinstall skipifsilent unchecked runascurrentuser; Check: ShouldRunExe
+[Code]
+function ShouldRunExe(): Boolean;
+begin
+  Result := WizardSilent() = False;  // Apenas rodar se o instalador não estiver no modo silencioso
+end;
