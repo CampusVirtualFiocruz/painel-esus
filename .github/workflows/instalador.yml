@@ -5,31 +5,35 @@ on:
     branches: [v*]
 
 jobs:
-  # build-frontend:
-  #   runs-on: ubuntu-latest
+  build-frontend:
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-  #     - name: Set up Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: "20"
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
 
-  #     - name: Install dependencies
-  #       working-directory: ./paineis-v2-front
-  #       run: yarn
+      - name: Install dependencies
+        working-directory: ./paineis-v2-front
+        run: yarn
 
-  #     - name: Build React project
-  #       working-directory: ./paineis-v2-front
-  #       run: |
-  #         ls -la
-  #         cat <<EOF > .env
-  #         ${{ vars.ENV_FRONT }}
-  #         EOF
-  #         CI=false npm run build --prod
-  #         ls -la
+      - name: Build React project
+        working-directory: ./paineis-v2-front
+        run: |
+          cat <<EOF > .env
+          ${{ vars.ENV_FRONT }}
+          EOF
+          CI=false npm run build --prod
+
+      - name: Upload static files
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-static-files
+          path: ./paineis-v2-front/static-files
 
   build-backend:
     runs-on: ubuntu-latest
@@ -61,31 +65,22 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
   create-exe-files:
-    needs: [ build-backend]
+    needs: [build-frontend, build-backend]
     runs-on: windows-latest
 
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Download static files
+        uses: actions/download-artifact@v4
         with:
-          node-version: "20"
+          name: frontend-static-files
 
-      - name: Install dependencies
-        working-directory: ./paineis-v2-front
-        run: yarn
-
-      - name: Build React project
-        working-directory: ./paineis-v2-front
+      - name: Move static files
         run: |
-          ls -la
-          cat <<EOF > .env
-          ${{ vars.ENV_FRONT }}
-          EOF
-          CI=false npm run build --prod
-          ls -la
+          mkdir -p ./paineis-v2-front/static-files
+          xcopy frontend-static-files\* ./paineis-v2-front/static-files /s /e /i /y
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -94,12 +89,6 @@ jobs:
 
       - name: Install PyInstaller
         run: pip install pyinstaller
-        shell: cmd
-
-      - name: Build EXE run
-        working-directory: ./painel-esus
-        run: |
-          dir
         shell: cmd
 
       - name: Build EXE config
@@ -133,11 +122,6 @@ jobs:
         with:
           name: painel-esus 
           path: D:\a\painel-esus\painel-esus\instalador\output
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: painel-esus 
-      
 
   notify-slack:
     runs-on: ubuntu-latest
@@ -146,4 +130,4 @@ jobs:
     steps:
       - name: Notify Slack
         run: |
-          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }}  -H 'Content-type: application/json' --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} -H 'Content-type: application/json' --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'
