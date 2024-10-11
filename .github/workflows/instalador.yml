@@ -24,10 +24,12 @@ jobs:
       - name: Build React project
         working-directory: ./paineis-v2-front
         run: |
+          ls -la
           cat <<EOF > .env
           ${{ vars.ENV_FRONT }}
           EOF
           CI=false npm run build --prod
+          ls -la
 
   build-backend:
     runs-on: ubuntu-latest
@@ -73,6 +75,12 @@ jobs:
 
       - name: Install PyInstaller
         run: pip install pyinstaller
+        shell: cmd
+
+      - name: Build EXE run
+        working-directory: ./painel-esus
+        run: |
+          dir
         shell: cmd
 
       - name: Build EXE config
