@@ -80,6 +80,8 @@ jobs:
       - name: Move static files
         run: |
           dir .\paineis-v2-front
+          if exist .\paineis-v2-front\static-files rmdir /s /q .\paineis-v2-front\static-files
+          dir .\paineis-v2-front
           mkdir .\paineis-v2-front\static-files
           dir .\paineis-v2-front
           xcopy frontend-static-files\* .\paineis-v2-front\static-files /s /e /i /y
