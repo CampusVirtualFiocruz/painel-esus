@@ -29,13 +29,6 @@ jobs:
           EOF
           CI=false npm run build --prod
 
-  build-backend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -59,7 +52,7 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
   create-exe-files:
-    needs: [build-frontend, build-backend]
+    needs: [build-frontend]
     runs-on: windows-latest
 
     steps:
