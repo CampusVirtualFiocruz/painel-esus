@@ -84,7 +84,7 @@ jobs:
           dir .\paineis-v2-front
           mkdir .\paineis-v2-front\static-files
           dir .\paineis-v2-front
-          xcopy frontend-static-files\* .\paineis-v2-front\static-files /s /e /i /y
+          
         shell: cmd
 
       - name: Set up Python
