@@ -12,12 +12,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create cache
-        uses: actions/cache@v4
-        with:
-          path: ./painel-esus
-          key: painel-esus-build
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -34,6 +28,13 @@ jobs:
           ${{ vars.ENV_FRONT }}
           EOF
           CI=false npm run build --prod
+
+  build-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -53,27 +54,17 @@ jobs:
           ${{ vars.ENV_BACK }}
           EOF
 
-
-
+      - name: Extract version from branch name
+        id: extract_version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
   create-exe-files:
-    needs: [build-frontend]
+    needs: [build-frontend, build-backend]
     runs-on: windows-latest
 
     steps:
-      - name: Restore cached
-        uses: actions/cache/restore@v4
-        with:
-          path:  ./painel-esus
-          key: painel-esus-build
-          
-      - name: Create env
-        run: |
-          dir  D:\a\painel-esus /s
-          more D:\a\painel-esus\painel-esus\instalador\buildPainelScript2.5.iss
-          more D:\a\painel-esus\painel-esus\paineis-v2-front\.env
-          
-        shell: cmd
+      - name: Checkout the repository
+        uses: actions/checkout@v2
 
       - name: Set up Python
         uses: actions/setup-python@v2
