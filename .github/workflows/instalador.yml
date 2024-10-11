@@ -5,29 +5,6 @@ on:
     branches: [v*]
 
 jobs:
-  build-frontend:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
-
-      - name: Install dependencies
-        working-directory: ./paineis-v2-front
-        run: yarn
-
-      - name: Build React project
-        working-directory: ./paineis-v2-front
-        run: |
-          cat <<EOF > .env
-          ${{ vars.ENV_FRONT }}
-          EOF
-          CI=false npm run build --prod
 
   build-backend:
     runs-on: ubuntu-latest
@@ -59,7 +36,7 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
   create-exe-files:
-    needs: [build-frontend, build-backend]
+    needs: [ build-backend]
     runs-on: windows-latest
 
     steps:
