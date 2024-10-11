@@ -10,7 +10,7 @@
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 #define ConfigExeName "config.exe"
-#define rootPath "\\wsl.localhost\Ubuntu-24.04\root\painel-esus"
+#define rootPath "D:\a\painel-esus\painel-esus"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
