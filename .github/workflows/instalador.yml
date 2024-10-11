@@ -2,7 +2,7 @@ name: Build and Deploy to Private Docker Hub
 
 on:
   push:
-    branches: [vv1.0.15.3.1]
+    branches: [v*]
 
 jobs:
   build-frontend:
@@ -112,11 +112,11 @@ jobs:
           name: painel-esus 
       
 
-  # notify-slack:
-  #   runs-on: ubuntu-latest
-  #   needs: create-installer
+  notify-slack:
+    runs-on: ubuntu-latest
+    needs: create-exe-files
 
-  #   steps:
-  #     - name: Notify Slack
-  #       run: |
-  #         curl -X POST -H 'Content-type: application/json' --data '{"text":"Deploy painel-esus gerado com sucesso! Versão: ${{ env.RELEASE_VERSION }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - name: Notify Slack
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }}  -H 'Content-type: application/json' --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'

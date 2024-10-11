@@ -115,6 +115,7 @@ jobs:
                   PASSWORD_SALT: 'painel'
                   BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
                   ENV: linux
+                  GENERATE_BASE=True
                 ports:
                   - 5003:5001
             networks:
@@ -124,6 +125,8 @@ jobs:
             EOF
             cat docker-compose.yml
             export DOCKER_IMAGE='painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}'
+            docker stop $(docker ps -a -q)
+            docker rm $(docker ps -a -q)
             docker images -q | xargs docker rmi
             echo 'LIMPOU IMAGENS OBSOLETAS'
             docker stack deploy -c docker-compose.yml --resolve-image changed livramento-stack  
@@ -138,3 +141,12 @@ jobs:
         run: |
           pritunl-client stop ${{ steps.pritunl-connection.outputs.client-id }}
           # Stop the VPN connection
+  
+  notify-slack:
+    runs-on: ubuntu-latest
+    needs: conncet-vpn-ssh-aws
+
+    steps:
+      - name: Notify Slack
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }}  -H 'Content-type: application/json' --data '{"text": "*Deploy Finalizado* :rocket:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'
