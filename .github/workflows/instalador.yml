@@ -77,6 +77,10 @@ jobs:
         with:
           name: frontend-static-files
 
+      - name: List downloaded files
+        run: dir frontend-static-files
+        shell: cmd
+        
       - name: Move static files
         run: |
           dir .\paineis-v2-front
@@ -84,7 +88,7 @@ jobs:
           dir .\paineis-v2-front
           mkdir .\paineis-v2-front\static-files
           dir .\paineis-v2-front
-          
+          xcopy frontend-static-files\* .\paineis-v2-front\static-files /s /e /i /y
         shell: cmd
 
       - name: Set up Python
