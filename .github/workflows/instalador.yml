@@ -69,8 +69,9 @@ jobs:
           
       - name: Create env
         run: |
-          mkdir D:\a\painel-esus
-          xcopy painel-esus-build D:\a\painel-esus\painel-esus /c /s /e /h
+          dir  D:\a\painel-esus /s
+          more D:\a\painel-esus\painel-esus\instalador\buildPainelScript2.5.iss
+          more D:\a\painel-esus\painel-esus\paineis-v2-front\.env
           
         shell: cmd
 
@@ -84,7 +85,7 @@ jobs:
         shell: cmd
 
       - name: Build EXE config
-        working-directory: D:\a\painel-esus\painel-esus
+        working-directory: ./painel-esus
         run: |
           python -m pip install --upgrade pip
           pip3 install -r requirements.txt
@@ -92,7 +93,7 @@ jobs:
         shell: cmd
 
       - name: Build EXE run
-        working-directory: D:\a\painel-esus\painel-esus
+        working-directory: ./painel-esus
         run: |
           pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
         shell: cmd
@@ -104,7 +105,6 @@ jobs:
         shell: cmd
 
       - name: Build installer
-        working-directory: D:\a\painel-esus\painel-esus
         run: |
           dir .
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
