@@ -139,10 +139,6 @@ export function Login() {
 
                 <div className="mt-5">
                   <p>
-                    * Susópolis é uma cidade fictícia. Qualquer semelhança com a
-                    realidade é mera coincidência.
-                  </p>
-                  <p>
                     * Esta é uma ferramenta gratuita e essencial para a tomada
                     de decisão em Atenção e Vigilância à Saúde.
                   </p>
