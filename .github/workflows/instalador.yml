@@ -79,7 +79,8 @@ jobs:
 
       - name: Move static files
         run: |
-          mkdir -p ./paineis-v2-front/static-files
+          mkdir ./paineis-v2-front/static-files
+          ls -la ./paineis-v2-front
           xcopy frontend-static-files\* ./paineis-v2-front/static-files /s /e /i /y
 
       - name: Set up Python
