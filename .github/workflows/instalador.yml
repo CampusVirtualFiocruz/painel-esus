@@ -126,16 +126,6 @@ jobs:
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
         shell: cmd
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: painel-esus
-          path: D:\a\painel-esus\painel-esus\instalador\output
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: painel-esus
-
   notify-slack:
     runs-on: ubuntu-latest
     needs: create-exe-files
