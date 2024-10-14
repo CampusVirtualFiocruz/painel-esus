@@ -95,7 +95,7 @@ jobs:
       - name: Create EXE files
         run: |
           # Comandos para usar os arquivos estáticos e criar o EXE
-          ls static-files
+          dir static-files
 
       # - name: Download static files
       #   uses: actions/download-artifact@v4
