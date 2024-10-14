@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-static-files
-          path: ./paineis-v2-front/static-files          
+          path: ./paineis-v2-front/static-files
 
   build-backend:
     runs-on: ubuntu-latest
@@ -85,7 +85,7 @@ jobs:
       - name: List downloaded files
         run: dir frontend-static-files
         shell: cmd
-        
+
       - name: Move static files
         run: |
           dir .\paineis-v2-front
@@ -130,17 +130,16 @@ jobs:
           dir .
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
         shell: cmd
-        
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: painel-esus 
+          name: painel-esus
           path: D:\a\painel-esus\painel-esus\instalador\output
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: painel-esus 
-      
+          name: painel-esus
 
   notify-slack:
     runs-on: ubuntu-latest

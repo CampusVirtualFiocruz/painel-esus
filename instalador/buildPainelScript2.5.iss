@@ -10,6 +10,7 @@
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 #define ConfigExeName "config.exe"
+#define rootPath "D:\a\painel-esus\painel-esus"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -27,9 +28,9 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=D:\a\painel-esus\painel-esus\instalador\output
+OutputDir={#rootPath}\instalador\output
 OutputBaseFilename=painel-esus-setup2.3
-SetupIconFile=D:\a\painel-esus\painel-esus\painel-esus\icon\Icon_Painel_Purple_ICO.ico
+SetupIconFile={#rootPath}\painel-esus\icon\Icon_Painel_Purple_ICO.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -41,14 +42,14 @@ Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortugue
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\a\painel-esus\painel-esus\painel-esus\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\a\painel-esus\painel-esus\paineis-v2-front\static-files\*"; DestDir: "{app}\static-files"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\a\painel-esus\painel-esus\painel-esus\icon\*"; DestDir: "{app}\icon"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "D:\a\painel-esus\painel-esus\painel-esus\dist\config.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\a\painel-esus\painel-esus\painel-esus\dist\painel-esus.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\a\painel-esus\painel-esus\painel-esus\ibge.csv"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "D:\a\painel-esus\painel-esus\painel-esus\painel_esus.db"; DestDir: "{app}"; Flags: ignoreversion
-;Source: "D:\a\painel-esus\painel-esus\painel-esus\painel-esus.sqls"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#rootPath}\painel-esus\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#rootPath}\paineis-v2-front\static-files\*"; DestDir: "{app}\static-files"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#rootPath}\painel-esus\icon\*"; DestDir: "{app}\icon"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#rootPath}\painel-esus\dist\config.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#rootPath}\painel-esus\dist\painel-esus.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#rootPath}\painel-esus\ibge.csv"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "{#rootPath}\painel-esus\painel_esus.db"; DestDir: "{app}"; Flags: ignoreversion
+;Source: "{#rootPath}\painel-esus\painel-esus.sqls"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
