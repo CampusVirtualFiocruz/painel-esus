@@ -84,15 +84,15 @@ jobs:
           # Comandos para usar os arquivos estáticos e criar o EXE
           dir ./paineis-v2-front
 
-      # Baixa o artifact salvo no job anterior
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: my-artifact
-          path: ./paineis-v2-front
+      # # Baixa o artifact salvo no job anterior
+      # - name: Download artifacts
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: my-artifact
+      #     path: ./paineis-v2-front
 
-      - name: Display structure of downloaded files
-        run: ls -R ./paineis-v2-front
+      # - name: Display structure of downloaded files
+      #   run: ls -R ./paineis-v2-front
 
       # Aqui você pode usar os arquivos estáticos baixados para criar o EXE
       - name: Create EXE files
@@ -106,6 +106,11 @@ jobs:
           name: Build
           path: bijay
       - run: dir
+
+      - name: Create EXE files
+        run: |
+          # Comandos para usar os arquivos estáticos e criar o EXE
+          dir
       # - name: Move static files
       #   run: |
       #     dir .\paineis-v2-front
