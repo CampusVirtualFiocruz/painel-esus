@@ -72,11 +72,6 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
-      - name: List available artifacts
-        uses: actions/artifact@v2
-        with:
-          name: frontend-static-files
-
       - name: Download static files
         uses: actions/download-artifact@v4
         with:
