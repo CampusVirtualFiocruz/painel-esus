@@ -29,10 +29,10 @@ jobs:
           EOF
           CI=false npm run build --prod
 
-      - name: Build React project
+      - name: Print directory
         run: |
           ls -la
-          cd ./paineis-v2-front
+          cd ./paineis-v2-front/static-files
           ls -la
 
       - name: Upload static files
@@ -84,7 +84,7 @@ jobs:
           name: frontend-static-files
 
       - name: List downloaded files
-        run: dir frontend-static-files
+        run: dir
         shell: cmd
 
       - name: Move static files
