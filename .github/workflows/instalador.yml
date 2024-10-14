@@ -36,23 +36,10 @@ jobs:
           ls -la
 
       # Salva a pasta 'paineis-v2-front/static-files' como um artifact
-      - name: Upload static files artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v3
         with:
-          name: my-artifact
-          path: paineis-v2-front/static-files
-
-      # - name: Upload static files artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: static-files
-      #     path: paineis-v2-front/static-files
-
-      # - name: Upload static files
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: frontend-static-files
-      #     path: ./paineis-v2-front/static-files
+          name: Build
+          path: ./paineis-v2-front/static-files
 
   build-backend:
     runs-on: ubuntu-latest
@@ -91,13 +78,21 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
+      # Aqui você pode usar os arquivos estáticos baixados para criar o EXE
+      - name: Create EXE files
+        run: |
+          # Comandos para usar os arquivos estáticos e criar o EXE
+          dir ./paineis-v2-front
+
       # Baixa o artifact salvo no job anterior
-      - uses: actions/download-artifact@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
         with:
           name: my-artifact
-          path: your/destination/dir
+          path: ./paineis-v2-front
+
       - name: Display structure of downloaded files
-        run: ls -R your/destination/dir
+        run: ls -R ./paineis-v2-front
 
       # Aqui você pode usar os arquivos estáticos baixados para criar o EXE
       - name: Create EXE files
@@ -105,15 +100,12 @@ jobs:
           # Comandos para usar os arquivos estáticos e criar o EXE
           dir
 
-      # - name: Download static files
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: frontend-static-files
-
-      # - name: List downloaded files
-      #   run: dir
-      #   shell: cmd
-
+      - name: Download files
+        uses: actions/download-artifact@v3
+        with:
+          name: Build
+          path: bijay
+      - run: dir
       # - name: Move static files
       #   run: |
       #     dir .\paineis-v2-front
