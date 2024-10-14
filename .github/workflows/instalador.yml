@@ -29,6 +29,12 @@ jobs:
           EOF
           CI=false npm run build --prod
 
+      - name: Build React project
+        run: |
+          ls -la
+          cd ./paineis-v2-front
+          ls -la
+
       - name: Upload static files
         uses: actions/upload-artifact@v4
         with:
