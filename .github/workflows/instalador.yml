@@ -110,9 +110,10 @@ jobs:
       - name: Create EXE files
         run: |
           # Comandos para usar os arquivos estáticos e criar o EXE
+          cd bijay
           dir
       # - name: Move static files
-      #   run: |
+      #   run : |
       #     dir .\paineis-v2-front
       #     if exist .\paineis-v2-front\static-files rmdir /s /q .\paineis-v2-front\static-files
       #     dir .\paineis-v2-front
