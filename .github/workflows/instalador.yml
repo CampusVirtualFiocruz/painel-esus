@@ -104,13 +104,15 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: Build
-          path: bijay
+          path: ./paineis-v2-front/static-files
       - run: dir
 
-      - name: Create EXE files
+      - name: List Downloaded Files
         run: |
           # Comandos para usar os arquivos estáticos e criar o EXE
-          cd bijay
+          cd ./paineis-v2-front
+          dir
+          cd ./static-files
           dir
       # - name: Move static files
       #   run : |
