@@ -71,7 +71,7 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
   create-exe-files:
-    needs: [build-backend]
+    needs: [build-frontend, build-backend]
     runs-on: windows-latest
 
     steps:
