@@ -71,7 +71,7 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
   create-exe-files:
-    needs: [build-frontend, build-backend]
+    needs: [build-backend]
     runs-on: windows-latest
 
     steps:
@@ -127,6 +127,16 @@ jobs:
           dir .
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
         shell: cmd
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: painel-esus
+          path: D:\a\painel-esus\painel-esus\instalador\output
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: painel-esus
 
   notify-slack:
     runs-on: ubuntu-latest
