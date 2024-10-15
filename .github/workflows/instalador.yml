@@ -84,18 +84,8 @@ jobs:
           # Comandos para usar os arquivos estáticos e criar o EXE
           dir ./paineis-v2-front
 
-      # # Baixa o artifact salvo no job anterior
-      # - name: Download artifacts
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: my-artifact
-      #     path: ./paineis-v2-front
-
-      # - name: Display structure of downloaded files
-      #   run: ls -R ./paineis-v2-front
-
       # Aqui você pode usar os arquivos estáticos baixados para criar o EXE
-      - name: Create EXE files
+      - name: List
         run: |
           # Comandos para usar os arquivos estáticos e criar o EXE
           dir
@@ -114,15 +104,6 @@ jobs:
           dir
           cd ./static-files
           dir
-      # - name: Move static files
-      #   run : |
-      #     dir .\paineis-v2-front
-      #     if exist .\paineis-v2-front\static-files rmdir /s /q .\paineis-v2-front\static-files
-      #     dir .\paineis-v2-front
-      #     mkdir .\paineis-v2-front\static-files
-      #     dir .\paineis-v2-front
-      #     xcopy frontend-static-files\* .\paineis-v2-front\static-files /s /e /i /y
-      #   shell: cmd
 
       - name: Set up Python
         uses: actions/setup-python@v2
