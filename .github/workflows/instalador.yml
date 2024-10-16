@@ -5,6 +5,41 @@ on:
     branches: [v*]
 
 jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: ./paineis-v2-front
+        run: yarn
+
+      - name: Build React project
+        working-directory: ./paineis-v2-front
+        run: |
+          cat <<EOF > .env
+          ${{ vars.ENV_FRONT }}
+          EOF
+          CI=false npm run build --prod
+
+      - name: Print directory
+        run: |
+          ls -la
+          cd ./paineis-v2-front/static-files
+          ls -la
+
+      # Salva a pasta 'paineis-v2-front/static-files' como um artifact
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Build
+          path: ./paineis-v2-front/static-files
 
   build-backend:
     runs-on: ubuntu-latest
@@ -36,12 +71,27 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
   create-exe-files:
-    needs: [ build-backend]
+    needs: [build-frontend, build-backend]
     runs-on: windows-latest
 
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
+
+      - name: Download files
+        uses: actions/download-artifact@v3
+        with:
+          name: Build
+          path: ./paineis-v2-front/static-files
+      - run: dir
+
+      - name: List Downloaded Files
+        run: |
+          # Comandos para usar os arquivos estáticos e criar o EXE
+          cd ./paineis-v2-front
+          dir
+          cd ./static-files
+          dir
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -77,17 +127,16 @@ jobs:
           dir .
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
         shell: cmd
-        
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: painel-esus 
+          name: painel-esus
           path: D:\a\painel-esus\painel-esus\instalador\output
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: painel-esus 
-      
+          name: painel-esus
 
   notify-slack:
     runs-on: ubuntu-latest
