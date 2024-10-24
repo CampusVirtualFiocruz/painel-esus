@@ -1,0 +1,37 @@
+perfil:
+  Painel_version: 1.0.5
+  nome_indicador: Hanseníase
+  codigo_indicador: P12
+  data: 2024-11-28
+  fichas: 
+    - atendimento individual
+    - visita domiciliar
+  tipo: cobertura proporcional
+  meses: 04
+
+denominador:
+  fonte: atendimento individual
+  filtro_cids: 
+    - A30
+    - B92
+  filtro_ciaps: 
+    - A78
+  procedimentos_solicitados:
+  procedimentos_avaliados: 
+  co_fat_cidadao_pec: NOT_NULL
+ 
+condição_A:
+  descrição: ao menos 2 consultas no quadrimestre
+  fonte: atendimento individual
+  profissional: 
+    - medico
+    - enfermeiro
+  valor_min: 2
+
+condição_B:
+  descrição: no mínimo 3 visitas domiciliares no quadrimestre
+  fonte: visita domiciliar
+  profissional: ACS
+  procedimentos_solicitados:
+  procedimentos_avaliados: 
+  valor_min: 3

@@ -1,0 +1,54 @@
+perfil:
+  Painel_version: 1.0.5
+  nome_indicador: Tuberculose
+  codigo_indicador: P11
+  data: 2024-11-28
+  fichas: 
+    - atendimento individual
+    - visita domiciliar
+  tipo: cobertura proporcional
+  meses: 04
+
+denominador:
+  fonte: atendimento individual
+  filtro_cids: 
+    - A15
+    - A16
+    - A17
+    - A18
+    - A19
+    - B90
+    - J65
+  filtro_ciaps: 
+    - A70
+    - ABP017
+  procedimentos_solicitados:
+  procedimentos_avaliados: 
+  co_fat_cidadao_pec: NOT_NULL
+ 
+condição_A:
+  descrição: ao menos 4 consultas no quadrimestre
+  fonte: atendimento individual
+  profissional: 
+    - medico
+    - enfermeiro
+  valor_min: 4
+
+condição_B:
+  descrição: no mínimo 2 baciloscopias
+  fonte: atendimento individual
+  profissional: enfermeiro
+  procedimentos_solicitados:
+  procedimentos_avaliados: 
+    - 02.02.08.004-8 
+    - 02.02.08.006-4 
+    - 02.13.01.069-0
+  valor_min: 2
+
+condição_C:
+  descrição: no mínimo 6 visitas domiciliares no quadrimestre
+  fonte: visita domiciliar
+  profissional: ACS
+  procedimentos_solicitados:
+  procedimentos_avaliados: 
+  valor_min: 6
