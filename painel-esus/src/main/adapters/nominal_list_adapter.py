@@ -1,4 +1,6 @@
 # pylint: disable=R0902
+from src.domain.entities.diabetes import Diabetes
+from src.domain.entities.hypertension import Hypertension
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.hipertensao_nominal import HipertensaoNominal
 
@@ -53,7 +55,8 @@ class HypertensionNominalListAdapter:
         self.telefone = "-"
         self.registros = []
         self.primeiro_registro = user.min_date
-        self.cids = list(set(user.cids.split("|")))
+        hipertensao = Hypertension()
+        self.cids = list(set(user.cids.split("|")) & set(hipertensao.target))
         if user.alerta_afericao_pa:
             self.registros.append(
                 AlertRecord(
@@ -168,8 +171,8 @@ class DiabetesNominalListAdapter:
         self.telefone = "-"
         self.registros = []
         self.primeiro_registro = user.min_date
-        self.cids = list(set(user.cids.split("|")))
-
+        diabetes = Diabetes()
+        self.cids = list(set(user.cids.split("|")) & set(diabetes.target))
         self.registros.append(
             AlertRecord(
                 data=user.ultima_data_afericao_pa,

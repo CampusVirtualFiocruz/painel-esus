@@ -15,7 +15,7 @@ todos_cids as (
 	    tb_fat_atendimento_individual tfai 
 	GROUP BY tfai.co_fat_cidadao_pec
 ),
- atendimento_individual as (
+ atendimento_individual_completo as (
 	select 
 		tfai.co_seq_fat_atd_ind, tfai.co_fat_cidadao_pec, tfai.co_dim_equipe_1, tfai.co_dim_unidade_saude_1 , tfai.co_dim_cbo_1, cbo.no_cbo, cbo.nu_cbo,
 		tfai.co_dim_tempo, tfai.ds_filtro_cids, tfai.ds_filtro_ciaps, tfai.ds_filtro_proced_avaliados,tfai.ds_filtro_proced_solicitados
@@ -35,7 +35,10 @@ todos_cids as (
                 WHERE tfai.ds_filtro_ciaps LIKE '%' || cr.codigo || '%'
             )
         )
-	and substring(co_dim_tempo::text, 0, 5)<= substring(now()::text, 0, 5)
+),
+atendimento_individual as (
+select * from atendimento_individual_completo where
+	substring(co_dim_tempo::text, 0, 5)<= substring(now()::text, 0, 5)
 	and
 	co_dim_tempo::text::date between (
 		select
@@ -46,7 +49,7 @@ todos_cids as (
 			max(tfai.co_dim_tempo::text::date) from tb_fat_atendimento_individual tfai)
 ),
 date_range as (
-		select ai.co_fat_cidadao_pec, min(ai.co_dim_tempo)::text::date min_date, max(ai.co_dim_tempo)::text::date max_date from atendimento_individual ai group by 1 order by 1 asc
+		select ai.co_fat_cidadao_pec, min(ai.co_dim_tempo)::text::date min_date, max(ai.co_dim_tempo)::text::date max_date from atendimento_individual_completo ai group by 1 order by 1 asc
 	),
 cad_individual as (
 	select co_fat_cidadao_pec , max(co_dim_tempo) as co_dim_tempo from tb_fat_cad_individual tfci 

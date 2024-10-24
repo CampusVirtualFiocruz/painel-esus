@@ -28,10 +28,10 @@ def center_window_to_display(
 
 
 root = ctk.CTk()
-root.iconbitmap("icon/Icon_Painel_Purple_ICO.ico")
+if os.name != "posix":
+    root.iconbitmap("icon/Icon_Painel_Purple_ICO.ico")
 root.title("Configurar")
-root.geometry(center_window_to_display(
-    root, 800, 600, root._get_window_scaling()))
+root.geometry(center_window_to_display(root, 800, 600, root._get_window_scaling()))
 
 
 def start_progress_bar(window):
@@ -55,8 +55,7 @@ def start_progress_bar(window):
 def connect_db(new_window):
     with DBConnectionHandler() as db_con:
         engine = db_con.get_engine()
-        res = pd.read_sql_query(
-            "select * from information_schema.tables", con=engine)
+        res = pd.read_sql_query("select * from information_schema.tables", con=engine)
 
         image_path = os.getcwd()
         image_path = os.path.join(image_path, "icon/success.png")
@@ -86,8 +85,7 @@ def connect_db_with_params(
         db_user, db_password, db_host, db_port, db_database
     ) as db_con:
         engine = db_con.get_engine()
-        res = pd.read_sql_query(
-            "select * from information_schema.tables", con=engine)
+        res = pd.read_sql_query("select * from information_schema.tables", con=engine)
         print("CONECTOU", res.shape)
 
         image_path = os.getcwd()
@@ -148,12 +146,12 @@ def topLevelViewConeectionFunction(
     db_database,
 ):
     new_window = ctk.CTkToplevel(frame)
-    new_window.title("Hello There!")
+    new_window.title("Testando conexão")
     new_window.geometry(
-        center_window_to_display(new_window, 400, 200,
-                                 new_window._get_window_scaling())
+        center_window_to_display(new_window, 400, 200, new_window._get_window_scaling())
     )
     # new_window.geometry("400x200")
+    new_window.wait_visibility()
     new_window.grab_set()
 
     def close():
@@ -177,8 +175,7 @@ def topLevelViewConeectionFunction(
         logging.exception(error)
         new_window.after(1, connection_error_db(new_window))
 
-    close_button = ctk.CTkButton(
-        master=new_window, text="Fechar", command=close)
+    close_button = ctk.CTkButton(master=new_window, text="Fechar", command=close)
     close_button.pack(pady=12, padx=10)
 
 
@@ -197,8 +194,7 @@ def exists_env(root):
     frame = ctk.CTkFrame(master=root, height=800, width=600)
     frame.pack(fill="both", expand=True)
 
-    label = ctk.CTkLabel(master=frame, text="Painel Esus",
-                         font=("arial bold", 50))
+    label = ctk.CTkLabel(master=frame, text="Painel Esus", font=("arial bold", 50))
     label.pack(pady=12, padx=10)
 
     image_path = os.getcwd()
@@ -287,11 +283,9 @@ def create_env(
             "DB_PORT='" + build_env_str(input_port.get()) + "'\n",
             "CIDADE_IBGE='" + build_env_str(input_cidade.get()) + "'\n",
             "ADMIN_USERNAME='" + build_env_str(input_user_admin.get()) + "'\n",
-            "ADMIN_PASSWORD='" +
-            build_env_str(input_password_admin.get()) + "'\n",
+            "ADMIN_PASSWORD='" + build_env_str(input_password_admin.get()) + "'\n",
             "PASSWORD_SALT='" + "painel" + "'\n",
-            "BRIDGE_LOGIN_URL='" +
-            build_env_str(input_bridge_login_url.get()) + "'\n",
+            "BRIDGE_LOGIN_URL='" + build_env_str(input_bridge_login_url.get()) + "'\n",
             "RELOAD_BASE_SCHELDULE='4:00'" + "\n",
             "ARTEFACT=" + "web" + "\n",
             "ENV=" + "instalador" + "\n",
@@ -430,7 +424,7 @@ def tabs():
     tabview.add("Banco de dados")
     tabview.add("Painel E-sus")
     # tabview.add("Responsável")
-    
+
     tabview.tab("Banco de dados").grid_columnconfigure(0, weight=1)
     tabview.tab("Painel E-sus").grid_columnconfigure(0, weight=1)
     # tabview.tab("Responsável").grid_columnconfigure(0, weight=1)
@@ -520,8 +514,7 @@ def tabs():
     test_connection_button.pack(pady=12, padx=10)
 
     # --------------------------------CONFIGURAÇÃO PAINEL--------------------------------
-    frame_painel = ctk.CTkFrame(tabview.tab(
-        "Painel E-sus"), height=780, width=580)
+    frame_painel = ctk.CTkFrame(tabview.tab("Painel E-sus"), height=780, width=580)
     frame_painel.pack(fill="both", expand=True)
 
     image_path_painel = os.getcwd()
@@ -634,9 +627,7 @@ def tabs():
     # )
     # input_owner_email.pack(pady=10, padx=10)
 
-# ---------------------------------------------------------------
-
-
+    # ---------------------------------------------------------------
 
     fill_input_fields(
         [
@@ -676,9 +667,14 @@ def tabs():
     create_new_env_button.pack(pady=12, padx=10)
 
 
-if os.path.exists(".env"):
-    exists_env(root)
-else:
-    tabs()
+def start_interface():
+    if os.path.exists(".env"):
+        exists_env(root)
+    else:
+        tabs()
 
-root.mainloop()
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    start_interface()

@@ -4,7 +4,7 @@ codigos_relevantes as (
 		select unnest (array[
       'T89','T90','W85','E10','E100','E101','E102','E103','E104','E105','E106','E107','E108','E109','E11','E110','E111','E112','E113','E114','E115','E116','E117','E118','E119','E12','E120','E121','E122','E123','E124','E125','E126','E127','E128','E129','E13','E130','E131','E132','E133','E134','E135','E136','E137','E138','E139','E14','E140','E141','E142','E143','E144','E145','E146','E147','E148','E149','O24','O240','O241','O242','O243','O244','O249','P702','ABP006']) as codigo
 	),
- atendimento_individual as (
+ atendimento_individual_completo as (
 	select 
 		tfai.co_seq_fat_atd_ind, tfai.co_fat_cidadao_pec, tfai.co_dim_equipe_1, tfai.co_dim_unidade_saude_1 , tfai.co_dim_cbo_1, cbo.no_cbo, cbo.nu_cbo,
 		tfai.co_dim_tempo, tfai.ds_filtro_cids, tfai.ds_filtro_ciaps, tfai.ds_filtro_proced_avaliados,tfai.ds_filtro_proced_solicitados
@@ -24,7 +24,10 @@ codigos_relevantes as (
                 WHERE tfai.ds_filtro_ciaps LIKE '%' || cr.codigo || '%'
             )
         )
-	and substring(co_dim_tempo::text, 0, 5)<= substring(now()::text, 0, 5)
+),
+atendimento_individual as (
+select * from atendimento_individual_completo where
+	substring(co_dim_tempo::text, 0, 5)<= substring(now()::text, 0, 5)
 	and
 	co_dim_tempo::text::date between (
 		select
@@ -35,7 +38,7 @@ codigos_relevantes as (
 			max(tfai.co_dim_tempo::text::date) from tb_fat_atendimento_individual tfai)
 ),
 date_range as (
-		select ai.co_fat_cidadao_pec, min(ai.co_dim_tempo)::text::date min_date, max(ai.co_dim_tempo)::text::date max_date from atendimento_individual ai group by 1 order by 1 asc
+		select ai.co_fat_cidadao_pec, min(ai.co_dim_tempo)::text::date min_date, max(ai.co_dim_tempo)::text::date max_date from atendimento_individual_completo ai group by 1 order by 1 asc
 	),
 todos_cids as (
 	SELECT 

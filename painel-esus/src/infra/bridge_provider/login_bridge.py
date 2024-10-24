@@ -1,6 +1,6 @@
 # pylint: disable=logging-too-many-args
 # pylint: disable=line-too-long
-# pylint: disable=W0012,R1710, W0611
+# pylint: disable=W0012,R1710, W0611, C0103,W0622
 import urllib.parse
 from pprint import pprint
 
@@ -18,6 +18,14 @@ from .queries.query_sessao import QUERY_SESSAO
 
 
 class LoginBridgeRepository(LoginRepositoryInterface):
+
+    def get_ubs_id(self, id):
+        sql = f"""select co_seq_dim_unidade_saude co_dim_unidade_saude from tb_unidade_saude tus join tb_dim_unidade_saude tdus on tus.nu_cnes = tdus.nu_cnes  where co_seq_unidade_saude = {id};	"""
+        with DBConnectionHandler().get_engine().connect() as db_con:
+            statement = text(sql)
+            result = db_con.execute(statement)
+            result = next(result)
+            return result[0] if len(result) > 0 else id
 
     def check_role(self, response):
         profissional = response["data"]["sessao"]["profissional"]
@@ -68,7 +76,8 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                 for r in result:
                     for i in cbo_unidade:
                         if i[0] == str(r.co_cbo):
-                            return ("user", i[1])
+                            ubs_id = self.get_ubs_id(i[1])
+                            return ("user", ubs_id)
 
         else:
             return ("admin", None)
