@@ -26,6 +26,7 @@ QUERY_SESSAO = """{
                 lotacoes {
                     id
                     ativo
+                    tipo
                     cbo {
                         id
                         nome

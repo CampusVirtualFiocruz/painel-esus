@@ -8,6 +8,7 @@ from src.infra.db.repositories.login_repository import (
     LoginRepository as LoginUserRepository,
 )
 from src.main.server.decorators.token_required import generate_token
+from src.main.server.decorators.token_required import validate_token
 from src.presentations.http_types import HttpRequest
 from src.presentations.http_types import HttpResponse
 
@@ -40,11 +41,57 @@ def login_composer(request: HttpRequest):
                     response.ubs,
                 )
                 body = {"data": token}
-                
-                if response.uf == "waiting for chosing":
-                    body={"data": token, "profiles": response.profiles}
-                
-                return HttpResponse(status_code=200, body={"data": token})
+
+                if response.ubs == "waiting for chosing":
+                    body = {"data": token, "profiles": response.profiles}
+
+                return HttpResponse(status_code=200, body=body)
         except Exception as exc:
             logging.exception(exc)
     return HttpResponse(status_code=401, body={"data": "Username or Password invalid."})
+
+
+def set_profile_composer(request: HttpRequest):
+    providers_repository = LoginBridgeRepository()
+    body = None
+    if request.body:
+        body = request.body
+
+    if body is None or not all(item in body for item in ["tipo", "ubs", "id", "cbo"]):
+        return HttpResponse(status_code=400, body={"data": "Input data missing"})
+
+    token = request.headers["Authorization"].split("Bearer ")[1]
+    token_parsed = validate_token(token)
+    print(f"token: {token_parsed}")
+    use_case = LoginUseCase(providers_repository)
+
+    request_adapter = {
+        "tipo": body["tipo"],
+        "cbo": {
+            "id": body["id"],
+            "cbo2002": body["cbo"],
+        },
+        "unidadeSaude": {
+            "id": (
+                body["ubs"]["id"] if "ubs" in body and body["ubs"] is not None else None
+            ),
+        },
+        "equipe": {
+            "id": (
+                body["equipe"]["id"]
+                if "equipe" in body and body["equipe"] is not None
+                else None
+            ),
+        },
+    }
+    user = use_case.check_role(request_adapter)
+    token = generate_token(
+        token_parsed["username"],
+        token_parsed["cns"],
+        token_parsed["uf"],
+        token_parsed["municipio"],
+        user[0],
+        user[1],
+    )
+    body = {"data": token}
+    return HttpResponse(status_code=200, body=body)

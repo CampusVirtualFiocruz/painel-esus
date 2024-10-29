@@ -105,8 +105,10 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                 equipe = format_entity(acesso["equipe"]["id"], acesso["equipe"]["nome"])
                 
             profiles.append({
+                "tipo": acesso["tipo"],
                 "profissao": acesso["cbo"]["nome"],
                 "cbo": acesso["cbo"]["cbo2002"],
+                "id": acesso["cbo"]["id"],
                 "ubs": ubs,
                 "equipe": equipe
             })
@@ -167,10 +169,14 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                     user_raw_data = UserPayload(
                         username=profissional["nome"],
                         cns=profissional["cns"],
-                        uf="waiting for chosing",
-                        municipio="waiting for chosing",
+                        uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"]["uf"][
+                            "sigla"
+                        ],
+                        municipio=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
+                            "uf"
+                        ]["nome"],
                         profiles=profiles,
-                        ubs=None,
+                        ubs="waiting for chosing",
                     )
                     return user_raw_data
                 if len(profiles) == 1:
