@@ -39,6 +39,11 @@ def login_composer(request: HttpRequest):
                     response.profiles,
                     response.ubs,
                 )
+                body = {"data": token}
+                
+                if response.uf == "waiting for chosing":
+                    body={"data": token, "profiles": response.profiles}
+                
                 return HttpResponse(status_code=200, body={"data": token})
         except Exception as exc:
             logging.exception(exc)

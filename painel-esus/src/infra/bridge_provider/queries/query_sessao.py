@@ -29,6 +29,7 @@ QUERY_SESSAO = """{
                     cbo {
                         id
                         nome
+                        cbo2002
                     }
                     equipe {
                         id

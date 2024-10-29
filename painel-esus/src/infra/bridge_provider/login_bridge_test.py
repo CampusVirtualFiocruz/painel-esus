@@ -1,4 +1,5 @@
 # pylint: disable=unused-import
+from pprint import pprint
 from unittest.mock import patch
 
 import mock
@@ -8,8 +9,10 @@ from src.infra.bridge_provider.login_bridge import LoginBridgeRepository
 
 from .tests.mocks.login_fail import login_fail_response
 from .tests.mocks.response import login
+from .tests.mocks.response import login_profile_list
 from .tests.mocks.response import login_response
 from .tests.mocks.response import login_response_user
+from .tests.mocks.response import login_response_user_0
 
 login_data = {
     "username": "10288507860",

@@ -28,4 +28,5 @@
             "username": "postgres"
         }
     ],
+    "editor.formatOnSave": false,
 }

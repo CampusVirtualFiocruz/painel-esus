@@ -27,10 +27,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             result = next(result)
             return result[0] if len(result) > 0 else id
 
-    def check_role(self, response):
-        profissional = response["data"]["sessao"]["profissional"]
-        acessos = profissional["acessos"]
-        lotacoes = profissional["lotacoes"]
+    def check_role(self, acesso):
         role = None
         roles_adm = [
             "GESTOR_ESTADUAL",
@@ -56,16 +53,14 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             "2515",
             "2239",
         ]
-        for acesso in acessos:
-            if acesso["tipo"] in roles_adm:
-                role = ["admin"]
+        if acesso["tipo"] in roles_adm:
+            role = ["admin"]
         cbo_unidade = []
         if role is None:
-            for lotacao in lotacoes:
-                unidade_saude = lotacao["unidadeSaude"]
-                cbo = lotacao["cbo"]
-                cbo_unidade.append((cbo["id"], unidade_saude["id"]))
-
+            unidade_saude = acesso["unidadeSaude"]
+            cbo = acesso["cbo"]["id"]
+            cbo_unidade.append((cbo, unidade_saude["id"]))
+            
             with DBConnectionHandler().get_engine().connect() as db_con:
                 cbos_ids = [cbo[0] for cbo in cbo_unidade]
                 list_cbo = ",".join(cbos_ids)
@@ -90,6 +85,35 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             "POST", url, headers=head, data=query_sessao, timeout=30
         )
 
+    def get_profiles(self, response):
+        acessos = response["lotacoes"]
+        def format_entity( id, name):
+            if id is not None and name is not None:
+                return {
+                    "id": id,
+                    "nome": name
+                }
+            return None
+        
+        profiles = []
+        for acesso in acessos:
+            ubs = None
+            equipe = None
+            if acesso["unidadeSaude"] is not None:
+                ubs = format_entity(acesso["unidadeSaude"]["id"], acesso["unidadeSaude"]["nome"])
+            if acesso["equipe"] is not None:
+                equipe = format_entity(acesso["equipe"]["id"], acesso["equipe"]["nome"])
+                
+            profiles.append({
+                "profissao": acesso["cbo"]["nome"],
+                "cbo": acesso["cbo"]["cbo2002"],
+                "ubs": ubs,
+                "equipe": equipe
+            })
+            
+        
+        return profiles
+    
     def check_credentials(self, username: str, password: str) -> UserPayload:
         session = requests.Session()
         url_login = env.get("BRIDGE_LOGIN_URL", "")
@@ -136,24 +160,32 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             response = self.post_bridge(url, head, QUERY_SESSAO)
             data = response.json()
 
-            # logging.info('head: {}, nome: {}',
-            #              head,
-            #              data["data"]["sessao"]["profissional"]["lotacoes"][0]["unidadeSaude"]
-            #              )
             if data["data"]["sessao"]:
                 profissional = data["data"]["sessao"]["profissional"]
-                user = self.check_role(data)
-                user_raw_data = UserPayload(
-                    username=profissional["nome"],
-                    cns=profissional["cns"],
-                    uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"]["uf"][
-                        "sigla"
-                    ],
-                    municipio=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
-                        "uf"
-                    ]["nome"],
-                    profiles=[user[0]],
-                    ubs=user[1],
-                )
-                return user_raw_data
+                profiles = self.get_profiles(profissional)
+                if len(profiles) > 1:
+                    user_raw_data = UserPayload(
+                        username=profissional["nome"],
+                        cns=profissional["cns"],
+                        uf="waiting for chosing",
+                        municipio="waiting for chosing",
+                        profiles=profiles,
+                        ubs=None,
+                    )
+                    return user_raw_data
+                if len(profiles) == 1:
+                    user = self.check_role(profissional['lotacoes'][0])                    
+                    user_raw_data = UserPayload(
+                        username=profissional["nome"],
+                        cns=profissional["cns"],
+                        uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"]["uf"][
+                            "sigla"
+                        ],
+                        municipio=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
+                            "uf"
+                        ]["nome"],
+                        profiles=[user[0] if user is not None else None],
+                        ubs=user[1] if user is not None else None,
+                    )
+                    return user_raw_data
         return None
