@@ -20,6 +20,7 @@ import FeridaVascular from "./pages/FeridaVascular";
 import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
 import BarraBrasil from "./components/BarraBrasil";
 import { getUserLocalStorage } from "./context/AuthProvider/util";
+import Qualidade from "./pages/Qualidade";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -182,6 +183,14 @@ function App() {
                 element={
                   <ProtectedLayout>
                     <GestantesList />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/qualidade"
+                element={
+                  <ProtectedLayout>
+                    <Qualidade />
                   </ProtectedLayout>
                 }
               />

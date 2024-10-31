@@ -1,10 +1,14 @@
 import { Typography } from "./Typography";
 import People from "../../assets/images/people.svg";
 import Medkit from "../../assets/images/medkit.png";
+import Paper from "../../assets/images/paper.png";
+import PaperDark from "../../assets/images/paperdark.png";
 
 const IconOptions = {
   people: People,
   medkit: Medkit,
+  paper: Paper,
+  paperdark: PaperDark,
 };
 
 const RenderSingleValue = ({

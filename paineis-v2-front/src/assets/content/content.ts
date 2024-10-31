@@ -6,6 +6,7 @@ export const content: any = {
   nao: "Não",
   masc: "Masculino",
   fem: "Feminino",
+  "nao-informado": "Não informado",
 
   //tabagismo
   "proporcao-tabagistas-acompanhadas":
@@ -32,4 +33,21 @@ export const content: any = {
   analfabeto: "Analfabeto",
   "primeiro-grau-completo": "1º grau\ncompleto",
   "primeiro-grau-incompleto": "1º grau\nincompleto",
+
+  //relatorio de qualidade
+  "total-cadastros-ubs": "Total de cadastros na Unidade Básica de Saúde",
+  "porcentagem-cadastros-atualizados": "Porcentagem de cadastros atualizados*",
+  "total-cadastros-cidadaos-por-tipo-identificacao": "Total de cadastros de cidadãos por tipo de identificação",
+  "status-cadastros-cidadaos": "Status do cadastro dos cidadãos",
+  "localizacao-domicilios-cadastrados": "Localização dos domicílios cadastrados",
+  "via-cadastros-cidadaos": "Via de cadastros dos cidadãos",
+  "total-cadastros-pessoas-raca-cor": "Total de cadastros de pessoas por raça e cor",
+  "sem-cpf-cnf": "Sem CPF/CNS",
+  "cadastros-identificados-por-cpf-cns": "Cadastros identificados\npor CPF e/ou CNS",
+  "ativo": "Cadastro Ativo",
+  "inconsistente": "Cadastro Iconsistente",
+  "total-cadastros": "Total de cadastros",
+  "fci": "Ficha de Cadastro\nIndividual (FCI)",
+  "pec": "Módulo Cidadão\n(PEC)",
+  "recusa": "Recusa de\nCadastro (FCI)",
 };

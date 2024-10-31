@@ -17,6 +17,8 @@ type generalConfigs = {
   isDisabledResponse?: boolean;
   isErrorResponse?: boolean;
   isIsDevelopmentResponse?: boolean;
+  colors?: Array<string>;
+  formatterKind?: string;
 };
 
 type LinearChart = {
@@ -24,18 +26,37 @@ type LinearChart = {
   config?: {
     xAxis?: { name?: string };
     yAxis?: { name?: string };
+    hideLegend?: boolean;
   } & generalConfigs;
 };
 
 type PercentualChart = {
   data: valueInput;
-  config?: generalConfigs;
+  config?: generalConfigs & {
+    radiusStart?: number
+  };
+};
+
+
+type Value = {
+  data: number;
+  config?: {
+    description: string;
+    info?: string;
+    percent?: boolean;
+    icon?: React.ReactElement;
+  } & generalConfigs;
 };
 
 //
 // Tipos finais de gráficos
 //
+
 export type BarChart = LinearChart;
 export type LineChart = LinearChart;
+
 export type PieChart = PercentualChart;
 export type DonutChart = PercentualChart;
+export type TreemapShallowChart = PercentualChart;
+
+export type ValueChart = Value;

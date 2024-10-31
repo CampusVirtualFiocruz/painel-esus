@@ -1,20 +1,21 @@
 import { HTMLProps, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
 import { Header } from "../Header";
 import { Footer } from "../Footer";
-import { Button } from "bold-ui";
 
 const ReportWrapper = ({
   title,
   subtitle,
   children,
+  header,
+  footer,
   ...props
 }: {
   title: string;
   subtitle?: string;
+  header?: ReactNode;
+  footer?: ReactNode;
   children: ReactNode;
 } & HTMLProps<HTMLDivElement>) => {
-  const navigate = useNavigate();
 
   return (
     <div
@@ -73,24 +74,13 @@ const ReportWrapper = ({
             </p>
           )}
         </div>
+        <div style={{ width: "100%" }}>
+          {header}
+          </div>
         <div className="container" style={{ marginTop: "20px" }}>
           <div className="row justify-content-center">{children}</div>
         </div>
-        {/* <div className="container">
-          <div className="row justify-content-center mb-2">
-            <div className="col-12 col-md-8 containerButtons d-flex justify-content-center my-5">
-              <Button
-                type="button"
-                kind="primary"
-                onClick={() => {
-                  navigate(-1);
-                }}
-              >
-                Voltar
-              </Button>
-            </div>
-          </div>
-        </div> */}
+      {footer}
       </div>
       <Footer />
     </div>
