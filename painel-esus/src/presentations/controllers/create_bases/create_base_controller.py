@@ -25,6 +25,10 @@ from src.infra.create_base.create_pessoas_base_repository import (
 from src.infra.create_base.create_smoking_bases_repository import (
     CreateSmokingBasesRepository,
 )
+from src.infra.create_base.create_structure_base_repository import (
+    CreateStructureBaseRepository,
+)
+from src.infra.create_base.create_units_base_repository import CreateUnitsBaseRepository
 
 
 class CreateBasesController:
@@ -39,8 +43,11 @@ class CreateBasesController:
             path = os.path.relpath(path)
         # os.remove(path)
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
+            logging.info("Starting structure generation")
+            CreateStructureBaseRepository().create_base()
             logging.info("Starting base generation")
             _list = [
+                CreateUnitsBaseRepository(),
                 CreatePessoasBaseRepository(),
                 CreateEquipesBaseRepository(),
                 CreateDiabetesBasesRepository(),

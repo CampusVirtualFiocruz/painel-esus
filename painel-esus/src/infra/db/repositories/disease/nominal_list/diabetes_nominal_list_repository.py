@@ -173,15 +173,15 @@ order by p.nome
             users = users.filter(
                 Equipes.codigo_unidade_saude == cnes
             )
-            if nome is not None:
+            if nome is not None and nome:
                 users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
-            if cpf is not None:
+            if cpf is not None and cpf:
                 users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
             users = users.group_by(DiabetesNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (
                 users.order_by(Pessoas.nome)
-                .offset(max(0, ((page - 1) * pagesize)))
+                .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
             return {
