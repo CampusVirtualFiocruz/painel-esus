@@ -177,7 +177,7 @@ order by p.nome
                 users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
             if cpf is not None and cpf:
                 users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
-            users = users.filter(Pessoas.nome.is_not(None))
+            # users = users.filter(Pessoas.nome.is_not(None))
             users = users.group_by(DiabetesNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (
@@ -185,6 +185,7 @@ order by p.nome
                 .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
+            print(str(users))
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,

@@ -1,5 +1,9 @@
 AUTORREFERIDO = """
-select distinct tfci.co_fat_cidadao_pec cidadao_pec, tfci.st_hipertensao_arterial, tfci.st_diabete from tb_fat_cad_individual tfci where  tfci.st_hipertensao_arterial = 1 or tfci.st_diabete = 1
+select 
+distinct tfci.co_fat_cidadao_pec cidadao_pec, tfci.st_hipertensao_arterial, tfci.st_diabete 
+from tb_fat_cad_individual tfci where  (tfci.st_hipertensao_arterial = 1 or tfci.st_diabete = 1 ) 
+group by co_fat_cidadao_pec, st_hipertensao_arterial, st_diabete, st_diabete, co_dim_tempo
+having max(co_dim_tempo::text::date) = co_dim_tempo::text::date
 """
 
 def autorreferidos_check(cnes, status, table):
@@ -26,4 +30,4 @@ from
 where 
 	{cnes_condition}
 	{status_condition}
-	a.cidadao_pec not in (select co_fat_cidadao_pec from {table})"""
+	not EXISTS ( select 1 from {table} d where d.co_fat_cidadao_pec = e.cidadao_pec )"""

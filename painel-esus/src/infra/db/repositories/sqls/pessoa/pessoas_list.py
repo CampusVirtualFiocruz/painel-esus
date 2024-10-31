@@ -5,7 +5,7 @@ select distinct on (p.co_seq_fat_cidadao_pec) p.co_seq_fat_cidadao_pec cidadao_p
     p.ds_raca_cor raca_cor,
     tacv.nu_cpf_cidadao cpf,
     tacv.nu_cns_cidadao cns,
-    tacv.no_cidadao nome,
+    coalesce(tacv.no_cidadao, 'Nome não informado') nome,
     tacv.no_social_cidadao nome_social,
     tacv.dt_nascimento_cidadao data_nascimento,
     extract(year from age(now(), tacv.dt_nascimento_cidadao )) idade,

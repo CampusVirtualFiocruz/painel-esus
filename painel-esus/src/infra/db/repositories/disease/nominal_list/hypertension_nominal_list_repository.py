@@ -183,7 +183,7 @@ order by p.nome
             if cpf is not None and cpf:
                 users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
 
-            users = users.filter(Pessoas.nome.is_not(None))
+            # users = users.filter(Pessoas.nome.is_not(None))
             users = users.group_by(HipertensaoNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (

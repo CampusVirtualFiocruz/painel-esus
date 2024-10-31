@@ -1,11 +1,12 @@
 TABELAS = [
-    'DROP TABLE IF EXISTS pessoas;',
-	'DROP TABLE IF EXISTS diabetes;',
-	'DROP TABLE IF EXISTS diabetes_nominal;',
-	'DROP TABLE IF EXISTS equipes;',
-	'DROP TABLE IF EXISTS hipertensao;',
-	'DROP TABLE IF EXISTS hipertensao_nominal;',
-	"""
+    "DROP TABLE IF EXISTS pessoas;",
+    "DROP TABLE IF EXISTS diabetes;",
+    "DROP TABLE IF EXISTS diabetes_nominal;",
+    "DROP TABLE IF EXISTS equipes;",
+    "DROP TABLE IF EXISTS hipertensao;",
+    "DROP TABLE IF EXISTS hipertensao_nominal;",
+    "DROP TABLE IF EXISTS autorreferidos;",
+    """
 		CREATE TABLE pessoas (
 			"index" BIGINT, 
 			cidadao_pec BIGINT, 
@@ -31,9 +32,9 @@ TABELAS = [
 			tipo_localidade TEXT,
 			CONSTRAINT pk_pessoas PRIMARY KEY (cidadao_pec)
 		);
-	""",	
-	'CREATE INDEX ix_pessoas_index ON pessoas ("index");',
-	"""CREATE TABLE hipertensao_nominal (
+	""",
+    'CREATE INDEX ix_pessoas_index ON pessoas ("index");',
+    """CREATE TABLE hipertensao_nominal (
 		"index" BIGINT, 
 		co_fat_cidadao_pec BIGINT, 
 		diagnostico TEXT, 
@@ -58,8 +59,8 @@ TABELAS = [
 		alerta_creatinina BOOLEAN,
 		FOREIGN KEY(co_fat_cidadao_pec) REFERENCES pessoas(cidadao_pec)
 	);""",
-	'CREATE INDEX ix_hipertensao_nominal_index ON hipertensao_nominal ("index");',
-	"""CREATE TABLE diabetes_nominal (
+    'CREATE INDEX ix_hipertensao_nominal_index ON hipertensao_nominal ("index");',
+    """CREATE TABLE diabetes_nominal (
 		"index" BIGINT, 
 		co_fat_cidadao_pec BIGINT, 
 		diagnostico TEXT, 
@@ -86,5 +87,5 @@ TABELAS = [
 		alerta_ultima_hemoglobina_glicada BOOLEAN,
 		FOREIGN KEY(co_fat_cidadao_pec) REFERENCES pessoas(cidadao_pec)
 	);""",
-	'CREATE INDEX ix_diabetes_nominal_index ON diabetes_nominal ("index");'
+    'CREATE INDEX ix_diabetes_nominal_index ON diabetes_nominal ("index");',
 ]

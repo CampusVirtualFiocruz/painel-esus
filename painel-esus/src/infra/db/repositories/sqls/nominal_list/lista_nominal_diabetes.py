@@ -9,7 +9,7 @@ diabetes_cids = ",".join([ f"'{cid}'" for cid in diabetes.target])
 LISTA_NOMINAL_DIABETES = f"""
 with 
 autoreferidos as (
-	select distinct tfci.co_fat_cidadao_pec, tfci.st_hipertensao_arterial, tfci.st_diabete from tb_fat_cad_individual tfci where  tfci.st_hipertensao_arterial = 1 or tfci.st_diabete = 1
+	select distinct tfci.co_fat_cidadao_pec, tfci.st_diabete from tb_fat_cad_individual tfci where  tfci.st_diabete = 1
 ),
 codigos_relevantes as (
 		{get_cids(diabetes_cids)}
@@ -31,7 +31,7 @@ todos_cids as (
 atendimento_individual_filtrado2 as (
         select 
                 ai.*,
-                ar.st_hipertensao_arterial,
+                ar.st_diabete,
                 (
                 EXISTS (
                 SELECT 1 
@@ -46,7 +46,7 @@ atendimento_individual_filtrado2 as (
             )
         ) "cid",
         case 
-                when ar.st_hipertensao_arterial = 1 and  (
+                when ar.st_diabete = 1 and  (
                 EXISTS (
                 SELECT 1 
                 FROM codigos_relevantes cr
@@ -76,7 +76,7 @@ atendimento_individual_filtrado2 as (
         from todos_cids ai 
         left join autoreferidos ar on ar.co_fat_cidadao_pec = ai.co_fat_cidadao_pec
         where 
-        ar.st_hipertensao_arterial = 1 or
+        ar.st_diabete = 1 or
         (
                 EXISTS (
                 SELECT 1 

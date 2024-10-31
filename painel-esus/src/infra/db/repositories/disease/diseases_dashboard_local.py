@@ -33,6 +33,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         with DBConnectionHandler().get_engine().connect() as db_con:
             sql = autorreferidos_check(cnes,self.disease.name, self.disease.name)
             sql = text(sql)
+            print(sql)
             autorreferidos = db_con.execute(sql)
             return list(autorreferidos)
     def faixa_etaria_list(self):
@@ -108,10 +109,10 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
                 return {"Rural": 0, "Urbano": 0, "Nao Informado": 0}
             for i in self.faixa_etaria_list():
                 result[i] = init()
-            for p in pacientes:
-                if p[2] not in result:
-                    result[p[2]] = init()
-                result[p[2]][p[1]] = p[0]
+            for paciente in pacientes:
+                if paciente[2] not in result:
+                    result[paciente[2]] = init()
+                result[paciente[2]][paciente[1]] = paciente[0]
 
             return result
 
@@ -125,10 +126,10 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
                 return  {"Feminino": 0, "Masculino": 0}
             for i in self.faixa_etaria_list():
                 result[i] = init()
-            for p in pacientes:
-                if p[2] not in result:
-                    result[p[2]] = init()
-                result[p[2]][p[1]] = p[0]
+            for paciente in pacientes:
+                if paciente[2] not in result:
+                    result[paciente[2]] = init()
+                result[paciente[2]][paciente[1]] = paciente[0]
 
             return result
 
