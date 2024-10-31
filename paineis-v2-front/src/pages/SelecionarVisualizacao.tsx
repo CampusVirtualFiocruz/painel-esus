@@ -7,18 +7,18 @@ import Select, { StylesConfig } from "react-select";
 
 import { Api } from "../services/api";
 
-import { Header } from "../components/Header";
+import { Header } from "../components/HeaderV2";
 import { Footer } from "../components/Footer";
 
 import "../styles/selecionarubs.scss";
-import "../styles/selecionarperfil.scss";
+import "../styles/selecionarvisualizacao.scss";
 import variables from "../styles/_exports.module.scss";
 import { Button } from "bold-ui";
 import { getUBS, userCanSelectUBS } from "../App";
 
-import iconeEquipe from "../assets/images/perfil/Icone_Equipe.svg";
-import iconeMunicipio from "../assets/images/perfil/Icone_Municipio.svg";
-import iconeUbs from "../assets/images/perfil/Icone_UBS.svg";
+import iconeEquipe from "../assets/images/visualizacao/Icone_Equipe.svg";
+import iconeMunicipio from "../assets/images/visualizacao/Icone_Municipio.svg";
+import iconeUbs from "../assets/images/visualizacao/Icone_UBS.svg";
 
 type Lista = {
   co_seq_dim_unidade_saude: number;
@@ -65,7 +65,7 @@ const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
   }),
 };
 
-export function SelecionarPerfil() {
+export function SelecionarVisualizacao() {
   let navigate = useNavigate();
 
   const { data, isLoading, error } = useQuery(

@@ -4,6 +4,7 @@ header {
   display: flex;
   align-items: center;
   background-color: var(--bold-blue);
+  height: 3rem;
 
   .siteInfo {
     display: flex;
@@ -12,6 +13,7 @@ header {
     background-color: #343131;
     padding: 8px 16px;
     color: #84aaff;
+    height: 3rem;
 
     .logoName {
       display: flex;
@@ -63,6 +65,35 @@ header {
         font-size: 1rem;
         cursor: pointer;
       }
+    }
+
+    .container-info {
+      display: flex;
+      flex-direction: column;
+
+      .info-name {
+        font-size: 1rem;
+      }
+
+      .info-perfil {
+        font-size: 0.7rem;
+      }
+    }
+
+    li {
+      &:focus {
+        box-shadow: none;
+      }
+    }
+
+    ul {
+      padding: 0;
+      top: 0.75rem;
+      left: -52px;
+    }
+
+    [role="separator"] {
+      margin-bottom: 0;
     }
   }
 }
