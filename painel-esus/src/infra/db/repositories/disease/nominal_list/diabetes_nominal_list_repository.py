@@ -138,7 +138,7 @@ order by p.nome
             diabetes = Diabetes()
             response['cids'] = response['cids'].apply( lambda x: ", ".join(list(set(x.split("|")) & set(diabetes.target))))
             response['ciaps'] = response['ciaps'].apply( lambda x: ", ".join(list(set(x.split("|")) & set(diabetes.target))))
-            
+
             return response
 
     def find_by_nome(self, nome: str):
@@ -177,6 +177,7 @@ order by p.nome
                 users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
             if cpf is not None and cpf:
                 users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
+            users = users.filter(Pessoas.nome.is_not(None))
             users = users.group_by(DiabetesNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (
