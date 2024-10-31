@@ -51,7 +51,9 @@ export function Diabetes() {
   } = useQuery(
     ["diabetes/total", id],
     async () => {
-      const response = await Api.get("diabetes/total");
+      let path = id ? `diabetes/total/${id}` : "diabetes/total";
+      const response = await Api.get(path);
+      
       const responseData = response.data;
 
       let total = responseData.data;
@@ -205,6 +207,7 @@ export function Diabetes() {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,
           id: ubs.co_seq_dim_unidade_saude,
+          qtd: ubs.qtd
         };
       });
 

@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.fed45a59.css",
-    "main.js": "/static/js/main.864c67e6.js",
+    "main.js": "/static/js/main.448bf37c.js",
     "static/media/ReguaLogosPainel.png": "/static/media/ReguaLogosPainel.3d06e51aab1dee04761e.png",
     "static/media/password.svg": "/static/media/password.67c5c0453240b30c4e247d20327ab12b.svg",
     "static/media/mulher.svg": "/static/media/mulher.3916a092b7a6d839cae0ea399caf701f.svg",
@@ -16,10 +16,10 @@
     "static/media/logo.svg": "/static/media/logo.249e7cbdd09a9677e7ae69861990b457.svg",
     "static/media/logout.svg": "/static/media/logout.bdb34d976f11ea095e83f713db0160bb.svg",
     "main.fed45a59.css.map": "/static/css/main.fed45a59.css.map",
-    "main.864c67e6.js.map": "/static/js/main.864c67e6.js.map"
+    "main.448bf37c.js.map": "/static/js/main.448bf37c.js.map"
   },
   "entrypoints": [
     "static/css/main.fed45a59.css",
-    "static/js/main.864c67e6.js"
+    "static/js/main.448bf37c.js"
   ]
 }
