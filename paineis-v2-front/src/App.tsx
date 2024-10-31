@@ -15,6 +15,7 @@ import ListaNominal from "./pages/ListaNominal";
 import { DiabeticosList } from "./pages/DiabeticosList";
 import { SindromesAgudas } from "./pages/SindromesAgudas/SindromesAgudas";
 import { SelecionarUbs } from "./pages/SelecionarUbs";
+import { SelecionarPerfil } from "./pages/SelecionarPerfil";
 import Tabagismo from "./pages/Tabagismo";
 import FeridaVascular from "./pages/FeridaVascular";
 import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
@@ -119,6 +120,14 @@ function App() {
                 element={
                   <ProtectedLayout>
                     <SelecionarUbs />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/selecionarperfil"
+                element={
+                  <ProtectedLayout>
+                    <SelecionarPerfil />
                   </ProtectedLayout>
                 }
               />
