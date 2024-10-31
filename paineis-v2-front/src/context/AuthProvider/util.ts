@@ -26,3 +26,12 @@ export async function LoginRequest(username: string, password: string) {
     return null;
   }
 }
+
+export async function ProfilesRequest(profileData: any) {
+  try {
+    const response = await Api.post("auth/profile", profileData);
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+}

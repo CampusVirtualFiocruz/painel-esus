@@ -19,7 +19,7 @@ import { useQuery } from "react-query";
 import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
 import { Button } from "bold-ui";
-import { getUBS } from "../App";
+import ProfileSelector from "../components/ui/ProfileSelector";
 
 interface CityResponse {
   cep: string;
@@ -28,7 +28,9 @@ interface CityResponse {
   municipio: string;
   uf: string;
 }
+
 type CityInformationResponse = CityResponse;
+
 export function Login() {
   const auth = useAuth();
   let navigate = useNavigate();
@@ -43,6 +45,7 @@ export function Login() {
   const infoContext = useInfo();
 
   const [passwordShown, setPasswordShown] = useState(false);
+  const [showProfileSelector, setShowProfileSelector] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [someStateOpen, setSomeStateOpen] = useState(false);
@@ -72,8 +75,14 @@ export function Login() {
 
     if (validateForm()) {
       try {
-        await auth.authenticate(username, password);
-        navigate("/selecionarubs");
+        const authResponse = await auth.authenticate(username, password);
+        const profiles = authResponse?.payload?.profiles ?? [];
+
+        if(profiles.length > 1){
+          setShowProfileSelector(true);
+        }else{
+          navigate("/selecionarubs");
+        }
       } catch (error) {
         setSomeStateOpen(true);
         setLoading(false);
@@ -92,6 +101,7 @@ export function Login() {
 
   return (
     <div id="page-login">
+      {showProfileSelector && <ProfileSelector />}
       <div id="main">
         <aside>
           <div className="header-content mb-5">
