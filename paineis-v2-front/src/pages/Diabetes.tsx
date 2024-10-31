@@ -381,11 +381,11 @@ export function Diabetes() {
                   </div>
                 )}
               </div>
-              <div className="mt-5" style={{ textAlign: "center" }}>
+              {/* <div className="mt-5" style={{ textAlign: "center" }}>
                 <Button kind="primary" onClick={() => handleClick(5)}>
                   Boas práticas na assistência a pessoa com diabetes
                 </Button>
-              </div>
+              </div> */}
             </div>
             <div style={{ textAlign: "center" }}>
               <Typography.Subtitle>

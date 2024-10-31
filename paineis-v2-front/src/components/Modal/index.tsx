@@ -38,7 +38,7 @@ export function bodyPrimeiroTrimestre() {
     <div className="d-flex flex-column">
       <h1 className="mb-4">Orientações para o 1º trimestre:</h1>
       <p className="mb-1">
-        As consultas devem ser realizadas conforme este cronograma:
+        As consultas médicas ou de enfermagem devem ser realizadas conforme este cronograma:
       </p>
       <ul className="ms-4">
         <li className="mb-1">- até a 28ª semana - mensalmente;</li>
@@ -80,7 +80,7 @@ export function bodyTerceiroTrimestre() {
         Encaminhar gestante para avaliação de bem-estar fetal após 41 semanas de
         gestação
       </p>
-      <p>Agendar consulta de retorno 42 dias após o parto</p>
+      <p>Agendar consulta médica ou de enfermagem de retorno 42 dias após o parto</p>
     </div>
   );
 }
@@ -174,14 +174,28 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
             ? item?.nomeSocialSelecionado
             : item?.nome}
         </h1>
-        <p>{item?.cpf}</p>
+        <p>
+          CPF: {item?.cpf} <br />
+          CNS: {item?.cns}
+        </p>
         <div className="address">
           <p>
+            {item?.tipoLogradouro && (
+              <>
+                <br /> Tipo Logradouro: {item?.tipoLogradouro}
+              </>
+            )}
+            <br />
             {item?.endereco}
+            {item?.complemento && (
+              <>
+                <br /> Complemento: {item?.complemento}
+              </>
+            )}
             <br />
             CEP: {item?.cep}
             <br />
-            Telefone de contato: {item?.telefone}
+            Telefone de contato: {item?.telefone ? item?.telefone : "-"}
           </p>
         </div>
         {Array.isArray(item?.detalhesCondicaoSaude) &&
@@ -207,17 +221,23 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
                           .join(" ")
                           .replace("Ultimo", "Último")
                           .replace("Ultima", "Última")
-                          .replace("Medico", "Médico")}
+                          .replace("Medico", "Médico")
+                          .replace("Odontologica", "Odontológica")
+                          .replace(/De /g, "de ")
+                          .replace(/Da /g, "da ")
+                          .replace(/Do /g, "do ")
+                          .replace(/Ou /g, "ou ")}
                       </strong>
                       <div>
                         <p>{parseText(registro?.data)}</p>
-                        {registro?.exibirAlerta &&
+                        {registro?.exibirAlerta && (
                           <span
                             className="iconCircle iconAlerta ms-2"
                             title="Possui Alertas"
                           >
                             !
-                          </span>}
+                          </span>
+                        )}
                       </div>
                     </p>
                   </div>

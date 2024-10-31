@@ -1,6 +1,12 @@
+# pylint: disable=R0913,C0103
 from pprint import pprint
 
-from src.infra.db.repositories.disease.nominal_list.hypertension_nominal_list_repository import HypertensionNominalListRepository
+from src.infra.db.repositories.disease.nominal_list.diabetes_nominal_list_repository import (
+    DiabetesNominalListRepository,
+)
+from src.infra.db.repositories.disease.nominal_list.hypertension_nominal_list_repository import (
+    HypertensionNominalListRepository,
+)
 from src.main.adapters.nominal_list_adapter import HypertensionNominalListAdapter
 
 
@@ -32,3 +38,24 @@ def test_filter():
 
     users = repo.find_filter(25, 0, 10)
     assert len(users['items']) == 10
+
+def test_join():
+    # repo = HypertensionNominalListRepository()
+    repo = DiabetesNominalListRepository()
+    # user = repo.find_by_nome("IRENILDA")
+    users = repo.find_filter(cnes=26)
+    print(users)
+
+def test_equipe():
+    repo = HypertensionNominalListRepository()
+    # repo = DiabetesNominalListRepository()
+    # user = repo.find_by_nome("IRENILDA")
+    users = repo.find_filter(cnes=26, pagesize=10, page=2)
+    for i in users['items']:
+        
+        print(i.co_fat_cidadao_pec, i.nome )
+
+def test_list_nominal():
+    repo = HypertensionNominalListRepository()
+    lista = repo.find_all_download(26)
+    print(lista)

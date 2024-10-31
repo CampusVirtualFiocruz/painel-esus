@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/static/css/main.fed45a59.css",
+    "main.js": "/static/js/main.864c67e6.js",
+    "static/media/ReguaLogosPainel.png": "/static/media/ReguaLogosPainel.3d06e51aab1dee04761e.png",
+    "static/media/password.svg": "/static/media/password.67c5c0453240b30c4e247d20327ab12b.svg",
+    "static/media/mulher.svg": "/static/media/mulher.3916a092b7a6d839cae0ea399caf701f.svg",
+    "static/media/homem.svg": "/static/media/homem.6a8974395b91ca5aa6e87b6c8f50a1bc.svg",
+    "static/media/user.svg": "/static/media/user.845c89030c28a0aad898ab69b667571d.svg",
+    "static/media/masculino.svg": "/static/media/masculino.71f137d82998d369b7e7452cbbf3f36b.svg",
+    "index.html": "/index.html",
+    "static/media/people.svg": "/static/media/people.83ea3b8fd97ea7a2c9fa6ad60fb8895e.svg",
+    "static/media/feminino.svg": "/static/media/feminino.54a41d660159f64cbc3d793b1826b559.svg",
+    "static/media/info-circle.svg": "/static/media/info-circle.2e9bf001dd6c386bf88c98e336c3eee8.svg",
+    "static/media/user-alt.svg": "/static/media/user-alt.ef4c8de05b0ebc1a51cc14873ffec075.svg",
+    "static/media/logo.svg": "/static/media/logo.249e7cbdd09a9677e7ae69861990b457.svg",
+    "static/media/logout.svg": "/static/media/logout.bdb34d976f11ea095e83f713db0160bb.svg",
+    "main.fed45a59.css.map": "/static/css/main.fed45a59.css.map",
+    "main.864c67e6.js.map": "/static/js/main.864c67e6.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fed45a59.css",
+    "static/js/main.864c67e6.js"
+  ]
+}

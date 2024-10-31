@@ -393,11 +393,11 @@ export function Hipertensao() {
                   </div>
                 )}
               </div>
-              <div className="mt-5">
+              {/* <div className="mt-5">
                 <Button kind="primary" onClick={() => handleClick(6)}>
                   Boas práticas na assistência a pessoas com hipertensão
                 </Button>
-              </div>
+              </div> */}
             </div>
             <div className="painel-secundario">
               <Typography.Subtitle>

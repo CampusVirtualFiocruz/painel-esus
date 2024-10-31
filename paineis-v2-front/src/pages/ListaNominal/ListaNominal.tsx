@@ -77,8 +77,9 @@ const ListaNominal = () => {
 
   const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
   const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
-  const title = `${UBS} / Lista Nominal / ${condicao}`;
-  const subtitle = "(referente aos últimos 12 meses)";
+  const title = `Pessoas Atendidas nos últimos 12 meses / ${condicao}`;
+  const subtitle =
+    `${UBS}`;
 
   const handleSortChange = (sort: string[]) =>
     setParams((state: any) => ({ ...state, sort }));

@@ -8,6 +8,9 @@ from src.errors.logging import logging
 from src.infra.create_base.create_diabetes_bases_repository import (
     CreateDiabetesBasesRepository,
 )
+from src.infra.create_base.create_equipes_base_repository import (
+    CreateEquipesBaseRepository,
+)
 from src.infra.create_base.create_hypertension_bases_repository import (
     CreateHypertensionBasesRepository,
 )
@@ -15,6 +18,9 @@ from src.infra.create_base.create_nominal_lists_bases_repository import CreateDi
 from src.infra.create_base.create_nominal_lists_bases_repository import CreateHypertensionNominalListRepository
 from src.infra.create_base.create_oral_health_bases_repository import (
     CreateOralHealthBasesRepository,
+)
+from src.infra.create_base.create_pessoas_base_repository import (
+    CreatePessoasBaseRepository,
 )
 from src.infra.create_base.create_smoking_bases_repository import (
     CreateSmokingBasesRepository,
@@ -35,9 +41,11 @@ class CreateBasesController:
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
             logging.info("Starting base generation")
             _list = [
+                CreatePessoasBaseRepository(),
+                CreateEquipesBaseRepository(),
                 CreateDiabetesBasesRepository(),
                 CreateHypertensionBasesRepository(),
-                CreateOralHealthBasesRepository(),
+                # CreateOralHealthBasesRepository(),
                 CreateDiabetesNominalListRepository(),
                 CreateHypertensionNominalListRepository(),
                 # CreateSmokingBasesRepository()
