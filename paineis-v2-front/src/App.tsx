@@ -21,6 +21,7 @@ import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
 import BarraBrasil from "./components/BarraBrasil";
 import { getUserLocalStorage } from "./context/AuthProvider/util";
 import Qualidade from "./pages/Qualidade";
+import Infantil from "./pages/Infantil";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -191,6 +192,14 @@ function App() {
                 element={
                   <ProtectedLayout>
                     <Qualidade />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/infantil"
+                element={
+                  <ProtectedLayout>
+                    <Infantil />
                   </ProtectedLayout>
                 }
               />
