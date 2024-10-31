@@ -16,11 +16,11 @@ select distinct on (p.co_seq_fat_cidadao_pec) p.co_seq_fat_cidadao_pec cidadao_p
     ) telefone,
     tacv.dt_ultima_atualizacao_cidadao ultima_atualizacao_cidadao,
     tacv.dt_atualizacao_fcd ultima_atualizacao_fcd,
-    tacv.no_tipo_logradouro_tb_cidadao tipo_endereco,
-    tacv.ds_logradouro_tb_cidadao endereco,
-    tacv.ds_complemento_tb_cidadao complemento,
-    tacv.nu_numero_tb_cidadao numero,
-    tacv.no_bairro_tb_cidadao bairro,
+    coalesce(tacv.no_tipo_logradouro_tb_cidadao, '') tipo_endereco,
+    coalesce(tacv.ds_logradouro_tb_cidadao, '') endereco,
+    coalesce(tacv.ds_complemento_tb_cidadao, '') complemento,
+    coalesce(tacv.nu_numero_tb_cidadao, '') numero,
+    coalesce(tacv.no_bairro_tb_cidadao, '') bairro,
     tacv.ds_cep_tb_cidadao cep,
     case
         when tacv.no_bairro_tb_cidadao_filtro is not null

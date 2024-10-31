@@ -17,8 +17,8 @@ from src.errors.logging import logging
 from src.infra.db.repositories.sqls.demographics import filter_by_gender_age
 from src.infra.db.repositories.sqls.demographics import filter_by_localidade
 from src.infra.db.repositories.sqls.demographics import filter_by_sexo
-from src.infra.db.repositories.sqls.demographics import get_indicators_diabetes
-from src.infra.db.repositories.sqls.demographics import get_indicators_hipertensao
+from src.infra.db.repositories.sqls.demographics import get_indicators_diabetes_plus_autorreferidos
+from src.infra.db.repositories.sqls.demographics import get_indicators_hipertensao_plus_autorreferidos
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -151,14 +151,14 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
                 "hipertensao": {"rural": 0, "urbano": 0, "nao_informado": 0},
             }
             with LocalDBConnectionHandler().get_engine().connect() as local_con:
-                indicator_diabetes_sql = get_indicators_diabetes(cnes)
+                indicator_diabetes_sql = get_indicators_diabetes_plus_autorreferidos(cnes)
                 result_diabetes = local_con.execute(
                     text(indicator_diabetes_sql),
                 )
                 for resp in result_diabetes:
                     idicators_body["diabetes"][resp[0]] = int(resp[1])
 
-                indicator_hipertensao_sql = get_indicators_hipertensao(cnes)
+                indicator_hipertensao_sql = get_indicators_hipertensao_plus_autorreferidos(cnes)
                 result_hipertensao = local_con.execute(
                     text(indicator_hipertensao_sql),
                 )

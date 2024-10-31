@@ -5,6 +5,9 @@ from pathlib import Path
 from src.data.use_cases.create_bases.create_bases_usecase import CreateBasesUseCase
 from src.env import env
 from src.errors.logging import logging
+from src.infra.create_base.create_autorreferido_base_repository import (
+    CreateAutorreferidoBaseRepository,
+)
 from src.infra.create_base.create_diabetes_bases_repository import (
     CreateDiabetesBasesRepository,
 )
@@ -50,6 +53,7 @@ class CreateBasesController:
                 CreateUnitsBaseRepository(),
                 CreatePessoasBaseRepository(),
                 CreateEquipesBaseRepository(),
+                CreateAutorreferidoBaseRepository(),
                 CreateDiabetesBasesRepository(),
                 CreateHypertensionBasesRepository(),
                 # CreateOralHealthBasesRepository(),
