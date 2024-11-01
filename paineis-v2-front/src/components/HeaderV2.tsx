@@ -8,23 +8,29 @@ import "../styles/header.scss";
 
 import imgLogo from "../assets/images/logo.svg";
 
-import { getFirstName } from "../utils";
+import { getFirstName, profiles } from "../utils";
 import { useInfo } from "../context/infoProvider/useInfo";
+import { Modal } from "../components/Modal";
 
 export function Header() {
   const { logout } = useAuth();
   const user = getUserLocalStorage();
   let navigate = useNavigate();
 
+  const [showModal, setShowModal] = useState(false);
+  const [data, setData] = useState<any>({ loaded: 8 });
+  const [profile, setProfile] = useState(profiles[0]);
+
+  const handleProfileSelect = () => {
+    setData({ loaded: 8 });
+    setShowModal(true);
+  };
+
   function handleHome() {
     navigate("/selecionarubs");
   }
 
-  function handleChangeViz() {
-    navigate("/selecionarvisualizacao");
-  }
-
-  function handleChangeProfile() {
+  function handleVizSelect() {
     navigate("/selecionarvisualizacao");
   }
 
@@ -44,6 +50,14 @@ export function Header() {
 
   return (
     <>
+      {showModal && (
+        <Modal
+          data={data}
+          setShowModal={setShowModal}
+          setProfile={setProfile}
+          initialProfile={profile}
+        />
+      )}
       <header id="header">
         <div className="siteInfo">
           <div className="logoName" onClick={handleHome}>
@@ -63,7 +77,7 @@ export function Header() {
           />
           <div className="container-info">
             <span className="info-name">{getFirstName(user?.fullName)}</span>
-            <span className="info-perfil">{getFirstName(user?.fullName)}</span>
+            <span className="info-perfil">{profile}</span>
           </div>
           <div
             ref={setlinkRef}
@@ -83,7 +97,7 @@ export function Header() {
             />
           </div>
           <Dropdown anchorRef={linkRef} open={open} onClose={handleClose}>
-            <DropdownItem onClick={handleChangeProfile}>
+            <DropdownItem onClick={handleProfileSelect}>
               <Icon
                 icon="userFilled"
                 style={{ width: "18px", marginRight: "10px", color: "#343131" }}
@@ -91,7 +105,7 @@ export function Header() {
               Trocar de Perfil
             </DropdownItem>
             <DropdownDivider />
-            <DropdownItem onClick={handleChangeViz}>
+            <DropdownItem onClick={handleVizSelect}>
               <Icon
                 icon="houseFilled"
                 style={{ width: "18px", marginRight: "10px", color: "#343131" }}
