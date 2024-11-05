@@ -135,8 +135,9 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "us-east-1"
         run: |
-          aws s3 cp "D:/a/painel-esus/painel-esus/instalador/output/" \
-          "s3://painel-esus-public/instalador/" --recursive --exclude "*" --include "painel-esus-setup*"
+          file_path=$(find "D:/a/painel-esus/painel-esus/instalador/output/" -name "painel-esus-setup*")
+          aws s3 cp "$file_path" "s3://painel-esus-public/instalador/" --acl public-read
+          echo "file_name=$(basename $file_path)" >> $GITHUB_ENV
         shell: bash
 
       - name: Upload Artifact
