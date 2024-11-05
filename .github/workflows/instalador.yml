@@ -135,7 +135,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "us-east-1"
         run: |
-          dir D:/a/painel-esus/painel-esus/instalador/
+          dir D:/a/painel-esus/painel-esus/instalador/output
         shell: bash
 
       - name: Upload Artifact
