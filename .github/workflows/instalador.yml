@@ -135,14 +135,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "us-east-1"
         run: |
-          file_path=$(find "D:/a/painel-esus/painel-esus/instalador/output/" -name "painel-esus-setup*")
-          aws s3 cp "$file_path" "s3://painel-esus-public/instalador/" --acl public-read
-          echo "file_name=$(basename $file_path)" >> $GITHUB_ENV
-        shell: bash
-
-      - name: Exibir URL do arquivo enviado
-        run: |
-          echo "URL do arquivo: https://painel-esus-public.s3.sua-regiao.amazonaws.com/instalador/${{ env.file_name }}"
+          aws s3 cp "D:/a/painel-esus/painel-esus/instalador/output/" \
+          "s3://painel-esus-public/instalador/" --recursive --exclude "*" --include "painel-esus-setup*"
         shell: bash
 
       - name: Upload Artifact
@@ -162,4 +156,8 @@ jobs:
     steps:
       - name: Notify Slack
         run: |
-          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }}  -H 'Content-type: application/json' --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'
+          version="${{ github.head_ref || github.ref_name }}"
+          clean_version=$(echo "$version" | sed 's/^v//')
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} -H 'Content-type: application/json' \
+            --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *'"$clean_version"'* \n Download: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.exe"}'
+        
