@@ -137,6 +137,7 @@ jobs:
         run: |
           aws s3 cp "D:\a\painel-esus\painel-esus\instalador\output\painel-esus" \
           "s3://painel-esus-public/instalador/" --acl public-read
+        shell: bash
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
