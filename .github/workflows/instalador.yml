@@ -135,8 +135,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "us-east-1"
         run: |
-          aws s3 cp "D:\a\painel-esus\painel-esus\instalador\output\painel-esus" \
-          "s3://painel-esus-public/instalador/" --acl public-read
+          dir .
         shell: bash
 
       - name: Upload Artifact
