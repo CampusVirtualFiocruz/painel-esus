@@ -140,6 +140,11 @@ jobs:
           echo "file_name=$(basename $file_path)" >> $GITHUB_ENV
         shell: bash
 
+      - name: Exibir URL do arquivo enviado
+        run: |
+          echo "URL do arquivo: https://painel-esus-public.s3.sua-regiao.amazonaws.com/instalador/${{ env.file_name }}"
+        shell: bash
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
