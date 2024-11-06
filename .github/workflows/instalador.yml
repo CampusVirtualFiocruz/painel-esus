@@ -80,8 +80,8 @@ jobs:
       
       - name: List Downloaded Files
         run: |
-          cat <<EOF > painel_esus.db EOF
-          cat <<EOF > painel-esus.sqls EOF
+          cat touch painel_esus.db
+          cat painel-esus.sqls
 
       - name: Create compressed file
         run: |
