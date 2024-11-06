@@ -87,6 +87,14 @@ jobs:
           cd ./static-files
           ls -la
 
+      - name: Create compressed file
+        run: |
+          # Defina o diretório e os arquivos que você deseja compactar
+          FILES_TO_COMPRESS="painel-esus/icon painel-esus/ibge.csv painel-esus painel-esus\painel_esus.db" painel-esus\painel-esus.sqls paineis-v2-front/static-files"
+          
+          # Cria um arquivo compactado .tar.gz
+          tar -czf painel-esus.tar.gz $FILES_TO_COMPRESS
+
   # create-exe-files:
   #   needs: [build-frontend, build-backend]
   #   runs-on: windows-latest
