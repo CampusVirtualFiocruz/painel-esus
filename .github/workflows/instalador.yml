@@ -87,15 +87,22 @@ jobs:
           cd ./static-files
           ls -la
 
+      - name: List Downloaded Files Back
+        run: |
+          # Comandos para usar os arquivos estáticos e criar o EXE
+          ls -la
+          cd ./painel-esus
+          ls -la
+
       - name: Create compressed file
         run: |
           # Define os arquivos e pastas que você deseja compactar
           tar -czf compressed_file.tar.gz \
-            painel-esus/icon \
-            painel-esus/ibge.csv \
-            painel-esus/painel_esus.db \
-            painel-esus/painel-esus.sqls \
-            paineis-v2-front/static-files
+            ./painel-esus/icon \
+            ./painel-esus/ibge.csv \
+            ./painel-esus/painel_esus.db \
+            ./painel-esus/painel-esus.sqls \
+            ./paineis-v2-front/static-files
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
