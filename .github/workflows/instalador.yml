@@ -64,7 +64,27 @@ jobs:
         working-directory: ./painel-esus
         run: |
           pyinstaller --icon=.\icon\config.ico -n config --onefile interface.py
+          cd dist
           ls -la
+
+      - name: Build EXE run
+        working-directory: ./painel-esus
+        run: |
+          pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
+          cd dist
+          ls -la   
+
+      # Salva a pasta 'paineis-v2-front/static-files' como um artifact
+      - uses: actions/upload-artifact@v3
+        with:
+          name: config
+          path: ./config.exe
+          
+      # Salva a pasta 'paineis-v2-front/static-files' como um artifact
+      - uses: actions/upload-artifact@v3
+        with:
+          name: run
+          path: ./painel-esus.exe
 
       - name: Create backend environment
         working-directory: ./painel-esus
@@ -124,17 +144,6 @@ jobs:
   #         pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
   #       shell: cmd
 
-  #     # Salva a pasta 'paineis-v2-front/static-files' como um artifact
-  #     - uses: actions/upload-artifact@v3
-  #       with:
-  #         name: config
-  #         path: ./config.exe
-          
-  #     # Salva a pasta 'paineis-v2-front/static-files' como um artifact
-  #     - uses: actions/upload-artifact@v3
-  #       with:
-  #         name: run
-  #         path: ./painel-esus.exe
 
   #     - name: Set up Inno Setup
   #       run: |
