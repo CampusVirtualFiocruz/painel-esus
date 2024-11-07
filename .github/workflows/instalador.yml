@@ -78,10 +78,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       
-      - name: List Downloaded Files
+      - name: Create empty files
         run: |
-          cat touch painel_esus.db
-          cat painel-esus.sqls
+          # Cria arquivos vazios
+          touch painel_esus.db painel-esus.sqls
 
       - name: Create compressed file
         run: |
