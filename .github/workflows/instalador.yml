@@ -86,7 +86,7 @@ jobs:
 
       - name: Create compressed file
         run: |
-          # Compacta os arquivos e pastas especificados na raiz do arquivo compactado
+          ls -la
           tar -czf compressed_file.tar.gz \
             -C painel-esus ibge.csv icon \
             -C paineis-v2-front static-files
