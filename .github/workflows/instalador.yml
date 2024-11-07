@@ -57,65 +57,19 @@ jobs:
         working-directory: ./painel-esus
         run: |
           python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
-
-      - name: Create backend environment
-        working-directory: ./painel-esus
-        run: |
-          cat <<EOF > .env
-          ${{ vars.ENV_BACK }}
-          EOF
-
-      - name: Extract version from branch name
-        id: extract_version
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
-
-
-  create-exe-files:
-    needs: [build-frontend, build-backend]
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
-
-      - name: Download files
-        uses: actions/download-artifact@v3
-        with:
-          name: Build
-          path: ./paineis-v2-front/static-files
-      - run: dir
-
-      - name: List Downloaded Files
-        run: |
-          # Comandos para usar os arquivos estáticos e criar o EXE
-          cd ./paineis-v2-front
-          dir
-          cd ./static-files
-          dir
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.10" # Use the Python version you need
-
-      - name: Install PyInstaller
-        run: pip install pyinstaller
-        shell: cmd
+          pip3 install -r requirements.tx
 
       - name: Build EXE config
         working-directory: ./painel-esus
         run: |
-          python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
           pyinstaller --icon=.\icon\config.ico -n config --onefile .\interface.py
-        shell: cmd
+          ls -la
 
       - name: Build EXE run
         working-directory: ./painel-esus
         run: |
           pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
-        shell: cmd
+          ls -la
 
       # Salva a pasta 'paineis-v2-front/static-files' como um artifact
       - uses: actions/upload-artifact@v3
@@ -129,84 +83,155 @@ jobs:
           name: run
           path: ./painel-esus.exe
 
-      - name: Set up Inno Setup
+
+      - name: Create backend environment
+        working-directory: ./painel-esus
         run: |
-          curl -LO https://jrsoftware.org/download.php/is.exe
-          start /wait is.exe /SILENT /VERYSILENT
-        shell: cmd
+          cat <<EOF > .env
+          ${{ vars.ENV_BACK }}
+          EOF
 
-      - name: Build installer
-        run: |
-          dir .
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
-        shell: cmd
-
-      - name: Upload para AWS S3
-        if: success() # Executa este step apenas se o build for bem-sucedido
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: "us-east-1"
-        run: |
-          aws s3 cp "D:/a/painel-esus/painel-esus/instalador/output/" \
-          "s3://painel-esus-public/instalador/" --recursive --exclude "*" --include "painel-esus-setup*"
-        shell: bash
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: painel-esus
-          path: D:\a\painel-esus\painel-esus\instalador\output
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: painel-esus
+      - name: Extract version from branch name
+        id: extract_version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
 
-  build-linux-artfact:
-    needs: [create-exe-files]
-    runs-on: ubuntu-latest
+  # create-exe-files:
+  #   needs: [build-frontend, build-backend]
+  #   runs-on: windows-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout the repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Download files
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: Build
+  #         path: ./paineis-v2-front/static-files
+  #     - run: dir
+
+  #     - name: List Downloaded Files
+  #       run: |
+  #         # Comandos para usar os arquivos estáticos e criar o EXE
+  #         cd ./paineis-v2-front
+  #         dir
+  #         cd ./static-files
+  #         dir
+
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: "3.10" # Use the Python version you need
+
+  #     - name: Install PyInstaller
+  #       run: pip install pyinstaller
+  #       shell: cmd
+
+  #     - name: Build EXE config
+  #       working-directory: ./painel-esus
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip3 install -r requirements.txt
+  #         pyinstaller --icon=.\icon\config.ico -n config --onefile .\interface.py
+  #       shell: cmd
+
+  #     - name: Build EXE run
+  #       working-directory: ./painel-esus
+  #       run: |
+  #         pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
+  #       shell: cmd
+
+  #     # Salva a pasta 'paineis-v2-front/static-files' como um artifact
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: config
+  #         path: ./config.exe
+          
+  #     # Salva a pasta 'paineis-v2-front/static-files' como um artifact
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: run
+  #         path: ./painel-esus.exe
+
+  #     - name: Set up Inno Setup
+  #       run: |
+  #         curl -LO https://jrsoftware.org/download.php/is.exe
+  #         start /wait is.exe /SILENT /VERYSILENT
+  #       shell: cmd
+
+  #     - name: Build installer
+  #       run: |
+  #         dir .
+  #         "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
+  #       shell: cmd
+
+  #     - name: Upload para AWS S3
+  #       if: success() # Executa este step apenas se o build for bem-sucedido
+  #       env:
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         AWS_REGION: "us-east-1"
+  #       run: |
+  #         aws s3 cp "D:/a/painel-esus/painel-esus/instalador/output/" \
+  #         "s3://painel-esus-public/instalador/" --recursive --exclude "*" --include "painel-esus-setup*"
+  #       shell: bash
+
+  #     - name: Upload Artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: painel-esus
+  #         path: D:\a\painel-esus\painel-esus\instalador\output
+  #     - name: Download Artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: painel-esus
+
+
+  # build-linux-artfact:
+  #   needs: [create-exe-files]
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
  
-      - name: Download files
-        uses: actions/download-artifact@v3
-        with:
-          name: config
-          path: ./config.exe
-      - run: ls
+  #     - name: Download files
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: config
+  #         path: ./config.exe
+  #     - run: ls
 
-      - name: Download files
-        uses: actions/download-artifact@v3
-        with:
-          name: conrunfig
-          path: ./painel-esus.exe
-      - run: ls
+  #     - name: Download files
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: conrunfig
+  #         path: ./painel-esus.exe
+  #     - run: ls
 
-      - name: Create empty files
-        run: |
-          # Cria arquivos vazios
-          touch painel_esus.db painel-esus.sqls
+  #     - name: Create empty files
+  #       run: |
+  #         # Cria arquivos vazios
+  #         touch painel_esus.db painel-esus.sqls
 
 
-      - name: Validate files and compress
-        run: |
-          tar -czf compressed_file.tar.gz \
-            -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
-            -C /home/runner/work/painel-esus/painel-esus/painel-esus icon \
-            -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files \
-            -C /home/runner/work/painel-esus/painel-esus painel_esus.db \
-            -C /home/runner/work/painel-esus/painel-esus painel-esus.sqls \
-            -C /home/runner/work/painel-esus/painel-esus config.exe \
-            -C /home/runner/work/painel-esus/painel-esus painel-esus.exe \
+  #     - name: Validate files and compress
+  #       run: |
+  #         tar -czf compressed_file.tar.gz \
+  #           -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
+  #           -C /home/runner/work/painel-esus/painel-esus/painel-esus icon \
+  #           -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files \
+  #           -C /home/runner/work/painel-esus/painel-esus painel_esus.db \
+  #           -C /home/runner/work/painel-esus/painel-esus painel-esus.sqls \
+  #           -C /home/runner/work/painel-esus/painel-esus config.exe \
+  #           -C /home/runner/work/painel-esus/painel-esus painel-esus.exe \
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: compressed-file
-          path: compressed_file.tar.gz
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: compressed-file
+  #         path: compressed_file.tar.gz
 
   # notify-slack:
   #   runs-on: ubuntu-latest
