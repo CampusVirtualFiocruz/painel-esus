@@ -191,14 +191,14 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: config
-          path: ./config
+          path: dist/config
       - run: ls
 
       - name: Download files
         uses: actions/download-artifact@v3
         with:
           name: run
-          path: ./painel-esus
+          path: dist/painel-esus
       - run: ls
 
       - name: Create empty files
