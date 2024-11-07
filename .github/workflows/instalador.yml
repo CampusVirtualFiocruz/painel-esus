@@ -90,8 +90,8 @@ jobs:
             -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
             -C /home/runner/work/painel-esus/painel-esus/painel-esus icon \
             -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files \
-            -C painel_esus.db \
-            -C painel-esus.sqls \
+            -C /home/runner/work/painel-esus/painel-esus painel_esus.db \
+            -C /home/runner/work/painel-esus/painel-esus painel-esus.sqls \
 
 
       # - name: Create compressed file
