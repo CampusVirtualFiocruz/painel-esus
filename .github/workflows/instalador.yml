@@ -86,11 +86,15 @@ jobs:
 
       - name: Create compressed file
         run: |
-          ls -la
+          # Lista o conteúdo para validar os arquivos antes da compactação
+          ls -l painel-esus
+          ls -l paineis-v2-front
+          
           tar -czf compressed_file.tar.gz \
             -C painel-esus ibge.csv icon \
-            -C paineis-v2-front static-files \
-            
+            -C . painel_esus.db painel-esus.sqls \
+            -C paineis-v2-front static-files
+          
       # - name: Create compressed file
       #   run: |
       #     # Define os arquivos e pastas que você deseja compactar
