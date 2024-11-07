@@ -98,8 +98,6 @@ jobs:
           tar -czf compressed_file.tar.gz \
             -C painel-esus ibge.csv \
             -C painel-esus icon \
-            -C painel-esus painel_esus.db \
-            -C painel-esus painel-esus.sqls \
             -C paineis-v2-front static-files
 
       - name: Upload artifact
