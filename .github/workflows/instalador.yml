@@ -89,7 +89,7 @@ jobs:
           ls -la
           tar -czf compressed_file.tar.gz \
             -C painel-esus ibge.csv icon \
-            -C paineis-v2-front static-files
+            -C paineis-v2-front static-files \
             
       # - name: Create compressed file
       #   run: |
