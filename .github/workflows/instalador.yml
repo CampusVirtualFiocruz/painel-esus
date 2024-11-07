@@ -221,7 +221,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: compressed-file
+          name: painel-esus-linux
           path: painel-esus-linux.tar.gz
 
   notify-slack:
