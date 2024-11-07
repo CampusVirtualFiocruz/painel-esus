@@ -164,13 +164,27 @@ jobs:
 
 
   build-linux-artfact:
-    needs: [build-frontend, build-backend]
+    needs: [create-exe-files]
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
+ 
+      - name: Download files
+        uses: actions/download-artifact@v3
+        with:
+          name: config
+          path: ./config.exe
+      - run: ls
+
+      - name: Download files
+        uses: actions/download-artifact@v3
+        with:
+          name: conrunfig
+          path: ./painel-esus.exe
+      - run: ls
+
       - name: Create empty files
         run: |
           # Cria arquivos vazios
@@ -185,6 +199,8 @@ jobs:
             -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files \
             -C /home/runner/work/painel-esus/painel-esus painel_esus.db \
             -C /home/runner/work/painel-esus/painel-esus painel-esus.sqls \
+            -C /home/runner/work/painel-esus/painel-esus config.exe \
+            -C /home/runner/work/painel-esus/painel-esus painel-esus.exe \
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
