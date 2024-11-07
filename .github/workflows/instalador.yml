@@ -96,9 +96,9 @@ jobs:
           
           # Cria o arquivo compactado com os arquivos na raiz
           tar -czf compressed_file.tar.gz \
-            -C painel-esus ibge.csv \
-            -C painel-esus icon \
-            -C paineis-v2-front static-files
+            -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
+            -C /home/runner/work/painel-esus/painel-esus/painel-esus icon \
+            -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
