@@ -78,13 +78,13 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: config
-          path: ./config.exe
+          path: dist/config
           
       # Salva a pasta 'paineis-v2-front/static-files' como um artifact
       - uses: actions/upload-artifact@v3
         with:
           name: run
-          path: ./painel-esus.exe
+          path: dist/painel-esus
 
       - name: Create backend environment
         working-directory: ./painel-esus
@@ -179,50 +179,50 @@ jobs:
   #         name: painel-esus
 
 
-  # build-linux-artfact:
-  #   needs: [create-exe-files]
-  #   runs-on: ubuntu-latest
+  build-linux-artfact:
+    needs: [create-exe-files]
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
  
-  #     - name: Download files
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: config
-  #         path: ./config.exe
-  #     - run: ls
+      - name: Download files
+        uses: actions/download-artifact@v3
+        with:
+          name: config
+          path: ./config
+      - run: ls
 
-  #     - name: Download files
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: conrunfig
-  #         path: ./painel-esus.exe
-  #     - run: ls
+      - name: Download files
+        uses: actions/download-artifact@v3
+        with:
+          name: run
+          path: ./painel-esus
+      - run: ls
 
-  #     - name: Create empty files
-  #       run: |
-  #         # Cria arquivos vazios
-  #         touch painel_esus.db painel-esus.sqls
+      - name: Create empty files
+        run: |
+          # Cria arquivos vazios
+          touch painel_esus.db painel-esus.sqls
 
 
-  #     - name: Validate files and compress
-  #       run: |
-  #         tar -czf compressed_file.tar.gz \
-  #           -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
-  #           -C /home/runner/work/painel-esus/painel-esus/painel-esus icon \
-  #           -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files \
-  #           -C /home/runner/work/painel-esus/painel-esus painel_esus.db \
-  #           -C /home/runner/work/painel-esus/painel-esus painel-esus.sqls \
-  #           -C /home/runner/work/painel-esus/painel-esus config.exe \
-  #           -C /home/runner/work/painel-esus/painel-esus painel-esus.exe \
+      - name: Validate files and compress
+        run: |
+          tar -czf compressed_file.tar.gz \
+            -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
+            -C /home/runner/work/painel-esus/painel-esus/painel-esus icon \
+            -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files \
+            -C /home/runner/work/painel-esus/painel-esus painel_esus.db \
+            -C /home/runner/work/painel-esus/painel-esus painel-esus.sqls \
+            -C /home/runner/work/painel-esus/painel-esus config \
+            -C /home/runner/work/painel-esus/painel-esus painel-esus \
 
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: compressed-file
-  #         path: compressed_file.tar.gz
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: compressed-file
+          path: compressed_file.tar.gz
 
   # notify-slack:
   #   runs-on: ubuntu-latest
