@@ -60,6 +60,12 @@ jobs:
           python -m pip install --upgrade pip
           pip3 install -r requirements.txt
 
+      - name: Build EXE config
+        working-directory: ./painel-esus
+        run: |
+          pyinstaller --icon=.\icon\config.ico -n config --onefile .\interface.py
+          ls -la
+
       - name: Create backend environment
         working-directory: ./painel-esus
         run: |
