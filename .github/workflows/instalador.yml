@@ -86,19 +86,21 @@ jobs:
 
       - name: Validate files and compress
         run: |
-          # Confirma o diretório de execução
-          echo "Current directory: $(pwd)"
-          
-          # Lista os diretórios para garantir que os arquivos existem
-          ls -l
-          ls -l painel-esus || echo "Directory painel-esus not found"
-          ls -l paineis-v2-front || echo "Directory paineis-v2-front not found"
-          
-          # Cria o arquivo compactado com os arquivos na raiz
           tar -czf compressed_file.tar.gz \
             -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
             -C /home/runner/work/painel-esus/painel-esus/painel-esus icon \
-            -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files
+            -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files \
+            painel_esus.db \
+            painel-esus.sqls \
+
+
+      # - name: Create compressed file
+      #   run: |
+      #     # Define os arquivos e pastas que você deseja compactar
+      #     tar -czf compressed_file.tar.gz \
+      #       painel_esus.db \
+      #       painel-esus.sqls \
+      #       paineis-v2-front/static-files
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
