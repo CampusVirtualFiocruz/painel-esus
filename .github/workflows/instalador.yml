@@ -89,12 +89,14 @@ jobs:
           # Lista o conteúdo para validar os arquivos antes da compactação
           ls -l painel-esus
           ls -l paineis-v2-front
+          
+          # Cria o arquivo compactado com os arquivos na raiz
           tar -czf compressed_file.tar.gz \
-            painel-esus/ibge.csv \
-            painel-esus/icon \
-            painel_esus.db \
-            painel-esus.sqls \
-            paineis-v2-front/static-files
+            -C painel-esus ibge.csv \
+            -C painel-esus icon \
+            -C painel-esus painel_esus.db \
+            -C painel-esus painel-esus.sqls \
+            -C paineis-v2-front static-files
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
