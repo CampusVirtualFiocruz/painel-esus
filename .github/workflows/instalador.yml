@@ -180,7 +180,7 @@ jobs:
 
 
   build-linux-artfact:
-    needs: [create-exe-files]
+    needs:  [build-frontend, build-backend]
     runs-on: ubuntu-latest
 
     steps:
