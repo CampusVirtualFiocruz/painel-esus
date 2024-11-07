@@ -84,11 +84,15 @@ jobs:
           touch painel_esus.db painel-esus.sqls
 
 
-      - name: Create compressed file
+      - name: Validate files and compress
         run: |
-          # Lista o conteúdo para validar os arquivos antes da compactação
-          ls -l painel-esus
-          ls -l paineis-v2-front
+          # Confirma o diretório de execução
+          echo "Current directory: $(pwd)"
+          
+          # Lista os diretórios para garantir que os arquivos existem
+          ls -l
+          ls -l painel-esus || echo "Directory painel-esus not found"
+          ls -l paineis-v2-front || echo "Directory paineis-v2-front not found"
           
           # Cria o arquivo compactado com os arquivos na raiz
           tar -czf compressed_file.tar.gz \
