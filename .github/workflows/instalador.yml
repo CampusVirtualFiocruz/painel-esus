@@ -56,33 +56,9 @@ jobs:
       - name: Install PyInstaller
         working-directory: ./painel-esus
         run: |
+          ls -la
           python -m pip install --upgrade pip
-          pip3 install -r requirements.tx
-
-      - name: Build EXE config
-        working-directory: ./painel-esus
-        run: |
-          pyinstaller --icon=.\icon\config.ico -n config --onefile .\interface.py
-          ls -la
-
-      - name: Build EXE run
-        working-directory: ./painel-esus
-        run: |
-          pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
-          ls -la
-
-      # Salva a pasta 'paineis-v2-front/static-files' como um artifact
-      - uses: actions/upload-artifact@v3
-        with:
-          name: config
-          path: ./config.exe
-          
-      # Salva a pasta 'paineis-v2-front/static-files' como um artifact
-      - uses: actions/upload-artifact@v3
-        with:
-          name: run
-          path: ./painel-esus.exe
-
+          pip3 install -r requirements.txt
 
       - name: Create backend environment
         working-directory: ./painel-esus
