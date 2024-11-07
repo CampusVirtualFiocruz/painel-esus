@@ -63,7 +63,7 @@ jobs:
       - name: Build EXE config
         working-directory: ./painel-esus
         run: |
-          pyinstaller --icon=.\icon\config.ico -n config --onefile .\interface.py
+          pyinstaller --icon=.\icon\config.ico -n config --onefile interface.py
           ls -la
 
       - name: Create backend environment
