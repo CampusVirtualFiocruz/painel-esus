@@ -79,7 +79,9 @@ jobs:
           ls -la
           pwd
           tar -czf painel-esus-linux.tar.gz \
-            -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
+            -C $(pwd)/painel-esus ibge.csv \
+            -C $(pwd)/painel-esus icon \
+            -C $(pwd)/paineis-v2-front static-files
             
 
       - name: Upload artifact
