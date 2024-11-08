@@ -19,8 +19,7 @@ import { useQuery } from "react-query";
 import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
 import { Button } from "bold-ui";
-import { getUBS } from "../App";
-import ProfileSelector from "../components/ProfileSelector";
+import ProfileSelector from "../components/ui/ProfileSelector";
 
 interface CityResponse {
   cep: string;
@@ -29,7 +28,9 @@ interface CityResponse {
   municipio: string;
   uf: string;
 }
+
 type CityInformationResponse = CityResponse;
+
 export function Login() {
   const auth = useAuth();
   let navigate = useNavigate();
@@ -37,22 +38,19 @@ export function Login() {
   const [username, setUsername] = useState("admin");
 
   //const [password, setPassword] = useState("painelfiocruz22");
-  const [password, setPassword] = useState("FCadmin");
+  const [password, setPassword] = useState("FCadmin23");
   // const [username, setUsername] = useState("");
   // const [password, setPassword] = useState("");
   const [city, setCity] = useState("");
   const infoContext = useInfo();
 
   const [passwordShown, setPasswordShown] = useState(false);
+  const [showProfileSelector, setShowProfileSelector] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [someStateOpen, setSomeStateOpen] = useState(false);
 
-  const {
-    data: diabeticosList,
-    isLoading,
-    error,
-  } = useQuery("city-informations", async () => {
+   useQuery("city-informations", async () => {
     const response = await Api.get<CityInformationResponse>(
       "city-informations"
     );
@@ -60,7 +58,7 @@ export function Login() {
     setCity(`${data.municipio} - ${data.uf}`);
     infoContext.setCityInformation(data);
     return data;
-  });
+  }); 
 
   function validateForm() {
     return username.length > 0 && password.length > 0;
@@ -73,8 +71,14 @@ export function Login() {
 
     if (validateForm()) {
       try {
-        await auth.authenticate(username, password);
-        navigate("/selecionarubs");
+        const authResponse = await auth.authenticate(username, password);
+        const profiles = authResponse?.payload?.profiles ?? [];
+
+        if (profiles.length > 1) {
+          setShowProfileSelector(true);
+        } else {
+          navigate("/selecionarvisualizacao");
+        }
       } catch (error) {
         setSomeStateOpen(true);
         setLoading(false);
@@ -93,7 +97,7 @@ export function Login() {
 
   return (
     <div id="page-login">
-      <ProfileSelector />
+      {showProfileSelector && <ProfileSelector />}
       <div id="main">
         <aside>
           <div className="header-content mb-5">
@@ -109,12 +113,10 @@ export function Login() {
               </div>
             </div>
           </div>
-
           <div className="container px-0">
             <div className="row gx-5">
               <div className="col-12 col-md-8 order-2 order-md-1">
                 <div className="separator mt-4"></div>
-
                 <div>
                   <div className="subtitle my-4">O QUE É:</div>
                   <p>
@@ -123,9 +125,7 @@ export function Login() {
                     saúde na tomada de decisão e gestão do cuidado em saúde.
                   </p>
                 </div>
-
                 <div className="separator mt-4"></div>
-
                 <div>
                   <div className="subtitle my-4">PARA QUÊ:</div>
                   <p>
@@ -138,7 +138,6 @@ export function Login() {
                     da Família e Atenção Primária.
                   </p>
                 </div>
-
                 <div className="mt-5">
                   <p>
                     * Esta é uma ferramenta gratuita e essencial para a tomada
@@ -146,7 +145,6 @@ export function Login() {
                   </p>
                 </div>
               </div>
-
               <div className="col-12 col-md-4 order-1 order-md-2">
                 <div
                   className="formCenter"
@@ -170,12 +168,10 @@ export function Login() {
                         />
                       </div>
                     </div>
-
                     <div className="formField">
                       <label className="formFieldLabel" htmlFor="password">
                         <img src={iconPassword} alt="Senha" /> Senha
                       </label>
-
                       <div className="container-field">
                         <input
                           type={passwordShown ? "text" : "password"}
@@ -186,7 +182,6 @@ export function Login() {
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                         />
-
                         {passwordShown ? (
                           <AiOutlineEye
                             size={"1.5rem"}
@@ -202,7 +197,6 @@ export function Login() {
                         )}
                       </div>
                     </div>
-
                     <div className="formField mt-5">
                       <Button kind="primary" type="submit" disabled={loading}>
                         {loading ? (
@@ -218,7 +212,6 @@ export function Login() {
             </div>
           </div>
         </aside>
-
         <Snackbar
           type="error"
           open={someStateOpen}
@@ -227,7 +220,6 @@ export function Login() {
           Usuário ou Senha inválidos!
         </Snackbar>
       </div>
-
       <Footer />
     </div>
   );

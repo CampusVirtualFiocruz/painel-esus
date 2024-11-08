@@ -5,7 +5,7 @@ import { PieChart } from "../charts.types";
 
 export function Pie(props: PieChart) {
   const options = {
-    color: ["#5CD2C8", "#E4E4E4"],
+    color: props?.config?.colors || ["#5CD2C8", "#E4E4E4"],
     tooltip: {
       trigger: "item",
     },

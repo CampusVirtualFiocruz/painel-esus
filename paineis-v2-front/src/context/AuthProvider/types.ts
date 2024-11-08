@@ -5,8 +5,10 @@ export interface IUser {
 }
 
 export interface IContext extends IUser {
-  authenticate: (username: string, password: string) => Promise<void>;
+  authenticate: (username: string, password: string) => Promise<any>;
   logout: () => void;
+  chooseProfile: (profileData: any) => void;
+  profilesList: Array<any> | null
 }
 
 export interface IAuthProvider {

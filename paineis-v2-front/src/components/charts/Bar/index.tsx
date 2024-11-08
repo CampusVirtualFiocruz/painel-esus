@@ -32,12 +32,13 @@ export function Bar(props: BarChart) {
   });
 
   const options = {
-    color: ["#77B4D0", "#2775B0"],
+    color: props?.config?.colors || ["#77B4D0", "#2775B0"],
     tooltip: {
       trigger: "item",
     },
     legend: {
       bottom: "0%",
+      data: props?.config?.hideLegend ? [] : undefined,
       borderRadius: 0,
       icon: "rect",
     },

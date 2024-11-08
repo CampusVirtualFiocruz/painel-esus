@@ -103,6 +103,7 @@ type Ubs = {
 };
 
 export function getNomeUbs(data: any, id: string) {
+  console.log(data)
   let ubs = Object.values(data).find(
     (item: any) => parseInt(item.value) === parseInt(id)
   ) as Ubs;
@@ -232,3 +233,8 @@ export const capitalize = (s: string, lower = false) =>
   (lower ? s.toLowerCase() : s).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
     match.toUpperCase()
   );
+
+export const profiles = [
+  "CBO 322415: Auxiliar de saúde bucal",
+  "CBO 411010: Assistente administrativo",
+];

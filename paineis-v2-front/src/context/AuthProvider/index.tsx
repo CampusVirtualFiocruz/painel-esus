@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
-import { IAuthProvider, IContext, IUser } from "./types";
-import { getUserLocalStorage, LoginRequest, setUserLocalStorage } from "./util";
 import jwt from "jwt-decode";
+import { IAuthProvider, IContext, IUser } from "./types";
+import { getUserLocalStorage, LoginRequest, ProfilesRequest, setUserLocalStorage } from "./util";
 
 export const AuthContext = createContext<IContext>({} as IContext);
 
@@ -15,6 +15,7 @@ type PayloadJwt = {
 
 export const AuthProvider = ({ children }: IAuthProvider) => {
   const [user, setUser] = useState<IUser | null>();
+  const [profilesList, setProfiles] = useState<Array<any> | null>(null);
 
   useEffect(() => {
     const user = getUserLocalStorage();
@@ -40,6 +41,20 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
 
     setUser(user);
     setUserLocalStorage(user);
+    setProfiles(response?.profiles);
+
+    return { response, payload, user }
+  }
+
+  async function chooseProfile(profileData: any){
+    const response = await ProfilesRequest(profileData);
+    const userWithNewToken = {
+      ...user,
+      token: response.data,
+    };
+    setUser(userWithNewToken);
+    setUserLocalStorage(userWithNewToken);
+    setProfiles(response?.profiles);
   }
 
   function logout() {
@@ -48,7 +63,7 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
   }
 
   return (
-    <AuthContext.Provider value={{ ...user, authenticate, logout }}>
+    <AuthContext.Provider value={{ ...user, authenticate, chooseProfile, profilesList, logout }}>
       {children}
     </AuthContext.Provider>
   );

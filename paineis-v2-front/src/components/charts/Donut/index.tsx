@@ -3,9 +3,25 @@ import "./style.scss";
 import { content } from "../../../assets/content/content";
 import { DonutChart } from "../charts.types";
 
+const formatters = {
+  full: ["{a|{b}}", "{b|{@2012}}", "{b|({d}%)}"].join(
+    "\n"
+  ),
+  undefined: ["{a|{b}}", "{b|{@2012}}", "{b|({d}%)}"].join(
+    "\n"
+  ),
+  perc: ["{b|{d}%}", "{a|{b}}"].join(
+    "\n"
+  )
+}
+
 export function Donut(props: DonutChart) {
+  const f = String(props?.config?.formatterKind) as keyof typeof formatters;
+  
+  console.log({f})
+
   const options = {
-    color: ["#09406A", "#5CD2C8"],
+    color: props?.config?.colors || ["#09406A", "#5CD2C8"],
     tooltip: {
       trigger: "item",
       label: {
@@ -20,7 +36,7 @@ export function Donut(props: DonutChart) {
       {
         name: "",
         type: "pie",
-        radius: ["40%", "70%"],
+        radius: [props?.config?.radiusStart || "40%", "70%"],
         avoidLabelOverlap: false,
         labelLine: {
           show: false,
@@ -42,19 +58,19 @@ export function Donut(props: DonutChart) {
                 value: curr?.value ?? 0,
                 name: content?.[curr?.tag] || curr?.tag,
                 label: {
-                  formatter: ["{a|{b}}", "{b|{@2012}}", "{b|({d}%)}"].join(
-                    "\n"
-                  ),
+                  formatter: formatters[f && f !== "undefined" ? f : "full"],
+                  
                   rich: {
                     a: {
                       color: "black",
-                      fontSize: 16,
+                      fontSize: 12,
                       marginBottom: 16,
                     },
                     b: {
                       color: "black",
-                      fontSize: 24,
+                      fontSize: 30,
                       fontWeight: "bold",
+                      
                     },
                   },
                 },

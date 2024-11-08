@@ -1,11 +1,9 @@
-from src.domain.use_cases.login import LoginUseCase as LoginUseCaseInterface
-from src.domain.entities.user_payload import UserPayload
 from src.data.interfaces.login_repository import LoginRepository
-from src.errors import (
-    InvalidArgument,
-    HttpCredentialsFailError,
-    HttpBadRequestError
-)
+from src.domain.entities.user_payload import UserPayload
+from src.domain.use_cases.login import LoginUseCase as LoginUseCaseInterface
+from src.errors import HttpBadRequestError
+from src.errors import HttpCredentialsFailError
+from src.errors import InvalidArgument
 
 
 class LoginUseCase(LoginUseCaseInterface):
@@ -40,3 +38,6 @@ class LoginUseCase(LoginUseCaseInterface):
         if not user_raw_data:
             raise HttpCredentialsFailError('Credentials fail.')
         return user_raw_data
+    
+    def check_role(self, body ):
+        return self.__repository.check_role(body)

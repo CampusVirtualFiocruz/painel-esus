@@ -1,10 +1,12 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import ReactDom from "react-dom";
 import { CgClose } from "react-icons/cg";
 
+import { VFlow, Radio } from "bold-ui";
+
 import "./style.scss";
 import "../../styles/listaNominal.scss";
-import { capitalize } from "../../utils";
+import { capitalize, profiles } from "../../utils";
 import { capitalizeName } from "../../utils/stringUtils";
 
 interface IModal {
@@ -13,6 +15,8 @@ interface IModal {
     cnes?: string | undefined;
   };
   setShowModal: (status: boolean) => void;
+  setProfile?: (profile: string) => void;
+  initialProfile?: string;
 }
 
 function parseText(text: string): number | string {
@@ -37,7 +41,7 @@ export function bodyPrimeiroTrimestre() {
     <div className="d-flex flex-column">
       <h1 className="mb-4">Orientações para o 1º trimestre:</h1>
       <p className="mb-1">
-        As consultas devem ser realizadas conforme este cronograma:
+        As consultas médicas ou de enfermagem devem ser realizadas conforme este cronograma:
       </p>
       <ul className="ms-4">
         <li className="mb-1">- até a 28ª semana - mensalmente;</li>
@@ -79,7 +83,7 @@ export function bodyTerceiroTrimestre() {
         Encaminhar gestante para avaliação de bem-estar fetal após 41 semanas de
         gestação
       </p>
-      <p>Agendar consulta de retorno 42 dias após o parto</p>
+      <p>Agendar consulta médica ou de enfermagem de retorno 42 dias após o parto</p>
     </div>
   );
 }
@@ -175,14 +179,28 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
               : item?.nome
           )}
         </h1>
-        <p>{item?.cpf}</p>
+        <p>
+          CPF: {item?.cpf} <br />
+          CNS: {item?.cns}
+        </p>
         <div className="address">
           <p>
+            {item?.tipoLogradouro && (
+              <>
+                <br /> Tipo Logradouro: {item?.tipoLogradouro}
+              </>
+            )}
+            <br />
             {item?.endereco}
+            {item?.complemento && (
+              <>
+                <br /> Complemento: {item?.complemento}
+              </>
+            )}
             <br />
             CEP: {item?.cep}
             <br />
-            Telefone de contato: {item?.telefone}
+            Telefone de contato: {item?.telefone ? item?.telefone : "-"}
           </p>
         </div>
         {Array.isArray(item?.detalhesCondicaoSaude) &&
@@ -209,7 +227,12 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
                           .replace("Ultimo", "Último")
                           .replace("Ultima", "Última")
                           .replace("Pa", "PA")
-                          .replace("Medico", "Médico")}
+                          .replace("Medico", "Médico")
+                          .replace("Odontologica", "Odontológica")
+                          .replace(/De /g, "de ")
+                          .replace(/Da /g, "da ")
+                          .replace(/Do /g, "do ")
+                          .replace(/Ou /g, "ou ")}
                       </strong>
                       <div>
                         <p>{parseText(registro?.data)}</p>
@@ -232,7 +255,39 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
   );
 }
 
-export const Modal = ({ data, setShowModal }: IModal) => {
+export function bodyPerfil(
+  selectedValue: string,
+  onChange: (value: string) => void
+) {
+  return (
+    <div className="d-flex flex-column mb-4">
+      <h1 className="mb-4">Em qual perfil você deseja logar:</h1>
+      <VFlow>
+        <Radio
+          name="default"
+          label={profiles[0]}
+          value={profiles[0]}
+          checked={selectedValue === profiles[0]}
+          onChange={() => onChange(profiles[0])}
+        />
+        <Radio
+          name="default"
+          label={profiles[1]}
+          value={profiles[1]}
+          checked={selectedValue === profiles[1]}
+          onChange={() => onChange(profiles[1])}
+        />
+      </VFlow>
+    </div>
+  );
+}
+
+export const Modal = ({
+  data,
+  setShowModal,
+  setProfile,
+  initialProfile,
+}: IModal) => {
   // close the modal when clicking outside the modal.
   const modalRef = useRef<HTMLDivElement | null>(null);
 
@@ -240,6 +295,20 @@ export const Modal = ({ data, setShowModal }: IModal) => {
     if (e.target === modalRef.current) {
       setShowModal(false);
     }
+  };
+
+  // Profile state selection.
+  const [selectedValue, setSelectedValue] = useState<string>(
+    initialProfile || ""
+  );
+
+  useEffect(() => {
+    setSelectedValue(initialProfile || "");
+  }, [initialProfile]);
+
+  const handleProfileChange = (value: string) => {
+    setSelectedValue(value);
+    if (setProfile) setProfile(value);
   };
 
   // render the modal JSX in the portal div.
@@ -259,6 +328,9 @@ export const Modal = ({ data, setShowModal }: IModal) => {
           data.loaded === 6 &&
           bodyBoasPraticasCuidadoPessoasHipertensao()}
         {data && data.loaded === 7 && bodyDetalhesCadastroDiabetes(data)}
+        {data &&
+          data.loaded === 8 &&
+          bodyPerfil(selectedValue, handleProfileChange)}
 
         <CgClose
           size={"1.5rem"}

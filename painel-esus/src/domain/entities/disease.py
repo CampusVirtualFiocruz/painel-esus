@@ -24,5 +24,4 @@ class Disease:
                 sql = f"""with table_lista as (select  distinct (co_fat_cidadao_pec) co_fat_cidadao_pec, co_dim_tipo_localizacao  from {table} h where h.co_dim_unidade_saude = {cnes})
     select co_dim_tipo_localizacao, count(*) valor from table_lista group by 1;
     """
-            print(sql)
             return pd.read_sql_query(sql, con=engine)

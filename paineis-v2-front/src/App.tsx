@@ -16,11 +16,14 @@ import ListaNominal from "./pages/ListaNominal";
 import { DiabeticosList } from "./pages/DiabeticosList";
 import { SindromesAgudas } from "./pages/SindromesAgudas/SindromesAgudas";
 import { SelecionarUbs } from "./pages/SelecionarUbs";
+import { SelecionarVisualizacao } from "./pages/SelecionarVisualizacao";
 import Tabagismo from "./pages/Tabagismo";
 import FeridaVascular from "./pages/FeridaVascular";
 import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
 import BarraBrasil from "./components/BarraBrasil";
 import { getUserLocalStorage } from "./context/AuthProvider/util";
+import Qualidade from "./pages/Qualidade";
+import Infantil from "./pages/Infantil";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -123,6 +126,14 @@ function App() {
                 }
               />
               <Route
+                path="/selecionarvisualizacao"
+                element={
+                  <ProtectedLayout>
+                    <SelecionarVisualizacao />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
                 path="/painelx"
                 element={
                   <ProtectedLayout>
@@ -183,6 +194,22 @@ function App() {
                 element={
                   <ProtectedLayout>
                     <GestantesList />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/qualidade"
+                element={
+                  <ProtectedLayout>
+                    <Qualidade />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/infantil"
+                element={
+                  <ProtectedLayout>
+                    <Infantil />
                   </ProtectedLayout>
                 }
               />

@@ -1,8 +1,8 @@
 adbc-driver-manager==1.1.0
 aiohttp==3.9.1
 aiosignal==1.3.1
+altgraph==0.17.4
 APScheduler==3.10.4
-aniso8601==9.0.1
 astroid==3.0.2
 async-timeout==4.0.3
 attrs==23.2.0
@@ -49,8 +49,7 @@ numpy==1.24.4
 packaging==23.1
 pandas==2.0.3
 pathspec==0.12.1
-pefile==2023.2.7
-pillow==10.3.0
+pillow==10.4.0
 platformdirs==3.10.0
 pluggy==1.3.0
 polars==1.7.1
@@ -58,6 +57,8 @@ pre-commit==3.4.0
 psycopg2-binary==2.9.7
 pyarrow==17.0.0
 pycparser==2.21
+pyinstaller==6.10.0
+pyinstaller-hooks-contrib==2024.8
 PyJWT==2.8.0
 pylint==3.0.3
 pytest==7.4.2
@@ -83,4 +84,3 @@ Werkzeug==2.3.7
 XlsxWriter==3.2.0
 yarl==1.9.4
 zipp==3.17.0
-zope.interface==5.4.0

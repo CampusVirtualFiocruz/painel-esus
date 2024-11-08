@@ -8,10 +8,25 @@
     "codesnap-plus.containerPadding": "4em",
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
-        "editor.formatOnSave": true,
+        // "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {
             "source.organizeImports": "explicit"
         }
     },
-    "isort.args": ["--profile", "black"],
+    "isort.args": [
+        "--profile",
+        "black"
+    ],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "186.232.197.254",
+            "port": 5433,
+            "driver": "PostgreSQL",
+            "name": "livramento",
+            "database": "livramento",
+            "username": "postgres"
+        }
+    ],
+    "editor.formatOnSave": false,
 }

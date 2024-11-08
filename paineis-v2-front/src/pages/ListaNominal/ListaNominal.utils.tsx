@@ -35,31 +35,31 @@ export const columns = ({ handleClick }: any) => [
       }
     },
   },
-  {
-    name: "zone",
-    header: (
-      <div className="headerZone ms-2">
-        <div className="iconHeader iconRural"></div>
-        <div className="iconHeader iconUrbano"></div>
-      </div>
-    ),
-    sortable: true,
-    render: (item: any) => {
-      if (item.zonaUrbana) {
-        return (
-          <span className="iconCircle iconUrbano ms-2" title="Zona Urbana">
-            U
-          </span>
-        );
-      } else if (item.zonaRural) {
-        return (
-          <span className="iconCircle iconRural ms-2" title="Zona Rural">
-            R
-          </span>
-        );
-      }
-    },
-  },
+  // {
+  //   name: "zone",
+  //   header: (
+  //     <div className="headerZone ms-2">
+  //       <div className="iconHeader iconRural"></div>
+  //       <div className="iconHeader iconUrbano"></div>
+  //     </div>
+  //   ),
+  //   sortable: true,
+  //   render: (item: any) => {
+  //     if (item.zonaUrbana) {
+  //       return (
+  //         <span className="iconCircle iconUrbano ms-2" title="Zona Urbana">
+  //           U
+  //         </span>
+  //       );
+  //     } else if (item.zonaRural) {
+  //       return (
+  //         <span className="iconCircle iconRural ms-2" title="Zona Rural">
+  //           R
+  //         </span>
+  //       );
+  //     }
+  //   },
+  // },
   {
     name: "cpf",
     header: "CPF",
@@ -79,6 +79,12 @@ export const columns = ({ handleClick }: any) => [
     name: "diagnostico",
     header: "Diagnóstico",
     render: (item: any) => <center>{capitalize(item.diagnostico)}</center>,
+
+  },
+  {
+    name: "grupo-codicao",
+    header: "Grupo Condição",
+    render: (item: any) => capitalize(item.diagnostico),
   },
   {
     name: "sexo",

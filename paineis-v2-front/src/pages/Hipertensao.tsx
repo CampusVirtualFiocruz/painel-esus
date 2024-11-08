@@ -217,6 +217,7 @@ export function Hipertensao() {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,
           id: ubs.co_seq_dim_unidade_saude,
+          qtd: ubs.qtd
         };
       });
 
@@ -393,11 +394,11 @@ export function Hipertensao() {
                   </div>
                 )}
               </div>
-              <div className="mt-5">
+              {/* <div className="mt-5">
                 <Button kind="primary" onClick={() => handleClick(6)}>
                   Boas práticas na assistência a pessoas com hipertensão
                 </Button>
-              </div>
+              </div> */}
             </div>
             <div className="painel-secundario">
               <Typography.Subtitle>

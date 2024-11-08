@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "react-query";
-import { PagedTable, TextField } from "bold-ui";
+import { PagedTable, TextField, LocaleContext } from "bold-ui";
+import ptBr from "bold-ui/lib/i18n/locales/pt-BR";
 import { Modal } from "../../components/Modal";
 import ReportWrapper from "../../components/ui/ReportWrapper";
 import { useInfo } from "../../context/infoProvider/useInfo";
@@ -76,8 +77,9 @@ const ListaNominal = () => {
 
   const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
   const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
-  const title = `${UBS} / Lista Nominal / ${condicao}`;
-  const subtitle = "(referente aos últimos 12 meses)";
+  const title = `Pessoas Atendidas nos últimos 12 meses / ${condicao}`;
+  const subtitle =
+    `${UBS}`;
 
   const handleSortChange = (sort: string[]) =>
     setParams((state: any) => ({ ...state, sort }));
@@ -107,18 +109,20 @@ const ListaNominal = () => {
             onChange={(e: any) => setSearchTerm(e.target.value)}
           />
         </div>
-        <PagedTable<RowType>
-          rows={info?.items || []}
-          page={info?.page - 1}
-          size={info?.itemsPerPage}
-          totalElements={info?.itemsCount}
-          totalPages={info?.pagesCount}
-          onSortChange={handleSortChange}
-          onPageChange={handlePageChange}
-          onSizeChange={handleSizeChange}
-          loading={isLoadingInfo}
-          columns={columns({ handleClick })}
-        />
+        <LocaleContext.Provider value={ptBr}>
+          <PagedTable<RowType>
+            rows={info?.items || []}
+            page={info?.page - 1}
+            size={info?.itemsPerPage}
+            totalElements={info?.itemsCount}
+            totalPages={info?.pagesCount}
+            onSortChange={handleSortChange}
+            onPageChange={handlePageChange}
+            onSizeChange={handleSizeChange}
+            loading={isLoadingInfo}
+            columns={columns({ handleClick })}
+          />
+        </LocaleContext.Provider>
         <Footer pathToReport={pathToReport} condicao={condicao} id={id} />
       </ReportWrapper>
     </div>

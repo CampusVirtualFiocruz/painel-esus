@@ -51,7 +51,7 @@ from
     left join tb_equipe t29 on t29.nu_ine = t9_cc.nu_ine --equipe cc
     left join tb_tipo_equipe t30 on t29.tp_equipe = t30.co_seq_tipo_equipe
     left join tb_fat_familia_territorio tfft on tfft.co_fat_cidadao_pec = t1.co_seq_fat_cidadao_pec
-    left join tb_fat_cad_domiciliar tfcd on tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar
+    left join tb_fat_cad_domiciliar tfcd    
 where
     (
         (t2.st_ativo = 1 and t3.co_dim_tipo_saida_cadastro = 3 and t5_fci.nu_ine is not null and t3.st_ficha_inativa = 0)

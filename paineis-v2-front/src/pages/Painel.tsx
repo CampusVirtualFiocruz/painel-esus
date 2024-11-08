@@ -50,6 +50,7 @@ type Indicator = {
 type TypeUbs = {
   label: string;
   value: number | string;
+  qtd?: number;
 };
 type TypeCondiction = {
   value: number;
@@ -109,6 +110,7 @@ type Lista = {
   co_seq_dim_unidade_saude: number;
   no_unidade_saude: string;
   nu_cnes: number;
+  qtd?: number;
 };
 
 type ResponseDataListUbs = {
@@ -189,39 +191,39 @@ export function Painel() {
   //   setInfecoesQtd(result);
   //   return data;
   // });
-  const {
-    data: dataOralHealth,
-    isLoading: isLoadingOralHealth,
-    error: errorOralHealth,
-  } = useQuery(["oral-health/get-all-cares-by-place", id], async () => {
-    const url = "oral-health/get-all-cares-by-place";
-    const path = id ? `${url}/${id}` : url;
-    const response = await Api.get<OralHealthResponse[]>(path);
-    const data = response.data;
-    const resp = {
-      rural: {
-        total: 0,
-        ds_tipo_localizacao: "Rural",
-      },
-      urbano: {
-        total: 0,
-        ds_tipo_localizacao: "Urbana",
-      },
-    };
-    const rural = data.find(
-      (i) => i.ds_tipo_localizacao.toLowerCase() === "rural"
-    );
-    if (rural !== undefined) {
-      resp["rural"] = rural;
-    }
-    const urbano = data.find(
-      (i) => i.ds_tipo_localizacao.toLowerCase() === "urbana"
-    );
-    if (urbano !== undefined) {
-      resp["urbano"] = urbano;
-    }
-    return resp;
-  });
+  // const {
+  //   data: dataOralHealth,
+  //   isLoading: isLoadingOralHealth,
+  //   error: errorOralHealth,
+  // } = useQuery(["oral-health/get-all-cares-by-place", id], async () => {
+  //   const url = "oral-health/get-all-cares-by-place";
+  //   const path = id ? `${url}/${id}` : url;
+  //   const response = await Api.get<OralHealthResponse[]>(path);
+  //   const data = response.data;
+  //   const resp = {
+  //     rural: {
+  //       total: 0,
+  //       ds_tipo_localizacao: "Rural",
+  //     },
+  //     urbano: {
+  //       total: 0,
+  //       ds_tipo_localizacao: "Urbana",
+  //     },
+  //   };
+  //   const rural = data.find(
+  //     (i) => i.ds_tipo_localizacao.toLowerCase() === "rural"
+  //   );
+  //   if (rural !== undefined) {
+  //     resp["rural"] = rural;
+  //   }
+  //   const urbano = data.find(
+  //     (i) => i.ds_tipo_localizacao.toLowerCase() === "urbana"
+  //   );
+  //   if (urbano !== undefined) {
+  //     resp["urbano"] = urbano;
+  //   }
+  //   return resp;
+  // });
   //get nome ubs
   const {
     data: dataUbs,
@@ -236,6 +238,7 @@ export function Painel() {
         return {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,
+          qtd: ubs.qtd
         };
       });
 
@@ -534,7 +537,7 @@ export function Painel() {
                   />
                 </div>
               </div>*/}
-              {!isLoadingOralHealth && dataOralHealth && (
+              {/* {!isLoadingOralHealth && dataOralHealth && (
                 <div className="card-condicao p-2" onClick={handleToOralHealth}>
                   <span className="nome-condicao">Saúde Bucal</span>
                   <h4>
@@ -554,7 +557,7 @@ export function Painel() {
                     />
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
 
             <div className="d-flex my-5 justify-content-center">
@@ -596,7 +599,7 @@ export function Painel() {
                     isClearable
                     placeholder="Selecione UBS"
                     noOptionsMessage={() => "Nenhuma UBS encontrada"}
-                    options={dataUbs}
+                    options={dataUbs?.filter(i=> i.qtd && i.qtd>0)}
                     styles={selectStyle}
                     onChange={onChangeSelection}
                   />

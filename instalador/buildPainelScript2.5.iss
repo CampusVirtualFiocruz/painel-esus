@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Painel Esus"
-#define MyAppVersion "2.4"
+#define MyAppVersion "1.0.16"
 #define MyAppPublisher "Fiocruz"
 #define MyAppURL "https://painelsaude.fiocruz.br"
 #define MyAppExeName "painel-esus.exe"
@@ -29,7 +29,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputDir={#rootPath}\instalador\output
-OutputBaseFilename=painel-esus-setup2.3
+OutputBaseFilename=painel-esus-setup{#MyAppVersion}
 SetupIconFile={#rootPath}\painel-esus\icon\Icon_Painel_Purple_ICO.ico
 Compression=lzma
 SolidCompression=yes
