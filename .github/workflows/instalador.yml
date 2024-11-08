@@ -81,7 +81,7 @@ jobs:
           tar -czf painel-esus-linux.tar.gz \
             -C $(pwd)/painel-esus ibge.csv \
             -C $(pwd)/painel-esus icon \
-            -C $(pwd)/paineis-v2-front static-files
+            -C $(pwd)/paineis-v2-front static-files \
             $(pwd)/painel-esus/dist/config \
             $(pwd)/painel-esus/dist/painel-esus 
             
