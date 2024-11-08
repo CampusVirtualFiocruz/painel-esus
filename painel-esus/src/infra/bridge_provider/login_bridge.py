@@ -133,8 +133,9 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             "Content-Type": "application/json",
             "Cookie": "JSESSIONID=87J4pWjfQUVaO3b_lndd1DQE-8hJ3RZzcHes0uFb; XSRF-TOKEN=25038984-1945-43e2-a990-f62709f4eddd",
         }
-
+        print('iniciando....')
         response = self.get_reponse_body(session, url, headers, payload)
+        print(response)
         if response.text is None:
             return None
         cookie = session.cookies.get_dict()

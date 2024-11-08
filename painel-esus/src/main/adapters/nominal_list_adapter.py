@@ -1,4 +1,6 @@
-# pylint: disable=R0902
+# pylint: disable=R0902, W4901, W0611, C0103
+from lib2to3.pytree import Base
+
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
@@ -29,12 +31,30 @@ class AlertRecord:
         )
 
 
-class HypertensionNominalListAdapter:
+class BaseNominalAdapter:
+    def __init__(self, user):
+        self.nome = user.nome
+        self.nome_social = "-"
+        self.tipo_localidade = user.tipo_localidade
+        self.cpf = user.cpf
+        self.cns = user.cns
+        self.idade = user.idade
+        self.diagnostico = user.diagnostico
+        self.sexo = user.sexo
+        self.equipe = user.nome_equipe
+        self.microarea = user.micro_area
+        self.endereco = f"{user.tipo_endereco} {user.endereco} {user.numero}, {user.bairro}"
+        self.tipo_logradouro = user.tipo_endereco
+        self.complemento = user.complemento
+        self.cep = user.cep
+        self.telefone = user.telefone
+        self.registros = []
+        self.primeiro_registro = user.min_date
+
+class HypertensionNominalListAdapter(BaseNominalAdapter):
 
     def __init__(self, user: HipertensaoNominal):
-        self.nome = user.no_cidadao
-        self.nome_social = "-"
-        self.tipo_localidade = user.ds_tipo_localizacao
+        super().__init__(user)
         self.possui_alertas = (
             user.alerta_afericao_pa
             or user.alerta_creatinina
@@ -43,18 +63,6 @@ class HypertensionNominalListAdapter:
             or user.alerta_ultima_consulta_odontologica
             or user.alerta_visita_acs
         )
-        self.cpf = user.nu_cpf
-        self.cns = user.nu_cns
-        self.idade = user.idade
-        self.diagnostico = "Hipertensao"
-        self.sexo = user.no_sexo
-        self.equipe = user.equipe
-        self.microarea = user.nu_micro_area
-        self.endereco = f"{user.ds_logradouro} {user.nu_numero}"
-        self.cep = user.ds_cep
-        self.telefone = "-"
-        self.registros = []
-        self.primeiro_registro = user.min_date
         hipertensao = Hypertension()
         self.cids = list(set(user.cids.split("|")) & set(hipertensao.target))
         if user.alerta_afericao_pa:
@@ -62,7 +70,7 @@ class HypertensionNominalListAdapter:
                 AlertRecord(
                     data=user.ultima_data_afericao_pa,
                     exibir_alerta=True,
-                    descricao="ultima-afericao-pa",
+                    descricao="data-da-ultima-afericao-pa",
                     tipo_alerta="alerta-afericao-pa-maior-6-meses",
                 )
             )
@@ -71,7 +79,7 @@ class HypertensionNominalListAdapter:
                 AlertRecord(
                     data=user.ultima_data_creatinina,
                     exibir_alerta=True,
-                    descricao="ultimo-exame-creatinina",
+                    descricao="data-do-ultimo-exame-creatinina",
                     tipo_alerta="alerta-creatinina-maior-6-meses",
                 )
             )
@@ -80,7 +88,7 @@ class HypertensionNominalListAdapter:
                 AlertRecord(
                     data=user.total_consulta_individual_medico,
                     exibir_alerta=True,
-                    descricao="total-de-consultas-medico",
+                    descricao="total-de-consultas-medicas-ou-de-enfermagem",
                     tipo_alerta="alerta-total-de-consultas-medico-menor-2",
                 )
             )
@@ -89,7 +97,7 @@ class HypertensionNominalListAdapter:
                 AlertRecord(
                     data=user.ultimo_atendimento_medico,
                     exibir_alerta=True,
-                    descricao="ultimo-atendimento-medico",
+                    descricao="data-da-ultima-consulta-medica-ou-de-enfermagem",
                     tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
                 )
             )
@@ -98,7 +106,7 @@ class HypertensionNominalListAdapter:
                 AlertRecord(
                     data=user.ultimo_atendimento_odonto,
                     exibir_alerta=True,
-                    descricao="ultimo-atendimento-odonto",
+                    descricao="data-da-ultima-consulta-odontologica",
                     tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
                 )
             )
@@ -108,7 +116,7 @@ class HypertensionNominalListAdapter:
                 AlertRecord(
                     data=user.data_ultima_visita_acs,
                     exibir_alerta=True,
-                    descricao="ultimo-data-ultima-visita-acs",
+                    descricao="data-da-ultima-visita-acs",
                     tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
                 )
             )
@@ -129,6 +137,8 @@ class HypertensionNominalListAdapter:
                 "equipe": self.equipe,
                 "microarea": self.microarea,
                 "endereco": self.endereco,
+                "complemento": self.complemento,
+                "tipoLogradouro": self.tipo_logradouro,
                 "cep": self.cep,
                 "telefone": self.telefone,
                 "detalhesCondicaoSaude": [
@@ -144,12 +154,10 @@ class HypertensionNominalListAdapter:
         )
 
 
-class DiabetesNominalListAdapter:
+class DiabetesNominalListAdapter(BaseNominalAdapter):
 
     def __init__(self, user: DiabetesNominal):
-        self.nome = user.no_cidadao
-        self.nome_social = "-"
-        self.tipo_localidade = user.ds_tipo_localizacao
+        super().__init__(user)
         self.possui_alertas = (
             user.alerta_afericao_pa
             or user.alerta_total_de_consultas_medico
@@ -159,25 +167,13 @@ class DiabetesNominalListAdapter:
             or user.alerta_ultima_hemoglobina_glicada
             or user.alerta_ultima_glicemia_capilar
         )
-        self.cpf = user.nu_cpf
-        self.cns = user.nu_cns
-        self.idade = user.idade
-        self.diagnostico = "Diabetes"
-        self.sexo = user.no_sexo
-        self.equipe = user.equipe
-        self.microarea = user.nu_micro_area
-        self.endereco = f"{user.ds_logradouro} {user.nu_numero}"
-        self.cep = user.ds_cep
-        self.telefone = "-"
-        self.registros = []
-        self.primeiro_registro = user.min_date
         diabetes = Diabetes()
         self.cids = list(set(user.cids.split("|")) & set(diabetes.target))
         self.registros.append(
             AlertRecord(
                 data=user.ultima_data_afericao_pa,
                 exibir_alerta=user.alerta_afericao_pa,
-                descricao="ultima-afericao-pa",
+                descricao="data-da-ultima-afericao-pa",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
         )
@@ -186,7 +182,7 @@ class DiabetesNominalListAdapter:
             AlertRecord(
                 data=user.total_consulta_individual_medico,
                 exibir_alerta=user.alerta_total_de_consultas_medico,
-                descricao="total-de-consultas-medico",
+                descricao="total-de-consultas-medicas-ou-de-enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
         )
@@ -194,7 +190,7 @@ class DiabetesNominalListAdapter:
             AlertRecord(
                 data=user.ultimo_atendimento_medico,
                 exibir_alerta=user.alerta_ultima_consulta_medico,
-                descricao="ultimo-atendimento-medico",
+                descricao="data-da-ultima-consulta-medica-ou-de-enfermagem",
                 tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
             )
         )
@@ -203,7 +199,7 @@ class DiabetesNominalListAdapter:
             AlertRecord(
                 data=user.ultimo_atendimento_odonto,
                 exibir_alerta=user.alerta_ultima_consulta_odontologica,
-                descricao="ultimo-atendimento-odonto",
+                descricao="data-da-ultima-consulta-odontologica",
                 tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
             )
         )
@@ -212,7 +208,7 @@ class DiabetesNominalListAdapter:
             AlertRecord(
                 data=user.data_ultima_visita_acs,
                 exibir_alerta=user.alerta_visita_acs,
-                descricao="ultimo-data-ultima-visita-acs",
+                descricao="data-da-ultima-visita-acs",
                 tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
             )
         )
@@ -220,7 +216,7 @@ class DiabetesNominalListAdapter:
             AlertRecord(
                 data=user.ultima_data_hemoglobina_glicada or "-",
                 exibir_alerta=user.alerta_ultima_hemoglobina_glicada,
-                descricao="ultima-data-hemoglobina-glicada",
+                descricao="data-da-ultima-hemoglobina-glicada",
                 tipo_alerta="alerta-ultima-data-hemoglobina-glicada-maior-6-meses",
             )
         )
@@ -228,7 +224,7 @@ class DiabetesNominalListAdapter:
             AlertRecord(
                 data=user.ultima_data_glicemia_capilar or "-",
                 exibir_alerta=user.alerta_ultima_glicemia_capilar,
-                descricao="ultima-data-glicemia-capilar",
+                descricao="data-da-ultima-glicemia-capilar",
                 tipo_alerta="alerta-ultima-data-glicemia-capilar-maior-6-meses",
             )
         )
@@ -249,6 +245,8 @@ class DiabetesNominalListAdapter:
                 "equipe": self.equipe,
                 "microarea": self.microarea,
                 "endereco": self.endereco,
+                "complemento": self.complemento,
+                "tipoLogradouro": self.tipo_logradouro,
                 "cep": self.cep,
                 "telefone": self.telefone,
                 "detalhesCondicaoSaude": [

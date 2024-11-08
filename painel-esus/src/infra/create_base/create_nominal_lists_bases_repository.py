@@ -1,11 +1,12 @@
-# pylint: disable= R1703
+# pylint: disable= R1703,W0612, C0103
 import pandas as pd
 import polars as pl
 from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.exc import ResourceClosedError
-from src.data.interfaces.create_bases.create_bases_repository import \
-    CreateBasesRepositoryInterface
+from src.data.interfaces.create_bases.create_bases_repository import (
+    CreateBasesRepositoryInterface,
+)
 from src.errors import InvalidArgument
 from src.errors import NoSuchTableError
 from src.errors.logging import logging
@@ -13,8 +14,9 @@ from src.infra.db.repositories.sqls.nominal_list import LISTA_NOMINAL_DIABETES
 from src.infra.db.repositories.sqls.nominal_list import LISTA_NOMINAL_HIPERTENSAO
 from src.infra.db.repositories.update_bases import UpdateBasesRepository
 from src.infra.db.settings.connection import DBConnectionHandler
-from src.infra.db.settings.connection_local import \
-    DBConnectionHandler as LocalDBConnectionHandler
+from src.infra.db.settings.connection_local import (
+    DBConnectionHandler as LocalDBConnectionHandler,
+)
 
 
 class CreateNominalListsBasesRepository(CreateBasesRepositoryInterface):
@@ -65,7 +67,7 @@ class CreateNominalListsBasesRepository(CreateBasesRepositoryInterface):
             raise InvalidArgument('Creation base not passed.')
         try:
             update_base_repository = UpdateBasesRepository()
-            update_base_repository.destroy_bases(self._base)
+            # update_base_repository.destroy_bases(self._base)
         except (OperationalError, ResourceClosedError) as exc:
             raise NoSuchTableError(
                 f'No {self.get_base()} table found') from exc

@@ -19,6 +19,7 @@ type Lista = {
   co_seq_dim_unidade_saude: number;
   no_unidade_saude: string;
   nu_cnes: number;
+  qtd?: number
 };
 
 type ResponseData = {
@@ -28,6 +29,7 @@ type ResponseData = {
 type TypeUbs = {
   label: string;
   value: number | string;
+  qtd?: number
 };
 
 const customControlStyles: CSSProperties = {
@@ -72,6 +74,7 @@ export function SelecionarUbs() {
         return {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,
+          qtd: ubs.qtd
         };
       });
 
@@ -134,7 +137,7 @@ export function SelecionarUbs() {
                 isClearable
                 placeholder="Selecione UBS"
                 noOptionsMessage={() => "Nenhuma UBS encontrada"}
-                options={data}
+                options={data?.filter(i=>i.qtd && i.qtd>0)}
                 styles={selectStyle}
                 onChange={onChangeSelection}
               />
