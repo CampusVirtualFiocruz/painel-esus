@@ -11,7 +11,7 @@ class HypertensionDashboardGetNominalList(ControllerInterface):
         self.__use_case = use_case
 
     def handle(self, request: HttpRequest) -> HttpResponse:
-        cnes, nome, cpf, page, page_size = None, None, None, 0, 10
+        cnes, equipe, nome, cpf, page, page_size = None, None, None, None, 0, 10
 
         if request.path_params and 'cnes' in request.path_params:
             cnes = int(request.path_params['cnes'])

@@ -21,6 +21,8 @@ from src.main.routes.oral_health import oral_health_bp
 from src.main.routes.oral_health import OralHealthPath
 from src.main.routes.smoking import smoking_bp
 from src.main.routes.smoking import SmokingPath
+from src.main.routes.units_route import teams_bp
+from src.main.routes.units_route import TeamsPath
 from src.main.routes.units_route import units_bp
 from src.main.routes.units_route import UnitsPath
 from src.main.server.cache import cache
@@ -80,6 +82,10 @@ register_blueprint(
 
 units = UnitsPath()
 app.register_blueprint(units_bp, url_prefix=units.root_path)
+
+teams = TeamsPath()
+app.register_blueprint(teams_bp, url_prefix=teams.root_path)
+
 
 demographics_info = DemographichInfoPath()
 register_blueprint(
