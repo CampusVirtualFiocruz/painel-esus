@@ -35,11 +35,11 @@ jobs:
   #         cd ./paineis-v2-front/static-files
   #         ls -la
 
-  #     # Salva a pasta 'paineis-v2-front/static-files' como um artifact
-  #     - uses: actions/upload-artifact@v3
-  #       with:
-  #         name: Build
-  #         path: ./paineis-v2-front/static-files
+      # Salva a pasta 'paineis-v2-front/static-files' como um artifact
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: Build
+      #     path: ./paineis-v2-front/static-files
 
   build-backend:
     runs-on: ubuntu-latest
@@ -60,26 +60,35 @@ jobs:
           python -m pip install --upgrade pip
           pip3 install -r requirements.txt         
 
-      - name: Build EXE config
-        working-directory: ./painel-esus
+      # - name: Build EXE config
+      #   working-directory: ./painel-esus
+      #   run: |
+      #     pyinstaller --icon=./icon/config.ico -n config --onefile ./interface.py --hidden-import='PIL._tkinter_finder'
+      #     cd dist
+      #     ls -la
+
+      # - name: Build EXE run
+      #   working-directory: ./painel-esus
+      #   run: |
+      #     pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
+      #     cd dist
+      #     ls -la
+
+      - name: Remove static-files
         run: |
-          pyinstaller --icon=./icon/config.ico -n config --onefile ./interface.py --hidden-import='PIL._tkinter_finder'
-          cd dist
+          rm -rf ./paineis-v2-front/static-files
+          cd ./paineis-v2-front
           ls -la
 
-      - name: Build EXE run
-        working-directory: ./painel-esus
-        run: |
-          pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
-          cd dist
+      - name: Download files
+        uses: actions/download-artifact@v3
+        with:
+          name: Build
+          path: ./paineis-v2-front/static-files
+      - run: |
           ls -la
-
-      # - name: Download files
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: Build
-      #     path: ./paineis-v2-front/static-files
-      # - run: ls -la          
+          cd ./paineis-v2-front
+          ls -la
 
       - name: Validate files and compress
         run: |
@@ -88,9 +97,8 @@ jobs:
           tar -czf painel-esus-linux.tar.gz \
             -C $(pwd)/painel-esus ibge.csv \
             -C $(pwd)/painel-esus icon \
-            -C $(pwd)/paineis-v2-front static-files \
-            -C $(pwd)/painel-esus/dist/ config \
-            -C $(pwd)/painel-esus/dist/ painel-esus 
+            -C $(pwd)/paineis-v2-front static-files 
+
             
 
       - name: Upload artifact
