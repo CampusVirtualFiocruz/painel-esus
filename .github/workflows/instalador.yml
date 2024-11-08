@@ -78,9 +78,9 @@ jobs:
         run: |
           ls -la
           tar -czf painel-esus-linux.tar.gz \
-            -C painel-esus ibge.csv \
-            -C painel-esus icon \
-            -C paineis-v2-front static-files \
+            -C ./painel-esus ibge.csv \
+            -C ./painel-esus icon \
+            -C ./paineis-v2-front static-files \
             
 
       - name: Upload artifact
