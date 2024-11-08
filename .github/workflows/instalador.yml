@@ -53,26 +53,26 @@ jobs:
         with:
           python-version: "3.10" # Use the Python version you need
 
-      # - name: Install PyInstaller
-      #   working-directory: ./painel-esus
-      #   run: |
-      #     ls -la
-      #     python -m pip install --upgrade pip
-      #     pip3 install -r requirements.txt         
+      - name: Install PyInstaller
+        working-directory: ./painel-esus
+        run: |
+          ls -la
+          python -m pip install --upgrade pip
+          pip3 install -r requirements.txt         
 
-      # - name: Build EXE config
-      #   working-directory: ./painel-esus
-      #   run: |
-      #     pyinstaller --icon=./icon/config.ico -n config --onefile ./interface.py --hidden-import='PIL._tkinter_finder'
-      #     cd dist
-      #     ls -la
+      - name: Build EXE config
+        working-directory: ./painel-esus
+        run: |
+          pyinstaller --icon=./icon/config.ico -n config --onefile ./interface.py --hidden-import='PIL._tkinter_finder'
+          cd dist
+          ls -la
 
-      # - name: Build EXE run
-      #   working-directory: ./painel-esus
-      #   run: |
-      #     pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
-      #     cd dist
-      #     ls -la   
+      - name: Build EXE run
+        working-directory: ./painel-esus
+        run: |
+          pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
+          cd dist
+          ls -la   
 
       - name: Validate files and compress
         run: |
@@ -82,6 +82,8 @@ jobs:
             -C $(pwd)/painel-esus ibge.csv \
             -C $(pwd)/painel-esus icon \
             -C $(pwd)/paineis-v2-front static-files
+            $(pwd)/painel-esus/dist/config \
+            $(pwd)/painel-esus/dist/painel-esus 
             
 
       - name: Upload artifact
