@@ -58,16 +58,7 @@ jobs:
         run: |
           ls -la
           python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
-
-      - name: List directory
-        run: |
-          ls -la
-
-      - name: List directory
-        run: |
-          cd paineis-v2-front/
-          ls -la          
+          pip3 install -r requirements.txt         
 
       - name: Build EXE config
         working-directory: ./painel-esus
@@ -83,33 +74,20 @@ jobs:
           cd dist
           ls -la   
 
-      # - name: Validate files and compress
-      #   run: |
-      #     tar -czf painel-esus-linux.tar.gz \
-      #       -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
-      #       -C /home/runner/work/painel-esus/painel-esus/painel-esus icon \
-      #       -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files \
-      #       -C /home/runner/work/painel-esus/painel-esus painel_esus.db \
-      #       -C /home/runner/work/painel-esus/painel-esus painel-esus.sqls \
-      #       -C /home/runner/work/painel-esus/painel-esus/dist config \
-      #       -C /home/runner/work/painel-esus/painel-esus/dist painel-esus \
+      - name: Validate files and compress
+        run: |
+          tar -czf painel-esus-linux.tar.gz \
+            -C painel-esus ibge.csv \
+            -C painel-esus icon \
+            -C paineis-v2-front static-files \
+            -C painel-esus/dist config \
+            -C painel-esus/dist painel-esus \
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: painel-esus-linux
           path: painel-esus-linux.tar.gz          
-      # - name: Upload config artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: config
-      #     path: ./painel-esus/dist/config
-
-      # - name: Upload run artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: run
-      #     path: ./painel-esus/dist/painel-esus
 
       - name: Create backend environment
         working-directory: ./painel-esus
