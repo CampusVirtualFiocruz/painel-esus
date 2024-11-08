@@ -7,7 +7,8 @@ import Select, { StylesConfig } from "react-select";
 
 import { Api } from "../services/api";
 
-import { Header } from "../components/HeaderV2";
+import { Header } from "../components/Header";
+// import { Header } from "../components/HeaderV2";
 import { Footer } from "../components/Footer";
 
 import "../styles/selecionarubs.scss";
@@ -156,7 +157,7 @@ export function SelecionarVisualizacao() {
             </div>
           </div>
 
-          <div className="container-combo-ubs ms-md-4">
+          {/* <div className="container-combo-ubs ms-md-4">
             <div className="container-icone">
               <img
                 className="icone-equipe"
@@ -182,9 +183,9 @@ export function SelecionarVisualizacao() {
                 />
               )}
             </div>
-          </div>
+          </div> */}
         </div>
-        <div className="container-entrar">
+        {/* <div className="container-entrar">
           <Button
             onClick={handleToPainel}
             type="button"
@@ -193,7 +194,7 @@ export function SelecionarVisualizacao() {
           >
             Entrar
           </Button>
-        </div>
+        </div> */}
       </div>
       <Footer />
     </div>

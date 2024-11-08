@@ -78,10 +78,10 @@ export function Login() {
         const authResponse = await auth.authenticate(username, password);
         const profiles = authResponse?.payload?.profiles ?? [];
 
-        if(profiles.length > 1){
+        if (profiles.length > 1) {
           setShowProfileSelector(true);
-        }else{
-          navigate("/selecionarubs");
+        } else {
+          navigate("/selecionarvisualizacao");
         }
       } catch (error) {
         setSomeStateOpen(true);
