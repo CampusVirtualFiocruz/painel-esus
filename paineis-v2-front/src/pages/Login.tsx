@@ -20,6 +20,7 @@ import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
 import { Button } from "bold-ui";
 import { getUBS } from "../App";
+import ProfileSelector from "../components/ProfileSelector";
 
 interface CityResponse {
   cep: string;
@@ -92,6 +93,7 @@ export function Login() {
 
   return (
     <div id="page-login">
+      <ProfileSelector />
       <div id="main">
         <aside>
           <div className="header-content mb-5">

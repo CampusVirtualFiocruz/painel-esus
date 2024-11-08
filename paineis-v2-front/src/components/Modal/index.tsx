@@ -5,6 +5,7 @@ import { CgClose } from "react-icons/cg";
 import "./style.scss";
 import "../../styles/listaNominal.scss";
 import { capitalize } from "../../utils";
+import { capitalizeName } from "../../utils/stringUtils";
 
 interface IModal {
   data: {
@@ -22,14 +23,12 @@ function parseText(text: string): number | string {
   }
 
   // Verifica se o texto é uma data válida
-  const parsedDate = new Date(
-    new Date(text)
-  );
+  const parsedDate = new Date(new Date(text));
   if (!isNaN(parsedDate.getTime())) {
     // Retorna a data formatada para o padrão localizado
-    return parsedDate.toLocaleDateString('pt-BR');
+    return parsedDate.toLocaleDateString("pt-BR");
   }
-  if (text == '-') return text;
+  if (text == "-") return text;
   throw new Error("O texto não é nem um número nem uma data válida.");
 }
 
@@ -170,9 +169,11 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
       <div className="user-details">
         {/* {JSON.stringify(item)} */}
         <h1>
-          {item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
-            ? item?.nomeSocialSelecionado
-            : item?.nome}
+          {capitalizeName(
+            item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
+              ? item?.nomeSocialSelecionado
+              : item?.nome
+          )}
         </h1>
         <p>{item?.cpf}</p>
         <div className="address">
@@ -207,17 +208,19 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
                           .join(" ")
                           .replace("Ultimo", "Último")
                           .replace("Ultima", "Última")
+                          .replace("Pa", "PA")
                           .replace("Medico", "Médico")}
                       </strong>
                       <div>
                         <p>{parseText(registro?.data)}</p>
-                        {registro?.exibirAlerta &&
+                        {registro?.exibirAlerta && (
                           <span
                             className="iconCircle iconAlerta ms-2"
-                            title="Possui Alertas"
+                            title="Alertas"
                           >
                             !
-                          </span>}
+                          </span>
+                        )}
                       </div>
                     </p>
                   </div>

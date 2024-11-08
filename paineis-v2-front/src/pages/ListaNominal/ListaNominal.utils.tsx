@@ -1,6 +1,7 @@
 import { Api } from "../../services/api";
 import { capitalize } from "../../utils";
 import { Icon } from "bold-ui";
+import { capitalizeName } from "../../utils/stringUtils";
 
 export const columns = ({ handleClick }: any) => [
   {
@@ -12,9 +13,11 @@ export const columns = ({ handleClick }: any) => [
         onClick={() => handleClick(item)}
         style={{ marginLeft: "16px", cursor: "pointer" }}
       >
-        {item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
-          ? `${item?.nomeSocialSelecionado} *`
-          : item?.nome}
+        {capitalizeName(
+          item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
+            ? `${item?.nomeSocialSelecionado} *`
+            : item?.nome
+        )}
       </span>
     ),
   },
@@ -25,7 +28,7 @@ export const columns = ({ handleClick }: any) => [
     render: (item: any) => {
       if (item.possuiAlertas) {
         return (
-          <span className="iconCircle iconAlerta ms-2" title="Possui Alertas">
+          <span className="iconCircle iconAlerta ms-2" title="Alertas">
             !
           </span>
         );
@@ -70,31 +73,34 @@ export const columns = ({ handleClick }: any) => [
   {
     name: "idade",
     header: "Idade",
-    render: (item: any) => item.idade,
+    render: (item: any) => <center>{item.idade}</center>,
   },
   {
     name: "diagnostico",
     header: "Diagnóstico",
-    render: (item: any) => capitalize(item.diagnostico),
+    render: (item: any) => <center>{capitalize(item.diagnostico)}</center>,
   },
   {
     name: "sexo",
     header: "Sexo",
-    render: (item: any) => (item.sexo === "MASCULINO" ? "M" : "F"),
+    render: (item: any) => (
+      <center>{item.sexo === "MASCULINO" ? "M" : "F"}</center>
+    ),
   },
   {
     name: "equipe",
     header: "Equipe",
     render: (item: any) => (
-      <p style={{ fontSize: "13px", transform: "translateY(8px)" }}>
-        {String(item.equipe)?.toUpperCase()}
-      </p>
+      <span title={item.equipe}>
+        {capitalizeName(String(item.equipe)?.toUpperCase().slice(0, 30))}
+        {String(item.equipe).length > 30 ? "..." : ""}
+      </span>
     ),
   },
   {
     name: "microarea",
     header: "Microárea",
-    render: (item: any) => item.microarea,
+    render: (item: any) => <center>{item.microarea}</center>,
   },
 ];
 
@@ -115,7 +121,7 @@ export const Footer = ({ pathToReport, condicao, id }: any) => {
         </p>
         <p>
           <span className="iconCircle iconAlerta ms-2">!</span>
-          Possui Alertas
+          Alertas
         </p>
         <p
           onClick={async () => {
@@ -132,7 +138,7 @@ export const Footer = ({ pathToReport, condicao, id }: any) => {
 
             const a = document.createElement("a");
             a.href = downloadUrl;
-            a.download = "lista_nominal.xlsx"; // Nome do arquivo a ser baixado
+            a.download = "lista_nominal.xlsx";
             document.body.appendChild(a);
             a.click();
             a.remove();

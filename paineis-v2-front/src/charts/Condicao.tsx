@@ -13,10 +13,13 @@ export function Condicao({ data }: any) {
 
   if (data !== undefined) {
     let total = data.urbano + data.rural + (data.nao_informado || 0);
-    const entries = Object.entries(data).map((item) => {
+    const entries = Object.entries(data).map((item, index) => {
       return {
         value: item[1],
-        name: getPorcentagemIndicador(item[0], total, item[1]),
+        name:
+          getPorcentagemIndicador(item[0], total, item[1]) +
+          "" +
+          new Array(index).fill(" ").join(""),
         label: parse_label(item[0]),
       };
     });
@@ -26,7 +29,7 @@ export function Condicao({ data }: any) {
       tooltip: {
         trigger: "item",
         formatter: function (params: any) {
-          return `${params.data.label}: ${params.data.value} (${params.name}%)`;
+          return `${params.data.label}: ${params.data.value} (${params.name})`;
         },
       },
       series: [

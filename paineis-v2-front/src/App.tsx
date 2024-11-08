@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
 import { InfoProvider } from "./context/infoProvider";
 import { ProtectedLayout } from "./components/ProtectedLayout";
-
+import { LocaleContext } from "bold-ui";
+//import ptBr from "bold-ui/i18n/locales/pt-BR";
 import { Login } from "./pages/Login";
 import { Painel } from "./pages/Painel";
 import { Gestantes } from "./pages/Gestantes";
