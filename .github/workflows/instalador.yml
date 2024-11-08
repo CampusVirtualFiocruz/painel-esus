@@ -98,7 +98,7 @@ jobs:
           tar -czf painel-esus-setup$clean_version.tar.gz \
             -C $(pwd)/painel-esus ibge.csv \
             -C $(pwd)/painel-esus icon \
-            -C $(pwd)/paineis-v2-front static-files 
+            -C $(pwd)/paineis-v2-front static-files \
             -C $(pwd)/painel-esus/dist/ config \
             -C $(pwd)/painel-esus/dist/ painel-esus 
 
@@ -134,7 +134,7 @@ jobs:
 
 
   create-exe-files:
-    needs: [build-frontend, build-backend]
+    needs: [build-backend]
     runs-on: windows-latest
 
     steps:
@@ -224,5 +224,5 @@ jobs:
           version="${{ github.head_ref || github.ref_name }}"
           clean_version=$(echo "$version" | sed 's/^v//')
           curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} -H 'Content-type: application/json' \
-            --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *'"$clean_version"'* \n Download: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.exe"}'
+            --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *'"$clean_version"'* \n Download-windows: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.exe" \n Download-linux: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.tar.gz"}'
         
