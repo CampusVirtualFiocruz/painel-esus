@@ -158,6 +158,7 @@ order by p.nome
         pagesize: int = 10,
         nome: str = None,
         cpf: str = None,
+        equipe: int = None,
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
@@ -182,8 +183,8 @@ order by p.nome
                 users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
             if cpf is not None and cpf:
                 users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
-
-            # users = users.filter(Pessoas.nome.is_not(None))
+            if equipe is not None and equipe:
+                users = users.filter(Equipes.codigo_equipe == equipe)
             users = users.group_by(HipertensaoNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (
@@ -191,7 +192,7 @@ order by p.nome
                 .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
-
+            # print(str(users))
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,
