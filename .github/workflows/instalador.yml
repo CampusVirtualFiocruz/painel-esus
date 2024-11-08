@@ -63,14 +63,14 @@ jobs:
       - name: Build EXE config
         working-directory: ./painel-esus
         run: |
-          pyinstaller --icon=.\icon\config.ico -n config --onefile interface.py
+          pyinstaller --icon=./icon/config.ico -n config --onefile ./interface.py --hidden-import='PIL._tkinter_finder'
           cd dist
           ls -la
 
       - name: Build EXE run
         working-directory: ./painel-esus
         run: |
-          pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
+          pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
           cd dist
           ls -la   
 
