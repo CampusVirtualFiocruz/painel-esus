@@ -66,6 +66,7 @@ jobs:
 
       - name: List directory
         run: |
+          cd paineis-v2-front/
           ls -la          
 
       - name: Build EXE config
