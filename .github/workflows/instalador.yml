@@ -72,7 +72,14 @@ jobs:
         run: |
           pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
           cd dist
-          ls -la   
+          ls -la
+
+      # - name: Download files
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: Build
+      #     path: ./paineis-v2-front/static-files
+      # - run: ls -la          
 
       - name: Validate files and compress
         run: |
@@ -82,8 +89,8 @@ jobs:
             -C $(pwd)/painel-esus ibge.csv \
             -C $(pwd)/painel-esus icon \
             -C $(pwd)/paineis-v2-front static-files \
-            $(pwd)/painel-esus/dist/config \
-            $(pwd)/painel-esus/dist/painel-esus 
+            -C $(pwd)/painel-esus/dist/ config \
+            -C $(pwd)/painel-esus/dist/ painel-esus 
             
 
       - name: Upload artifact
@@ -184,51 +191,6 @@ jobs:
   #       with:
   #         name: painel-esus
 
-
-  # build-linux-artfact:
-  #   needs:  [build-frontend, build-backend]
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v3
- 
-  #     - name: Download files
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: config
-  #         path: ./dist/config
-  #     - run: ls
-
-  #     - name: Download files
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: run
-  #         path: ./dist/painel-esus
-  #     - run: ls
-
-  #     - name: Create empty files
-  #       run: |
-  #         # Cria arquivos vazios
-  #         touch painel_esus.db painel-esus.sqls
-
-
-  #     - name: Validate files and compress
-  #       run: |
-  #         tar -czf painel-esus-linux.tar.gz \
-  #           -C /home/runner/work/painel-esus/painel-esus/painel-esus ibge.csv \
-  #           -C /home/runner/work/painel-esus/painel-esus/painel-esus icon \
-  #           -C /home/runner/work/painel-esus/painel-esus/paineis-v2-front static-files \
-  #           -C /home/runner/work/painel-esus/painel-esus painel_esus.db \
-  #           -C /home/runner/work/painel-esus/painel-esus painel-esus.sqls \
-  #           -C /home/runner/work/painel-esus/painel-esus/dist config \
-  #           -C /home/runner/work/painel-esus/painel-esus/dist painel-esus \
-
-  #     - name: Upload artifact
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         name: painel-esus-linux
-  #         path: painel-esus-linux.tar.gz
 
   # notify-slack:
   #   runs-on: ubuntu-latest
