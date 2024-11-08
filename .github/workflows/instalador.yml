@@ -5,45 +5,45 @@ on:
     branches: [v*]
 
 jobs:
-  build-frontend:
-    runs-on: ubuntu-latest
+  # build-frontend:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20"
+  #     - name: Set up Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: "20"
 
-      - name: Install dependencies
-        working-directory: ./paineis-v2-front
-        run: yarn
+  #     - name: Install dependencies
+  #       working-directory: ./paineis-v2-front
+  #       run: yarn
 
-      - name: Build React project
-        working-directory: ./paineis-v2-front
-        run: |
-          cat <<EOF > .env
-          ${{ vars.ENV_FRONT }}
-          EOF
-          CI=false npm run build --prod
+  #     - name: Build React project
+  #       working-directory: ./paineis-v2-front
+  #       run: |
+  #         cat <<EOF > .env
+  #         ${{ vars.ENV_FRONT }}
+  #         EOF
+  #         CI=false npm run build --prod
 
-      - name: Print directory
-        run: |
-          ls -la
-          cd ./paineis-v2-front/static-files
-          ls -la
+  #     - name: Print directory
+  #       run: |
+  #         ls -la
+  #         cd ./paineis-v2-front/static-files
+  #         ls -la
 
-      # Salva a pasta 'paineis-v2-front/static-files' como um artifact
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Build
-          path: ./paineis-v2-front/static-files
+  #     # Salva a pasta 'paineis-v2-front/static-files' como um artifact
+  #     - uses: actions/upload-artifact@v3
+  #       with:
+  #         name: Build
+  #         path: ./paineis-v2-front/static-files
 
   build-backend:
     runs-on: ubuntu-latest
-    needs: [build-frontend]
+    # needs: [build-frontend]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -76,6 +76,7 @@ jobs:
 
       - name: Validate files and compress
         run: |
+          ls -la
           tar -czf painel-esus-linux.tar.gz \
             -C painel-esus ibge.csv \
             -C painel-esus icon \
