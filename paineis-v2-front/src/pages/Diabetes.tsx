@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Alert, Progress, Spinner } from "reactstrap";
 import { Button } from "bold-ui";
@@ -35,9 +35,12 @@ export function Diabetes() {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<TModal>({ loaded: 0 });
-  const { cityInformation } = useInfo();
+
+  const [params] = useSearchParams();
+  const equipe = params.get("equipe");
 
   let paramRoute = id ? id : "all";
+  const search = equipe ? `?equipe=${equipe}` : "";
 
   const getData = async (idModal: number, tipo?: string) => {
     await wait(100);
@@ -52,7 +55,7 @@ export function Diabetes() {
     ["diabetes/total", id],
     async () => {
       let path = id ? `diabetes/total/${id}` : "diabetes/total";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       
       const responseData = response.data;
 
@@ -75,7 +78,7 @@ export function Diabetes() {
       let path = id
         ? `diabetes/age-group-gender/${id}`
         : "diabetes/age-group-gender";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const responseData = response.data;
 
       return responseData.data;
@@ -95,7 +98,7 @@ export function Diabetes() {
       let path = id
         ? `diabetes/age-group-location/${id}`
         : "diabetes/age-group-location";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const responseData = response.data;
 
       return responseData.data;
@@ -113,7 +116,7 @@ export function Diabetes() {
     ["diabetes-complications", paramRoute],
     async () => {
       let path = id ? `diabetes/complications/${id}` : "diabetes/complications";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const responseData = response.data;
 
       const arrData = responseData.data.map((item: any, i: number) => {
@@ -136,7 +139,7 @@ export function Diabetes() {
     ["diabetes-factors-imc", paramRoute],
     async () => {
       let path = id ? `diabetes/imc/${id}` : "diabetes/imc";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const responseData = response.data;
 
       return responseData.data;
@@ -154,7 +157,7 @@ export function Diabetes() {
     ["diabetes-exams", paramRoute],
     async () => {
       let path = id ? `diabetes/exams/${id}` : "diabetes/exams";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const data = response.data;
 
       return data.data;
@@ -172,7 +175,7 @@ export function Diabetes() {
     ["diabetes-professionals", paramRoute],
     async () => {
       let path = id ? `diabetes/professionals/${id}` : "diabetes/professionals";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const data = response.data;
 
       return data.data;

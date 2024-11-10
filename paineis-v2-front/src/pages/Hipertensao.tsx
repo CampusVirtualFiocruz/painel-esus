@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Alert, Progress, Spinner } from "reactstrap";
 import { Button } from "bold-ui";
@@ -36,9 +36,12 @@ export function Hipertensao() {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<TModal>({ loaded: 0 });
-  const { cityInformation } = useInfo();
+  
+  const [params] = useSearchParams();
+  const equipe = params.get("equipe");
 
   let paramRoute = id ? id : "all";
+  const search = equipe ? `?equipe=${equipe}` : "";
 
   const getData = async (idModal: number, tipo?: string) => {
     await wait(100);
@@ -55,7 +58,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/total/${id}`
         : "arterial-hypertension/total";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const responseData = response.data;
 
       let total = responseData.data;
@@ -77,7 +80,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/age-group-location/${id}`
         : "arterial-hypertension/age-group-location";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const responseData = response.data;
 
       return responseData.data;
@@ -97,7 +100,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/age-group-gender/${id}`
         : "arterial-hypertension/age-group-gender";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const responseData = response.data;
 
       return responseData.data;
@@ -117,7 +120,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/complications/${id}`
         : "arterial-hypertension/complications";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const responseData = response.data;
 
       const arrData = responseData.data.map((item: any, i: number) => {
@@ -142,7 +145,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/imc/${id}`
         : "arterial-hypertension/imc";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const responseData = response.data;
 
       return responseData.data;
@@ -162,7 +165,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/exams/${id}`
         : "arterial-hypertension/exams";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const data = response.data;
 
       return data.data;
@@ -182,7 +185,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/professionals/${id}`
         : "arterial-hypertension/professionals";
-      const response = await Api.get(path);
+      const response = await Api.get(path+search);
       const data = response.data;
 
       return data.data;
