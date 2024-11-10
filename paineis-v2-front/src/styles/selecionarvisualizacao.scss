@@ -1,9 +1,12 @@
 @import "./_exports.module.scss";
 .container-escolher {
+  
   .container-icone {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: start;
+    height: 200px;
 
     img {
       padding-bottom: 20px;
@@ -26,24 +29,20 @@
     }
   }
 
-  .container-municipio {
-    display: flex;
 
-    button {
-      width: 250px;
-      height: 40px;
-      color: hsl(0, 0%, 50%);
-      border-color: hsl(0, 0%, 80%);
-      font: 400 1rem "IBM Plex Sans", sans-serif;
+  button {
+    width: 250px;
+    height: 40px;
+    border-color: hsl(0, 0%, 80%);
+    font: 400 1rem "IBM Plex Sans", sans-serif;
 
-      &:hover {
-        background-color: var(--bold-blue);
-        color: #ffffff;
-      }
+    &:hover {
+      background-color: var(--bold-blue);
+      color: #ffffff;
+    }
 
-      span {
-        padding-top: 5px;
-      }
+    span {
+      padding-top: 5px;
     }
   }
 }

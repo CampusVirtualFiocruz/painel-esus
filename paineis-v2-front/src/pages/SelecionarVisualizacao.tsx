@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from "reactstrap";
 import { useQuery } from "react-query";
 
-import { CSSProperties, useEffect } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import Select, { StylesConfig } from "react-select";
 
 import { Api } from "../services/api";
@@ -68,6 +68,8 @@ const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
 
 export function SelecionarVisualizacao() {
   let navigate = useNavigate();
+  const [currentUbs, setCurrentUbs] = useState<any>();
+  const [currentTeam, setCurrentTeam] = useState<any>();
 
   const { data, isLoading, error } = useQuery(
     "ubs",
@@ -88,6 +90,28 @@ export function SelecionarVisualizacao() {
     }
   );
 
+  const { data: teamsData } = useQuery(
+    "get-teams/"+currentUbs,
+    async () => {
+      const response = await Api.get<ResponseData>("get-teams/"+currentUbs);
+      const data = response.data;
+      const listData: TypeUbs[] = data.data.map((i: any) => {
+        return {
+          ...i,
+          label: i.nome_equipe + " (" + i.codigo_equipe + ")",
+          value: i.codigo_equipe,
+        };
+      });
+
+      return listData;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
+
+  console.log({ teamsData })
+
   const canSelect = userCanSelectUBS();
 
   useEffect(() => {
@@ -103,8 +127,20 @@ export function SelecionarVisualizacao() {
     navigate("/painelx");
   }
 
+  function handleToPainelWithTeam() {
+    navigate("/painelx?equipe="+currentTeam);
+  }
+
   const onChangeSelection = (e: any) => {
-    navigate(`/painel/${e.value}`);
+    setCurrentUbs(e.value);
+  };
+
+  const handleToPainelWithUbs = () => {
+    navigate(`/painel/${currentUbs}`);
+  };
+
+  const onChangeTeamSelection = (e: any) => {
+    setCurrentTeam(e.value);
   };
 
   return (
@@ -114,7 +150,7 @@ export function SelecionarVisualizacao() {
         <div className="container-titulo mb-5">
           <h2>Visualizar dados por:</h2>
         </div>
-        <div className="container-escolher d-flex flex-column flex-md-row align-items-center">
+        <div className="container-escolher d-flex flex-column flex-md-row">
           <div className="container-municipio mb-4 mb-md-0">
             <div className="container-icone">
               <img
@@ -125,7 +161,7 @@ export function SelecionarVisualizacao() {
               <Button
                 onClick={handleToPainel}
                 type="button"
-                kind="normal"
+                kind="primary"
                 size="small"
               >
                 Município
@@ -145,19 +181,33 @@ export function SelecionarVisualizacao() {
                   Falha ao carregar lista de UBS's
                 </div>
               ) : (
-                <Select
-                  isClearable
-                  placeholder="UBS"
-                  noOptionsMessage={() => "Nenhuma UBS encontrada"}
-                  options={data}
-                  styles={selectStyle}
-                  onChange={onChangeSelection}
-                />
+                <>
+                  <Select
+                    isClearable
+                    placeholder="UBS"
+                    noOptionsMessage={() => "Nenhuma UBS encontrada"}
+                    options={data}
+                    styles={selectStyle}
+                    onChange={onChangeSelection}
+                  />
+                  { currentUbs && <Button
+                    onClick={handleToPainelWithUbs}
+                    type="button"
+                    kind="primary"
+                    size="small"
+                    style={{ marginTop: "10px" }}
+                  >
+                    Acessar UBS
+                  </Button>}
+                </>
               )}
             </div>
           </div>
 
-          {/* <div className="container-combo-ubs ms-md-4">
+        <div className="container-combo-ubs ms-md-4"
+                style={{
+                  opacity: !currentUbs ? 0.6 : 1
+                }}>
             <div className="container-icone">
               <img
                 className="icone-equipe"
@@ -173,28 +223,33 @@ export function SelecionarVisualizacao() {
                   Falha ao carregar lista de equipes
                 </div>
               ) : (
+                <>
                 <Select
                   isClearable
-                  placeholder="Equipe"
+                  placeholder={"Equipe"}
                   noOptionsMessage={() => "Nenhuma equipe encontrada"}
-                  options={data}
+                  options={teamsData}
                   styles={selectStyle}
-                  onChange={onChangeSelection}
+                  onChange={onChangeTeamSelection}
+                  isDisabled={!currentUbs}
                 />
+                {!currentUbs ?<p style={{ fontSize: "12px" }}>
+                 Selecione uma ubs para continuar
+                </p>: null}
+                  { currentTeam && <Button
+                    onClick={handleToPainelWithTeam}
+                    type="button"
+                    kind="primary"
+                    size="small"
+                    style={{ marginTop: "10px" }}
+                  >
+                    Acessar Equipe
+                  </Button>}
+                </>
               )}
             </div>
-          </div> */}
+          </div> 
         </div>
-        {/* <div className="container-entrar">
-          <Button
-            onClick={handleToPainel}
-            type="button"
-            kind="normal"
-            size="small"
-          >
-            Entrar
-          </Button>
-        </div> */}
       </div>
       <Footer />
     </div>

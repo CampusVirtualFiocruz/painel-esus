@@ -18,7 +18,7 @@ export function Header() {
   let navigate = useNavigate();
 
   function handleHome() {
-    navigate("/selecionarubs");
+    navigate("/selecionarvisualizacao");
   }
 
   function handleLogout() {
