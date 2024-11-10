@@ -84,51 +84,69 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             "Feminino": self.__create_age_groups_items(),
             "Masculino": self.__create_age_groups_items(),
         }
-
         for resp in response:
-            body[resp[0]][resp[1]][resp[2]] = int(resp[3])
+            print(resp)
+            if resp[0] is not None and resp[1] is not None:
+                body[resp[0]][resp[1]][resp[2]] = int(resp[3])
         return body
 
-    def get_demographics_info(self, cnes: int = None) -> Dict:
-        if cnes and not isinstance(cnes, int):
-            raise InvalidArgument("CNES must be int")
-        with DBConnectionHandler().get_engine().connect() as con:
-
-            sql = "select count(tus.*) total  from tb_acomp_cidadaos_vinculados tacv join tb_dim_unidade_saude tus on tus.nu_cnes = tacv.nu_cnes_vinc_equipe "
+    def get_total_people(self, cnes:int = None, equipe: int = None):
+        with LocalDBConnectionHandler().get_engine().connect() as con:
+            where_clause = ""
             if cnes is not None:
-                statement = text(
-                    f"{sql} where tus.co_seq_dim_unidade_saude  = {cnes} ;"
-                )
-            else:
-                statement = text(f"{sql};")
+                where_clause += f"""            where 
+                    e.codigo_unidade_saude = {cnes}
+                """
+                if equipe and equipe is not None:
+                    where_clause += f"  and e.codigo_equipe = {equipe} "
+            sql = f"""
+with 
+    cidadaos as ( select distinct p.cidadao_pec from 	pessoas p join equipes e on e.cidadao_pec = p.cidadao_pec 
+    {where_clause}
+)
+select count(*) total  from 	cidadaos """
+
+            statement = text(f"{sql};")
+
             result = con.execute(
                 statement,
             )
             db_response = next(result)
+        return db_response[0] if len(db_response) > 0 else 0
 
-            path = os.getcwd()
-            path = Path(path)
-            path = os.path.join(path, "ibge.csv")
-            df = pd.read_csv(path, sep=";")
+    def get_ibge_total(self):
+        path = os.getcwd()
+        path = Path(path)
+        path = os.path.join(path, "ibge.csv")
+        df = pd.read_csv(path, sep=";")
 
-            ibge = int(env.get("CIDADE_IBGE", 0))
-            if ibge == "-":
+        ibge = int(env.get("CIDADE_IBGE", 0))
+        if ibge == "-":
+            ibge_population = 0
+        else:
+            try:
+                df_ibge = df[df["IBGE"] == ibge]
+                ibge_population = df_ibge["POPULACAO"].iloc[0]
+                ibge_population = f"{ibge_population:_.0f}".replace("_", ".")
+            except Exception as exc:
+                logging.exception(exc)
                 ibge_population = 0
-            else:
-                try:
-                    df_ibge = df[df["IBGE"] == ibge]
-                    ibge_population = df_ibge["POPULACAO"].iloc[0]
-                    ibge_population = f"{ibge_population:_.0f}".replace("_", ".")
-                except Exception as exc:
-                    logging.exception(exc)
-                    ibge_population = 0
-            age_gender = filter_by_gender_age(cnes)
+        return ibge_population
+
+    def get_age_groups(self, cnes:int = None, equipe:int = None):
+        with LocalDBConnectionHandler().get_engine().connect() as con:
+            age_gender = filter_by_gender_age(cnes, equipe)
             statement = text(age_gender)
             result_age_gender = con.execute(
                 statement,
             )
             age_groups = self.__create_age_groups(result_age_gender)
-            location_area_sql = filter_by_localidade(cnes)
+        return age_groups
+
+    def get_by_place(self, cnes:int = None, equipe:int = None):
+        with LocalDBConnectionHandler().get_engine().connect() as con:
+
+            location_area_sql = filter_by_localidade(cnes, equipe)
             statement = text(location_area_sql)
             result_location_area_sql = con.execute(
                 statement,
@@ -136,37 +154,49 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             location_body = {"rural": 0, "urbano": 0, "nao_definido": 0}
             for resp in result_location_area_sql:
                 location_body[resp[0]] = int(resp[1])
+            return location_body
 
+    def get_by_gender(self, cnes:int = None, equipe:int = None):
+        with LocalDBConnectionHandler().get_engine().connect() as con:
             gender = {"feminino": 0, "masculino": 0}
-            gender_sql = filter_by_sexo(cnes)
+            gender_sql = filter_by_sexo(cnes, equipe)
             statement = text(gender_sql)
             result_gender = con.execute(
                 statement,
             )
             for resp in result_gender:
                 gender[resp[0]] = int(resp[1])
+            return gender
+    def get_demographics_info(self, cnes: int = None, equipe: int= None) -> Dict:
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument("CNES must be int")
 
-            idicators_body = {
-                "diabetes": {"rural": 0, "urbano": 0, "nao_informado": 0},
-                "hipertensao": {"rural": 0, "urbano": 0, "nao_informado": 0},
-            }
-            with LocalDBConnectionHandler().get_engine().connect() as local_con:
-                indicator_diabetes_sql = get_indicators_diabetes_plus_autorreferidos(cnes)
-                result_diabetes = local_con.execute(
-                    text(indicator_diabetes_sql),
-                )
-                for resp in result_diabetes:
-                    idicators_body["diabetes"][resp[0]] = int(resp[1])
+        total_people = self.get_total_people(cnes, equipe)
+        ibge_population = self.get_ibge_total()
+        age_groups = self.get_age_groups(cnes, equipe)
+        location_body = self.get_by_place(cnes, equipe)
+        gender = self.get_by_gender(cnes, equipe)
+        idicators_body = {
+            "diabetes": {"rural": 0, "urbano": 0, "nao_informado": 0},
+            "hipertensao": {"rural": 0, "urbano": 0, "nao_informado": 0},
+        }
+        with LocalDBConnectionHandler().get_engine().connect() as local_con:
+            indicator_diabetes_sql = get_indicators_diabetes_plus_autorreferidos(cnes, equipe)
+            result_diabetes = local_con.execute(
+                text(indicator_diabetes_sql),
+            )
+            for resp in result_diabetes:
+                idicators_body["diabetes"][resp[0]] = int(resp[1])
 
-                indicator_hipertensao_sql = get_indicators_hipertensao_plus_autorreferidos(cnes)
-                result_hipertensao = local_con.execute(
-                    text(indicator_hipertensao_sql),
-                )
-                for resp in result_hipertensao:
-                    idicators_body["hipertensao"][resp[0]] = int(resp[1])
+            indicator_hipertensao_sql = get_indicators_hipertensao_plus_autorreferidos(cnes, equipe)
+            result_hipertensao = local_con.execute(
+                text(indicator_hipertensao_sql),
+            )
+            for resp in result_hipertensao:
+                idicators_body["hipertensao"][resp[0]] = int(resp[1])
 
             return {
-                "total": db_response[0],
+                "total": total_people,
                 "ibgePopulation": ibge_population,
                 "ageGroups": age_groups,
                 "locationArea": location_body,
