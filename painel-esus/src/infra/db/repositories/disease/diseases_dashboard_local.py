@@ -29,13 +29,20 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
     def __init__(self, disease: Disease):
         self.disease = disease
 
-    def _find_auto_referido(self, cnes: int = None):
+    def _find_auto_referido(
+        self,
+        cnes: int = None,
+        equipe: int = None,
+    ):
         with DBConnectionHandler().get_engine().connect() as db_con:
-            sql = autorreferidos_check(cnes,self.disease.name, self.disease.name)
+            sql = autorreferidos_check(
+                cnes, self.disease.name, self.disease.name, equipe
+            )
             sql = text(sql)
             print(sql)
             autorreferidos = db_con.execute(sql)
             return list(autorreferidos)
+
     def faixa_etaria_list(self):
         return [
             "0 a 19 anos",
@@ -45,25 +52,36 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
             "50 a 59 anos",
             "60+ anos",
         ]
-    def _total_pacientes(self, cnes: int = None):
+
+    def _total_pacientes(self, cnes: int = None, equipe: int = None):
         with DBConnectionHandler().get_engine().connect() as db_con:
             cnes_condition = ""
             if cnes is not None and cnes:
-                cnes_condition = f' where co_dim_unidade_saude = {cnes}'
+                cnes_condition += f" where co_dim_unidade_saude = {cnes}"
+                if equipe is not None and equipe:
+                    cnes_condition += f"  and co_dim_equipe = {equipe} "
+
             sql = f"select distinct co_fat_cidadao_pec , co_dim_tipo_localizacao from {self.disease.name}  {cnes_condition} ;"
             sql = text(sql)
+
+            print( sql )
             pacientes = db_con.execute(sql)
             return list(pacientes)
 
-    def _retrieve_imc_info(self, cnes: int = None):
+    def _retrieve_imc_info(self, cnes: int = None, equipe: int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
         with DBConnectionHandler() as db_con:
             engine = db_con.get_engine()
-            sql = LISTA_PESOS_ALTURAS(self.disease.name, cnes)
+            sql = LISTA_PESOS_ALTURAS(self.disease.name, cnes, equipe)
             return pd.read_sql_query(sql, con=engine)
 
-    def _retrieve_procedures(self, cnes: int = None, id_cares: List = None):
+    def _retrieve_procedures(
+        self,
+        cnes: int = None,
+        id_cares: List = None,
+        equipe: int = None,
+    ):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
         # if not id_cares:
@@ -73,12 +91,14 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
             sql = f"select * from {self.disease.name} "
             if cnes:
                 sql += f""" where co_dim_unidade_saude = {cnes} """
+                if equipe and equipe is not None:
+                    sql += f""" and co_dim_equipe = {equipe} """
 
             sql += "ORDER BY no_cidadao ASC;"
             response = pd.read_sql_query(sql, con=engine)
             return response
 
-    def _retrieve_cares(self, cnes: int = None):
+    def _retrieve_cares(self, cnes: int = None, equipe: int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
         with DBConnectionHandler() as db_con:
@@ -86,27 +106,33 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
             sql = f"select * from {self.disease.name} "
             if cnes:
                 sql += f""" where co_dim_unidade_saude = {cnes} """
+                if equipe is not None and equipe:
+                    sql += f" and co_dim_equipe = {equipe} "
             sql += ";"
+
+            print(f"_retrieve_cares: {sql}")
             return pd.read_sql_query(sql, con=engine)
 
-    def get_total(self, cnes: int = None) -> DiseaseDashboardTotal:
-        cares = self._retrieve_cares(cnes)
-        auto_referido = self._find_auto_referido(cnes)
-        total_pacientes = self._total_pacientes(cnes)
+    def get_total(self, cnes: int = None, equipe: int = None) -> DiseaseDashboardTotal:
+        cares = self._retrieve_cares(cnes, equipe)
+        auto_referido = self._find_auto_referido(cnes, equipe)
+        total_pacientes = self._total_pacientes(cnes, equipe)
         return {
             "total_atendimentos": int(cares["co_seq_fat_atd_ind"].unique().shape[0]),
             "total_pacientes": int(len(total_pacientes)),
             "total_auto_referido": int(len(auto_referido)),
         }
 
-    def get_age_groups_location(self, cnes: int = None) -> Dict:
+    def get_age_groups_location(self, cnes: int = None, equipe: int = None) -> Dict:
         with DBConnectionHandler().get_engine().connect() as db_con:
-            sql = get_patients_by_location(cnes, self.disease.name)
+            sql = get_patients_by_location(cnes, self.disease.name, equipe)
             sql = text(sql)
             pacientes = list(db_con.execute(sql))
             result = dict()
+
             def init():
                 return {"Rural": 0, "Urbano": 0, "Nao Informado": 0}
+
             for i in self.faixa_etaria_list():
                 result[i] = init()
             for paciente in pacientes:
@@ -116,14 +142,16 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
             return result
 
-    def get_age_group_gender(self, cnes: int = None) -> Dict:
+    def get_age_group_gender(self, cnes: int = None, equipe: int = None) -> Dict:
         with DBConnectionHandler().get_engine().connect() as db_con:
-            sql = get_patients_by_gender(cnes, self.disease.name)
+            sql = get_patients_by_gender(cnes, self.disease.name, equipe)
             sql = text(sql)
             pacientes = list(db_con.execute(sql))
             result = dict()
+
             def init():
-                return  {"Feminino": 0, "Masculino": 0}
+                return {"Feminino": 0, "Masculino": 0}
+
             for i in self.faixa_etaria_list():
                 result[i] = init()
             for paciente in pacientes:
@@ -133,28 +161,35 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
             return result
 
-    def get_complications(self, cnes: int = None) -> None:
-        cares = self._retrieve_cares(cnes)
+    def get_complications(self, cnes: int = None, equipe: int = None) -> None:
+        cares = self._retrieve_cares(cnes, equipe)
         hypertension_complications = HypertensionComplications(cares)
         statistics = hypertension_complications.compute_statistics()
         return statistics
 
-    def get_professionals_count(self, cnes: int = None) -> Dict:
-        cares = self._retrieve_cares(cnes)
+    def get_professionals_count(self, cnes: int = None, equipe: int = None) -> Dict:
+        cares = self._retrieve_cares(cnes, equipe)
         professionals = ProfessionalsGroup()
         return professionals.get_professionals_count(cares)
 
     def get_exams_count(
-        self, cnes: int = None, exam_disease: DiseaseExams = None
+        self,
+        cnes: int = None,
+        equipe: int = None,
+        exam_disease: DiseaseExams = None,
     ) -> Dict:
-        cares = self._retrieve_cares(cnes)
+        cares = self._retrieve_cares(cnes, equipe)
         id_cares = cares["co_seq_fat_atd_ind"].unique().tolist()
-        procedures = self._retrieve_procedures(cnes, id_cares)
+        procedures = self._retrieve_procedures(cnes, id_cares, equipe)
         hypertension = exam_disease
         return hypertension.check_presence(procedures)
 
-    def get_imc(self, cnes: int = None) -> Dict:
-        cares = self._retrieve_imc_info(cnes)
+    def get_imc(
+        self,
+        cnes: int = None,
+        equipe: int = None,
+    ) -> Dict:
+        cares = self._retrieve_imc_info(cnes, equipe)
         imc_model = ImcModel()
         cares.apply(
             lambda x: imc_model.check_presence(
@@ -190,11 +225,15 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         return results
 
     def get_individual_exams_count(
-        self, cnes: int = None, exam_disease: DiseaseExams = None, page=1
+        self,
+        cnes: int = None,
+        equipe: int = None,
+        exam_disease: DiseaseExams = None,
+        page=1,
     ) -> Dict:
-        cares = self._retrieve_cares(cnes)
+        cares = self._retrieve_cares(cnes, equipe)
         id_cares = cares["co_seq_fat_atd_ind"].unique().tolist()
-        procedures = self._retrieve_procedures(cnes, id_cares)
+        procedures = self._retrieve_procedures(cnes, id_cares, equipe)
         age_group = AgeGroupsLocationDF()
         procedures = age_group.parse_date(procedures)
         hypertension = exam_disease

@@ -27,6 +27,7 @@ atd_individual_filtro_ciaps as (
             coalesce(nu_peso, 0 ) nu_peso,
             coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
+            co_dim_equipe_1 as co_dim_equipe,
             co_dim_faixa_etaria,
             co_dim_sexo,
             co_dim_local_atendimento,
@@ -47,7 +48,7 @@ atd_individual_filtro_ciaps as (
         8,
         9,
         10,
-        11, 12, 13
+        11, 12, 13, 14
     union
     select
                         co_seq_fat_atd_ind,
@@ -57,6 +58,7 @@ atd_individual_filtro_ciaps as (
             coalesce(nu_peso, 0 ) nu_peso,
             coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
+            co_dim_equipe_1 as co_dim_equipe,
             co_dim_faixa_etaria,
             co_dim_sexo,
             co_dim_local_atendimento,
@@ -77,7 +79,7 @@ atd_individual_filtro_ciaps as (
         8,
         9,
         10,
-        11, 12, 13
+        11, 12, 13, 14
 union
 select
             co_seq_fat_atd_ind,
@@ -87,6 +89,7 @@ select
             coalesce(nu_peso, 0) nu_peso,
             coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
+            co_dim_equipe_1 as co_dim_equipe,
             co_dim_faixa_etaria,
             co_dim_sexo,
             co_dim_local_atendimento,
@@ -107,7 +110,7 @@ select
         8,
         9,
         10,
-        11, 12, 13
+        11, 12, 13, 14
     union
     select
                         co_seq_fat_atd_ind,
@@ -117,6 +120,7 @@ select
             coalesce(nu_peso, 0) nu_peso,
             coalesce(nu_altura, 0) nu_altura,
             co_dim_unidade_saude_1 as co_dim_unidade_saude,
+            co_dim_equipe_1 as co_dim_equipe,
             co_dim_faixa_etaria,
             co_dim_sexo,
             co_dim_local_atendimento,
@@ -137,7 +141,7 @@ select
         8,
         9,
         10,
-        11, 12, 13
+        11, 12, 13,14
     )
 select
         atd.*,
