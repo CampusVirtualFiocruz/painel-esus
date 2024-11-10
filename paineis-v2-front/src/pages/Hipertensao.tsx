@@ -479,8 +479,7 @@ export function Hipertensao() {
             </div>
           </TwoColumnSection.Col>
         </TwoColumnSection>
-
-        <ReportFooter chaveListaNominal="Hipertensão" />
+        <ReportFooter chaveListaNominal="Hipertensão" equipe={equipe} />
       </ReportWrapper>
     </div>
   );

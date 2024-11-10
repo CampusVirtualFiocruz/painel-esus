@@ -128,7 +128,7 @@ export function SelecionarVisualizacao() {
   }
 
   function handleToPainelWithTeam() {
-    navigate("/painelx?equipe="+currentTeam);
+    navigate(`/painel/${currentUbs}?equipe=${currentTeam}`);
   }
 
   const onChangeSelection = (e: any) => {

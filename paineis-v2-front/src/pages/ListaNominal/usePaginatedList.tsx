@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Api } from "../../services/api";
 
-const usePaginatedList = ({ condicao, id, searchTerm }: any) => {
+const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
   const [params, setParams] = useState<any>({
     page: 1,
     size: 10,
@@ -17,7 +17,7 @@ const usePaginatedList = ({ condicao, id, searchTerm }: any) => {
   } as any;
 
   const { data: info, isLoading: isLoadingInfo } = useQuery(
-    ["diabetes-list", { condicao, id, pathToReport, searchTerm, ...params }],
+    ["nominal-list"+condicao+equipe+id, { condicao, equipe, id, pathToReport, searchTerm, ...params }],
     async () => {
       let path = `${pathToReport?.[condicao]}/get-nominal-list/${id}`;
       const response = await Api.get(path, {
@@ -25,6 +25,7 @@ const usePaginatedList = ({ condicao, id, searchTerm }: any) => {
           itemsPerPage: params.size,
           page: params.page,
           cpf: searchTerm,
+          equipe
         },
       });
       return response?.data;

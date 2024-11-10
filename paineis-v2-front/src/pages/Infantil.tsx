@@ -78,7 +78,6 @@ const Infantil = () => {
     <ReportWrapper
       title="UBS Sérgio Arouca / Desenvolvimento Infantil de Cadastro"
       subtitle="(cuidado até o 2º ano de vida de acordo com a data da última atualização pelo município)"
-    
       footer={
         <ReportFooter />}
     >

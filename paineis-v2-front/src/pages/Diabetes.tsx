@@ -469,7 +469,7 @@ export function Diabetes() {
             </div>
           </TwoColumnSection.Col>
         </TwoColumnSection>
-        <ReportFooter chaveListaNominal="Diabetes" />
+        <ReportFooter chaveListaNominal="Diabetes" equipe={equipe} />
       </ReportWrapper>
     </div>
   );
