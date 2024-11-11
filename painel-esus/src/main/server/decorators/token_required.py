@@ -66,6 +66,7 @@ def generate_token(
     municipio: str,
     profiles: List[str] = None,
     ubs: int = None,
+    equipe: int=None
 ) -> str:
     return jwt.encode(
         {
@@ -74,6 +75,7 @@ def generate_token(
             "uf": uf,
             "municipio": municipio,
             "profiles": profiles,
+            "equipe": equipe,
             "ubs": ubs,
             "exp": datetime.datetime.now() + datetime.timedelta(hours=12),
         },

@@ -90,7 +90,7 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
                 body[resp[0]][resp[1]][resp[2]] = int(resp[3])
         return body
 
-    def get_total_people(self, cnes:int = None, equipe: int = None):
+    def get_total_people(self, cnes: int = None, equipe: int = None):
         with LocalDBConnectionHandler().get_engine().connect() as con:
             where_clause = ""
             if cnes is not None:
@@ -133,7 +133,7 @@ select count(*) total  from 	cidadaos """
                 ibge_population = 0
         return ibge_population
 
-    def get_age_groups(self, cnes:int = None, equipe:int = None):
+    def get_age_groups(self, cnes: int = None, equipe: int = None):
         with LocalDBConnectionHandler().get_engine().connect() as con:
             age_gender = filter_by_gender_age(cnes, equipe)
             statement = text(age_gender)
@@ -143,7 +143,7 @@ select count(*) total  from 	cidadaos """
             age_groups = self.__create_age_groups(result_age_gender)
         return age_groups
 
-    def get_by_place(self, cnes:int = None, equipe:int = None):
+    def get_by_place(self, cnes: int = None, equipe: int = None):
         with LocalDBConnectionHandler().get_engine().connect() as con:
 
             location_area_sql = filter_by_localidade(cnes, equipe)
@@ -156,7 +156,7 @@ select count(*) total  from 	cidadaos """
                 location_body[resp[0]] = int(resp[1])
             return location_body
 
-    def get_by_gender(self, cnes:int = None, equipe:int = None):
+    def get_by_gender(self, cnes: int = None, equipe: int = None):
         with LocalDBConnectionHandler().get_engine().connect() as con:
             gender = {"feminino": 0, "masculino": 0}
             gender_sql = filter_by_sexo(cnes, equipe)
@@ -167,7 +167,13 @@ select count(*) total  from 	cidadaos """
             for resp in result_gender:
                 gender[resp[0]] = int(resp[1])
             return gender
-    def get_demographics_info(self, cnes: int = None, equipe: int= None) -> Dict:
+
+    def get_demographics_info(
+        self,
+        cnes: int = None,
+        equipe: int = None,
+    ) -> Dict:
+        print(f"EQUIPE: {equipe}")
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
 
@@ -181,14 +187,18 @@ select count(*) total  from 	cidadaos """
             "hipertensao": {"rural": 0, "urbano": 0, "nao_informado": 0},
         }
         with LocalDBConnectionHandler().get_engine().connect() as local_con:
-            indicator_diabetes_sql = get_indicators_diabetes_plus_autorreferidos(cnes, equipe)
+            indicator_diabetes_sql = get_indicators_diabetes_plus_autorreferidos(
+                cnes, equipe
+            )
             result_diabetes = local_con.execute(
                 text(indicator_diabetes_sql),
             )
             for resp in result_diabetes:
                 idicators_body["diabetes"][resp[0]] = int(resp[1])
 
-            indicator_hipertensao_sql = get_indicators_hipertensao_plus_autorreferidos(cnes, equipe)
+            indicator_hipertensao_sql = get_indicators_hipertensao_plus_autorreferidos(
+                cnes, equipe
+            )
             result_hipertensao = local_con.execute(
                 text(indicator_hipertensao_sql),
             )

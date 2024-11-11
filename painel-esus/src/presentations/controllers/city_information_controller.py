@@ -23,7 +23,11 @@ class CityInformationsController(ControllerInterface):
 
     def handle_teams(self, request: HttpRequest) -> HttpResponse:
         cnes = None
-        if request.path_params and "cnes" in request.path_params:
+        if (
+            request.path_params
+            and "cnes" in request.path_params
+            and request.path_params["cnes"] is not None
+        ):
             cnes = int(request.path_params["cnes"])
 
         response = self.__use_case.get_teams(cnes)

@@ -31,7 +31,10 @@ urls = UnitsPath.urls
 teams = TeamsPath()
 
 
-@units_bp.route(urls['root'], methods=['GET'])
+@units_bp.route(urls["root"], endpoint="get_units", methods=["GET"])
+@units_bp.route(
+    urls["root"] + "/<cnes>", endpoint="get_units_id", methods=["GET"]
+)
 @cache.cached()
 def units_list():
     http_response = None
@@ -47,14 +50,16 @@ def units_list():
     return response, http_response.status_code
 
 
-@teams_bp.route(teams.urls["root"] + "/<cnes>", endpoint="get_teams", methods=["GET"])
+@teams_bp.route(teams.urls["root"] , endpoint="get_teams", methods=["GET"])
+@teams_bp.route(teams.urls["root"] + "/<cnes>", endpoint="get_teams_id", methods=["GET"])
 @cache.cached()
 def teams_list(cnes=None):
     http_response = None
     response = None
-    if cnes:
+    if cnes and cnes is not None and cnes != 'undefined':
         request.view_args["cnes"] = int(request.view_args["cnes"])
-
+    else:
+        request.view_args["cnes"] = None
     try:
         http_response = request_adapter(request, get_teams_composer())
         response = jsonify(http_response.body)

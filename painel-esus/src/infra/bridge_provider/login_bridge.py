@@ -60,7 +60,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             unidade_saude = acesso["unidadeSaude"]
             cbo = acesso["cbo"]["id"]
             cbo_unidade.append((cbo, unidade_saude["id"]))
-            
+
             with DBConnectionHandler().get_engine().connect() as db_con:
                 cbos_ids = [cbo[0] for cbo in cbo_unidade]
                 list_cbo = ",".join(cbos_ids)
@@ -71,11 +71,29 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                 for r in result:
                     for i in cbo_unidade:
                         if i[0] == str(r.co_cbo):
-                            ubs_id = self.get_ubs_id(i[1])
-                            return ("user", ubs_id)
+                            # ubs_id = self.get_ubs_id(i[1])
+                            return ("user", i[1])
 
         else:
             return ("admin", None)
+
+    def get_equipe_id(self, id):
+        with DBConnectionHandler().get_engine().connect() as db_con:
+            statement = text(f'select tde.co_seq_dim_equipe  from tb_equipe te join tb_dim_equipe tde on te.nu_ine = tde.nu_ine where te.co_seq_equipe = {id}')
+            result = db_con.execute(statement)
+            for r in result:
+                return r.co_seq_dim_equipe
+        return None
+
+    def get_unit_id(self, id):
+        with DBConnectionHandler().get_engine().connect() as db_con:
+            statement = text(
+                f"select co_seq_dim_unidade_saude from tb_unidade_saude tus join tb_dim_unidade_saude tdus on tdus.nu_cnes = tus.nu_cnes where tus.co_seq_unidade_saude = {id}"
+            )
+            result = db_con.execute(statement)
+            for r in result:
+                return r.co_seq_dim_unidade_saude
+        return None
 
     def get_reponse_body(self, session, url, headers, payload):
         return session.request("POST", url, headers=headers, data=payload)
@@ -94,16 +112,18 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                     "nome": name
                 }
             return None
-        
+
         profiles = []
         for acesso in acessos:
             ubs = None
             equipe = None
             if acesso["unidadeSaude"] is not None:
-                ubs = format_entity(acesso["unidadeSaude"]["id"], acesso["unidadeSaude"]["nome"])
+                id = self.get_unit_id(acesso["unidadeSaude"]["id"])
+                ubs = format_entity(id, acesso["unidadeSaude"]["nome"])
             if acesso["equipe"] is not None:
-                equipe = format_entity(acesso["equipe"]["id"], acesso["equipe"]["nome"])
-                
+                equipe_id = self.get_equipe_id(acesso["equipe"]["id"])
+                equipe = format_entity(equipe_id, acesso["equipe"]["nome"])
+
             profiles.append({
                 "tipo": acesso["tipo"],
                 "profissao": acesso["cbo"]["nome"],
@@ -112,10 +132,9 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                 "ubs": ubs,
                 "equipe": equipe
             })
-            
-        
+
         return profiles
-    
+
     def check_credentials(self, username: str, password: str) -> UserPayload:
         session = requests.Session()
         url_login = env.get("BRIDGE_LOGIN_URL", "")
@@ -181,18 +200,19 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                     )
                     return user_raw_data
                 if len(profiles) == 1:
-                    user = self.check_role(profissional['lotacoes'][0])                    
+                    user = self.check_role(profissional['lotacoes'][0])        
                     user_raw_data = UserPayload(
                         username=profissional["nome"],
                         cns=profissional["cns"],
-                        uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"]["uf"][
-                            "sigla"
-                        ],
-                        municipio=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
+                        uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
                             "uf"
-                        ]["nome"],
+                        ]["sigla"],
+                        municipio=profissional["lotacoes"][0]["unidadeSaude"][
+                            "endereco"
+                        ]["uf"]["nome"],
                         profiles=[user[0] if user is not None else None],
-                        ubs=user[1] if user is not None else None,
+                        ubs=(profiles[0]["ubs"]["id"] if user is not None else None),
+                        equipe=profiles[0]["equipe"]["id"],
                     )
                     return user_raw_data
         return None

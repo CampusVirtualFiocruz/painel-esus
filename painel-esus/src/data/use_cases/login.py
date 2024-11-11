@@ -38,6 +38,6 @@ class LoginUseCase(LoginUseCaseInterface):
         if not user_raw_data:
             raise HttpCredentialsFailError('Credentials fail.')
         return user_raw_data
-    
-    def check_role(self, body ):
+
+    def check_role(self, body) -> UserPayload:
         return self.__repository.check_role(body)

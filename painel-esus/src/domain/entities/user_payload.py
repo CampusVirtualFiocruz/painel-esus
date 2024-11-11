@@ -13,6 +13,7 @@ class UserPayload:
         municipio: str,
         profiles: List[str],
         ubs: int = None,
+        equipe:int=None
     ) -> None:
         self.username = username
         self.cns = cns
@@ -20,6 +21,7 @@ class UserPayload:
         self.municipio = municipio
         self.profiles = profiles
         self.ubs = ubs
+        self.equipe = equipe
 
     def __repr__(self) -> str:
         return f"UserPayload: nome: {self.username}\tcns: {self.cns}"

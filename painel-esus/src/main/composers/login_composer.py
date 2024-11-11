@@ -39,6 +39,7 @@ def login_composer(request: HttpRequest):
                     response.municipio,
                     response.profiles,
                     response.ubs,
+                    response.equipe
                 )
                 body = {"data": token}
 
@@ -90,8 +91,9 @@ def set_profile_composer(request: HttpRequest):
         token_parsed["cns"],
         token_parsed["uf"],
         token_parsed["municipio"],
-        user[0],
-        user[1],
+        user.profiles,
+        user.ubs,
+        user.equipe
     )
     body = {"data": token}
     return HttpResponse(status_code=200, body=body)
