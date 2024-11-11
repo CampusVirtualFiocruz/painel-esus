@@ -74,6 +74,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         with DBConnectionHandler() as db_con:
             engine = db_con.get_engine()
             sql = LISTA_PESOS_ALTURAS(self.disease.name, cnes, equipe)
+            print(f'cares_sql: {sql}')
             return pd.read_sql_query(sql, con=engine)
 
     def _retrieve_procedures(
@@ -197,7 +198,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
             ),
             axis=1,
         )
-
+        print(f'cares: {cares.shape}')
         results = [
             imc_item.statistics_response(cares.shape[0])
             for imc_item in imc_model.get_list()
@@ -207,7 +208,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
             current_total += i[1]["com_consulta_abs"]
 
         total = cares.shape[0] - current_total
-        consultas = 100 * round(float((total) / cares.shape[0]), 2)
+        consultas = 100 * round(float((total) / cares.shape[0]), 2) if cares.shape[0] > 0 else 0
 
         results = results + [
             [

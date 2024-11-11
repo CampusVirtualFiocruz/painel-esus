@@ -3,7 +3,7 @@ def get_sql_for_imc(table: str, cnes: int = None, equipe: int = None):
     if cnes is not None:
         cnes_condition += f''' and co_dim_unidade_saude = {cnes} '''
         if equipe and equipe is not None:
-            cnes_condition += f''' and co_dim_unidade_saude = {equipe}'''
+            cnes_condition += f''' and co_dim_equipe = {equipe}'''
 
     return f"""
              with atendimentos as (
