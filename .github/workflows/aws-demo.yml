@@ -89,6 +89,9 @@ jobs:
           key: ${{secrets.AWS_KEY}}
           username: ${{ secrets.AWS_USERNAME }}
           script: |
+            docker kill $(docker ps -q)
+            docker rm $(docker ps -q)
+            docker rmi $(docker images -a -q)
             echo 'INICIOU PROCESSO DE DEPLOY DOCKER SWARM'
             echo RELEASE VERSION: ${{ env.RELEASE_VERSION }}
             cd livramento
