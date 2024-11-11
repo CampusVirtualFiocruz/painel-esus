@@ -72,10 +72,10 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                     for i in cbo_unidade:
                         if i[0] == str(r.co_cbo):
                             # ubs_id = self.get_ubs_id(i[1])
-                            return ("user", i[1])
+                            return ("user", i[1], acesso['equipe'][ 'id'])
 
         else:
-            return ("admin", None)
+            return ("admin", None, None)
 
     def get_equipe_id(self, id):
         with DBConnectionHandler().get_engine().connect() as db_con:

@@ -10,6 +10,8 @@ class IMC:
     imc = ""
 
     def __imc_calc(self, weigh, height) -> float:
+        if height == 0:
+            return 0
         height = round(height / 100, 2)
         return round(float(weigh / (height * height)), 2)
 
