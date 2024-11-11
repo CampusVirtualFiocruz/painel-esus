@@ -71,8 +71,6 @@ export function SelecionarVisualizacao() {
   let navigate = useNavigate();
   const { currentProfile }:any = useAuth();
 
-  console.log({currentProfile})
-
   const [currentUbs, setCurrentUbs] = useState<any>(currentProfile?.currentUbs || undefined);
   const [currentTeam, setCurrentTeam] = useState<any>(currentProfile?.currentTeam || undefined);
 
@@ -114,12 +112,10 @@ export function SelecionarVisualizacao() {
       staleTime: 1000 * 60 * 10, //10 minutos
     }
   );
-
-  console.log({ teamsData })
-
+/* 
   const canSelect = userCanSelectUBS();
 
- /*  useEffect(() => {
+  useEffect(() => {
     if (!canSelect) {
       const selectedUBS = getUBS();
       if (selectedUBS) {
@@ -156,7 +152,7 @@ export function SelecionarVisualizacao() {
           <h2>Visualizar dados por:</h2>
         </div>
         <div className="container-escolher d-flex flex-column flex-md-row">
-          <div className="container-municipio mb-4 mb-md-0">
+          <div className="container-combo-ubs ms-md-4">
             <div className="container-icone">
               <img
                 className="icone-municipio"
@@ -168,6 +164,7 @@ export function SelecionarVisualizacao() {
                 type="button"
                 kind="primary"
                 size="small"
+                style={{ marginTop: "10px" }}
               >
                 Município
               </Button>
