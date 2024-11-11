@@ -71,14 +71,9 @@ export function Login() {
 
     if (validateForm()) {
       try {
-        const authResponse = await auth.authenticate(username, password);
-        const profiles = authResponse?.payload?.profiles ?? [];
+        await auth.authenticate(username, password);
 
-        if (profiles.length > 1) {
-          setShowProfileSelector(true);
-        } else {
-          navigate("/selecionarvisualizacao");
-        }
+        setShowProfileSelector(true);
       } catch (error) {
         setSomeStateOpen(true);
         setLoading(false);

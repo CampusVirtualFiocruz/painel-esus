@@ -49,6 +49,7 @@ type IsMulti = false;
 const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
   control: (provided, state) => {
     return {
+      marginTop: "10px",
       ...provided,
       ...customControlStyles,
     };
@@ -96,6 +97,10 @@ export function SelecionarVisualizacao() {
   const { data: teamsData } = useQuery(
     "get-teams/"+currentUbs,
     async () => {
+      if(currentUbs){
+        return [];
+      }
+
       const response = await Api.get<ResponseData>("get-teams/"+currentUbs);
       const data = response.data;
       const listData: TypeUbs[] = data.data.map((i: any) => {
@@ -124,20 +129,23 @@ export function SelecionarVisualizacao() {
     }
   }, [canSelect]); */
 
-  function handleToPainel() {
+  const handleToPainel = () => {
     navigate("/painelx");
   }
 
-  function handleToPainelWithTeam() {
-    navigate(`/painel/${currentUbs}?equipe=${currentTeam}`);
+  const teamSuggestion = currentTeam || currentProfile?.currentTeam;
+  const ubsSuggestion = currentUbs || currentProfile?.currentUbs;
+
+  const handleToPainelWithTeam = () => {
+    navigate(`/painel/${ubsSuggestion}?equipe=${teamSuggestion}`);
   }
+
+  const handleToPainelWithUbs = () => {
+    navigate(`/painel/${ubsSuggestion}`);
+  };
 
   const onChangeSelection = (e: any) => {
     setCurrentUbs(e.value);
-  };
-
-  const handleToPainelWithUbs = () => {
-    navigate(`/painel/${currentUbs}`);
   };
 
   const onChangeTeamSelection = (e: any) => {
@@ -192,7 +200,7 @@ export function SelecionarVisualizacao() {
                     styles={selectStyle}
                     onChange={onChangeSelection}
                   />}
-                  { currentUbs && <Button
+                  { (currentUbs || currentProfile?.currentUbs) && <Button
                     onClick={handleToPainelWithUbs}
                     type="button"
                     kind="primary"
@@ -206,9 +214,9 @@ export function SelecionarVisualizacao() {
             </div>
           </div>
 
-        <div className="container-combo-ubs ms-md-4"
+        {currentProfile?.info != "not-configured" && <div className="container-combo-ubs ms-md-4"
                 style={{
-                  opacity: !currentUbs ? 0.6 : 1
+                  opacity: (currentUbs || currentProfile?.currentUbs) ? 1 : 0.5
                 }}>
             <div className="container-icone">
               <img
@@ -235,10 +243,10 @@ export function SelecionarVisualizacao() {
                   onChange={onChangeTeamSelection}
                   isDisabled={!currentUbs}
                 />}
-                {!currentUbs ?<p style={{ fontSize: "12px" }}>
+                {(!(currentUbs || currentProfile?.currentUbs)) ?<p style={{ fontSize: "12px" }}>
                  Selecione uma ubs para continuar
                 </p>: null}
-                  { currentTeam && <Button
+                  { (currentTeam || currentProfile?.currentTeam) && <Button
                     onClick={handleToPainelWithTeam}
                     type="button"
                     kind="primary"
@@ -250,7 +258,7 @@ export function SelecionarVisualizacao() {
                 </>
               )}
             </div>
-          </div> 
+          </div> }
         </div>
       </div>
       <Footer />

@@ -53,7 +53,8 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
       token: response.data,
       currentProfile: {
         currentTeam: profileData?.equipe?.id,
-        currentUbs: profileData?.ubs?.id
+        currentUbs: profileData?.ubs?.id,
+        info: response?.info
       }
     };
 

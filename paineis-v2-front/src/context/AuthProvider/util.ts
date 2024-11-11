@@ -29,8 +29,12 @@ export async function LoginRequest(username: string, password: string) {
 
 export async function ProfilesRequest(profileData: any) {
   try {
-    const response = await Api.post("auth/profile", profileData);
-    return response.data;
+    if(typeof profileData === "object"){
+      const response = await Api.post("auth/profile", profileData);
+      return { ...response.data, info: "success" };
+    }else{
+      return { info: "not-configured" }
+    }
   } catch (error) {
     return null;
   }
