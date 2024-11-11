@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt, FaUserAlt, FaUserAltSlash, FaUserFriends } from "react-icons/fa";
 import { useAuth } from "../../context/AuthProvider/useAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -24,8 +24,7 @@ const ProfileSelector = () => {
     >
         <div style={{ margin: "0 auto", border: "1px solid black", padding: "20px", backgroundColor: "white" }}>
           <h4 style={{ fontWeight: "bold", marginBottom: "20px" }}>Em qual perfil você deseja logar:</h4>
-           
-            {profilesList?.map((i) => {
+            {(profilesList ?? [])?.map((i) => {
               return <div
               style={{
                   border: "1px solid black",
@@ -36,12 +35,12 @@ const ProfileSelector = () => {
                 }}
                 onClick={async () => {
                   await chooseProfile(i);
-                  navigate("/selecionarubs");
+                  navigate("/selecionarvisualizacao");
                 }}
               >
                   <b>CBO {i.cbo}</b>: <span style={{ fontSize: "14px" }}> {i.profissao}</span>
-                  {i.ubs.nome && <div style={{ marginTop: "6px" }}> <FaMapMarkerAlt color="#1c1a92" /> {i.ubs.nome}</div>}
-                  {i.equipe && <><br />{i.equipe}</>}
+                  {Boolean(i?.ubs?.nome) && <div style={{ fontSize: "12px", marginTop: "6px" }}> <FaMapMarkerAlt color="#1c1a92" /> {i?.ubs?.nome}</div>}
+                  {Boolean(i?.equipe) && <div style={{ fontSize: "12px", marginTop: "6px" }}> <FaUserFriends color="#1c1a92" /> {i?.equipe?.nome}</div>}
                 </div>
             })}
         </div>

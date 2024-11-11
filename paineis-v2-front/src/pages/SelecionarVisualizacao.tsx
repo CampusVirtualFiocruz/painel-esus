@@ -20,6 +20,7 @@ import { getUBS, userCanSelectUBS } from "../App";
 import iconeEquipe from "../assets/images/visualizacao/Icone_Equipe.svg";
 import iconeMunicipio from "../assets/images/visualizacao/Icone_Municipio.svg";
 import iconeUbs from "../assets/images/visualizacao/Icone_UBS.svg";
+import { useAuth } from "../context/AuthProvider/useAuth";
 
 type Lista = {
   co_seq_dim_unidade_saude: number;
@@ -68,8 +69,12 @@ const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
 
 export function SelecionarVisualizacao() {
   let navigate = useNavigate();
-  const [currentUbs, setCurrentUbs] = useState<any>();
-  const [currentTeam, setCurrentTeam] = useState<any>();
+  const { currentProfile }:any = useAuth();
+
+  console.log({currentProfile})
+
+  const [currentUbs, setCurrentUbs] = useState<any>(currentProfile?.currentUbs || undefined);
+  const [currentTeam, setCurrentTeam] = useState<any>(currentProfile?.currentTeam || undefined);
 
   const { data, isLoading, error } = useQuery(
     "ubs",
@@ -114,14 +119,14 @@ export function SelecionarVisualizacao() {
 
   const canSelect = userCanSelectUBS();
 
-  useEffect(() => {
+ /*  useEffect(() => {
     if (!canSelect) {
       const selectedUBS = getUBS();
       if (selectedUBS) {
         navigate(`/painel/${Number(String(selectedUBS))}`);
       }
     }
-  }, [canSelect]);
+  }, [canSelect]); */
 
   function handleToPainel() {
     navigate("/painelx");
@@ -182,14 +187,14 @@ export function SelecionarVisualizacao() {
                 </div>
               ) : (
                 <>
-                  <Select
+                  {!currentProfile?.currentUbs && <Select
                     isClearable
                     placeholder="UBS"
                     noOptionsMessage={() => "Nenhuma UBS encontrada"}
                     options={data}
                     styles={selectStyle}
                     onChange={onChangeSelection}
-                  />
+                  />}
                   { currentUbs && <Button
                     onClick={handleToPainelWithUbs}
                     type="button"
@@ -224,7 +229,7 @@ export function SelecionarVisualizacao() {
                 </div>
               ) : (
                 <>
-                <Select
+                {!currentProfile?.currentTeam && <Select
                   isClearable
                   placeholder={"Equipe"}
                   noOptionsMessage={() => "Nenhuma equipe encontrada"}
@@ -232,7 +237,7 @@ export function SelecionarVisualizacao() {
                   styles={selectStyle}
                   onChange={onChangeTeamSelection}
                   isDisabled={!currentUbs}
-                />
+                />}
                 {!currentUbs ?<p style={{ fontSize: "12px" }}>
                  Selecione uma ubs para continuar
                 </p>: null}

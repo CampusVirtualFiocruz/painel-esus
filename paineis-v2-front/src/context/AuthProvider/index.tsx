@@ -51,7 +51,12 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
     const userWithNewToken = {
       ...user,
       token: response.data,
+      currentProfile: {
+        currentTeam: profileData?.equipe?.id,
+        currentUbs: profileData?.ubs?.id
+      }
     };
+
     setUser(userWithNewToken);
     setUserLocalStorage(userWithNewToken);
     setProfiles(response?.profiles);
