@@ -171,7 +171,7 @@ export function SelecionarVisualizacao() {
                 onClick={handleToPainel}
                 type="button"
                 kind="primary"
-                size="small"
+                
                 style={{ marginTop: "10px" }}
               >
                 Município
@@ -204,7 +204,7 @@ export function SelecionarVisualizacao() {
                     onClick={handleToPainelWithUbs}
                     type="button"
                     kind="primary"
-                    size="small"
+                    
                     style={{ marginTop: "10px" }}
                   >
                     Acessar UBS
@@ -250,7 +250,7 @@ export function SelecionarVisualizacao() {
                     onClick={handleToPainelWithTeam}
                     type="button"
                     kind="primary"
-                    size="small"
+                    
                     style={{ marginTop: "10px" }}
                   >
                     Acessar Equipe

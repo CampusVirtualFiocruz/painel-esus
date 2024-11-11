@@ -17,9 +17,7 @@ export function Condicao({ data }: any) {
       return {
         value: item[1],
         name:
-          getPorcentagemIndicador(item[0], total, item[1]) +
-          "" +
-          new Array(index).fill(" ").join(""),
+          getPorcentagemIndicador(item[0], total, item[1]),
         label: parse_label(item[0]),
       };
     });

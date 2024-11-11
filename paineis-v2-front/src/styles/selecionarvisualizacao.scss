@@ -29,22 +29,12 @@
     }
   }
 
-
   button {
-    width: 250px;
-    height: 40px;
-    border-color: hsl(0, 0%, 80%);
-    font: 400 1rem "IBM Plex Sans", sans-serif;
-
-    &:hover {
-      background-color: var(--bold-blue);
-      color: #ffffff;
-    }
-
-    span {
-      padding-top: 5px;
-    }
+    min-width: 200px;
+    width: 100%;
+    padding: 6px;
   }
+
 }
 
 .container-entrar {
