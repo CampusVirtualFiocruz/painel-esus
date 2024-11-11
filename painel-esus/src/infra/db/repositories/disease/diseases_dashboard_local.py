@@ -55,16 +55,16 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
     def _total_pacientes(self, cnes: int = None, equipe: int = None):
         with DBConnectionHandler().get_engine().connect() as db_con:
-            cnes_condition = ""
+            cnes_condition = "where co_fat_cidadao_pec NOTNULL and co_dim_tempo_nascimento > 0 "
             if cnes is not None and cnes:
-                cnes_condition += f" where co_dim_unidade_saude = {cnes}"
+                cnes_condition += f" and co_dim_unidade_saude = {cnes}"
                 if equipe is not None and equipe:
                     cnes_condition += f"  and co_dim_equipe = {equipe} "
 
             sql = f"select distinct co_fat_cidadao_pec , co_dim_tipo_localizacao from {self.disease.name}  {cnes_condition} ;"
             sql = text(sql)
 
-            print( sql )
+            # print( sql )
             pacientes = db_con.execute(sql)
             return list(pacientes)
 
@@ -140,7 +140,6 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
                 if paciente[2] not in result:
                     result[paciente[2]] = init()
                 result[paciente[2]][paciente[1]] = paciente[0]
-
             return result
 
     def get_age_group_gender(self, cnes: int = None, equipe: int = None) -> Dict:

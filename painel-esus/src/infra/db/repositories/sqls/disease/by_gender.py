@@ -70,7 +70,7 @@ select
     CASE 
         when co_dim_tipo_localizacao =1 then 'Urbano'
         when co_dim_tipo_localizacao =2 then 'Rural'
-        when co_dim_tipo_localizacao =3 then 'Não Informado'
+        when co_dim_tipo_localizacao =3 then 'Nao Informado'
     END co_dim_tipo_localizacao,
 CASE 
     when idade  >= 0 and idade <= 19 then '0 a 19 anos'

@@ -4,9 +4,9 @@ from src.infra.db.repositories.sqls.nominal_list.autoreferido import (
 
 
 def get_indicators_hipertensao(cnes: int = None, equipe: int = None):
-    where_clause = ""
+    where_clause = " where co_fat_cidadao_pec NOTNULL and co_dim_tempo_nascimento > 0 "
     if cnes is not None:
-        where_clause = f""" where co_dim_unidade_saude_vinc = {cnes} """
+        where_clause += f""" and co_dim_unidade_saude_vinc = {cnes} """
         if equipe is not None:
             where_clause += f""" and co_dim_equipe = {equipe} """
     return f"""with lista as (
@@ -24,9 +24,9 @@ def get_indicators_hipertensao(cnes: int = None, equipe: int = None):
 
 
 def get_indicators_hipertensao_plus_autorreferidos(cnes: int = None, equipe: int = None):
-    where_clause = ""
+    where_clause = " where co_fat_cidadao_pec NOTNULL and co_dim_tempo_nascimento > 0 "
     if cnes is not None:
-        where_clause = f""" where co_dim_unidade_saude = {cnes} """
+        where_clause += f""" and co_dim_unidade_saude = {cnes} """
         if equipe is not None:
             where_clause += f""" and co_dim_equipe = {equipe} """
     hipertensao_sql = autorreferidos_check(cnes, "hipertensao", "hipertensao", equipe)
