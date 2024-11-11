@@ -1,6 +1,5 @@
 # pylint: disable= R1703, W0612,C0103
 import pandas as pd
-import polars as pl
 from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.exc import ResourceClosedError
@@ -20,29 +19,6 @@ from src.infra.db.settings.connection_local import (
 
 class CreatePessoasBaseRepository(CreateBasesRepositoryInterface):
     _base = 'pessoas'
-    schema = {
-        "cidadao_pec": pl.UInt64(),
-        "co_cidadao": pl.UInt64(),
-        "raca_cor": pl.String(),
-        "cpf": pl.String(),
-        "cns": pl.String(),
-        "nome": pl.String(),
-        "nome_social": pl.String(),
-        "data_nascimento": pl.Date(),
-        "idade": pl.UInt64(),
-        "sexo": pl.String(),
-        "identidade_genero": pl.String(),
-        "telefone": pl.String(),
-        "ultima_atualizacao_cidadao": pl.Date(),
-        "ultima_atualizacao_fcd":pl.Date() ,
-        "tipo_endereco": pl.String(),
-        "endereco": pl.String(),
-        "complemento": pl.String(),
-        "numero": pl.String(),
-        "bairro": pl.String(),
-        "cep": pl.String(),
-        "tipo_localidade": pl.String()
-    }
 
     def __init__(self):
         ...

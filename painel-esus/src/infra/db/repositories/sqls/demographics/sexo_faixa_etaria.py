@@ -1,23 +1,23 @@
-def filter_by_gender_age(cnes: int = None):
+def filter_by_gender_age(cnes: int = None, equipe: int = None):
     where_clause = ""
     if cnes is not None:
-        where_clause = f""" where
-            tus.co_seq_dim_unidade_saude = {cnes} 
+        where_clause = f""" 	   	where 
+	   		e.codigo_unidade_saude = {cnes}
         """
+        if equipe and equipe is not None:
+            where_clause += f"  and e.codigo_equipe = {equipe} "
     return f"""
     with 
     cidadaos as (
-    select
-        tacv.*,
-        extract(year from age(now(), tacv.dt_nascimento_cidadao)) as idade
-    from
-        tb_acomp_cidadaos_vinculados tacv
-    join tb_dim_unidade_saude tus on
-        tus.nu_cnes = tacv.nu_cnes_vinc_equipe
+     select
+	        distinct p.*
+	    from
+	        pessoas p        
+	    join equipes e on e.cidadao_pec = p.cidadao_pec
     {where_clause}
     )
     select 
-        INITCAP(no_sexo_cidadao), case 
+        UPPER(substr(sexo, 1,1))||LOWER(substr( sexo, 2)) sexo, case 
     when idade  >= 0 and idade <= 4 then '0 a 4 anos'
     when idade  >= 5 and idade <= 9 then '5 a 9 anos'
     when idade  >= 10 and idade <= 14 then '10 a 14 anos'
@@ -40,12 +40,12 @@ def filter_by_gender_age(cnes: int = None):
     when idade  >= 95 and idade <= 99 then '95 a 99 anos'
     when idade  >= 100  then '100 ou mais'
         end as tipo ,
-    case 
-		when no_bairro_domicilio_filtro is null then 'Nao Informado'
-		when no_bairro_domicilio_filtro = 'zona rural' then 'Rural'
-		when no_bairro_domicilio_filtro is not null  and no_bairro_domicilio_filtro != 'zona rural' then 'Urbano'
+     case 
+		when LOWER(tipo_localidade) is null then 'Nao Informado'
+		when LOWER(tipo_localidade) = 'zona rural' then 'Rural'
+		when LOWER(tipo_localidade) is not null  and LOWER(tipo_localidade) != 'zona rural' then 'Urbano'
 	end localidade	,
         count(*) total
         from cidadaos
-        group by no_sexo_cidadao, tipo, localidade
-    ;"""
+        group by sexo, tipo, localidade
+    """

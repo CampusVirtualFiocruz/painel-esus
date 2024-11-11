@@ -39,11 +39,10 @@ def login_composer(request: HttpRequest):
                     response.municipio,
                     response.profiles,
                     response.ubs,
+                    response.equipe
                 )
-                body = {"data": token}
 
-                if response.ubs == "waiting for chosing":
-                    body = {"data": token, "profiles": response.profiles}
+                body = {"data": token, "profiles": response.profiles}
 
                 return HttpResponse(status_code=200, body=body)
         except Exception as exc:
@@ -62,7 +61,6 @@ def set_profile_composer(request: HttpRequest):
 
     token = request.headers["Authorization"].split("Bearer ")[1]
     token_parsed = validate_token(token)
-    print(f"token: {token_parsed}")
     use_case = LoginUseCase(providers_repository)
 
     request_adapter = {
@@ -92,6 +90,7 @@ def set_profile_composer(request: HttpRequest):
         token_parsed["municipio"],
         user[0],
         user[1],
+        user[2]
     )
     body = {"data": token}
     return HttpResponse(status_code=200, body=body)

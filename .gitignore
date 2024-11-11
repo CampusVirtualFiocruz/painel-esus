@@ -36,7 +36,8 @@
 
 
 #build
-# **/static-files
+**/static-files
+**/**/static-files
 
 **/package-lock.json
 **/yarn.lock

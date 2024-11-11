@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-  <g id="Grupo_538" data-name="Grupo 538" transform="translate(-876 -763)">
-    <g id="Elipse_150" data-name="Elipse 150" transform="translate(876 763)" fill="#343131" stroke="#707070" stroke-width="1">
-      <circle cx="24" cy="24" r="24" stroke="none"/>
-      <circle cx="24" cy="24" r="23.5" fill="none"/>
-    </g>
-    <path id="Icon_ionic-md-male" data-name="Icon ionic-md-male" d="M27.26,3.375H18.952V6.49h6.107l-6.925,6.919a9.345,9.345,0,1,0,2.207,2.207L27.26,8.691V14.8h3.115V3.375ZM12.721,27.26a6.231,6.231,0,1,1,6.231-6.231A6.241,6.241,0,0,1,12.721,27.26Z" transform="translate(882.779 769.663)" fill="#fff"/>
-  </g>
-</svg>

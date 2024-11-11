@@ -15,14 +15,16 @@ export type PainelParams = {
 
 export const ReportFooter = ({
   chaveListaNominal,
+  equipe,
 }: {
   chaveListaNominal?: "Hipertensão" | "Diabetes";
+  equipe?: any;
 }) => {
   const { id } = useParams<PainelParams>();
   const navigate = useNavigate();
 
   const handleToViewList = () =>
-    navigate(`/lista-nominal/${id}?condicao=${chaveListaNominal}`);
+    navigate(`/lista-nominal/${id}?condicao=${chaveListaNominal}${equipe ? `&equipe=${equipe || "undefined"}` : ""}`);
 
   const handleToPainelMunicipio = () => navigate("/painelx");
 

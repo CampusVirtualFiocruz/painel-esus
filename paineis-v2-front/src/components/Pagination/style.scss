@@ -67,3 +67,9 @@
     }
   }
 }
+
+table tbody tr:hover {
+  border-left-style: solid;
+  border-left-width: 2px;
+  border-left-color: #343131 !important;
+}

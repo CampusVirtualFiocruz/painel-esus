@@ -6,10 +6,12 @@ group by co_fat_cidadao_pec, st_hipertensao_arterial, st_diabete, st_diabete, co
 having max(co_dim_tempo::text::date) = co_dim_tempo::text::date
 """
 
-def autorreferidos_check(cnes, status, table):
+def autorreferidos_check(cnes, status, table, equipe:int = None):
     cnes_condition, status_condition= "",""
     if cnes is not None and cnes:
         cnes_condition = f'e.codigo_unidade_saude = {cnes} and '
+        if equipe is not None and equipe:
+            cnes_condition = f"e.codigo_equipe = {equipe} and "
     if status is not None and status:
         if status == 'hipertensao':
             status_condition = "a.st_hipertensao_arterial  = 1 and"

@@ -11,8 +11,9 @@ from src.errors.logging import logging
 class DBConnectionHandler:
 
     def __init__(self) -> None:
-        if os.getenv("ENV") == "instalador":
-            path = "painel_esus.db"
+        if env["ENV"] == "instalador":
+            path = self.get_db_path()
+            logging.info(f'DB Path: {path}')
         else:
             path = os.getcwd()
             path = Path(path.split("/painel-esus")[0])
@@ -21,6 +22,11 @@ class DBConnectionHandler:
         self.__connection_string = f"sqlite:///{path}"
         self.__engine = self.__create_database_engine()
         self.session = None
+
+    def get_db_path(self):
+        path = os.getcwd()
+        path = os.path.join(path, "painel_esus.db")
+        return path
 
     def __create_database_engine(self):
         engine = create_engine(self.__connection_string)

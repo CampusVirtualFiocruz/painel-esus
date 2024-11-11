@@ -54,7 +54,7 @@ export function Bar(props: BarChart) {
         rotate: 90,
         nameTextStyle: { overflow: "break" },
         margin: 10,
-        fontSize: 12,
+        fontSize: 14,
         weight: "bold",
       },
       ...{

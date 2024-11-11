@@ -1,7 +1,9 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint
+from flask import jsonify
+from flask import request
+from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.city_informations_composer import city_informations_composer
-from src.errors.error_handler import handle_errors
 
 city_informations_bp = Blueprint("city_informations", __name__)
 

@@ -103,33 +103,33 @@ class DiabetesNominalListRepository:
 	dn.total_consulta_individual_enfermeiro,
 	dn.total_consulta_individual_medico_enfermeiro total_de_consultas_medicas_enfermagem,
 	case 
-		when hn.alerta_total_de_consultas_medico = 1 then 'SIM'
-		when hn.alerta_total_de_consultas_medico = 0 then 'NAO'
+		when dn.alerta_total_de_consultas_medico = 1 then 'SIM'
+		when dn.alerta_total_de_consultas_medico = 0 then 'NAO'
 	end   alerta_total_de_consultas_medicas_enfermagem,
 	dn.ultimo_atendimento_medico_enfermeiro data_ultima_consulta_medica_enfermagem,
 	dn.ultimo_atendimento_odonto,
 	case 
-		when hn.alerta_ultima_consulta_odontologica = 1 then 'SIM'
-		when hn.alerta_ultima_consulta_odontologica = 0 then 'NAO'
+		when dn.alerta_ultima_consulta_odontologica = 1 then 'SIM'
+		when dn.alerta_ultima_consulta_odontologica = 0 then 'NAO'
 	end  alerta_ultima_consulta_odontologica,
 	dn.ultima_data_afericao_pa ,
 	case 
-		when hn.alerta_afericao_pa = 1 then 'SIM'
-		when hn.alerta_afericao_pa = 0 then 'NAO'
+		when dn.alerta_afericao_pa = 1 then 'SIM'
+		when dn.alerta_afericao_pa = 0 then 'NAO'
 	end alerta_afericao_pa ,
 	dn.ultima_data_glicemia_capilar ,
 	case 
-		when hn.alerta_ultima_glicemia_capilar = 1 then 'SIM'
-		when hn.alerta_ultima_glicemia_capilar = 0 then 'NAO'
+		when dn.alerta_ultima_glicemia_capilar = 1 then 'SIM'
+		when dn.alerta_ultima_glicemia_capilar = 0 then 'NAO'
 	end  alerta_ultima_glicemia_capilar ,
 	dn.ultima_data_hemoglobina_glicada ,
 	case 
-		when hn.alerta_ultima_hemoglobina_glicada = 1 then 'SIM'
-		when hn.alerta_ultima_hemoglobina_glicada = 0 then 'NAO'
+		when dn.alerta_ultima_hemoglobina_glicada = 1 then 'SIM'
+		when dn.alerta_ultima_hemoglobina_glicada = 0 then 'NAO'
 	end alerta_ultima_hemoglobina_glicada 
 from
 	diabetes_nominal dn join pessoas p on p.cidadao_pec = dn.co_fat_cidadao_pec 
-	left join equipes e on e.cidadao_pec  = p.cidadao_pec 
+	left join equipes e on e.cidadao_pec  = p.cidadao_pec  
 where e.codigo_unidade_saude = {cnes}
 group by p.cidadao_pec	
 order by p.nome
@@ -161,6 +161,7 @@ order by p.nome
         pagesize: int = 10,
         nome: str = None,
         cpf: str = None,
+        equipe: int = None,
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
@@ -177,7 +178,8 @@ order by p.nome
                 users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
             if cpf is not None and cpf:
                 users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
-            # users = users.filter(Pessoas.nome.is_not(None))
+            if equipe is not None and equipe:
+                users = users.filter(Equipes.codigo_equipe == equipe)
             users = users.group_by(DiabetesNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (
@@ -185,7 +187,7 @@ order by p.nome
                 .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
-            print(str(users))
+            # print(str(users))
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,

@@ -5,11 +5,11 @@ select distinct on (p.co_seq_fat_cidadao_pec) p.co_seq_fat_cidadao_pec cidadao_p
     p.ds_raca_cor raca_cor,
     tacv.nu_cpf_cidadao cpf,
     tacv.nu_cns_cidadao cns,
-    coalesce(tacv.no_cidadao, 'Nome não informado') nome,
+    coalesce(tacv.no_cidadao, p.no_cidadao,'Nome não informado') nome,
     tacv.no_social_cidadao nome_social,
-    tacv.dt_nascimento_cidadao data_nascimento,
-    extract(year from age(now(), tacv.dt_nascimento_cidadao )) idade,
-    tacv.no_sexo_cidadao sexo,
+    coalesce(tacv.dt_nascimento_cidadao, p.dt_nascimento) data_nascimento,
+    extract(year from age(now(), coalesce(tacv.dt_nascimento_cidadao, p.dt_nascimento) )) idade,
+    coalesce(tacv.no_sexo_cidadao, p.sexo) sexo,
     tacv.tp_identidade_genero_cidadao identidade_genero,
     (
         tacv.nu_telefone_celular || tacv.nu_telefone_contato || tacv.nu_fone_residencial

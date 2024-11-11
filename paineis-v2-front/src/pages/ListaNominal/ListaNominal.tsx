@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useSearchParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { PagedTable, TextField, LocaleContext } from "bold-ui";
 import ptBr from "bold-ui/lib/i18n/locales/pt-BR";
@@ -38,6 +38,9 @@ const ListaNominal = () => {
   const [data, setData] = useState<any>({ loaded: 7 });
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [params] = useSearchParams();
+  const equipe = params.get("equipe");
+
   const handleClick = (item: any) => {
     setData({ loaded: 7, ...item });
     setShowModal(true);
@@ -71,6 +74,7 @@ const ListaNominal = () => {
 
   const { info, setParams, isLoadingInfo, pathToReport } = usePaginatedList({
     condicao,
+    equipe,
     id,
     searchTerm,
   });

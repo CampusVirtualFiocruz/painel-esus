@@ -1,6 +1,6 @@
 import { CSSProperties, useState, useEffect } from "react";
 import Select, { StylesConfig } from "react-select";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Spinner } from "reactstrap";
 import { Button } from "bold-ui";
@@ -131,6 +131,9 @@ export function Painel() {
   let navigate = useNavigate();
   const user = getUserLocalStorage();
   const { id } = useParams<PainelParams>();
+  const [params] = useSearchParams();
+  const equipe = params.get("equipe");
+
   const { cityInformation, city } = useInfo();
 
   const [dadosPainel, setDadosPainel] = useState<IPainel>();
@@ -139,10 +142,11 @@ export function Painel() {
     { value: 12, name: "Rural" },
     { value: 21, name: "Urbano" },
   ]);
+
   //get-demographic-info
   useEffect(() => {
     const getDados = async () => {
-      let rota = id ? `get-demographic-info/${id}` : "get-demographic-info";
+      let rota = id ? `get-demographic-info/${id}${equipe ? `?equipe=${equipe}` : ""}` : `get-demographic-info${equipe ? `?equipe=${equipe}` : ""}`;
 
       try {
         const response = await Api.get<ResponseData>(rota);
@@ -262,30 +266,30 @@ export function Painel() {
     navigate(`/painel/${e.value}`);
   };
 
-  function handleToGestante() {
+  /* function handleToGestante() {
     if (id !== undefined) {
       navigate(`/gestantes/${id}`);
     } else {
       navigate("/gestantes");
     }
-  }
+  } */
 
   function handleToDiabetes() {
     if (id !== undefined) {
-      navigate(`/diabetes/${id}`);
+      navigate(`/diabetes/${id}${equipe ? `?equipe=${equipe}` : ""}`);
     } else {
-      navigate("/diabetes");
+      navigate(`/diabetes${equipe ? `?equipe=${equipe}` : ""}`);
     }
   }
 
   function handleToHipertensao() {
     if (id !== undefined) {
-      navigate(`/hipertensao/${id}`);
+      navigate(`/hipertensao/${id}${equipe ? `?equipe=${equipe}` : ""}`);
     } else {
-      navigate("/hipertensao");
+      navigate(`/hipertensao${equipe ? `?equipe=${equipe}` : ""}`);
     }
   }
-  function handleToSindromesAgudas() {
+/*   function handleToSindromesAgudas() {
     if (id !== undefined) {
       navigate(`/sindromes-agudas/${id}`);
     } else {
@@ -298,7 +302,7 @@ export function Painel() {
     } else {
       navigate("/saude-bucal");
     }
-  }
+  } */
 
   return (
     <div id="page-painel">

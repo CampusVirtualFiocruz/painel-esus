@@ -101,3 +101,8 @@ def test_login_response_mock_user_body(login, login_response_user, mocker):
     )
     assert user.ubs == '5'
     assert user.profiles == ['user']
+
+def test_get_equipe_id():
+    login_repository = LoginBridgeRepository()
+    equipe_id = login_repository.get_equipe_id(3)
+    assert equipe_id == 10

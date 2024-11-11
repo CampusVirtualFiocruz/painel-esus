@@ -233,3 +233,8 @@ export const capitalize = (s: string, lower = false) =>
   (lower ? s.toLowerCase() : s).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
     match.toUpperCase()
   );
+
+export const profiles = [
+  "CBO 322415: Auxiliar de saúde bucal",
+  "CBO 411010: Assistente administrativo",
+];

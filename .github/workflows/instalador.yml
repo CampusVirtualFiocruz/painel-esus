@@ -43,7 +43,7 @@ jobs:
 
   build-backend:
     runs-on: ubuntu-latest
-
+    needs: [build-frontend]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -56,8 +56,70 @@ jobs:
       - name: Install PyInstaller
         working-directory: ./painel-esus
         run: |
+          ls -la
           python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
+          pip3 install -r requirements.txt         
+
+      - name: Build EXE config
+        working-directory: ./painel-esus
+        run: |
+          pyinstaller --icon=./icon/config.ico -n config --onefile ./interface.py --hidden-import='PIL._tkinter_finder'
+          cd dist
+          ls -la
+
+      - name: Build EXE run
+        working-directory: ./painel-esus
+        run: |
+          pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
+          cd dist
+          ls -la
+
+      - name: Remove static-files
+        run: |
+          rm -rf ./paineis-v2-front/static-files
+          cd ./paineis-v2-front
+          ls -la
+
+      - name: Download files
+        uses: actions/download-artifact@v3
+        with:
+          name: Build
+          path: ./paineis-v2-front/static-files
+      - run: |
+          ls -la
+          cd ./paineis-v2-front
+          ls -la
+
+      - name: Validate files and compress
+        run: |
+          ls -la
+          version="${{ github.head_ref || github.ref_name }}"
+          clean_version=$(echo "$version" | sed 's/^v//')
+          tar -czf painel-esus-setup$clean_version.tar.gz \
+            -C $(pwd)/painel-esus ibge.csv \
+            -C $(pwd)/painel-esus icon \
+            -C $(pwd)/paineis-v2-front static-files \
+            -C $(pwd)/painel-esus/dist/ config \
+            -C $(pwd)/painel-esus/dist/ painel-esus 
+
+      - name: Upload para AWS S3
+        if: success() # Executa este step apenas se o build for bem-sucedido
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "us-east-1"
+        run: |
+          version="${{ github.head_ref || github.ref_name }}"
+          clean_version=$(echo "$version" | sed 's/^v//')
+          aws s3 cp painel-esus-setup$clean_version.tar.gz \
+          "s3://painel-esus-public/instalador/"
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: painel-esus-linux
+          path: painel-esus-linux.tar.gz          
 
       - name: Create backend environment
         working-directory: ./painel-esus
@@ -70,8 +132,9 @@ jobs:
         id: extract_version
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
+
   create-exe-files:
-    needs: [build-frontend, build-backend]
+    needs: [build-backend]
     runs-on: windows-latest
 
     steps:
@@ -116,6 +179,7 @@ jobs:
           pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
         shell: cmd
 
+
       - name: Set up Inno Setup
         run: |
           curl -LO https://jrsoftware.org/download.php/is.exe
@@ -128,6 +192,17 @@ jobs:
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.5.iss"
         shell: cmd
 
+      - name: Upload para AWS S3
+        if: success() # Executa este step apenas se o build for bem-sucedido
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "us-east-1"
+        run: |
+          aws s3 cp "D:/a/painel-esus/painel-esus/instalador/output/" \
+          "s3://painel-esus-public/instalador/" --recursive --exclude "*" --include "painel-esus-setup*"
+        shell: bash
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -138,6 +213,7 @@ jobs:
         with:
           name: painel-esus
 
+
   notify-slack:
     runs-on: ubuntu-latest
     needs: create-exe-files
@@ -145,4 +221,8 @@ jobs:
     steps:
       - name: Notify Slack
         run: |
-          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }}  -H 'Content-type: application/json' --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'
+          version="${{ github.head_ref || github.ref_name }}"
+          clean_version=$(echo "$version" | sed 's/^v//')
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} -H 'Content-type: application/json' \
+            --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *'"$clean_version"'* \n Download-windows: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.exe" \n Download-linux: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.tar.gz"}'
+        

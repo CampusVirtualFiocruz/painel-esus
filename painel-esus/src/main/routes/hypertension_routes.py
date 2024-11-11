@@ -48,7 +48,7 @@ urls = hypertension.urls
                        endpoint='total')
 @hypertension_bp.route(f"{urls['total']}/<cnes>", methods=['GET'],
                        endpoint='total_id')
-@cache.cached()
+@cache.cached(query_string=True)
 def get_total(cnes=None):
     http_response = None
     response = None
@@ -67,7 +67,7 @@ def get_total(cnes=None):
                        endpoint='get_age_group_gender')
 @hypertension_bp.route(f"{urls['age_group_gender']}/<cnes>", methods=['GET'],
                        endpoint='get_age_group_gender_id')
-@cache.cached()
+@cache.cached(query_string=True)
 def get_age_group_gender(cnes=None):
     http_response = None
     response = None
@@ -86,7 +86,7 @@ def get_age_group_gender(cnes=None):
                        endpoint='get_age_group_location')
 @hypertension_bp.route(f"{urls['age_group_location']}/<cnes>", methods=['GET'],
                        endpoint='get_age_group_location_id')
-@cache.cached()
+@cache.cached(query_string=True)
 def get_age_group_location(cnes=None):
     http_response = None
     response = None
@@ -105,7 +105,7 @@ def get_age_group_location(cnes=None):
                        endpoint='get_imc')
 @hypertension_bp.route(f"{urls['imc']}/<int:cnes>", methods=['GET'],
                        endpoint='get_imc_id')
-@cache.cached()
+@cache.cached(query_string=True)
 def get_imc(cnes=None):
     if cnes:
         request.view_args['cnes'] = int(request.view_args['cnes'])
@@ -126,7 +126,7 @@ def get_imc(cnes=None):
                        endpoint='get_complications')
 @hypertension_bp.route(f"{urls['complications']}/<cnes>", methods=['GET'],
                        endpoint='get_complications_id')
-@cache.cached()
+@cache.cached(query_string=True)
 def get_complications(cnes=None):
     http_response = None
     response = None
@@ -145,7 +145,7 @@ def get_complications(cnes=None):
                        endpoint='get_exams')
 @hypertension_bp.route(f"{urls['exams']}/<cnes>", methods=['GET'],
                        endpoint='get_exams_id')
-@cache.cached()
+@cache.cached(query_string=True)
 def get_exams(cnes=None):
     http_response = None
     response = None
@@ -164,7 +164,7 @@ def get_exams(cnes=None):
                        endpoint='get_professionals')
 @hypertension_bp.route(f"{urls['professionals']}/<cnes>", methods=['GET'],
                        endpoint='get_professionals_id')
-@cache.cached()
+@cache.cached(query_string=True)
 def get_professionals(cnes=None):
     http_response = None
     response = None
@@ -183,7 +183,7 @@ def get_professionals(cnes=None):
                        endpoint='get_hypertenses_list')
 @hypertension_bp.route(f"{urls['get_hypertensive_list']}/<cnes>", methods=['GET'],
                        endpoint='get_hypertenses_list_id')
-@cache.cached()
+@cache.cached(query_string=True)
 def get_hypertenses_list(cnes=None):
     if cnes:
         request.view_args['cnes'] = int(request.view_args['cnes'])
@@ -203,7 +203,7 @@ def get_hypertenses_list(cnes=None):
 
 @hypertension_bp.route(f"{urls['get_nominal_list']}/<cnes>", methods=['GET'],
                        endpoint='get_nominal_list_id')
-# @cache.cached()
+# @cache.cached(query_string=True)
 def get_nominal_list(cnes=None):
     if cnes:
         request.view_args['cnes'] = int(request.view_args['cnes'])
@@ -226,7 +226,7 @@ def get_nominal_list(cnes=None):
 
 @hypertension_bp.route(f"{urls['get_nominal_list']}/download/<cnes>", methods=['GET'],
                        endpoint='get_nominal_list_id_download')
-# @cache.cached()
+# @cache.cached(query_string=True)
 def get_nominal_list_download(cnes=None):
     if cnes:
         request.view_args['cnes'] = int(request.view_args['cnes'])
