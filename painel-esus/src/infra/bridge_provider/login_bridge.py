@@ -210,7 +210,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                         municipio=profissional["lotacoes"][0]["unidadeSaude"][
                             "endereco"
                         ]["uf"]["nome"],
-                        profiles=[user[0] if user is not None else None],
+                        profiles=[profiles[0]],
                         ubs=(profiles[0]["ubs"]["id"] if user is not None else None),
                         equipe=profiles[0]["equipe"]["id"],
                     )
