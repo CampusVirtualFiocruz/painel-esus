@@ -114,12 +114,16 @@ jobs:
           aws s3 cp painel-esus-setup$clean_version.tar.gz \
           "s3://painel-esus-public/instalador/"
         shell: bash
-
+      - name: Validate files and compress
+        run: |
+          version="${{ github.head_ref || github.ref_name }}"
+          clean_version=$(echo "$version" | sed 's/^v//')
+          mv painel-esus-setup$clean_version.tar.gz painel-esus-setup-linux.tar.gz
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: painel-esus-linux
-          path: painel-esus-setup$clean_version.tar.gz
+          path: painel-esus-setup-linux.tar.gz
           
       - name: Download Artifact
         uses: actions/download-artifact@v4
