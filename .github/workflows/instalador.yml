@@ -119,28 +119,6 @@ jobs:
           version="${{ github.head_ref || github.ref_name }}"
           clean_version=$(echo "$version" | sed 's/^v//')
           mv painel-esus-setup$clean_version.tar.gz painel-esus-setup-linux.tar.gz
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: painel-esus-linux
-          path: ./painel-esus-setup-linux.tar.gz
-          
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: painel-esus-linux
-
-      - name: Create backend environment
-        working-directory: ./painel-esus
-        run: |
-          cat <<EOF > .env
-          ${{ vars.ENV_BACK }}
-          EOF
-
-      - name: Extract version from branch name
-        id: extract_version
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
-
 
   create-exe-files:
     needs: [build-backend]
