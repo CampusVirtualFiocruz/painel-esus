@@ -119,7 +119,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: painel-esus-linux
-          path: painel-esus-setup${{ echo (github.head_ref || github.ref_name) | sed 's/^v//'}}.tar.gz
+          path: painel-esus-setup$clean_version.tar.gz
           
       - name: Download Artifact
         uses: actions/download-artifact@v4
