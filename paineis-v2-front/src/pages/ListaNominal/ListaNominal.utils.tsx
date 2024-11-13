@@ -75,15 +75,15 @@ export const columns = ({ handleClick }: any) => [
     header: "Idade",
     render: (item: any) => <center>{item.idade}</center>,
   },
-  {
-    name: "diagnostico",
-    header: "Diagnóstico",
-    render: (item: any) => <center>{capitalize(item.diagnostico)}</center>,
-  },
+  // {
+  //   name: "diagnostico",
+  //   header: "Diagnóstico",
+  //   render: (item: any) => <center>{capitalize(item.diagnostico)}</center>,
+  // },
   {
     name: "grupo-codicao",
-    header: "Grupo Condição",
-    render: (item: any) => capitalize(item.diagnostico),
+    header: "Grupo/Condição",
+    render: (item: any) => item.diagnostico.toUpperCase(),
   },
   {
     name: "sexo",

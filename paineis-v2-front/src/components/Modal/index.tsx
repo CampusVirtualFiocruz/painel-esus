@@ -184,17 +184,18 @@ export function bodyDetalhesCadastro(item: any) {
         </h1>
         <div className="address">
           <p>
-            <b>CPF:</b> {item?.cpf} <br />
-            <b>CNS:</b> {item?.cns} <br />
-            <b>Endereço:</b>{" "}
+            <strong>CPF:</strong> {item?.cpf} <br />
+            <strong>CNS:</strong> {item?.cns} <br />
+            <strong>Endereço:</strong>{" "}
             {item?.endereco && item.endereco !== "None None"
               ? capitalizeName(item.endereco).replace("S/n", "S/N")
               : "-"}{" "}
             <br />
-            <b>Complemento:</b> {item?.complemento ? item?.complemento : "-"}{" "}
-            <br />
-            <b>CEP:</b> {item?.cep ? item?.cep : "-"} <br />
-            <b>Telefone de contato:</b> {item?.telefone ? item?.telefone : "-"}{" "}
+            <strong>Complemento:</strong>{" "}
+            {item?.complemento ? capitalizeName(item?.complemento) : "-"} <br />
+            <strong>CEP:</strong> {item?.cep ? item?.cep : "-"} <br />
+            <strong>Telefone de contato:</strong>{" "}
+            {item?.telefone ? item?.telefone : "-"}{" "}
           </p>
         </div>
         {Array.isArray(item?.detalhesCondicaoSaude) &&
@@ -213,35 +214,48 @@ export function bodyDetalhesCadastro(item: any) {
                 condicao?.registros.map((registro: any) => (
                   <div className="latest-checkups">
                     <p>
-                      <strong>
-                        {registro?.descricao
-                          .split("-")
-                          .map((s: string) => capitalize(s))
-                          .join(" ")
-                          .replace("S/n", "S/N")
-                          .replace("Ultimo", "Último")
-                          .replace("Ultima", "Última")
-                          .replace("Afericao", "Aferição")
-                          .replace("Acs", "ACS")
-                          .replace("Pa", "PA")
-                          .replace("Medico", "Médico")
-                          .replace("Odontologica", "Odontológica")
-                          .replace(/De /g, "de ")
-                          .replace(/Da /g, "da ")
-                          .replace(/Do /g, "do ")
-                          .replace(/Ou /g, "ou ")}
-                      </strong>
-                      <div>
-                        <p>{parseText(registro?.data)}</p>
-                        {registro?.exibirAlerta && (
-                          <span
-                            className="iconCircle iconAlerta ms-2"
-                            title="Alertas"
-                          >
-                            !
-                          </span>
-                        )}
-                      </div>
+                      {registro?.descricao !==
+                        "data-da-ultima-glicemia-capilar" && (
+                        <>
+                          <strong>
+                            {registro?.descricao
+                              .split("-")
+                              .map((s: string) => capitalize(s))
+                              .join(" ")
+                              .replace("S/n", "S/N")
+                              .replace("Ultimo", "Último")
+                              .replace("Ultima", "Última")
+                              .replace("Afericao", "Aferição")
+                              .replace("Acs", "ACS")
+                              .replace("Pa", "PA")
+                              .replace("Medico", "Médico")
+                              .replace("Medica", "Médica")
+                              .replace("Medicas", "Médicas")
+                              .replace("Odontologica", "Odontológica")
+                              .replace(/De /g, "de ")
+                              .replace(/Da /g, "da ")
+                              .replace(/Do /g, "do ")
+                              .replace(/Ou /g, "ou ")}
+                          </strong>
+                          <div>
+                            <p>
+                              {registro?.data === null ||
+                              registro?.data === 0 ||
+                              registro?.data === "0"
+                                ? "-"
+                                : parseText(registro?.data)}
+                            </p>
+                            {registro?.exibirAlerta && (
+                              <span
+                                className="iconCircle iconAlerta ms-2"
+                                title="Alertas"
+                              >
+                                !
+                              </span>
+                            )}
+                          </div>
+                        </>
+                      )}
                     </p>
                   </div>
                 ))}

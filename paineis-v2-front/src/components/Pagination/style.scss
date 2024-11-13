@@ -68,8 +68,12 @@
   }
 }
 
-table tbody tr:hover {
+table tbody tr {
   border-left-style: solid;
   border-left-width: 2px;
-  border-left-color: #343131 !important;
+  border-left-color: none !important;
+
+  &:hover {
+    border-left-color: #343131 !important;
+  }
 }
