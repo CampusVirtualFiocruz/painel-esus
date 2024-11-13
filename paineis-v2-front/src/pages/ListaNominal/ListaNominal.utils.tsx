@@ -79,7 +79,6 @@ export const columns = ({ handleClick }: any) => [
     name: "diagnostico",
     header: "Diagnóstico",
     render: (item: any) => <center>{capitalize(item.diagnostico)}</center>,
-
   },
   {
     name: "grupo-codicao",
@@ -117,14 +116,6 @@ export const Footer = ({ pathToReport, condicao, id }: any) => {
         <p>* Nome Social</p>
       </div>
       <div className="legend-icons">
-        <p>
-          <span className="iconCircle iconUrbano ms-2">U</span>
-          Zona Urbana
-        </p>
-        <p>
-          <span className="iconCircle iconRural ms-2">R</span>
-          Zona Rural
-        </p>
         <p>
           <span className="iconCircle iconAlerta ms-2">!</span>
           Alertas

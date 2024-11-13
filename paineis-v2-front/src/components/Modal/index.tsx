@@ -41,7 +41,8 @@ export function bodyPrimeiroTrimestre() {
     <div className="d-flex flex-column">
       <h1 className="mb-4">Orientações para o 1º trimestre:</h1>
       <p className="mb-1">
-        As consultas médicas ou de enfermagem devem ser realizadas conforme este cronograma:
+        As consultas médicas ou de enfermagem devem ser realizadas conforme este
+        cronograma:
       </p>
       <ul className="ms-4">
         <li className="mb-1">- até a 28ª semana - mensalmente;</li>
@@ -83,7 +84,9 @@ export function bodyTerceiroTrimestre() {
         Encaminhar gestante para avaliação de bem-estar fetal após 41 semanas de
         gestação
       </p>
-      <p>Agendar consulta médica ou de enfermagem de retorno 42 dias após o parto</p>
+      <p>
+        Agendar consulta médica ou de enfermagem de retorno 42 dias após o parto
+      </p>
     </div>
   );
 }
@@ -167,7 +170,7 @@ export function bodyBoasPraticasCuidadoPessoasHipertensao() {
   );
 }
 
-export function bodyDetalhesCadastroDiabetes(item: any) {
+export function bodyDetalhesCadastro(item: any) {
   return (
     <div className="d-flex flex-column mb-4">
       <div className="user-details">
@@ -179,28 +182,19 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
               : item?.nome
           )}
         </h1>
-        <p>
-          CPF: {item?.cpf} <br />
-          CNS: {item?.cns}
-        </p>
         <div className="address">
           <p>
-            {item?.tipoLogradouro && (
-              <>
-                <br /> Tipo Logradouro: {item?.tipoLogradouro}
-              </>
-            )}
+            <b>CPF:</b> {item?.cpf} <br />
+            <b>CNS:</b> {item?.cns} <br />
+            <b>Endereço:</b>{" "}
+            {item?.endereco && item.endereco !== "None None"
+              ? capitalizeName(item.endereco).replace("S/n", "S/N")
+              : "-"}{" "}
             <br />
-            {item?.endereco}
-            {item?.complemento && (
-              <>
-                <br /> Complemento: {item?.complemento}
-              </>
-            )}
+            <b>Complemento:</b> {item?.complemento ? item?.complemento : "-"}{" "}
             <br />
-            CEP: {item?.cep}
-            <br />
-            Telefone de contato: {item?.telefone ? item?.telefone : "-"}
+            <b>CEP:</b> {item?.cep ? item?.cep : "-"} <br />
+            <b>Telefone de contato:</b> {item?.telefone ? item?.telefone : "-"}{" "}
           </p>
         </div>
         {Array.isArray(item?.detalhesCondicaoSaude) &&
@@ -211,7 +205,7 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
                   Condição de saúde: CID {condicao?.cidCondicaoSaude.join(", ")}
                 </p>
                 <p>
-                  Primeiro diagnóstico:{" "}
+                  Data do primeiro registro da condição:{" "}
                   {parseText(condicao?.primeiroDiagnostico)}
                 </p>
               </div>
@@ -224,8 +218,11 @@ export function bodyDetalhesCadastroDiabetes(item: any) {
                           .split("-")
                           .map((s: string) => capitalize(s))
                           .join(" ")
+                          .replace("S/n", "S/N")
                           .replace("Ultimo", "Último")
                           .replace("Ultima", "Última")
+                          .replace("Afericao", "Aferição")
+                          .replace("Acs", "ACS")
                           .replace("Pa", "PA")
                           .replace("Medico", "Médico")
                           .replace("Odontologica", "Odontológica")
@@ -327,7 +324,7 @@ export const Modal = ({
         {data &&
           data.loaded === 6 &&
           bodyBoasPraticasCuidadoPessoasHipertensao()}
-        {data && data.loaded === 7 && bodyDetalhesCadastroDiabetes(data)}
+        {data && data.loaded === 7 && bodyDetalhesCadastro(data)}
         {data &&
           data.loaded === 8 &&
           bodyPerfil(selectedValue, handleProfileChange)}
