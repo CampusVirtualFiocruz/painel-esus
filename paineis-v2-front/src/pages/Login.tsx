@@ -50,7 +50,7 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const [someStateOpen, setSomeStateOpen] = useState(false);
 
-   useQuery("city-informations", async () => {
+  useQuery("city-informations", async () => {
     const response = await Api.get<CityInformationResponse>(
       "city-informations"
     );
@@ -58,7 +58,7 @@ export function Login() {
     setCity(`${data.municipio} - ${data.uf}`);
     infoContext.setCityInformation(data);
     return data;
-  }); 
+  });
 
   function validateForm() {
     return username.length > 0 && password.length > 0;
@@ -124,13 +124,13 @@ export function Login() {
                 <div>
                   <div className="subtitle my-4">PARA QUÊ:</div>
                   <p>
-                    O Painel se conecta ao banco local do e-SUS APS. Com isso,
-                    você tem acesso à informação de forma estruturada e a
-                    relatórios pré-configurados de acordo com o seu perfil:
-                    gestor, profissional de saúde ou de tecnologia. Os
-                    relatórios são validados por especialistas em saúde pública
-                    e visam apoiar a qualificação das ações das equipes de Saúde
-                    da Família e Atenção Primária.
+                    O Painel se conecta ao banco local do e-SUS APS. Portanto,
+                    você tem acesso a informações de forma estruturada e a
+                    relatórios pré-configurados conforme seu perfil: gestor,
+                    profissional de saúde ou de tecnologia. Os relatórios são
+                    validados por especialistas em saúde pública e visam apoiar
+                    a qualificação das ações das equipes de Saúde da Família e
+                    Atenção Primária.
                   </p>
                 </div>
                 <div className="mt-5">

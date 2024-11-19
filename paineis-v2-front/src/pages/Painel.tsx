@@ -146,7 +146,9 @@ export function Painel() {
   //get-demographic-info
   useEffect(() => {
     const getDados = async () => {
-      let rota = id ? `get-demographic-info/${id}${equipe ? `?equipe=${equipe}` : ""}` : `get-demographic-info${equipe ? `?equipe=${equipe}` : ""}`;
+      let rota = id
+        ? `get-demographic-info/${id}${equipe ? `?equipe=${equipe}` : ""}`
+        : `get-demographic-info${equipe ? `?equipe=${equipe}` : ""}`;
 
       try {
         const response = await Api.get<ResponseData>(rota);
@@ -242,7 +244,7 @@ export function Painel() {
         return {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,
-          qtd: ubs.qtd
+          qtd: ubs.qtd,
         };
       });
 
@@ -289,7 +291,7 @@ export function Painel() {
       navigate(`/hipertensao${equipe ? `?equipe=${equipe}` : ""}`);
     }
   }
-/*   function handleToSindromesAgudas() {
+  /*   function handleToSindromesAgudas() {
     if (id !== undefined) {
       navigate(`/sindromes-agudas/${id}`);
     } else {
@@ -336,10 +338,10 @@ export function Painel() {
                     <Tooltip>
                       <TooltipContent className="Tooltip">
                         <div>
-                          Informação extraída da Relação da População para
-                          publicação no TCU em 2023,
-                          <br /> no site do IBGE (Clique para acessar o portal
-                          do IBGE.)
+                          Informação extraída da Relação da População Municipal
+                          enviada ao TCU em 2023,
+                          <br /> pelo IBGE. (clique para acessar o portal do
+                          IBGE)
                         </div>
                       </TooltipContent>
                       <a
@@ -446,7 +448,7 @@ export function Painel() {
 
           <div className="my-5">
             <Typography.Subtitle>
-              Proporção de indivíduos cadastrados segundo sexo e idade
+              Proporção de indivíduos cadastrados por sexo e idade
             </Typography.Subtitle>
           </div>
           {dadosPainel !== undefined &&
@@ -603,7 +605,7 @@ export function Painel() {
                     isClearable
                     placeholder="Selecione UBS"
                     noOptionsMessage={() => "Nenhuma UBS encontrada"}
-                    options={dataUbs?.filter(i=> i.qtd && i.qtd>0)}
+                    options={dataUbs?.filter((i) => i.qtd && i.qtd > 0)}
                     styles={selectStyle}
                     onChange={onChangeSelection}
                   />

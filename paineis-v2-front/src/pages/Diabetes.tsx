@@ -55,8 +55,8 @@ export function Diabetes() {
     ["diabetes/total", id],
     async () => {
       let path = id ? `diabetes/total/${id}` : "diabetes/total";
-      const response = await Api.get(path+search);
-      
+      const response = await Api.get(path + search);
+
       const responseData = response.data;
 
       let total = responseData.data;
@@ -78,7 +78,7 @@ export function Diabetes() {
       let path = id
         ? `diabetes/age-group-gender/${id}`
         : "diabetes/age-group-gender";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const responseData = response.data;
 
       return responseData.data;
@@ -98,7 +98,7 @@ export function Diabetes() {
       let path = id
         ? `diabetes/age-group-location/${id}`
         : "diabetes/age-group-location";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const responseData = response.data;
 
       return responseData.data;
@@ -116,7 +116,7 @@ export function Diabetes() {
     ["diabetes-complications", paramRoute],
     async () => {
       let path = id ? `diabetes/complications/${id}` : "diabetes/complications";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const responseData = response.data;
 
       const arrData = responseData.data.map((item: any, i: number) => {
@@ -139,7 +139,7 @@ export function Diabetes() {
     ["diabetes-factors-imc", paramRoute],
     async () => {
       let path = id ? `diabetes/imc/${id}` : "diabetes/imc";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const responseData = response.data;
 
       return responseData.data;
@@ -157,7 +157,7 @@ export function Diabetes() {
     ["diabetes-exams", paramRoute],
     async () => {
       let path = id ? `diabetes/exams/${id}` : "diabetes/exams";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const data = response.data;
 
       return data.data;
@@ -175,7 +175,7 @@ export function Diabetes() {
     ["diabetes-professionals", paramRoute],
     async () => {
       let path = id ? `diabetes/professionals/${id}` : "diabetes/professionals";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const data = response.data;
 
       return data.data;
@@ -210,7 +210,7 @@ export function Diabetes() {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,
           id: ubs.co_seq_dim_unidade_saude,
-          qtd: ubs.qtd
+          qtd: ubs.qtd,
         };
       });
 
@@ -356,7 +356,7 @@ export function Diabetes() {
             </div>
             <div>
               <Typography.Subtitle>
-                Frequência de complicações relacionadas à diabetes
+                Frequência de complicações relacionadas ao diabetes
               </Typography.Subtitle>
               <div style={{ marginBottom: "30px" }} />
               <div className="d-flex flex-wrap flex-xl-nowrap justify-content-center">
@@ -397,7 +397,7 @@ export function Diabetes() {
               <Typography.Subtitle>
                 Adultos com diabetes de acordo com o IMC
               </Typography.Subtitle>
-              (IMC de pessoas com 20 anos ou mais e menores de 60 anos)
+              (IMC de pessoas com idade de 20 anos ou mais e menores de 60 anos)
               <br />
               <br />
               <div className="d-flex flex-wrap flex-lg-nowrap">

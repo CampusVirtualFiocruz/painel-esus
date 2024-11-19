@@ -36,7 +36,7 @@ export function Hipertensao() {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<TModal>({ loaded: 0 });
-  
+
   const [params] = useSearchParams();
   const equipe = params.get("equipe");
 
@@ -58,7 +58,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/total/${id}`
         : "arterial-hypertension/total";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const responseData = response.data;
 
       let total = responseData.data;
@@ -80,7 +80,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/age-group-location/${id}`
         : "arterial-hypertension/age-group-location";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const responseData = response.data;
 
       return responseData.data;
@@ -100,7 +100,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/age-group-gender/${id}`
         : "arterial-hypertension/age-group-gender";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const responseData = response.data;
 
       return responseData.data;
@@ -120,7 +120,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/complications/${id}`
         : "arterial-hypertension/complications";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const responseData = response.data;
 
       const arrData = responseData.data.map((item: any, i: number) => {
@@ -145,7 +145,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/imc/${id}`
         : "arterial-hypertension/imc";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const responseData = response.data;
 
       return responseData.data;
@@ -165,7 +165,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/exams/${id}`
         : "arterial-hypertension/exams";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const data = response.data;
 
       return data.data;
@@ -185,7 +185,7 @@ export function Hipertensao() {
       let path = id
         ? `arterial-hypertension/professionals/${id}`
         : "arterial-hypertension/professionals";
-      const response = await Api.get(path+search);
+      const response = await Api.get(path + search);
       const data = response.data;
 
       return data.data;
@@ -220,7 +220,7 @@ export function Hipertensao() {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,
           id: ubs.co_seq_dim_unidade_saude,
-          qtd: ubs.qtd
+          qtd: ubs.qtd,
         };
       });
 
@@ -356,7 +356,7 @@ export function Hipertensao() {
                   />
                   <RenderSingleValue
                     icon="people"
-                    title="Nº de pessoas com hipertensão (autorreferido)"
+                    title="Nº de pessoas com hipertensão (autorreferida)"
                     value={dataTotalHipertensao?.total_auto_referido?.toLocaleString(
                       "pt-BR"
                     )}
@@ -407,7 +407,7 @@ export function Hipertensao() {
               <Typography.Subtitle>
                 Adultos com hipertensão de acordo com o IMC
               </Typography.Subtitle>
-              (IMC de pessoas com 20 anos ou mais e menores de 60 anos)
+              (IMC de pessoas com idade de 20 anos ou mais e menores de 60 anos)
               <br />
               <br />
               <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
