@@ -8,12 +8,16 @@ from flask import send_from_directory
 from flask_cors import CORS
 from src.env import env as config
 from src.errors.logging import logging
+from src.main.routes.children_routes import children_bp
+from src.main.routes.children_routes import ChildrenPath
 from src.main.routes.city_informations_route import city_informations_bp
 from src.main.routes.city_informations_route import CityInfoPath
 from src.main.routes.demographics_info_route import DemographichInfoPath
 from src.main.routes.demographics_info_route import demographics_info_bp
 from src.main.routes.diabetes_routes import diabetes_bp
 from src.main.routes.diabetes_routes import DiabetesPath
+from src.main.routes.elderly_routes import elderly_bp
+from src.main.routes.elderly_routes import ElderlyPath
 from src.main.routes.hypertension_routes import hypertension_bp
 from src.main.routes.hypertension_routes import HypertensionPath
 from src.main.routes.login_route import login_bp
@@ -104,3 +108,23 @@ register_blueprint(app, (oral_health_bp, oral_path.root_path), [token_required])
 
 smoking = SmokingPath()
 register_blueprint(app, (smoking_bp, smoking.root_path), [token_required])
+
+children = ChildrenPath()
+register_blueprint(
+    app,
+    (children_bp, children.root_path),
+    [
+        token_required,
+        cache.cached(timeout=24 * 60 * 60, query_string=True)
+    ],
+)
+
+elderly = ElderlyPath()
+register_blueprint(
+    app,
+    (elderly_bp, elderly.root_path),
+    [
+    # token_required,
+        cache.cached(timeout=24 * 60 * 60, query_string=True)
+    ], 
+)

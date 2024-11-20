@@ -72,7 +72,10 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                     for i in cbo_unidade:
                         if i[0] == str(r.co_cbo):
                             # ubs_id = self.get_ubs_id(i[1])
-                            return ("user", i[1], acesso['equipe'][ 'id'])
+                            equipe_id = None
+                            if "equipe" in acesso and acesso['equipe'] is not None:
+                                equipe_id = acesso["equipe"]["id"]
+                            return ("user", i[1], equipe_id)
 
         else:
             return ("admin", None, None)
@@ -117,6 +120,8 @@ class LoginBridgeRepository(LoginRepositoryInterface):
         for acesso in acessos:
             ubs = None
             equipe = None
+            if not acesso['ativo']:
+                continue
             if acesso["unidadeSaude"] is not None:
                 id = self.get_unit_id(acesso["unidadeSaude"]["id"])
                 ubs = format_entity(id, acesso["unidadeSaude"]["nome"])
@@ -200,7 +205,10 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                     )
                     return user_raw_data
                 if len(profiles) == 1:
-                    user = self.check_role(profissional['lotacoes'][0])        
+                    user = self.check_role(profissional['lotacoes'][0])  
+                    equipe = None
+                    if profiles[0]["equipe"] is not None:
+                        equipe = profiles[0]["equipe"]["id"]
                     user_raw_data = UserPayload(
                         username=profissional["nome"],
                         cns=profissional["cns"],
@@ -212,7 +220,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                         ]["uf"]["nome"],
                         profiles=[profiles[0]],
                         ubs=(profiles[0]["ubs"]["id"] if user is not None else None),
-                        equipe=profiles[0]["equipe"]["id"],
+                        equipe=equipe,
                     )
                     return user_raw_data
         return None
