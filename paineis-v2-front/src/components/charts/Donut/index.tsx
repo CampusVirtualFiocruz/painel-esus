@@ -18,14 +18,12 @@ const formatters = {
 export function Donut(props: DonutChart) {
   const f = String(props?.config?.formatterKind) as keyof typeof formatters;
   
-  console.log({f})
-
   const options = {
     color: props?.config?.colors || ["#09406A", "#5CD2C8"],
     tooltip: {
       trigger: "item",
       label: {
-        formatter: "ai papai",
+        formatter: "testes",
       },
     },
     legend: {

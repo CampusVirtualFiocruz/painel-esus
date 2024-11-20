@@ -1,27 +1,19 @@
 import { content } from "../assets/content/content";
-import { DonutChart } from "../charts/Donut";
-import {
-  Bar,
-  Donut,
-  ShallowTreemap,
-  ValueCard,
-  ProgressBar,
-} from "../components/charts";
-import { charts } from "../components/charts/infantil.mock";
+import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
+import { charts } from "../components/charts/idoso.mock";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
-import useReportDataInfantil from "../hooks/sctions/infantil/useReportDataInfantil";
 
 const reportHeader = [
   {
-    "total-criancas-cadastradas-2-anos": {
+    "total-ubs": {
       Chart: ValueCard,
       config: {
         description: "Total de crianças até 2 anos cadastradas",
         icon: "paperdark",
       },
     },
-    "total-criancas-atendidas-2-anos": {
+    "total-atendidas": {
       Chart: ValueCard,
       config: {
         description: "Porcentagem de cadastros atualizados",
@@ -33,38 +25,35 @@ const reportHeader = [
 
 const reportSections = [
   {
-    "total-cadastros-criancas-raca-cor": {
+    "total-raca-cor": {
       Chart: ShallowTreemap,
       config: {
         colors: ["#0b5b98", "#6595ff", "#0066b4", "#49e8db", "#0066b4"],
       },
     },
-    "total-extratificacao-por-profissional": {
-      Chart: ProgressBar,
-    },
-  },
-  {
-    "distribuicao-criancas-faixa-etaria": {
-      Chart: Bar,
+    "total-imc": {
+      Chart: Donut,
       config: {
-        hideLegend: true,
+        formatterKind: "perc",
+        radiusStart: "0%",
         colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
         yAxis: {
           name: content?.["total-cadastros"],
         },
       },
     },
-    "distribuicao-criancas-sexo": {
-      Chart: Bar,
+    "total-proporcao-vacina-influenza": {
+      Chart: Donut,
       config: {
-        hideLegend: true,
-        colors: ["rgba(57,150,193,255)", "rgba(92,210,200,255)", "#dddddd"],
+        formatterKind: "perc",
+        radiusStart: "0%",
+        colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
         yAxis: {
           name: content?.["total-cadastros"],
         },
       },
     },
-    "distribuicao-criancas-local": {
+    "total-proporcao-atendimento-odonto": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
@@ -76,18 +65,45 @@ const reportSections = [
       },
     },
   },
+  {
+    "pessoas-por-faixa-etaria": {
+      Chart: Bar,
+      config: {
+        hideLegend: true,
+        colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
+        yAxis: {
+          name: content?.["total-cadastros"],
+        },
+      },
+    },
+    "pessoas-por-sexo": {
+      Chart: Bar,
+      config: {
+        hideLegend: true,
+        colors: ["rgba(57,150,193,255)", "rgba(92,210,200,255)", "#dddddd"],
+        yAxis: {
+          name: content?.["total-cadastros"],
+        },
+      },
+    },
+    "pessoas-por-diagnostico": {
+      Chart: Bar,
+      config: {
+        hideLegend: true,
+        colors: ["rgba(57,150,193,255)", "rgba(92,210,200,255)", "#dddddd"],
+        yAxis: {
+          name: content?.["total-cadastros"],
+        },
+      },
+    },
+  },
 ];
 
-const Infantil = () => {
-  const reportData = useReportDataInfantil({});
-  const mockData = { ...charts, ...reportData?.data };
-
-  console.log({ mockData });
-
+const Idosa = () => {
   return (
     <ReportWrapper
-      title="UBS Sérgio Arouca / Desenvolvimento Infantil de Cadastro"
-      subtitle="(cuidado até o 2º ano de vida de acordo com a data da última atualização pelo município)"
+      title="UBS Sérgio Arouca / Cuidado da Pessoa Idosa"
+      subtitle="(referente aos últimos 12 meses)"
       footer={<ReportFooter />}
     >
       {reportSections.map((chartList: any, colIndex) => (
@@ -119,7 +135,7 @@ const Infantil = () => {
                     Object.keys(chartList).map((chartKey) => {
                       const CustomChart = chartList?.[chartKey]?.Chart;
                       const chartConfigs = chartList?.[chartKey]?.config;
-                      const data = (mockData as any)?.[chartKey]?.data;
+                      const data = (charts as any)?.[chartKey]?.data;
                       return <CustomChart data={data} config={chartConfigs} />;
                     })
                   )}
@@ -127,15 +143,13 @@ const Infantil = () => {
               </div>
             </>
           )}
-
           {colIndex === 1 && (
             <div style={{ paddingTop: "60px", content: " " }} />
           )}
           {Object.keys(chartList).map((chartKey) => {
             const CustomChart = chartList?.[chartKey]?.Chart;
             const chartConfigs = chartList?.[chartKey]?.config;
-            const data = (mockData as any)?.[chartKey]?.data;
-
+            const data = (charts as any)?.[chartKey]?.data;
             if (chartConfigs) {
               const xAxisNames = data?.map(
                 (d: any) => content?.[d?.tag] ?? d?.tag
@@ -159,4 +173,4 @@ const Infantil = () => {
   );
 };
 
-export default Infantil;
+export default Idosa;
