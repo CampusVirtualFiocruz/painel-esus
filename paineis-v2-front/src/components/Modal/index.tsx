@@ -186,6 +186,13 @@ export function bodyDetalhesCadastro(item: any) {
           <p>
             <strong>CPF:</strong> {item?.cpf} <br />
             <strong>CNS:</strong> {item?.cns} <br />
+            {item?.tipoLogradouro && (
+              <>
+                <strong>Tipo Logradouro:</strong>
+                {item.tipoLogradouro}
+                <br />
+              </>
+            )}
             <strong>Endereço:</strong>{" "}
             {item?.endereco && item.endereco !== "None None"
               ? capitalizeName(item.endereco).replace("S/n", "S/N")

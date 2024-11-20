@@ -1,5 +1,6 @@
 # pylint: disable=E0401,C0301,W0612,W0611
 import os
+import subprocess
 from pathlib import Path
 
 from src.data.use_cases.create_bases.create_bases_usecase import CreateBasesUseCase
@@ -17,8 +18,10 @@ from src.infra.create_base.create_equipes_base_repository import (
 from src.infra.create_base.create_hypertension_bases_repository import (
     CreateHypertensionBasesRepository,
 )
-from src.infra.create_base.create_nominal_lists_bases_repository import CreateDiabetesNominalListRepository
-from src.infra.create_base.create_nominal_lists_bases_repository import CreateHypertensionNominalListRepository
+from src.infra.create_base.create_nominal_lists_bases_repository import (
+    CreateDiabetesNominalListRepository,
+    CreateHypertensionNominalListRepository,
+)
 from src.infra.create_base.create_oral_health_bases_repository import (
     CreateOralHealthBasesRepository,
 )
@@ -32,6 +35,28 @@ from src.infra.create_base.create_structure_base_repository import (
     CreateStructureBaseRepository,
 )
 from src.infra.create_base.create_units_base_repository import CreateUnitsBaseRepository
+from src.infra.create_base.polars import (
+    CreateAcompCidadaosVinculadosBaseRepository,
+    CreateAtendIndivBaseRepository,
+    CreateAtendOdontoBaseRepository,
+    CreateCadDomiciliarBaseRepository,
+    CreateCadIndividualBaseRepository,
+    CreateCidacaoPecBaseRepository,
+    CreateCidadaoBaseRepository,
+    CreateCidCiapExplodeAtendimentosRepository,
+    CreateDimEquipesBaseRepository,
+    CreateDimRacaCorBaseRepository,
+    CreateEquipeBaseRepository,
+    CreateFamiliaTerrBaseRepository,
+    CreateIndicadoresCriancasRepository,
+    CreateIndicadoresEquipeRepository,
+    CreateIndicadoresIdososRepository,
+    CreateProcedAtendBaseRepository,
+    CreateTipoEquipeBaseRepository,
+    CreateUnidadesSaudeBaseRepository,
+    CreateVacinacaoBaseRepository,
+    CreateVisistaDomiciliarBaseRepository,
+)
 
 
 class CreateBasesController:
@@ -50,18 +75,49 @@ class CreateBasesController:
             CreateStructureBaseRepository().create_base()
             logging.info("Starting base generation")
             _list = [
-                CreateUnitsBaseRepository(),
                 CreatePessoasBaseRepository(),
                 CreateEquipesBaseRepository(),
+                # CreateDimEquipesBaseRepository(),
+                CreateUnidadesSaudeBaseRepository(),
+                CreateAtendIndivBaseRepository(),
+                CreateAtendOdontoBaseRepository(),
+                CreateCadIndividualBaseRepository(),
+                CreateVacinacaoBaseRepository(),
+                CreateCidacaoPecBaseRepository(),
+                CreateProcedAtendBaseRepository(),
+                CreateFamiliaTerrBaseRepository(),
+                CreateCidadaoBaseRepository(),
+                CreateCadDomiciliarBaseRepository(),
+                CreateDimRacaCorBaseRepository(),
+                CreateTipoEquipeBaseRepository(),
+                CreateEquipeBaseRepository(),
+                CreateAcompCidadaosVinculadosBaseRepository(),
+                CreateVisistaDomiciliarBaseRepository(),
+                CreateCidCiapExplodeAtendimentosRepository(),
+                CreateIndicadoresIdososRepository(),
+                CreateIndicadoresCriancasRepository(),
+                CreateIndicadoresEquipeRepository(),
+                CreateUnitsBaseRepository(),
                 CreateAutorreferidoBaseRepository(),
                 CreateDiabetesBasesRepository(),
                 CreateHypertensionBasesRepository(),
-                # CreateOralHealthBasesRepository(),
                 CreateDiabetesNominalListRepository(),
                 CreateHypertensionNominalListRepository(),
-                # CreateSmokingBasesRepository()
             ]
             usecase = CreateBasesUseCase(bases_generators=_list)
             usecase.create_bases()
+            
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+
+            script_path = os.path.abspath('parquet_db.py')
+            resultado = subprocess.run(
+                    ['python', script_path],
+                    check=True,             # Levanta uma exceção se o comando falhar
+                    stdout=subprocess.PIPE, # Captura a saída padrão
+                    stderr=subprocess.PIPE, # Captura a saída de erro
+                    text=True               # Retorna a saída como string
+                )
+            print("Script conversao de parquet realizado com sucesso:")
+            print(resultado.stdout)
         else:
             logging.info("Skipping base generation")

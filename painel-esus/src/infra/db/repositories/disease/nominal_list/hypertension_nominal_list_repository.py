@@ -98,7 +98,7 @@ class HypertensionNominalListRepository:
 	hn.min_date primeiro_atendimento,
 	hn.cids ,
 	hn.ciaps ,
-	hn.diagnostico ,
+	hn.diagnostico 'grupo/condição',
 	hn.data_ultima_visita_acs,
 	case 
 		when hn.alerta_visita_acs = 1 then 'SIM'

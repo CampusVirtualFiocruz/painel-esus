@@ -1,16 +1,16 @@
-from flask import Blueprint
-from flask import jsonify
-from flask import request
+from flask import Blueprint, jsonify, request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
-from src.main.composers.elderly_composer import elderly_group_by_age_location_composer
-from src.main.composers.elderly_composer import elderly_group_by_gender_composer
-from src.main.composers.elderly_composer import elderly_group_by_race_composer
-from src.main.composers.elderly_composer import elderly_hipertesnion_diabetes_rate_composer
-from src.main.composers.elderly_composer import elderly_imc_rate_composer
-from src.main.composers.elderly_composer import elderly_influenza_rate_composer
-from src.main.composers.elderly_composer import elderly_odonto_rate_composer
-from src.main.composers.elderly_composer import elderly_total_composer
+from src.main.composers.elderly_composer import (
+    elderly_group_by_age_location_composer,
+    elderly_group_by_gender_composer,
+    elderly_group_by_race_composer,
+    elderly_hipertesnion_diabetes_rate_composer,
+    elderly_imc_rate_composer,
+    elderly_influenza_rate_composer,
+    elderly_odonto_rate_composer,
+    elderly_total_composer,
+)
 
 elderly_bp = Blueprint("elderly", __name__)
 
@@ -38,7 +38,7 @@ urls = elderly.urls
 @elderly_bp.route(
     urls["total"] + "/<cnes>", methods=["GET"], endpoint="elderly_total_id"
 )
-def elderly_total():
+def elderly_total(cnes=None):
     http_response = None
     response = None
     try:
@@ -59,7 +59,7 @@ def elderly_total():
     methods=["GET"],
     endpoint="group_by_age_location_id",
 )
-def elderly_grouping_by_ages_location():
+def elderly_grouping_by_ages_location(cnes=None):
     http_response = None
     response = None
     try:
@@ -80,7 +80,7 @@ def elderly_grouping_by_ages_location():
     methods=["GET"],
     endpoint="group_by_race_id",
 )
-def elderly_grouping_by_race():
+def elderly_grouping_by_race(cnes=None):
     http_response = None
     response = None
     try:
@@ -99,7 +99,7 @@ def elderly_grouping_by_race():
     methods=["GET"],
     endpoint="group_by_gender_id",
 )
-def elderly_grouping_by_gender():
+def elderly_grouping_by_gender(cnes=None):
     http_response = None
     response = None
     try:
@@ -122,7 +122,7 @@ def elderly_grouping_by_gender():
     methods=["GET"],
     endpoint="grouping_by_imc_rate_id",
 )
-def elderly_grouping_by_imc_rate():
+def elderly_grouping_by_imc_rate(cnes=None):
     http_response = None
     response = None
     try:
@@ -145,7 +145,7 @@ def elderly_grouping_by_imc_rate():
     methods=["GET"],
     endpoint="grouping_by_influenza_rate_id",
 )
-def elderly_grouping_by_influenza_rate():
+def elderly_grouping_by_influenza_rate(cnes=None):
     http_response = None
     response = None
     try:
@@ -170,7 +170,7 @@ def elderly_grouping_by_influenza_rate():
     methods=["GET"],
     endpoint="grouping_by_odonto_rate_id",
 )
-def elderly_grouping_by_odonto_rate():
+def elderly_grouping_by_odonto_rate(cnes=None):
     http_response = None
     response = None
     try:
@@ -193,7 +193,7 @@ def elderly_grouping_by_odonto_rate():
     methods=["GET"],
     endpoint="grouping_hipertesnion_diabetes_rate_id",
 )
-def elderly_grouping_hipertesnion_diabetes_rate():
+def elderly_grouping_hipertesnion_diabetes_rate(cnes=None):
     http_response = None
     response = None
     try:
