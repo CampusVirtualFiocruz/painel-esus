@@ -1,14 +1,14 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint
+from flask import jsonify
+from flask import request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
-from src.main.composers.children_composer import (
-    children_grouping_by_ages_location_composer,
-    children_grouping_by_gender_composer,
-    children_grouping_by_location_rate_composer,
-    children_grouping_by_race_composer,
-    children_grouping_cares_by_professionals_composer,
-    children_total_composer,
-)
+from src.main.composers.children_composer import children_grouping_by_ages_location_composer
+from src.main.composers.children_composer import children_grouping_by_gender_composer
+from src.main.composers.children_composer import children_grouping_by_location_rate_composer
+from src.main.composers.children_composer import children_grouping_by_race_composer
+from src.main.composers.children_composer import children_grouping_cares_by_professionals_composer
+from src.main.composers.children_composer import children_total_composer
 
 children_bp = Blueprint("children", __name__)
 

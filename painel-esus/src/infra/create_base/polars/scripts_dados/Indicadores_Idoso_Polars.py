@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
-
 # # Indicadores Idosos
 #
 # A tabela pessoa foi gerada a partir da tabela de acompanhamento do cidadão vinculado.O script realiza o cálculo de diversos indicadores baseados em nas fichas de atendimento individual e odontológico de população idosa. O processo inclui a leitura de dados, criação de filtros temporais e categóricos, cálculo de frequências de atendimentos e procedimentos (como creatinina e peso/altura), e geração de colunas de indicadores binários (1 ou 0). Esses indicadores são então integrados ao conjunto de dados final de idosos para análise posterior.
 #
 # usando a tabela pessoa gerada via sql do tales, script adaptado
-
 # In[27]:
-
-
 import time
 
 start_time = time.time()

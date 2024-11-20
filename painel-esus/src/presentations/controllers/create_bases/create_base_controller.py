@@ -18,10 +18,8 @@ from src.infra.create_base.create_equipes_base_repository import (
 from src.infra.create_base.create_hypertension_bases_repository import (
     CreateHypertensionBasesRepository,
 )
-from src.infra.create_base.create_nominal_lists_bases_repository import (
-    CreateDiabetesNominalListRepository,
-    CreateHypertensionNominalListRepository,
-)
+from src.infra.create_base.create_nominal_lists_bases_repository import CreateDiabetesNominalListRepository
+from src.infra.create_base.create_nominal_lists_bases_repository import CreateHypertensionNominalListRepository
 from src.infra.create_base.create_oral_health_bases_repository import (
     CreateOralHealthBasesRepository,
 )
@@ -35,28 +33,26 @@ from src.infra.create_base.create_structure_base_repository import (
     CreateStructureBaseRepository,
 )
 from src.infra.create_base.create_units_base_repository import CreateUnitsBaseRepository
-from src.infra.create_base.polars import (
-    CreateAcompCidadaosVinculadosBaseRepository,
-    CreateAtendIndivBaseRepository,
-    CreateAtendOdontoBaseRepository,
-    CreateCadDomiciliarBaseRepository,
-    CreateCadIndividualBaseRepository,
-    CreateCidacaoPecBaseRepository,
-    CreateCidadaoBaseRepository,
-    CreateCidCiapExplodeAtendimentosRepository,
-    CreateDimEquipesBaseRepository,
-    CreateDimRacaCorBaseRepository,
-    CreateEquipeBaseRepository,
-    CreateFamiliaTerrBaseRepository,
-    CreateIndicadoresCriancasRepository,
-    CreateIndicadoresEquipeRepository,
-    CreateIndicadoresIdososRepository,
-    CreateProcedAtendBaseRepository,
-    CreateTipoEquipeBaseRepository,
-    CreateUnidadesSaudeBaseRepository,
-    CreateVacinacaoBaseRepository,
-    CreateVisistaDomiciliarBaseRepository,
-)
+from src.infra.create_base.polars import CreateAcompCidadaosVinculadosBaseRepository
+from src.infra.create_base.polars import CreateAtendIndivBaseRepository
+from src.infra.create_base.polars import CreateAtendOdontoBaseRepository
+from src.infra.create_base.polars import CreateCadDomiciliarBaseRepository
+from src.infra.create_base.polars import CreateCadIndividualBaseRepository
+from src.infra.create_base.polars import CreateCidacaoPecBaseRepository
+from src.infra.create_base.polars import CreateCidadaoBaseRepository
+from src.infra.create_base.polars import CreateCidCiapExplodeAtendimentosRepository
+from src.infra.create_base.polars import CreateDimEquipesBaseRepository
+from src.infra.create_base.polars import CreateDimRacaCorBaseRepository
+from src.infra.create_base.polars import CreateEquipeBaseRepository
+from src.infra.create_base.polars import CreateFamiliaTerrBaseRepository
+from src.infra.create_base.polars import CreateIndicadoresCriancasRepository
+from src.infra.create_base.polars import CreateIndicadoresEquipeRepository
+from src.infra.create_base.polars import CreateIndicadoresIdososRepository
+from src.infra.create_base.polars import CreateProcedAtendBaseRepository
+from src.infra.create_base.polars import CreateTipoEquipeBaseRepository
+from src.infra.create_base.polars import CreateUnidadesSaudeBaseRepository
+from src.infra.create_base.polars import CreateVacinacaoBaseRepository
+from src.infra.create_base.polars import CreateVisistaDomiciliarBaseRepository
 
 
 class CreateBasesController:

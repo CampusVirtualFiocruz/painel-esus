@@ -1,16 +1,16 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint
+from flask import jsonify
+from flask import request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
-from src.main.composers.elderly_composer import (
-    elderly_group_by_age_location_composer,
-    elderly_group_by_gender_composer,
-    elderly_group_by_race_composer,
-    elderly_hipertesnion_diabetes_rate_composer,
-    elderly_imc_rate_composer,
-    elderly_influenza_rate_composer,
-    elderly_odonto_rate_composer,
-    elderly_total_composer,
-)
+from src.main.composers.elderly_composer import elderly_group_by_age_location_composer
+from src.main.composers.elderly_composer import elderly_group_by_gender_composer
+from src.main.composers.elderly_composer import elderly_group_by_race_composer
+from src.main.composers.elderly_composer import elderly_hipertesnion_diabetes_rate_composer
+from src.main.composers.elderly_composer import elderly_imc_rate_composer
+from src.main.composers.elderly_composer import elderly_influenza_rate_composer
+from src.main.composers.elderly_composer import elderly_odonto_rate_composer
+from src.main.composers.elderly_composer import elderly_total_composer
 
 elderly_bp = Blueprint("elderly", __name__)
 

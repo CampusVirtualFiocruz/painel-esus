@@ -3,11 +3,13 @@ import os
 
 import pandas as pd
 from sqlalchemy import text
-from sqlalchemy.exc import OperationalError, ResourceClosedError
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import ResourceClosedError
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
-from src.errors import InvalidArgument, NoSuchTableError
+from src.errors import InvalidArgument
+from src.errors import NoSuchTableError
 from src.errors.logging import logging
 from src.infra.db.repositories.sqls.pessoa.pessoas import pessoas as PESSOAS
 from src.infra.db.repositories.update_bases import UpdateBasesRepository

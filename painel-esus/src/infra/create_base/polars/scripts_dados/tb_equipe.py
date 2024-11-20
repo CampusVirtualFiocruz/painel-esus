@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-
 # In[1]:
-
-
 import time
 
 start_time = time.time()

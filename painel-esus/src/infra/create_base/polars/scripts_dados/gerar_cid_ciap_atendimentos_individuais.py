@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
-
 # In[20]:
-
+import os
+from datetime import datetime
 
 import polars as pl
-from datetime import datetime
-import os
 from dateutil.relativedelta import relativedelta
 pl.Config.set_tbl_cols(100)
 pl.Config.set_tbl_rows(5000)
@@ -101,4 +99,3 @@ final_df = pl.concat([cids_df, ciaps_df,proced_avaliados_df,proced_solicitados_d
 
 
 final_df.write_parquet(input_path+"fat_atd_ind_cod.parquet")
-
