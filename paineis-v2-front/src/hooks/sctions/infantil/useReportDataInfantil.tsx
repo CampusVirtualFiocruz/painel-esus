@@ -20,12 +20,12 @@ const useReportDataInfantil = ({ ubsId, squadId }: reportBasicInfo) => {
           },
         }),
         Api.get(`/children/group-by-age-location`),
-        Api.get(`/children/group-by-gender/${ubsParam}`, {
+        Api.get(`/children/group-by-gender${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        Api.get(`/children/group-cares-by-professionals/${ubsParam}`, {
+        Api.get(`/children/group-cares-by-professionals${ubsParam}`, {
           params: {
             equipe: squadId,
           },

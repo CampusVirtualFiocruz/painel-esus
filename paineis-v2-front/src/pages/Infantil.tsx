@@ -79,7 +79,7 @@ const reportSections = [
 ];
 
 const Infantil = () => {
-  const reportData = useReportDataInfantil({});
+  const reportData = useReportDataInfantil({ ubsId: "9" });
   const mockData = { ...charts, ...reportData?.data };
 
   console.log({ mockData });
