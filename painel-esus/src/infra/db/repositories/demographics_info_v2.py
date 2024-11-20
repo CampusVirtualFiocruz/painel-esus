@@ -14,11 +14,15 @@ from src.data.interfaces.demographics_info import (
 from src.env.conf import env
 from src.errors import InvalidArgument
 from src.errors.logging import logging
-from src.infra.db.repositories.sqls.demographics import filter_by_gender_age
-from src.infra.db.repositories.sqls.demographics import filter_by_localidade
-from src.infra.db.repositories.sqls.demographics import filter_by_sexo
-from src.infra.db.repositories.sqls.demographics import get_indicators_diabetes_plus_autorreferidos
-from src.infra.db.repositories.sqls.demographics import get_indicators_hipertensao_plus_autorreferidos
+from src.infra.db.repositories.sqls.demographics import (
+    filter_by_gender_age,
+    filter_by_localidade,
+    filter_by_sexo,
+    get_indicators_crianca,
+    get_indicators_diabetes_plus_autorreferidos,
+    get_indicators_hipertensao_plus_autorreferidos,
+    get_indicators_idoso,
+)
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -185,6 +189,9 @@ select count(*) total  from 	cidadaos """
         idicators_body = {
             "diabetes": {"rural": 0, "urbano": 0, "nao_informado": 0},
             "hipertensao": {"rural": 0, "urbano": 0, "nao_informado": 0},
+            "crianca": {"rural": 0, "urbano": 0, "nao_informado": 0},
+            "idosa": {"rural": 0, "urbano": 0, "nao_informado": 0},
+            "qualidade": {"rural": 0, "urbano": 0, "nao_informado": 0},
         }
         with LocalDBConnectionHandler().get_engine().connect() as local_con:
             indicator_diabetes_sql = get_indicators_diabetes_plus_autorreferidos(
@@ -204,6 +211,28 @@ select count(*) total  from 	cidadaos """
             )
             for resp in result_hipertensao:
                 idicators_body["hipertensao"][resp[0]] = int(resp[1])
+
+            indicator_idoso_sql = get_indicators_idoso(
+                cnes, equipe
+            )
+            result_idoso = local_con.execute(
+                text(indicator_idoso_sql),
+            )
+            for resp in result_idoso:
+                key = (
+                    resp[0].lower().replace("zona ", "").replace("n/i", "nao_informado")
+                )
+                idicators_body["idosa"][key] = int(resp[1])
+
+            indicator_crianca_sql = get_indicators_crianca(cnes, equipe)
+            result_crianca = local_con.execute(
+                text(indicator_crianca_sql),
+            )
+            for resp in result_crianca:
+                key = (
+                    resp[0].lower().replace("zona ", "").replace("n/i", "nao_informado")
+                )
+                idicators_body["crianca"][key] = int(resp[1])
 
             return {
                 "total": total_people,
