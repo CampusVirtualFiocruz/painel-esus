@@ -17,7 +17,8 @@ import homem from "../assets/images/homem.svg";
 import mulher from "../assets/images/mulher.svg";
 import diabetes from "../assets/images/menu/diabetes.png";
 import hipertensao from "../assets/images/menu/hipertensao.png";
-import thooth from "../assets/images/menu/bucal.png";
+import children from "../assets/images/menu/children.png";
+import old from "../assets/images/menu/old.png";
 
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
@@ -291,6 +292,23 @@ export function Painel() {
       navigate(`/hipertensao${equipe ? `?equipe=${equipe}` : ""}`);
     }
   }
+
+  function handleToInfantil() {
+    if (id !== undefined) {
+      navigate(`/infantil/${id}${equipe ? `?equipe=${equipe}` : ""}`);
+    } else {
+      navigate(`/infantil${equipe ? `?equipe=${equipe}` : ""}`);
+    }
+  }
+
+  function handleToIdosa() {
+    if (id !== undefined) {
+      navigate(`/idosa/${id}${equipe ? `?equipe=${equipe}` : ""}`);
+    } else {
+      navigate(`/idosa${equipe ? `?equipe=${equipe}` : ""}`);
+    }
+  }
+
   /*   function handleToSindromesAgudas() {
     if (id !== undefined) {
       navigate(`/sindromes-agudas/${id}`);
@@ -498,7 +516,6 @@ export function Painel() {
               <div className="card-condicao p-2" onClick={handleToDiabetes}>
                 <span className="nome-condicao">Diabetes</span>
                 <h4>{somaIndicador(dadosPainel?.indicators.diabetes)}</h4>
-
                 <div className="d-flex align-items-center">
                   <img src={diabetes} alt="Diabetes" className="mx-2" />
                   <Condicao data={dadosPainel?.indicators.diabetes} />
@@ -510,6 +527,22 @@ export function Painel() {
                 <div className="d-flex align-items-center">
                   <img src={hipertensao} alt="Hipertensão" className="mx-2" />
                   <Condicao data={dadosPainel?.indicators.hipertensao} />
+                </div>
+              </div>
+              <div className="card-condicao p-2" onClick={handleToInfantil}>
+                <span className="nome-condicao">Desenvolvimento Infantil</span>
+                <h4>{somaIndicador(dadosPainel?.indicators.hipertensao)}</h4>
+                <div className="d-flex align-items-center">
+                  <img width={"30%"} src={children} alt="Desenvolvimento Infantil" className="mx-2" />
+                  {/* <Condicao data={dadosPainel?.indicators.infantil} /> */}
+                </div>
+              </div>
+              <div className="card-condicao p-2" onClick={handleToIdosa}>
+                <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
+                <h4>{somaIndicador(dadosPainel?.indicators.hipertensao)}</h4>
+                <div className="d-flex align-items-center">
+                  <img width={"30%"} src={old} alt="Pessoa Idosa" className="mx-2" />
+                  {/* <Condicao data={dadosPainel?.indicators.idosa} /> */}
                 </div>
               </div>
               {/* <div className="card-condicao p-2" onClick={handleToGestante}>
