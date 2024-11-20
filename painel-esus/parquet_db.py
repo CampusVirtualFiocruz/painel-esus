@@ -1,7 +1,11 @@
 import pandas as pd
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
-bases = [("crianca", "./src/bases/crianca.parquet"), ("idoso", "./src/bases/idoso.parquet")]
+bases = [
+    ("crianca", "./dados/output/crianca.parquet"),
+    ("idoso", "./dados/output/idoso.parquet"),
+    # ("equipes", "./dados/output/equipe.parquet"),
+]
 
 def create_base(base):
     data = pd.read_parquet(base[1])

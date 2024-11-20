@@ -65,6 +65,7 @@ class ElderlyAdapter:
     def group_by_race(self, response):
         result = []
         for r in response:
+            print(r)
             result.append(
                 self._fill_single_values(r[0].lower(), r[2],True)
             ) 

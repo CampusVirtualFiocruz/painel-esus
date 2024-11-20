@@ -11,7 +11,7 @@ class ChildrenAdapter:
         }
 
     def tag(self, months):
-        if months == 1:
+        if months <=1:
             return ( '1-mes', '1 mês')
         if months > 1:
             return (f"{months}-meses", f"{months} meses")
@@ -52,7 +52,7 @@ class ChildrenAdapter:
         }
         if len(response) == 0:
             return result 
-        
+
         for resp in response:
             result["total-criancas-cadastradas-2-anos"]["data"] = int(resp[0])
             result["total-criancas-atendidas-2-anos"]["data"] = int(resp[1])

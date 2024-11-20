@@ -93,9 +93,9 @@ class DiabetesNominalListRepository:
 	dn.min_date primeiro_atendimento,
 	dn.cids ,
 	dn.ciaps ,
-	dn.diagnostico ,
+	dn.diagnostico 'grupo/condição',
 	dn.data_ultima_visita_acs,
-	case 
+	case e
 		when dn.alerta_visita_acs = 1 then 'SIM'
 		when dn.alerta_visita_acs = 0 then 'NAO'
 	end alerta_visita_acs ,

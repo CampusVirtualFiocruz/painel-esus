@@ -1,4 +1,6 @@
 # pylint: disable= R1703, W0612,C0103
+import os
+
 import pandas as pd
 from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
@@ -32,6 +34,7 @@ class CreatePessoasBaseRepository(CreateBasesRepositoryInterface):
         try:
             update_base_repository = UpdateBasesRepository()
             # update_base_repository.destroy_bases(self._base)
+            os.remove("dados/input/pessoas.csv")
         except (OperationalError, ResourceClosedError) as exc:
             raise NoSuchTableError(
                 f'No {self.get_base()} table found') from exc
@@ -64,6 +67,7 @@ class CreatePessoasBaseRepository(CreateBasesRepositoryInterface):
 
                     df.to_sql(name=self._base, con=local_engine,
                               if_exists='append')
+                    df.to_csv("dados/input/pessoas.csv", mode='a', index=False,sep=";")
 
         except NoSuchTableError:
             logging.info(f'Erro {self._base} already destroyed!')

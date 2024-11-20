@@ -33,8 +33,10 @@
 **/*.db
 **/docker-compose.yaml
 **/deploy.sh
-
-
+**/*.parquet
+**/**/*.parquet
+dados/input/** 
+dados/output/**
 #build
 **/static-files
 **/**/static-files

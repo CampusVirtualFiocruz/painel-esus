@@ -2,9 +2,9 @@ from sqlalchemy import text
 
 
 def group_by_race(cnes: int = None, equipe: int = None):
-    where_clause = " "
+    where_clause = " where pessoas.raca_cor is NOT NULL"
     if cnes is not None and cnes:
-        where_clause += f" where equipes.codigo_unidade_saude  = {cnes} "
+        where_clause += f" and equipes.codigo_unidade_saude  = {cnes} "
         if equipe is not None and equipe:
             where_clause += f" and equipes.codigo_equipe  = {equipe} "
     sql = f"""

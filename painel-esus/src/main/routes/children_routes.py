@@ -32,7 +32,7 @@ urls = children.urls
 
 @children_bp.route(urls["total"], methods=["GET"], endpoint="children_total")
 @children_bp.route(urls["total"]+"/<cnes>", methods=["GET"], endpoint="children_total_id")
-def children_total():
+def children_total(cnes=None):
     http_response = None
     response = None
     try:
@@ -46,7 +46,7 @@ def children_total():
 
 @children_bp.route(urls["group_by_age_location"], methods=["GET"], endpoint="group_by_age_location")
 @children_bp.route(urls["group_by_age_location"]+"/<cnes>", methods=["GET"], endpoint="group_by_age_location_id")
-def children_grouping_by_ages_location():
+def children_grouping_by_ages_location(cnes=None):
     http_response = None
     response = None
     try:
@@ -65,7 +65,7 @@ def children_grouping_by_ages_location():
     methods=["GET"],
     endpoint="group_by_race_id",
 )
-def children_grouping_by_race():
+def children_grouping_by_race(cnes=None):
     http_response = None
     response = None
     try:
@@ -83,7 +83,7 @@ def children_grouping_by_race():
     methods=["GET"],
     endpoint="group_by_gender_id",
 )
-def children_grouping_by_gender():
+def children_grouping_by_gender(cnes=None):
     http_response = None
     response = None
     try:
@@ -102,7 +102,7 @@ def children_grouping_by_gender():
     methods=["GET"],
     endpoint="grouping_by_location_rate_id",
 )
-def children_grouping_by_location_rate():
+def children_grouping_by_location_rate(cnes=None):
     http_response = None
     response = None
     try:
@@ -121,7 +121,7 @@ def children_grouping_by_location_rate():
     methods=["GET"],
     endpoint="grouping_cares_by_professionals_id",
 )
-def children_grouping_cares_by_professionals():
+def children_grouping_cares_by_professionals(cnes=None):
     http_response = None
     response = None
     try:

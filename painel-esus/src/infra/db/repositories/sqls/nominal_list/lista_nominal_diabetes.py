@@ -18,8 +18,8 @@ max_date as (select max(co_dim_tempo::text::date) max_date from tb_fat_atendimen
 todos_cids as (
         select 
                 tfai.co_fat_cidadao_pec, 
-            regexp_replace(string_agg(tfai.ds_filtro_ciaps,''), '[||]+','|', 'g') cids,
-            regexp_replace(string_agg(tfai.ds_filtro_cids,''), '[||]+','|', 'g') ciaps
+            regexp_replace(string_agg(tfai.ds_filtro_cids,''), '[||]+','|', 'g') cids,
+            regexp_replace(string_agg(tfai.ds_filtro_ciaps,''), '[||]+','|', 'g') ciaps
         from tb_fat_atendimento_individual tfai 
         where 
                 substring(co_dim_tempo::text, 0, 5)<= substring(now()::text, 0, 5)

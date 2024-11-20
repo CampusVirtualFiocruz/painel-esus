@@ -38,7 +38,7 @@ urls = elderly.urls
 @elderly_bp.route(
     urls["total"] + "/<cnes>", methods=["GET"], endpoint="elderly_total_id"
 )
-def elderly_total():
+def elderly_total(cnes=None):
     http_response = None
     response = None
     try:
@@ -59,7 +59,7 @@ def elderly_total():
     methods=["GET"],
     endpoint="group_by_age_location_id",
 )
-def elderly_grouping_by_ages_location():
+def elderly_grouping_by_ages_location(cnes=None):
     http_response = None
     response = None
     try:
@@ -80,7 +80,7 @@ def elderly_grouping_by_ages_location():
     methods=["GET"],
     endpoint="group_by_race_id",
 )
-def elderly_grouping_by_race():
+def elderly_grouping_by_race(cnes=None):
     http_response = None
     response = None
     try:
@@ -99,7 +99,7 @@ def elderly_grouping_by_race():
     methods=["GET"],
     endpoint="group_by_gender_id",
 )
-def elderly_grouping_by_gender():
+def elderly_grouping_by_gender(cnes=None):
     http_response = None
     response = None
     try:
@@ -122,7 +122,7 @@ def elderly_grouping_by_gender():
     methods=["GET"],
     endpoint="grouping_by_imc_rate_id",
 )
-def elderly_grouping_by_imc_rate():
+def elderly_grouping_by_imc_rate(cnes=None):
     http_response = None
     response = None
     try:
@@ -145,7 +145,7 @@ def elderly_grouping_by_imc_rate():
     methods=["GET"],
     endpoint="grouping_by_influenza_rate_id",
 )
-def elderly_grouping_by_influenza_rate():
+def elderly_grouping_by_influenza_rate(cnes=None):
     http_response = None
     response = None
     try:
@@ -170,7 +170,7 @@ def elderly_grouping_by_influenza_rate():
     methods=["GET"],
     endpoint="grouping_by_odonto_rate_id",
 )
-def elderly_grouping_by_odonto_rate():
+def elderly_grouping_by_odonto_rate(cnes=None):
     http_response = None
     response = None
     try:
@@ -193,7 +193,7 @@ def elderly_grouping_by_odonto_rate():
     methods=["GET"],
     endpoint="grouping_hipertesnion_diabetes_rate_id",
 )
-def elderly_grouping_hipertesnion_diabetes_rate():
+def elderly_grouping_hipertesnion_diabetes_rate(cnes=None):
     http_response = None
     response = None
     try:
