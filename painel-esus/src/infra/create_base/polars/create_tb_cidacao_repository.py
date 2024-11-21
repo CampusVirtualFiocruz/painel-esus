@@ -34,7 +34,7 @@ class CreateCidadaoBaseRepository(CreateBasesRepositoryInterface):
             offset = 0
             chunk_size = 50000
             parquet_file = f"{self._base}.parquet"
-            os.remove("dados/input/" + parquet_file)
+            # os.remove("dados/input/" + parquet_file)
             writer = None 
             while _next:
                 with DBConnectionHandler() as db:

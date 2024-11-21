@@ -30,7 +30,7 @@ class CreateDimEquipesBaseRepository(CreateBasesRepositoryInterface):
             _next = True
             offset = 0
             parquet_file = f"{self._base}.parquet"
-            os.remove("dados/input/" + parquet_file)
+            # os.remove("dados/input/" + parquet_file)
             chunk_size = 30000
             writer = None 
             while _next:
