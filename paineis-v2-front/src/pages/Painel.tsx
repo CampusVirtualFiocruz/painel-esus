@@ -7,9 +7,11 @@ import { Button } from "bold-ui";
 
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
-import { getUserLocalStorage } from "../context/AuthProvider/util";
-
 import { formataNumero, getNomeUbs, somaIndicador } from "../utils";
+import { Condicao } from "../charts/Condicao";
+import Piramide from "../charts/Piramide";
+import { Zonas } from "../charts/Zonas";
+import { Api } from "../services/api";
 
 import masculino from "../assets/images/masculino.svg";
 import feminino from "../assets/images/feminino.svg";
@@ -19,13 +21,7 @@ import diabetes from "../assets/images/menu/diabetes.png";
 import hipertensao from "../assets/images/menu/hipertensao.png";
 import children from "../assets/images/menu/children.png";
 import old from "../assets/images/menu/old.png";
-
-import { Condicao } from "../charts/Condicao";
-import Piramide from "../charts/Piramide";
-import { Zonas } from "../charts/Zonas";
-
-import { Api } from "../services/api";
-import { Api as Api2 } from "../services/api2";
+import quality from "../assets/images/menu/quality.png";
 
 import { useInfo } from "../context/infoProvider/useInfo";
 
@@ -38,7 +34,7 @@ import {
 } from "../components/ui/Tooltip";
 import { Typography } from "../components/ui/Typography";
 import Card from "../components/ui/Card";
-import { isUserFromUBS, userCanSelectUBS } from "../App";
+import { userCanSelectUBS } from "../App";
 
 type PainelParams = {
   id: string;
@@ -53,10 +49,7 @@ type TypeUbs = {
   value: number | string;
   qtd?: number;
 };
-type TypeCondiction = {
-  value: number;
-  name: string;
-};
+
 const customControlStyles: CSSProperties = {
   width: "320px",
   height: "40px",
@@ -120,34 +113,16 @@ type Lista = {
 type ResponseDataListUbs = {
   data: Lista[];
 };
-type TResponse = {
-  co_dim_tempo: string;
-  nu_cnes: string;
-  type: string;
-  ds_filtro_cids: number;
-  local: string;
-};
-type OralHealthResponse = {
-  total: number;
-  ds_tipo_localizacao: string;
-};
+
 export function Painel() {
   let navigate = useNavigate();
-  const user = getUserLocalStorage();
   const { id } = useParams<PainelParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe");
-
-  const { cityInformation, city } = useInfo();
-
+  const { cityInformation } = useInfo();
   const [dadosPainel, setDadosPainel] = useState<IPainel>();
   const [loading, setLoading] = useState(true);
-  const [infecoesQtd, setInfecoesQtd] = useState<TypeCondiction[]>([
-    { value: 12, name: "Rural" },
-    { value: 21, name: "Urbano" },
-  ]);
 
-  //get-demographic-info
   useEffect(() => {
     const getDados = async () => {
       let rota = id
@@ -173,68 +148,6 @@ export function Painel() {
     };
   }, [id]);
 
-  // const {
-  //   data: sindromesAgudasData,
-  //   isLoading,
-  //   error,
-  // } = useQuery(["sindromes-agudas", id], async () => {
-  //   // let path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
-  //   let path = "/saida.json";
-  //   const response = await Api2.get(path);
-  //   let data = response.data;
-  //   const result = [
-  //     { value: 0, name: "Rural" },
-  //     { value: 0, name: "Urbano" },
-  //   ];
-  //   if (id) {
-  //     data = data.filter((item: TResponse) => item.nu_cnes == id);
-  //   }
-  //   let total = 0;
-  //   data.map((item: TResponse) => {
-  //     if (item.local == "Rural") {
-  //       result[0].value += item.ds_filtro_cids;
-  //     } else {
-  //       result[1].value += item.ds_filtro_cids;
-  //     }
-  //     total += item.ds_filtro_cids;
-  //   });
-  //   setInfecoesQtd(result);
-  //   return data;
-  // });
-  // const {
-  //   data: dataOralHealth,
-  //   isLoading: isLoadingOralHealth,
-  //   error: errorOralHealth,
-  // } = useQuery(["oral-health/get-all-cares-by-place", id], async () => {
-  //   const url = "oral-health/get-all-cares-by-place";
-  //   const path = id ? `${url}/${id}` : url;
-  //   const response = await Api.get<OralHealthResponse[]>(path);
-  //   const data = response.data;
-  //   const resp = {
-  //     rural: {
-  //       total: 0,
-  //       ds_tipo_localizacao: "Rural",
-  //     },
-  //     urbano: {
-  //       total: 0,
-  //       ds_tipo_localizacao: "Urbana",
-  //     },
-  //   };
-  //   const rural = data.find(
-  //     (i) => i.ds_tipo_localizacao.toLowerCase() === "rural"
-  //   );
-  //   if (rural !== undefined) {
-  //     resp["rural"] = rural;
-  //   }
-  //   const urbano = data.find(
-  //     (i) => i.ds_tipo_localizacao.toLowerCase() === "urbana"
-  //   );
-  //   if (urbano !== undefined) {
-  //     resp["urbano"] = urbano;
-  //   }
-  //   return resp;
-  // });
-  //get nome ubs
   const {
     data: dataUbs,
     isLoading: isLoadingUbs,
@@ -259,7 +172,6 @@ export function Painel() {
     }
   );
 
-  //get nome ubs
   const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : "-";
 
   function handleToPainelMunicipio() {
@@ -272,13 +184,15 @@ export function Painel() {
     navigate(`/painel/${e.value}`);
   };
 
-  /* function handleToGestante() {
+  const openReport = (
+    report: "diabetes" | "hipertensao" | "infantil" | "qualidade" | "idosa"
+  ) => {
     if (id !== undefined) {
-      navigate(`/gestantes/${id}`);
+      navigate(`/diabetes/${id}${equipe ? `?equipe=${equipe}` : ""}`);
     } else {
-      navigate("/gestantes");
+      navigate(`/diabetes${equipe ? `?equipe=${equipe}` : ""}`);
     }
-  } */
+  };
 
   function handleToDiabetes() {
     if (id !== undefined) {
@@ -304,6 +218,14 @@ export function Painel() {
     }
   }
 
+  function handleToQualidade() {
+    if (id !== undefined) {
+      navigate(`/qualidade/${id}${equipe ? `?equipe=${equipe}` : ""}`);
+    } else {
+      navigate(`/qualidade${equipe ? `?equipe=${equipe}` : ""}`);
+    }
+  }
+
   function handleToIdosa() {
     if (id !== undefined) {
       navigate(`/idosa/${id}${equipe ? `?equipe=${equipe}` : ""}`);
@@ -311,21 +233,6 @@ export function Painel() {
       navigate(`/idosa${equipe ? `?equipe=${equipe}` : ""}`);
     }
   }
-
-  /*   function handleToSindromesAgudas() {
-    if (id !== undefined) {
-      navigate(`/sindromes-agudas/${id}`);
-    } else {
-      navigate("/sindromes-agudas");
-    }
-  }
-  function handleToOralHealth() {
-    if (id !== undefined) {
-      navigate(`/saude-bucal/${id}`);
-    } else {
-      navigate("/saude-bucal");
-    }
-  } */
 
   return (
     <div id="page-painel">
@@ -518,26 +425,41 @@ export function Painel() {
             <div className="row container-cards-condicoes">
               <div className="card-condicao p-2" onClick={handleToDiabetes}>
                 <span className="nome-condicao">Diabetes</span>
-                <h4>{somaIndicador(dadosPainel?.indicators.diabetes)}</h4>
+                <h4>{somaIndicador(dadosPainel?.indicators?.diabetes)}</h4>
                 <div className="d-flex align-items-center">
                   <img src={diabetes} alt="Diabetes" className="mx-2" />
-                  <Condicao data={dadosPainel?.indicators.diabetes} />
+                  <Condicao data={dadosPainel?.indicators?.diabetes} />
                 </div>
               </div>
               <div className="card-condicao p-2" onClick={handleToHipertensao}>
                 <span className="nome-condicao">Hipertensão</span>
-                <h4>{somaIndicador(dadosPainel?.indicators.hipertensao)}</h4>
+                <h4>{somaIndicador(dadosPainel?.indicators?.hipertensao)}</h4>
                 <div className="d-flex align-items-center">
                   <img src={hipertensao} alt="Hipertensão" className="mx-2" />
-                  <Condicao data={dadosPainel?.indicators.hipertensao} />
+                  <Condicao data={dadosPainel?.indicators?.hipertensao} />
                 </div>
               </div>
-              {Boolean(dadosPainel?.indicators.crianca) && (
+              {Boolean(dadosPainel?.indicators?.qualidade) && (
+                <div className="card-condicao p-2" onClick={handleToQualidade}>
+                  <span className="nome-condicao">Qualidade de Cadastros</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.qualidade)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img
+                      width={"30%"}
+                      src={quality}
+                      alt="Qualidade"
+                      className="mx-2"
+                    />
+                    <Condicao data={dadosPainel?.indicators?.qualidade} />
+                  </div>
+                </div>
+              )}
+              {Boolean(dadosPainel?.indicators?.crianca) && (
                 <div className="card-condicao p-2" onClick={handleToInfantil}>
                   <span className="nome-condicao">
                     Desenvolvimento Infantil
                   </span>
-                  <h4>{somaIndicador(dadosPainel?.indicators.crianca)}</h4>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.crianca)}</h4>
                   <div className="d-flex align-items-center">
                     <img
                       width={"30%"}
@@ -545,14 +467,14 @@ export function Painel() {
                       alt="Desenvolvimento Infantil"
                       className="mx-2"
                     />
-                    <Condicao data={dadosPainel?.indicators.crianca} />
+                    <Condicao data={dadosPainel?.indicators?.crianca} />
                   </div>
                 </div>
               )}
-              {Boolean(dadosPainel?.indicators.idosa) && (
+              {Boolean(dadosPainel?.indicators?.idosa) && (
                 <div className="card-condicao p-2" onClick={handleToIdosa}>
                   <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
-                  <h4>{somaIndicador(dadosPainel?.indicators.idosa)}</h4>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>
                   <div className="d-flex align-items-center">
                     <img
                       width={"30%"}
@@ -560,62 +482,10 @@ export function Painel() {
                       alt="Pessoa Idosa"
                       className="mx-2"
                     />
-                    <Condicao data={dadosPainel?.indicators.idosa} />
+                    <Condicao data={dadosPainel?.indicators?.idosa} />
                   </div>
                 </div>
               )}
-              {/* <div className="card-condicao p-2" onClick={handleToGestante}>
-                                <span className="nome-condicao">Gestantes</span>
-                                <h4>{somaIndicador(dadosPainel?.indicators.gestantes)}</h4>
-
-                                <div className="d-flex align-items-center">
-                                    <img src={gestantes} alt="Gestantes" className="mx-2" />
-                                    <Condicao data={dadosPainel?.indicators.gestantes} />
-                                </div>
-                            </div> */}
-              {/*<div
-                className="card-condicao p-2"
-                onClick={handleToSindromesAgudas}
-              >
-                <span className="nome-condicao">Síndromes Agudas</span>
-                <h4>
-                  {somaIndicador({
-                    rural: infecoesQtd[0].value,
-                    urbano: infecoesQtd[1].value,
-                  })}
-                </h4>
-
-                <div className="d-flex align-items-center">
-                  <img src={tosse} alt="Sindrome Aguda" className="mx-2" />
-                  <Condicao
-                    data={{
-                      rural: infecoesQtd[0].value,
-                      urbano: infecoesQtd[1].value,
-                    }}
-                  />
-                </div>
-              </div>*/}
-              {/* {!isLoadingOralHealth && dataOralHealth && (
-                <div className="card-condicao p-2" onClick={handleToOralHealth}>
-                  <span className="nome-condicao">Saúde Bucal</span>
-                  <h4>
-                    {somaIndicador({
-                      rural: dataOralHealth["rural"].total,
-                      urbano: dataOralHealth["urbano"].total,
-                    })}
-                  </h4>
-
-                  <div className="d-flex align-items-center">
-                    <img src={thooth} alt="Saúde Bucal" className="mx-2" />
-                    <Condicao
-                      data={{
-                        rural: dataOralHealth["rural"].total,
-                        urbano: dataOralHealth["urbano"].total,
-                      }}
-                    />
-                  </div>
-                </div>
-              )} */}
             </div>
 
             <div className="d-flex my-5 justify-content-center">

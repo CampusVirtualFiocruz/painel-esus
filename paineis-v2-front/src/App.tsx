@@ -206,6 +206,14 @@ function App() {
                 }
               />
               <Route
+                path="/qualidade/:id"
+                element={
+                  <ProtectedLayout>
+                    <Qualidade />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
                 path="/infantil"
                 element={
                   <ProtectedLayout>
