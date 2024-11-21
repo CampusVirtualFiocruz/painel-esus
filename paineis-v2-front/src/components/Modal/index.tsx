@@ -208,7 +208,7 @@ export function bodyDetalhesCadastro(item: any) {
         {Array.isArray(item?.detalhesCondicaoSaude) &&
           item?.detalhesCondicaoSaude.map((condicao: any) => (
             <>
-              <div className="health-condition">
+              {Boolean(condicao?.cidCondicaoSaude || condicao?.primeiroDiagnostico) ? <div className="health-condition">
                 {condicao?.cidCondicaoSaude && <><p>
                   Condição de saúde: CID {condicao?.cidCondicaoSaude.join(", ")}
                 </p></>}
@@ -216,7 +216,7 @@ export function bodyDetalhesCadastro(item: any) {
                   Data do primeiro registro da condição:{" "}
                   {parseText(condicao?.primeiroDiagnostico)}
                 </p></>}
-              </div>
+              </div> : <br />}
               {Array.isArray(condicao?.registros) &&
                 condicao?.registros.map((registro: any) => (
                   <div className="latest-checkups">
