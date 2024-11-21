@@ -7,6 +7,7 @@ export const content: any = {
   masc: "Masculino",
   fem: "Feminino",
   "nao-informado": "Não informado",
+  "total": "Total",
 
   "1-meses": "1 mês",
   "2-meses": "2 meses",
@@ -15,6 +16,14 @@ export const content: any = {
   "6-meses": "6 meses",
   "9-meses": "9 meses",
   "12-meses": "12 meses",
+
+  "60-a-64-anos": "60 a 64 anos",
+  "65-a-69-anos": "65 a 69 anos",
+  "70-a-74-anos": "70 a 74 anos",
+  "75-a-79-anos": "75 a 79 anos",
+  "80-a-84-anos": "80 a 84 anos",
+  "85-a-89-anos": "85 a 89 anos",
+  "90-a-94-anos": "90 a 94 anos",
 
   "amarela": "Amarela",
   "parda": "Parda",
@@ -34,7 +43,7 @@ export const content: any = {
 
   "hipertensao": "Hipertensão",
   "diabetes": "Diabetes",
-  "hipertensao-diabetes-associadas": "Hipertensão e Diabetes Associadas",
+  "hipertensao-diabetes-associadas": "Hipertensão\ne Diabetes\nAssociadas",
 
 
   //tabagismo
@@ -99,6 +108,7 @@ export const content: any = {
     "Distribuição de crianças por local de moradia",
 
   //idosas
+  "total-idosas-ubs": "Total de pessoas idosas na UBS",
   "total-raca-cor": "Total de cadastros de pessoas idosas por raça e cor",
   "total-imc": "Total de pessoas idosas de acordo com o IMC",
   "total-proporcao-vacina-influenza":

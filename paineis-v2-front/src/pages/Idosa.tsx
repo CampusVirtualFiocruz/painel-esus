@@ -1,10 +1,11 @@
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
 
 import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
-import { charts } from "../components/charts/idoso.mock";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
+import { PainelParams } from "./Hipertensao";
+import useReportDataIdosas from "../hooks/sctions/idosas/useReportDataIdosas";
 
 const reportHeader = [
   {
@@ -33,7 +34,7 @@ const reportSections = [
         colors: ["#0b5b98", "#6595ff", "#0066b4", "#49e8db", "#0066b4"],
       },
     },
-    "total-imc": {
+    /* "total-imc": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
@@ -43,7 +44,7 @@ const reportSections = [
           name: content?.["total-cadastros"],
         },
       },
-    },
+    },  */
     row: {
       "total-proporcao-vacina-influenza": {
         Chart: Donut,
@@ -56,8 +57,8 @@ const reportSections = [
           },
           componentStyle: {
             width: "100%",
-            minWidth: "170px",
-            height: "170px",
+            minWidth: "150px",
+            height: "150px",
           },
         },
       },
@@ -72,8 +73,8 @@ const reportSections = [
           },
           componentStyle: {
             width: "100%",
-            minWidth: "170px",
-            height: "170px",
+            minWidth: "150px",
+            height: "150px",
           },
         },
       },
@@ -83,20 +84,18 @@ const reportSections = [
     "pessoas-por-faixa-etaria": {
       Chart: Bar,
       config: {
-        hideLegend: true,
         colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
         yAxis: {
-          name: content?.["total-cadastros"],
+          name: content?.["total-idosas-ubs"],
         },
       },
     },
     "pessoas-por-sexo": {
       Chart: Bar,
       config: {
-        hideLegend: true,
         colors: ["rgba(57,150,193,255)", "rgba(92,210,200,255)", "#dddddd"],
         yAxis: {
-          name: content?.["total-cadastros"],
+          name: content?.["total-idosas-ubs"],
         },
       },
     },
@@ -105,20 +104,17 @@ const reportSections = [
       config: {
         hideLegend: true,
         colors: ["#0069d0", "#49e8db", "#84aaff"],
-        yAxis: {
-          name: content?.["total-cadastros"],
-        },
         invertAxis: true,
       },
     },
   },
 ];
 
-const RenderChartGroup = ({ chartList, renderSmall }: any) => {
+const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
   return Object.keys(chartList).map((chartKey) => {
     const CustomChart = chartList?.[chartKey]?.Chart;
     const chartConfigs = chartList?.[chartKey]?.config;
-    const data = (charts as any)?.[chartKey]?.data;
+    const data = (report as any)?.[chartKey]?.data;
     const isRow = chartKey === "row";
 
     if (chartConfigs) {
@@ -136,14 +132,24 @@ const RenderChartGroup = ({ chartList, renderSmall }: any) => {
             flexDirection: "row",
           }}
         >
-          <RenderChartGroup chartList={chartList?.[chartKey]} renderSmall />
+          <RenderChartGroup
+            report={report}
+            chartList={chartList?.[chartKey]}
+            renderSmall
+          />
         </div>
       );
     }
 
     return (
       <div style={{ marginBottom: "40px" }}>
-        <h5 style={{ fontWeight: "bold", textAlign: "center", padding: renderSmall ? "30px": "initial" }}>
+        <h5
+          style={{
+            fontWeight: "bold",
+            textAlign: "center",
+            padding: renderSmall ? "30px" : "initial",
+          }}
+        >
           {content?.[chartKey] || chartKey}
         </h5>
         <CustomChart data={data} config={chartConfigs} />
@@ -153,8 +159,16 @@ const RenderChartGroup = ({ chartList, renderSmall }: any) => {
 };
 
 const Idosa = () => {
+  const { id } = useParams<PainelParams>();
   const [params] = useSearchParams();
-  const equipe = params.get("equipe");
+  const equipe = params.get("equipe") as any;
+
+  const reportData = useReportDataIdosas({ ubsId: id, squadId: equipe });
+  const report = reportData?.data;
+
+  if (reportData?.isLoading) {
+    return <center>Aguarde...</center>;
+  }
 
   return (
     <ReportWrapper
@@ -191,7 +205,7 @@ const Idosa = () => {
                     Object.keys(chartList).map((chartKey) => {
                       const CustomChart = chartList?.[chartKey]?.Chart;
                       const chartConfigs = chartList?.[chartKey]?.config;
-                      const data = (charts as any)?.[chartKey]?.data;
+                      const data = (report as any)?.[chartKey]?.data;
 
                       return <CustomChart data={data} config={chartConfigs} />;
                     })
@@ -203,7 +217,7 @@ const Idosa = () => {
           {colIndex === 1 && (
             <div style={{ paddingTop: "60px", content: " " }} />
           )}
-          <RenderChartGroup chartList={chartList} />
+          <RenderChartGroup report={report} chartList={chartList} />
         </div>
       ))}
     </ReportWrapper>

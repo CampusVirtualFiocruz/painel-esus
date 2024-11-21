@@ -75,7 +75,6 @@ export function Bar(props: BarChart) {
         nameLocation: "middle",
         nameGap: 40,
       },
-      //{ ...(props?.config?.yAxis ?? {}) },
     ],
     series: chartSeries,
   };
@@ -92,7 +91,7 @@ export function Bar(props: BarChart) {
       style={{
         width: "100%",
         minWidth: "316px",
-        height: "460px",
+        height: "500px",
       }}
       opts={{ renderer: "svg" }}
     />

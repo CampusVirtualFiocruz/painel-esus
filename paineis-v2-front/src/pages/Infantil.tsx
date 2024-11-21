@@ -1,6 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
-import { DonutChart } from "../charts/Donut";
 import {
   Bar,
   Donut,
@@ -8,7 +7,6 @@ import {
   ValueCard,
   ProgressBar,
 } from "../components/charts";
-import { charts } from "../components/charts/infantil.mock";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import useReportDataInfantil from "../hooks/sctions/infantil/useReportDataInfantil";
