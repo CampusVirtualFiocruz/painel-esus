@@ -439,7 +439,7 @@ export function Painel() {
                   <Condicao data={dadosPainel?.indicators?.hipertensao} />
                 </div>
               </div>
-              {Boolean(dadosPainel?.indicators?.qualidade) && (
+             {/*  {Boolean(dadosPainel?.indicators?.qualidade) && (
                 <div className="card-condicao p-2" onClick={handleToQualidade}>
                   <span className="nome-condicao">Qualidade de Cadastros</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.qualidade)}</h4>
@@ -453,7 +453,7 @@ export function Painel() {
                     <Condicao data={dadosPainel?.indicators?.qualidade} />
                   </div>
                 </div>
-              )}
+              )} */}
               {Boolean(dadosPainel?.indicators?.crianca) && (
                 <div className="card-condicao p-2" onClick={handleToInfantil}>
                   <span className="nome-condicao">

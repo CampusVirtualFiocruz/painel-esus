@@ -6,6 +6,8 @@ export const content: any = {
   nao: "Não",
   masc: "Masculino",
   fem: "Feminino",
+  masculino: "Masculino",
+  feminino: "Feminino",
   "nao-informado": "Não informado",
   "total": "Total",
 
