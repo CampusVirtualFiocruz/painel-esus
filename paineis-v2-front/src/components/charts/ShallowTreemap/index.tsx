@@ -33,6 +33,9 @@ export function ShallowTreemap(props: DonutChart) {
             fontWeight: "bold",
           },
         },
+        breadcrumb: {
+          show: false
+        },
         data: props.data.reduce(
           (prev, curr) =>
             [
