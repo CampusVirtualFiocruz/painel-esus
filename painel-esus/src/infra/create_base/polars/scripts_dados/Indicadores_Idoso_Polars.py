@@ -20,22 +20,22 @@ from datetime import datetime
 import polars as pl
 from dateutil.relativedelta import relativedelta
 
-pl.Config.set_tbl_cols(100)
-pl.Config.set_tbl_rows(5000)
-pl.Config.set_fmt_str_lengths(100)
-pl.Config.set_tbl_width_chars(900)
-pl.Config.set_fmt_table_cell_list_len(15)
+# pl.Config.set_tbl_cols(100)
+# pl.Config.set_tbl_rows(5000)
+# pl.Config.set_fmt_str_lengths(100)
+# pl.Config.set_tbl_width_chars(900)
+# pl.Config.set_fmt_table_cell_list_len(15)
 
 
 # ### 1. importação de dados
 
 # In[29]:
+print("---")
 working_directory  = os.getcwd()
-
-
 input_path = os.path.join(working_directory, "dados", "input") 
-
 output_path = os.path.join(working_directory, "dados", "output")  
+print(os.path.join(working_directory, "dados", "input"))
+
 
 
 # tb_pessoa = pl.read_parquet(caminho_pasta+"tabela_pessoa_fcp_17102024.parquet")
@@ -98,7 +98,7 @@ acs_tacs = [488, 780]
 
 ## Filtrando para apenas idosos (60 anos ou mais)
 
-print(tb_pessoa.head())
+
 idoso = tb_pessoa.filter(
     (pl.col("idade").cast(pl.Int32) >= 60)).rename({"cidadao_pec" : "co_fat_cidadao_pec"}).with_columns(pl.col("co_fat_cidadao_pec").cast(pl.Int64) ).select("co_fat_cidadao_pec")
 
