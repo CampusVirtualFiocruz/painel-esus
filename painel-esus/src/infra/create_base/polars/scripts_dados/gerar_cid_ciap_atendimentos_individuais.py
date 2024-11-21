@@ -6,6 +6,7 @@ from datetime import datetime
 
 import polars as pl
 from dateutil.relativedelta import relativedelta
+
 pl.Config.set_tbl_cols(100)
 pl.Config.set_tbl_rows(5000)
 
@@ -14,12 +15,12 @@ working_directory  = os.getcwd()
 
 
 
-input_path = working_directory+"/dados/input/" 
+input_path = os.path.join(working_directory, "dados", "input") 
 
-output_path = working_directory+"/dados/output/" 
+output_path = os.path.join(working_directory, "dados", "output")  
 
 
-fai = pl.read_parquet(input_path+"tb_fat_atendimento_individual.parquet")
+fai = pl.read_parquet(input_path+os.sep+"tb_fat_atendimento_individual.parquet")
 
 
 # In[22]:
@@ -98,4 +99,4 @@ final_df = pl.concat([cids_df, ciaps_df,proced_avaliados_df,proced_solicitados_d
 # In[25]:
 
 
-final_df.write_parquet(input_path+"fat_atd_ind_cod.parquet")
+final_df.write_parquet(input_path+os.sep+"fat_atd_ind_cod.parquet")

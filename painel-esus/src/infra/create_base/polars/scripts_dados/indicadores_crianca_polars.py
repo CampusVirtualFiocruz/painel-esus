@@ -15,38 +15,35 @@ from datetime import datetime
 import polars as pl
 from dateutil.relativedelta import relativedelta
 
-pl.Config.set_tbl_cols(100)
-pl.Config.set_tbl_rows(5000)
+# pl.Config.set_tbl_cols(100)
+# pl.Config.set_tbl_rows(5000)
 
 
+print("---")
 working_directory  = os.getcwd()
-
-
-input_path = working_directory+"/dados/input/" 
-
-output_path = working_directory+"/dados/output/" 
-
-
-tb_pessoa = pl.read_csv(input_path + "pessoas.csv", separator=";", ignore_errors=True)
+input_path = os.path.join(working_directory, "dados", "input") 
+output_path = os.path.join(working_directory, "dados", "output")  
+print(os.path.join(working_directory, "dados", "input"))
+tb_pessoa = pl.read_csv(input_path + os.sep + "pessoas.csv", separator=";", ignore_errors=True)
 tb_pessoa = tb_pessoa.with_columns(pl.col("cidadao_pec").cast(pl.Int64))
 
-fai = pl.read_parquet(input_path+"tb_fat_atendimento_individual.parquet")
+fai = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet")
 fai = fai.with_columns(pl.col("co_fat_cidadao_pec").cast(pl.Int64) )
 
-fao = pl.read_parquet(input_path+"tb_fat_atendimento_odonto.parquet")
+fao = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet")
 
 
-faip = pl.read_parquet(input_path+"fat_atd_ind_cod.parquet")
+faip = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
 
-fat_vis_dom = pl.read_parquet(input_path+"tb_fat_visita_domiciliar.parquet")
-
-
-fat_vac = pl.read_parquet(input_path+"tb_fat_vacinacao.parquet")
-
-fat_acomp_vinc = pl.read_parquet(input_path+"tb_acomp_cidadaos_vinculados.parquet")
+fat_vis_dom = pl.read_parquet(input_path + os.sep +"tb_fat_visita_domiciliar.parquet")
 
 
-faip = pl.read_parquet(input_path+"fat_atd_ind_cod.parquet")
+fat_vac = pl.read_parquet(input_path + os.sep +"tb_fat_vacinacao.parquet")
+
+fat_acomp_vinc = pl.read_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet")
+
+
+faip = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
 faip = faip.with_columns(pl.col("co_seq_fat_atd_ind").cast(pl.Int64) )
 
 
@@ -698,7 +695,7 @@ crianca_updated = (crianca
 # In[20]:
 
 
-crianca_updated.write_parquet(output_path+"crianca.parquet")
+crianca_updated.write_parquet(output_path+os.sep+"crianca.parquet")
 
 
 # In[21]:

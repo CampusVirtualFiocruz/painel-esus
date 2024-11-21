@@ -22,9 +22,8 @@ pl.Config.set_tbl_rows(1000)
 working_directory  = os.getcwd()
 
 
-input_path = working_directory+"/dados/input/" 
-
-output_path = working_directory+"/dados/output/" 
+input_path = os.path.join(working_directory, "dados", "input",os.sep) 
+output_path = os.path.join(working_directory,"dados","output", os.sep) 
 
 
 # ## ler dados
@@ -54,7 +53,7 @@ fat_vac = pl.read_parquet(input_path+"tb_fat_vacinacao.parquet")
 
 fcdt = pl.read_parquet(input_path+"tb_fat_cad_domiciliar.parquet")
 
-tb_pessoa = pl.read_csv(input_path+"/pessoas.csv",separator=";",ignore_errors=True)
+tb_pessoa = pl.read_csv( input_path+"pessoas.csv"),separator=";",ignore_errors=True)
 tb_pessoa = tb_pessoa.with_columns(pl.col("cidadao_pec").cast(pl.Int64))
 
 # ## Transformações
@@ -647,7 +646,7 @@ equipe_v2 = equipe.select("cidadao_pec","codigo_equipe","nome_equipe","codigo_un
 equipe_pessoa = equipe_v2.join(tb_pessoa.select('cidadao_pec'),on ='cidadao_pec' , how ='inner')
 
 
-equipe_pessoa.write_parquet(output_path+"equipe.parquet")
+equipe_pessoa.write_parquet(os.path.join(output_path, "equipe.parquet"))
 
 
 end_time = time.time()

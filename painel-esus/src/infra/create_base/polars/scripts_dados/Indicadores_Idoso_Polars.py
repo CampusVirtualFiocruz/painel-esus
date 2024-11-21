@@ -33,26 +33,26 @@ pl.Config.set_fmt_table_cell_list_len(15)
 working_directory  = os.getcwd()
 
 
-input_path = working_directory+"/dados/input/" 
+input_path = os.path.join(working_directory, "dados", "input") 
 
-output_path = working_directory+"/dados/output/" 
+output_path = os.path.join(working_directory, "dados", "output")  
 
 
 # tb_pessoa = pl.read_parquet(caminho_pasta+"tabela_pessoa_fcp_17102024.parquet")
-tb_pessoa = pl.read_csv(input_path+"pessoas.csv",separator=";",ignore_errors=True)
+tb_pessoa = pl.read_csv(input_path+os.sep+"pessoas.csv",separator=";",ignore_errors=True)
 tb_pessoa = tb_pessoa.with_columns(pl.col("cidadao_pec").cast(pl.Int64))
 
-fai = pl.read_parquet(input_path+"tb_fat_atendimento_individual.parquet")
+fai = pl.read_parquet(input_path+os.sep+"tb_fat_atendimento_individual.parquet")
 
 fai = fai.with_columns(pl.col("co_fat_cidadao_pec").cast(pl.Int64) )
 
-fao = pl.read_parquet(input_path+"tb_fat_atendimento_odonto.parquet")
+fao = pl.read_parquet(input_path+os.sep+"tb_fat_atendimento_odonto.parquet")
 
-fat_vis_dom = pl.read_parquet(input_path+"tb_fat_visita_domiciliar.parquet")
+fat_vis_dom = pl.read_parquet(input_path+os.sep+"tb_fat_visita_domiciliar.parquet")
 
-faip = pl.read_parquet(input_path+"fat_atd_ind_cod.parquet")
+faip = pl.read_parquet(input_path+os.sep+"fat_atd_ind_cod.parquet")
 
-tb_fat_vac = pl.read_parquet(input_path+"tb_fat_vacinacao.parquet")
+tb_fat_vac = pl.read_parquet(input_path+os.sep+"tb_fat_vacinacao.parquet")
 
 
 # ### 2. Definindo Funções
@@ -616,7 +616,7 @@ idoso_updated_v2 = (idoso_updated
 # In[52]:
 
 
-idoso_updated_v2.write_parquet(output_path+"idoso.parquet")
+idoso_updated_v2.write_parquet(output_path + os.sep + "idoso.parquet")
 # print("terminou")
 
 # In[50]:

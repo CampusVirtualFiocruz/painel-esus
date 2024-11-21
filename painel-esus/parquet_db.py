@@ -1,9 +1,15 @@
+import os
 import pandas as pd
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+script_path = os.path.abspath('parquet_db.py')
+print(os.path.join(current_dir, "dados", "output", "crianca.parquet"))
 bases = [
-    ("crianca", "./dados/output/crianca.parquet"),
-    ("idoso", "./dados/output/idoso.parquet"),
+    ("crianca", os.path.join(current_dir, "dados", "output", "crianca.parquet")),
+    ("idoso", os.path.join(current_dir, "dados", "output", "idoso.parquet")),
     # ("equipes", "./dados/output/equipe.parquet"),
 ]
 

@@ -52,11 +52,11 @@ from src.infra.create_base.polars import (
     CreateIndicadoresEquipeRepository,
     CreateIndicadoresIdososRepository,
     CreateProcedAtendBaseRepository,
+    CreateTbDimCboRepository,
     CreateTipoEquipeBaseRepository,
     CreateUnidadesSaudeBaseRepository,
     CreateVacinacaoBaseRepository,
     CreateVisistaDomiciliarBaseRepository,
-    CreateTbDimCboRepository,
 )
 
 
@@ -106,10 +106,11 @@ class CreateBasesController:
             ]
             usecase = CreateBasesUseCase(bases_generators=_list)
             usecase.create_bases()
-            
+
             current_dir = os.path.dirname(os.path.abspath(__file__))
 
             script_path = os.path.abspath('parquet_db.py')
+            print("Script de conversao parquet:", script_path)
             resultado = subprocess.run(
                     ['python', script_path],
                     check=True,             # Levanta uma exceção se o comando falhar
