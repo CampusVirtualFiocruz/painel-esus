@@ -79,8 +79,6 @@ const reportSections = [
         },
       },
     },
-  },
-  {
     "pessoas-por-faixa-etaria": {
       Chart: Bar,
       config: {
@@ -90,6 +88,8 @@ const reportSections = [
         },
       },
     },
+  },
+  {
     "pessoas-por-sexo": {
       Chart: Bar,
       config: {
