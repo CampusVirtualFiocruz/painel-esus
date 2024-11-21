@@ -3,13 +3,11 @@ import os
 
 import pandas as pd
 from sqlalchemy import text
-from sqlalchemy.exc import OperationalError
-from sqlalchemy.exc import ResourceClosedError
+from sqlalchemy.exc import OperationalError, ResourceClosedError
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
-from src.errors import InvalidArgument
-from src.errors import NoSuchTableError
+from src.errors import InvalidArgument, NoSuchTableError
 from src.errors.logging import logging
 from src.infra.db.repositories.sqls.pessoa.pessoas import pessoas as PESSOAS
 from src.infra.db.repositories.update_bases import UpdateBasesRepository
@@ -34,7 +32,10 @@ class CreatePessoasBaseRepository(CreateBasesRepositoryInterface):
         try:
             update_base_repository = UpdateBasesRepository()
             # update_base_repository.destroy_bases(self._base)
-            os.remove("dados/input/pessoas.csv")
+            try:
+                os.remove("dados/input/pessoas.csv")
+            except FileNotFoundError:
+                print('pessoas.csv not found')
         except (OperationalError, ResourceClosedError) as exc:
             raise NoSuchTableError(
                 f'No {self.get_base()} table found') from exc
