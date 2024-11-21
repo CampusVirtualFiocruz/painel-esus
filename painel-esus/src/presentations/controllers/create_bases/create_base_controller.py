@@ -56,6 +56,7 @@ from src.infra.create_base.polars import (
     CreateUnidadesSaudeBaseRepository,
     CreateVacinacaoBaseRepository,
     CreateVisistaDomiciliarBaseRepository,
+    CreateTbDimCboRepository,
 )
 
 
@@ -79,6 +80,7 @@ class CreateBasesController:
                 CreateEquipesBaseRepository(),
                 # CreateDimEquipesBaseRepository(),
                 CreateUnidadesSaudeBaseRepository(),
+                CreateTbDimCboRepository(),
                 CreateAtendIndivBaseRepository(),
                 CreateAtendOdontoBaseRepository(),
                 CreateCadIndividualBaseRepository(),

@@ -1,5 +1,6 @@
 # pylint: disable= R1703, W0612,C0103
 import os
+import shutil
 
 from sqlalchemy import text
 from src.data.interfaces.create_bases.create_bases_repository import (
@@ -27,6 +28,8 @@ class CreateStructureBaseRepository(CreateBasesRepositoryInterface):
             raise InvalidArgument('Creation base not passed.')
         try:
             with LocalDBConnectionHandler().get_engine().connect() as con:
+                if os.path.exists("dados"):
+                    shutil.rmtree('dados')
                 if not os.path.exists("dados"):
                     os.mkdir("dados")
                 if not os.path.exists("dados/input"):
