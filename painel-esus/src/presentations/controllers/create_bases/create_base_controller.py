@@ -95,7 +95,6 @@ class CreateBasesController:
                 CreateCidCiapExplodeAtendimentosRepository(),
                 CreateIndicadoresIdososRepository(),
                 CreateIndicadoresCriancasRepository(),
-                CreateIndicadoresEquipeRepository(),
                 CreateUnitsBaseRepository(),
                 CreateAutorreferidoBaseRepository(),
                 CreateDiabetesBasesRepository(),
