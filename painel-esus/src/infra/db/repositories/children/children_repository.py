@@ -124,6 +124,7 @@ class ChildrenRepository:
                 users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
             if equipe is not None and equipe:
                 users = users.filter(Equipes.codigo_equipe == equipe)
+            
             users = users.group_by(Crianca.cidadao_pec)
             total = users.count()
             users = (
@@ -131,7 +132,6 @@ class ChildrenRepository:
                 .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
-            # print(str(users))
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,

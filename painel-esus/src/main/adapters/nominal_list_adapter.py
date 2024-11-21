@@ -295,7 +295,7 @@ class CriancaNominalListAdapter:
                 data=user.indicador_atendimentos_medicos_enfermeiros_puericultura,
                 exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros_puericultura
                 == 1,
-                descricao="data do último atendimento médico/enfermeiro em Puericultura",
+                descricao="data do último atendimento médico/enfermeiro de Puericultura",
                 tipo_alerta="indicador_atendimentos_medicos_enfermeiros_puericultura",
             )
         )

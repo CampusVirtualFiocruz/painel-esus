@@ -209,13 +209,13 @@ export function bodyDetalhesCadastro(item: any) {
           item?.detalhesCondicaoSaude.map((condicao: any) => (
             <>
               <div className="health-condition">
-                <p>
+                {condicao?.cidCondicaoSaude && <><p>
                   Condição de saúde: CID {condicao?.cidCondicaoSaude.join(", ")}
-                </p>
-                <p>
+                </p></>}
+                {condicao?.primeiroDiagnostico && <><p>
                   Data do primeiro registro da condição:{" "}
                   {parseText(condicao?.primeiroDiagnostico)}
-                </p>
+                </p></>}
               </div>
               {Array.isArray(condicao?.registros) &&
                 condicao?.registros.map((registro: any) => (
