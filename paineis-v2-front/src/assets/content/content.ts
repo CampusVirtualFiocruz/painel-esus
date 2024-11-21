@@ -16,6 +16,27 @@ export const content: any = {
   "9-meses": "9 meses",
   "12-meses": "12 meses",
 
+  "amarela": "Amarela",
+  "parda": "Parda",
+  "branca": "Branca",
+  "indigena": "Indígena",
+  "preta": "Preta",
+
+  "normal": "Normal",
+  "baixo-peso": "Baixo Peso",
+  "excesso-peso": "Excesso de Peso",
+
+  "vacinadas": "Vacinadas",
+  "nao-vacinadas": "Não Vacinadas",
+
+  "atendidas": "Atendidas",
+  "nao-atendidas": "Sem atendimento",
+
+  "hipertensao": "Hipertensão",
+  "diabetes": "Diabetes",
+  "hipertensao-diabetes-associadas": "Hipertensão e Diabetes Associadas",
+
+
   //tabagismo
   "proporcao-tabagistas-acompanhadas":
     "Proporção de pessoas tabagistas acompanhadas",

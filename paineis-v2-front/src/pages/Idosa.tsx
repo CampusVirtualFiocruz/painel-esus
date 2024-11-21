@@ -9,14 +9,14 @@ const reportHeader = [
     "total-ubs": {
       Chart: ValueCard,
       config: {
-        description: "Total de crianças até 2 anos cadastradas",
+        description: "Total de pessoas idosas na UBS",
         icon: "paperdark",
       },
     },
     "total-atendidas": {
       Chart: ValueCard,
       config: {
-        description: "Porcentagem de cadastros atualizados",
+        description: "Total de pessoas idosas atendidas",
         icon: "paper",
       },
     },
