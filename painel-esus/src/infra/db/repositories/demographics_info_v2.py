@@ -220,7 +220,11 @@ select count(*) total  from 	cidadaos """
             )
             for resp in result_idoso:
                 key = (
-                    resp[0].lower().replace("zona ", "").replace("n/i", "nao_informado")
+                    resp[0]
+                    .lower()
+                    .replace("zona ", "")
+                    .replace("n/i", "nao_informado")
+                    .replace("urbana", "urbano")
                 )
                 idicators_body["idosa"][key] = int(resp[1])
 
@@ -230,7 +234,7 @@ select count(*) total  from 	cidadaos """
             )
             for resp in result_crianca:
                 key = (
-                    resp[0].lower().replace("zona ", "").replace("n/i", "nao_informado")
+                    resp[0].lower().replace("zona ", "").replace("n/i", "nao_informado").replace("urbana", "urbano")
                 )
                 idicators_body["crianca"][key] = int(resp[1])
 
