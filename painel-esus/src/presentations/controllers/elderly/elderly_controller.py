@@ -1,8 +1,7 @@
 # pylint: disable=W0613
 from src.infra.db.repositories.elderly.elderly_repository import ElderlyRepository
 from src.main.adapters.elderly_adapter import ElderlyAdapter
-from src.main.adapters.request_adapter import HttpRequest
-from src.main.adapters.request_adapter import HttpResponse
+from src.main.adapters.request_adapter import HttpRequest, HttpResponse
 
 
 class ElderlyController:
@@ -62,10 +61,17 @@ class ElderlyController:
         response = self.__use_case.find_group_by_odonto_rate(cnes, equipe)
         result = self._adapter.odonto_rate(response)
         return HttpResponse(status_code=200, body=result)
-    
+
     def grouping_total_disease_related(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
 
         response = self.__use_case.find_total_hipertension_diabetes(cnes, equipe)
         result = self._adapter.total_hipertension_diabetes(response)
+        return HttpResponse(status_code=200, body=result)
+
+    def get_nominal_list(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = self.parse_request(request)
+        response = self.__use_case.find_filter_nominal(cnes=cnes, equipe=equipe)
+
+        result = self._adapter.nominal_list(response)
         return HttpResponse(status_code=200, body=result)

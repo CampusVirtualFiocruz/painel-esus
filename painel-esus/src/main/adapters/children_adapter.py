@@ -105,7 +105,6 @@ class ChildrenAdapter:
         return result
 
     def nominal_list(self, response):
-        print(response["items"])
         response["items"] = [
             CriancaNominalListAdapter(r).to_dict() for r in response["items"]
         ]

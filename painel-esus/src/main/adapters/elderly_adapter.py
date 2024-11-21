@@ -1,4 +1,6 @@
 # pylint: disable=C0103
+from src.main.adapters.nominal_list_adapter import IdosoNominalListAdapter
+
 
 class ElderlyAdapter:
 
@@ -125,3 +127,9 @@ class ElderlyAdapter:
             self._fill_disease_value("hipertensao-diabetes-associadas", response[2])
         )
         return result
+
+    def nominal_list(self, response):
+        response["items"] = [
+            IdosoNominalListAdapter(r).to_dict() for r in response["items"]
+        ]
+        return response

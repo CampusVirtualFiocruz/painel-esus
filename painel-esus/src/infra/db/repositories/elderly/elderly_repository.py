@@ -1,12 +1,63 @@
-from src.infra.db.repositories.elderly.sqls import get_elderly_total_influenza
-from src.infra.db.repositories.elderly.sqls import get_elderly_total_odonto
-from src.infra.db.repositories.elderly.sqls import get_elderly_total_on_ubs_and_team
-from src.infra.db.repositories.elderly.sqls import group_by_age_gender
-from src.infra.db.repositories.elderly.sqls import group_by_age_location
-from src.infra.db.repositories.elderly.sqls import group_by_race
-from src.infra.db.repositories.elderly.sqls import total_hipertension_diabetes
+from src.infra.db.entities.equipes import Equipes
+from src.infra.db.entities.idoso import Idoso
+from src.infra.db.entities.pessoas import Pessoas
+from src.infra.db.repositories.elderly.sqls import (
+    get_elderly_total_influenza,
+    get_elderly_total_odonto,
+    get_elderly_total_on_ubs_and_team,
+    group_by_age_gender,
+    group_by_age_location,
+    group_by_race,
+    total_hipertension_diabetes,
+)
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
+columns = [
+    Idoso.cidadao_pec,
+    Idoso.atendimentos_medicos,
+    Idoso.data_ultimo_atendimento_medicos,
+    Idoso.indicador_atendimentos_medicos,
+    Idoso.medicoes_peso_altura,
+    Idoso.data_ultima_medicao_peso_altura,
+    Idoso.indicador_medicoes_peso_altura,
+    Idoso.imc,
+    Idoso.categoria_imc,
+    Idoso.registros_creatinina,
+    Idoso.data_ultimo_registro_creatinina,
+    Idoso.indicador_registros_creatinina,
+    Idoso.vacinas_influenza,
+    Idoso.data_ultima_vacina_influenza,
+    Idoso.indicador_vacinas_influenza,
+    Idoso.atendimentos_odontologicos,
+    Idoso.data_ultimo_atendimento_odontologico,
+    Idoso.indicador_atendimento_odontologico,
+    Idoso.visitas_domiciliares_acs,
+    Idoso.data_ultima_visita_domiciliar_acs,
+    Idoso.indicador_visitas_domiciliares_acs,
+    Pessoas.co_cidadao,
+    Pessoas.raca_cor,
+    Pessoas.cpf,
+    Pessoas.cns,
+    Pessoas.nome,
+    Pessoas.nome_social,
+    Pessoas.data_nascimento,
+    Pessoas.idade,
+    Pessoas.sexo,
+    Pessoas.identidade_genero,
+    Pessoas.telefone,
+    Pessoas.ultima_atualizacao_cidadao,
+    Pessoas.ultima_atualizacao_fcd,
+    Pessoas.tipo_endereco,
+    Pessoas.endereco,
+    Pessoas.complemento,
+    Pessoas.numero,
+    Pessoas.bairro,
+    Pessoas.cep,
+    Pessoas.tipo_localidade,
+    Equipes.nome_unidade_saude,
+    Equipes.nome_equipe,
+    Equipes.micro_area,
+]
 
 class ElderlyRepository:
 
@@ -51,3 +102,51 @@ class ElderlyRepository:
             sql = total_hipertension_diabetes(cnes, equipe)
             result = con.execute(sql)
             return list(result)
+
+    def find_filter_nominal(
+        self,
+        cnes: int,
+        page: int = 0,
+        pagesize: int = 10,
+        nome: str = None,
+        cpf: str = None,
+        equipe: int = None,
+    ):
+        page = int(page) if page is not None else 0
+        pagesize = int(pagesize) if pagesize is not None else 0
+        with DBConnectionHandler() as db_con:
+            users = (
+                db_con.session.query(*columns)
+                .distinct(Idoso.cidadao_pec)
+                .join(
+                    Pessoas,
+                    Pessoas.cidadao_pec == Idoso.cidadao_pec,
+                )
+                .join(
+                    Equipes,
+                    Equipes.cidadao_pec == Idoso.cidadao_pec,
+                )
+            )
+
+            users = users.filter(Equipes.codigo_unidade_saude == cnes)
+            if nome is not None and nome:
+                users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
+            if cpf is not None and cpf:
+                users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
+            if equipe is not None and equipe:
+                users = users.filter(Equipes.codigo_equipe == equipe)
+
+            users = users.group_by(Idoso.cidadao_pec)
+            total = users.count()
+            users = (
+                users.order_by(Pessoas.nome)
+                .offset(max(0, page - 1) * pagesize)
+                .limit(pagesize)
+            )
+            return {
+                "itemsCount": total,
+                "itemsPerPage": pagesize,
+                "page": page,
+                "pagesCount": round(total / pagesize),
+                "items": list(users),
+            }

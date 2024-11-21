@@ -11,7 +11,7 @@ class Idoso(Base):
     index = Column(Integer, primary_key=True, autoincrement=True)
     cidadao_pec = Column(Integer, ForeignKey("pessoas.cidadao_pec"))
     pessoa: Mapped[Pessoas] = relationship("Pessoas", uselist=False, lazy="subquery")
-    
+
     atendimentos_medicos = Column(Integer) 
     data_ultimo_atendimento_medicos = Column(Date) 
     indicador_atendimentos_medicos = Column(Integer)
@@ -19,7 +19,7 @@ class Idoso(Base):
     data_ultima_medicao_peso_altura = Column(Date) 
     indicador_medicoes_peso_altura = Column(Integer)
     imc =  Column(Float)
-	categoria_imc = Column(String) 
+    categoria_imc = Column(String)
     registros_creatinina = Column(Integer) 
     data_ultimo_registro_creatinina = Column(Date) 
     indicador_registros_creatinina = Column(Integer)

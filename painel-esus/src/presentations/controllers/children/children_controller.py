@@ -71,5 +71,4 @@ class ChildrenController:
         response = self.__use_case.find_filter_nominal(cnes=cnes, equipe=equipe)
 
         result = self._adapter.nominal_list(response)
-        print(result)
         return HttpResponse(status_code=200, body=result)

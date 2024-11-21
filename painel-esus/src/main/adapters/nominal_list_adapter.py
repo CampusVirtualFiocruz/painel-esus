@@ -328,3 +328,76 @@ class CriancaNominalListAdapter:
                 ],
             }
         )
+
+
+class IdosoNominalListAdapter:
+
+    def __init__(self, user: Crianca):
+        self.nome = user.nome
+        self.nome_social = "-"
+        self.tipo_localidade = user.tipo_localidade
+        self.cpf = user.cpf
+        self.cns = user.cns
+        self.idade = user.idade
+        self.sexo = user.sexo
+        self.equipe = user.nome_equipe
+        self.microarea = user.micro_area
+        self.endereco = f"{user.endereco} {user.numero}, {user.bairro}"
+        self.tipo_logradouro = user.tipo_endereco
+        self.complemento = user.complemento
+        self.cep = user.cep
+        self.telefone = user.telefone
+        self.possui_alertas = (
+            user.indicador_atendimentos_medicos == 1
+            or user.indicador_medicoes_peso_altura == 1
+            or user.indicador_registros_creatinina == 1
+            or user.indicador_vacinas_influenza == 1
+            or user.indicador_atendimento_odontologico == 1
+            or user.indicador_visitas_domiciliares_acs == 1
+        )
+        self.registros = []
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultimo_atendimento_medicos,
+                exibir_alerta=user.indicador_atendimentos_medicos == 1,
+                descricao="data do último atendimento médico/enfermeiro",
+                tipo_alerta="data_ultimo_atendimento_medicos",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultima_medicao_peso_altura,
+                exibir_alerta=user.indicador_medicoes_peso_altura == 1,
+                descricao="data da última medição de peso e altura",
+                tipo_alerta="data_ultima_medicao_peso_altura",
+            )
+        )
+
+    def to_dict(self):
+        return dict(
+            {
+                "nome": self.nome,
+                "nomeSocialSelecionado": self.nome_social,
+                "zonaUrbana": self.tipo_localidade == "Urbana",
+                "zonaRural": self.tipo_localidade == "Rural",
+                "possuiAlertas": self.possui_alertas,
+                "cpf": self.cpf,
+                "cns": self.cns,
+                "idade": self.idade,
+                "sexo": self.sexo,
+                "equipe": self.equipe,
+                "microarea": self.microarea,
+                "endereco": self.endereco,
+                "complemento": self.complemento,
+                "tipoLogradouro": self.tipo_logradouro,
+                "cep": self.cep,
+                "telefone": self.telefone,
+                "detalhesCondicaoSaude": [
+                    {
+                        "registros": [
+                            registro.to_dict() for registro in self.registros
+                        ],
+                    }
+                ],
+            }
+        )
