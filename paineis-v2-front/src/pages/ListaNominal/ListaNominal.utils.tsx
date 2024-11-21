@@ -1,5 +1,4 @@
 import { Api } from "../../services/api";
-import { capitalize } from "../../utils";
 import { Icon } from "bold-ui";
 import { capitalizeName } from "../../utils/stringUtils";
 
@@ -63,17 +62,17 @@ export const columns = ({ handleClick }: any) => [
   {
     name: "cpf",
     header: "CPF",
-    render: (item: any) => <b>{item.cpf}</b>,
+    render: (item: any) => <b>{item?.cpf || "-"}</b>,
   },
   {
     name: "cns",
     header: "CNS",
-    render: (item: any) => item.cns,
+    render: (item: any) => item?.cns || "-",
   },
   {
     name: "idade",
     header: "Idade",
-    render: (item: any) => <center>{item.idade}</center>,
+    render: (item: any) => <center>{item?.idade || "-"}</center>,
   },
   // {
   //   name: "diagnostico",
@@ -83,7 +82,7 @@ export const columns = ({ handleClick }: any) => [
   {
     name: "grupo-codicao",
     header: "Grupo/Condição",
-    render: (item: any) => item.diagnostico.toUpperCase(),
+    render: (item: any) => (item?.diagnostico || "-").toUpperCase(),
   },
   {
     name: "sexo",
