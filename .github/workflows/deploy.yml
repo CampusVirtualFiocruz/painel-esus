@@ -2,7 +2,7 @@ name: Build and Deploy to Private Docker Hub
 
 on:
   push:
-    branches: [release/*]
+    branches: [release/xxxx]
 
 jobs:
   build:

@@ -118,7 +118,7 @@ jobs:
                   PASSWORD_SALT: 'painel'
                   BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
                   ENV: linux
-                  GENERATE_BASE=True
+                  GENERATE_BASE: 'True'
                 ports:
                   - 5003:5001
             networks:
