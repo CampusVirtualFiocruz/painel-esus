@@ -1,4 +1,7 @@
 # pylint: disable=C0103,C3001,W0613
+from src.main.adapters.nominal_list_adapter import CriancaNominalListAdapter
+
+
 class ChildrenAdapter:
 
     def fill_value_age_by_sex(self, _tag):
@@ -100,3 +103,9 @@ class ChildrenAdapter:
             value = r[2]
             result.append(result_item(tag, value))
         return result
+
+    def nominal_list(self, response):
+        response["items"] = [
+            CriancaNominalListAdapter(r).to_dict() for r in response["items"]
+        ]
+        return response

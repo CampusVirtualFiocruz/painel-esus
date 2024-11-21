@@ -3,6 +3,7 @@ from lib2to3.pytree import Base
 
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
+from src.infra.db.entities.crianca import Crianca
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.hipertensao_nominal import HipertensaoNominal
 
@@ -245,6 +246,81 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
                     {
                         "cidCondicaoSaude": self.cids,
                         "primeiroDiagnostico": self.primeiro_registro,
+                        "registros": [
+                            registro.to_dict() for registro in self.registros
+                        ],
+                    }
+                ],
+            }
+        )
+
+
+class CriancaNominalListAdapter:
+
+    def __init__(self, user: Crianca):
+        self.nome = user.nome
+        self.nome_social = "-"
+        self.tipo_localidade = user.tipo_localidade
+        self.cpf = user.cpf
+        self.cns = user.cns
+        self.idade = user.idade
+        self.sexo = user.sexo
+        self.equipe = user.nome_equipe
+        self.microarea = user.micro_area
+        self.endereco = f"{user.endereco} {user.numero}, {user.bairro}"
+        self.tipo_logradouro = user.tipo_endereco
+        self.complemento = user.complemento
+        self.cep = user.cep
+        self.telefone = user.telefone
+        self.possui_alertas = (
+            user.indicador_atendimentos_medicos_enfermeiros == 1
+            or user.indicador_atendimentos_medicos_enfermeiros_puericultura == 1
+            or user.indicador_medicoes_peso_altura_ate2anos == 1
+            or user.indicador_visitas_domiciliares_acs == 1
+            or user.indicador_teste_pezinho == 1
+            or user.indicador_atendimentos_odontologicos == 1
+            or user.indicador_vacinas_penta_polio_triplici == 1
+        )
+        self.registros=[]
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultimo_atendimento_medico_enfermeiro,
+                exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros == 1,
+                descricao="data do último atendimento médico/enfermeiro",
+                tipo_alerta="data_ultimo_atendimento_medico_enfermeiro",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.indicador_atendimentos_medicos_enfermeiros_puericultura,
+                exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros_puericultura
+                == 1,
+                descricao="data do último atendimento médico/enfermeiro em Puericultura",
+                tipo_alerta="indicador_atendimentos_medicos_enfermeiros_puericultura",
+            )
+        )
+
+    def to_dict(self):
+        return dict(
+            {
+                "nome": self.nome,
+                "nomeSocialSelecionado": self.nome_social,
+                "zonaUrbana": self.tipo_localidade == "Urbana",
+                "zonaRural": self.tipo_localidade == "Rural",
+                "possuiAlertas": self.possui_alertas,
+                "cpf": self.cpf,
+                "cns": self.cns,
+                "idade": self.idade,
+                "sexo": self.sexo,
+                "equipe": self.equipe,
+                "microarea": self.microarea,
+                "endereco": self.endereco,
+                "complemento": self.complemento,
+                "tipoLogradouro": self.tipo_logradouro,
+                "cep": self.cep,
+                "telefone": self.telefone,
+                "detalhesCondicaoSaude": [
+                    {
                         "registros": [
                             registro.to_dict() for registro in self.registros
                         ],

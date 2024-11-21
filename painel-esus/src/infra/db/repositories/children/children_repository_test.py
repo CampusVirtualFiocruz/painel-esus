@@ -97,3 +97,13 @@ def test_children_by_race():
     adapter = ChildrenAdapter()
     result = adapter.children_group_by_race(data)
     pprint(result)
+
+
+def test_children_nominal_list():
+    repo = ChildrenRepository()
+    data = []
+    data = repo.find_filter_nominal(cnes=25)
+
+    adapter = ChildrenAdapter()
+    result = adapter.nominal_list(data)
+    pprint(result)
