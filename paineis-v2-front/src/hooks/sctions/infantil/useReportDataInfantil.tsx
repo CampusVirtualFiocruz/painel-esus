@@ -12,35 +12,61 @@ const useReportDataInfantil = ({ ubsId, squadId }: reportBasicInfo) => {
     async () => {
       const ubsParam = ubsId ? `/${ubsId}` : "";
 
-      const requests = [
-        Api.get(`/children/total`),
-        Api.get(`/children/group-by-race${ubsParam}`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-        Api.get(`/children/group-by-age-location`),
-        Api.get(`/children/group-by-gender${ubsParam}`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-        Api.get(`/children/group-cares-by-professionals${ubsParam}`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-      ];
+      const requests = {
+        indicadores: Api.get(`/children/total`),
+        "total-cadastros-criancas-raca-cor": Api.get(
+          `/children/group-by-race${ubsParam}`,
+          {
+            params: {
+              equipe: squadId,
+            },
+          }
+        ),
+        "distribuicao-criancas-faixa-etaria": Api.get(
+          `/children/group-by-age-location`
+        ),
+        "distribuicao-criancas-sexo": Api.get(
+          `/children/group-by-gender${ubsParam}`,
+          {
+            params: {
+              equipe: squadId,
+            },
+          }
+        ),
+        "distribuicao-criancas-local": Api.get(
+          `/children/group-by-location-rate${ubsParam}`,
+          {
+            params: {
+              equipe: squadId,
+            },
+          }
+        ),
+        "total-extratificacao-por-profissional": Api.get(
+          `/children/group-cares-by-professionals${ubsParam}`,
+          {
+            params: {
+              equipe: squadId,
+            },
+          }
+        ),
+      };
 
-      const results = await Promise.all(requests);
-      const reducedData = results.reduce(
-        (prev, curr) => ({ ...prev, ...curr.data }),
+      const results = await Promise.all(Object.values(requests));
+
+      const reducedData:any = results.reduce(
+        (prev, curr, currIndex) => ({
+          ...prev,
+          [Object.keys(requests)?.[currIndex]]: {
+            ["data"]: curr?.data?.data || curr.data,
+          },
+        }),
         {}
       );
 
-      console.log("resultados :", { reducedData });
-
-      return reducedData;
+      return {
+        ...reducedData,
+        ...reducedData?.indicadores?.data
+      };
     },
     {
       staleTime: 1000 * 60 * 10, //10 minutos

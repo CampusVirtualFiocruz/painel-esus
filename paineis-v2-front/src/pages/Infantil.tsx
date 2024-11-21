@@ -27,7 +27,7 @@ const reportHeader = [
         description: "Porcentagem de cadastros atualizados",
         icon: "paper",
       },
-    },
+    }, 
   },
 ];
 
@@ -38,13 +38,13 @@ const reportSections = [
       config: {
         colors: ["#0b5b98", "#6595ff", "#0066b4", "#49e8db", "#0066b4"],
       },
-    },
+    },  
     "total-extratificacao-por-profissional": {
       Chart: ProgressBar,
-    },
+    },  
   },
   {
-    "distribuicao-criancas-faixa-etaria": {
+     "distribuicao-criancas-faixa-etaria": {
       Chart: Bar,
       config: {
         hideLegend: true,
@@ -54,7 +54,7 @@ const reportSections = [
         },
       },
     },
-    "distribuicao-criancas-sexo": {
+   "distribuicao-criancas-sexo": {
       Chart: Bar,
       config: {
         hideLegend: true,
@@ -74,15 +74,19 @@ const reportSections = [
           name: content?.["total-cadastros"],
         },
       },
-    },
+    }, 
   },
 ];
 
 const Infantil = () => {
   const reportData = useReportDataInfantil({ ubsId: "9" });
-  const mockData = { ...charts, ...reportData?.data };
+  const report = reportData?.data;
 
-  console.log({ mockData });
+  console.log({ report });
+
+  if(reportData?.isLoading){
+    return <center>Aguarde...</center>
+  }
 
   return (
     <ReportWrapper
@@ -92,7 +96,7 @@ const Infantil = () => {
     >
       {reportSections.map((chartList: any, colIndex) => (
         <div className="col-12 col-md-6">
-          {colIndex === 0 && (
+           {colIndex === 0 && (
             <>
               <div
                 style={{
@@ -119,22 +123,21 @@ const Infantil = () => {
                     Object.keys(chartList).map((chartKey) => {
                       const CustomChart = chartList?.[chartKey]?.Chart;
                       const chartConfigs = chartList?.[chartKey]?.config;
-                      const data = (mockData as any)?.[chartKey]?.data;
+                      const data = (report as any)?.[chartKey]?.data;
                       return <CustomChart data={data} config={chartConfigs} />;
                     })
                   )}
                 </div>
               </div>
             </>
-          )}
-
+          )} 
           {colIndex === 1 && (
             <div style={{ paddingTop: "60px", content: " " }} />
           )}
           {Object.keys(chartList).map((chartKey) => {
             const CustomChart = chartList?.[chartKey]?.Chart;
             const chartConfigs = chartList?.[chartKey]?.config;
-            const data = (mockData as any)?.[chartKey]?.data;
+            const data = (report as any)?.[chartKey]?.data;
 
             if (chartConfigs) {
               const xAxisNames = data?.map(

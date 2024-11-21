@@ -94,6 +94,9 @@ interface IPainel {
     diabetes: Indicator;
     gestantes: Indicator;
     hipertensao: Indicator;
+    crianca: Indicator;
+    idosa: Indicator;
+    qualidade: Indicator;
   };
   locationArea: {
     rural: number;
@@ -529,22 +532,38 @@ export function Painel() {
                   <Condicao data={dadosPainel?.indicators.hipertensao} />
                 </div>
               </div>
-              <div className="card-condicao p-2" onClick={handleToInfantil}>
-                <span className="nome-condicao">Desenvolvimento Infantil</span>
-                <h4>{somaIndicador(dadosPainel?.indicators.hipertensao)}</h4>
-                <div className="d-flex align-items-center">
-                  <img width={"30%"} src={children} alt="Desenvolvimento Infantil" className="mx-2" />
-                  {/* <Condicao data={dadosPainel?.indicators.infantil} /> */}
+              {Boolean(dadosPainel?.indicators.crianca) && (
+                <div className="card-condicao p-2" onClick={handleToInfantil}>
+                  <span className="nome-condicao">
+                    Desenvolvimento Infantil
+                  </span>
+                  <h4>{somaIndicador(dadosPainel?.indicators.crianca)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img
+                      width={"30%"}
+                      src={children}
+                      alt="Desenvolvimento Infantil"
+                      className="mx-2"
+                    />
+                    <Condicao data={dadosPainel?.indicators.crianca} />
+                  </div>
                 </div>
-              </div>
-              <div className="card-condicao p-2" onClick={handleToIdosa}>
-                <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
-                <h4>{somaIndicador(dadosPainel?.indicators.hipertensao)}</h4>
-                <div className="d-flex align-items-center">
-                  <img width={"30%"} src={old} alt="Pessoa Idosa" className="mx-2" />
-                  {/* <Condicao data={dadosPainel?.indicators.idosa} /> */}
+              )}
+              {Boolean(dadosPainel?.indicators.idosa) && (
+                <div className="card-condicao p-2" onClick={handleToIdosa}>
+                  <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators.idosa)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img
+                      width={"30%"}
+                      src={old}
+                      alt="Pessoa Idosa"
+                      className="mx-2"
+                    />
+                    <Condicao data={dadosPainel?.indicators.idosa} />
+                  </div>
                 </div>
-              </div>
+              )}
               {/* <div className="card-condicao p-2" onClick={handleToGestante}>
                                 <span className="nome-condicao">Gestantes</span>
                                 <h4>{somaIndicador(dadosPainel?.indicators.gestantes)}</h4>

@@ -202,6 +202,7 @@
         top: 0px;
         position: relative;
         z-index: 0;
+        overflow: hidden;
 
         &:hover {
           cursor: pointer;
