@@ -56,8 +56,8 @@ const reportSections = [
           },
           componentStyle: {
             width: "100%",
-            minWidth: "140px",
-            height: "140px",
+            minWidth: "170px",
+            height: "170px",
           },
         },
       },
@@ -72,8 +72,8 @@ const reportSections = [
           },
           componentStyle: {
             width: "100%",
-            minWidth: "140px",
-            height: "140px",
+            minWidth: "170px",
+            height: "170px",
           },
         },
       },
@@ -104,7 +104,7 @@ const reportSections = [
       Chart: Bar,
       config: {
         hideLegend: true,
-        colors: ["rgba(57,150,193,255)", "rgba(92,210,200,255)", "#dddddd"],
+        colors: ["#0069d0", "#49e8db", "#84aaff"],
         yAxis: {
           name: content?.["total-cadastros"],
         },
@@ -134,7 +134,6 @@ const RenderChartGroup = ({ chartList, renderSmall }: any) => {
             width: "100%",
             display: "flex",
             flexDirection: "row",
-            gap: "20px",
           }}
         >
           <RenderChartGroup chartList={chartList?.[chartKey]} renderSmall />
@@ -144,7 +143,7 @@ const RenderChartGroup = ({ chartList, renderSmall }: any) => {
 
     return (
       <div style={{ marginBottom: "40px" }}>
-        <h5 style={{ fontWeight: "bold", textAlign: "center" }}>
+        <h5 style={{ fontWeight: "bold", textAlign: "center", padding: renderSmall ? "30px": "initial" }}>
           {content?.[chartKey] || chartKey}
         </h5>
         <CustomChart data={data} config={chartConfigs} />

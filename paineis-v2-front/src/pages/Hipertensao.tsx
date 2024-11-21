@@ -28,7 +28,7 @@ type TModal = {
   cnes?: string | undefined;
 };
 
-type PainelParams = {
+export type PainelParams = {
   id: string;
 };
 

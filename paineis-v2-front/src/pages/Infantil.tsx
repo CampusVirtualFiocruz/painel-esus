@@ -1,4 +1,4 @@
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
 import { DonutChart } from "../charts/Donut";
 import {
@@ -12,6 +12,7 @@ import { charts } from "../components/charts/infantil.mock";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import useReportDataInfantil from "../hooks/sctions/infantil/useReportDataInfantil";
+import { PainelParams } from "./Hipertensao";
 
 const reportHeader = [
   {
@@ -80,10 +81,11 @@ const reportSections = [
 ];
 
 const Infantil = () => {
+  const { id } = useParams<PainelParams>();
   const [params] = useSearchParams();
-  const equipe = params.get("equipe");
+  const equipe = params.get("equipe") as any;
 
-  const reportData = useReportDataInfantil({ ubsId: "9" });
+  const reportData = useReportDataInfantil({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
 
   if(reportData?.isLoading){

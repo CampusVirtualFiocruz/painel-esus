@@ -2,8 +2,8 @@ import { useQuery } from "react-query";
 import { Api } from "../../../services/api";
 
 type reportBasicInfo = {
-  ubsId?: string;
-  squadId?: string;
+  ubsId?: string | undefined;
+  squadId?: string | undefined;
 };
 
 const useReportDataInfantil = ({ ubsId, squadId }: reportBasicInfo) => {
