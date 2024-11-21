@@ -1,4 +1,5 @@
 # pylint: disable=R0913,W0611
+import pandas as pd
 from sqlalchemy import extract
 from src.infra.db.entities.crianca import Crianca
 from src.infra.db.entities.equipes import Equipes
@@ -124,7 +125,7 @@ class ChildrenRepository:
                 users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
             if equipe is not None and equipe:
                 users = users.filter(Equipes.codigo_equipe == equipe)
-            
+
             users = users.group_by(Crianca.cidadao_pec)
             total = users.count()
             users = (
@@ -157,3 +158,86 @@ class ChildrenRepository:
             sql = group_by_race(cnes, equipe)
             result = con.execute(sql)
             return list(result)
+
+    def find_all_download(self, cnes: int = None, equipe: int = None):
+        with DBConnectionHandler() as db_con:
+            where_clause = ""
+            if cnes is not None and cnes:
+                where_clause += f" where e.codigo_unidade_saude = {cnes} "
+                if equipe is not None and equipe:
+                    where_clause += f" where e.codigo_equipe = {equipe} "
+            response = pd.read_sql_query(
+                con=db_con.get_engine(),
+                sql=f"""select
+                    p.cidadao_pec as codigo_cidadao,
+                    p.nome  as nome,
+                    p.cns as cns,
+                    p.cpf as cpf,
+                    p.sexo as sexo,
+                    p.raca_cor  as "raca/cor",
+                    group_concat(e.micro_area) micro_area,
+                    group_concat(e.nome_equipe) nome_equipe,
+                    e.nome_unidade_saude,
+                    p.data_nascimento ,
+                    p.idade ,
+                    p.tipo_endereco ,
+                    p.endereco || ' ' || p.numero logradouro,
+                    p.complemento,
+                    p.bairro ,
+                    p.cep,
+                    p.tipo_localidade ,
+                    case 
+                        when c.indicador_atendimentos_medicos_enfermeiros   = 1 then 'SIM'
+                        when c.indicador_atendimentos_medicos_enfermeiros != 1 then 'NÃO'	
+                    end indicador_atendimentos_medicos_enfermeiros,
+                    c.data_ultimo_atendimento_medico_enfermeiro, 
+                    c.atendimentos_medicos_enfermeiros_8d_vida, 
+                    c.atendimentos_medicos_enfermeiros_puericult, 
+                    c.data_ultimo_atendimento_medicos_enfermeiros_puericult, 
+                    case 
+                        when c.indicador_atendimentos_medicos_enfermeiros_puericult   = 1 then 'SIM'
+                        when c.indicador_atendimentos_medicos_enfermeiros_puericult != 1 then 'NÃO'	
+                    end indicador_atendimentos_medicos_enfermeiros_puericultura,
+                    c.medicoes_peso_altura_ate2anos, 
+                    c.data_ultima_medicao_peso_altura_ate2anos, 
+                    case 
+                        when c.indicador_medicoes_peso_altura_ate2anos   = 1 then 'SIM'
+                        when c.indicador_medicoes_peso_altura_ate2anos != 1 then 'NÃO'	
+                    end indicador_medicoes_peso_altura_ate2anos,
+                    c.data_ultima_visita_domiciliar_acs, 
+                    case 
+                        when c.indicador_visitas_domiciliares_acs   = 1 then 'SIM'
+                        when c.indicador_visitas_domiciliares_acs != 1 then 'NÃO'	
+                    end indicador_visitas_domiciliares_acs,
+                    c.visitas_domiciliares_acs, 
+                    c.teste_pezinho, 
+                    case 
+                        when c.indicador_teste_pezinho   = 1 then 'SIM'
+                        when c.indicador_teste_pezinho != 1 then 'NÃO'	
+                    end indicador_teste_pezinho,
+                    c.data_ultimo_teste_pezinho, 
+                    c.n_penta, 
+                    c.n_polio, 
+                    c.n__triplici, 
+                    c.data_ultima_vacina_penta, 
+                    c.data_ultima_vacina_polio, 
+                    c.data_ultima_vacina_triplici, 
+                    case 
+                        when c.indicador_vacinas_penta_polio_triplici   = 1 then 'SIM'
+                        when c.indicador_vacinas_penta_polio_triplici != 1 then 'NÃO'	
+                    end indicador_vacinas_penta_polio_triplici,
+                    c.atendimentos_odontologicos, 
+                    c.data_ultimo_atendimento_odontologico, 
+                    case 
+                        when c.indicador_atendimentos_odontologicos   = 1 then 'SIM'
+                        when c.indicador_atendimentos_odontologicos != 1 then 'NÃO'	
+                    end indicador_atendimentos_odontologicos
+                from
+                    crianca c   join pessoas p on p.cidadao_pec = c.cidadao_pec 
+                    left join equipes e on e.cidadao_pec  = p.cidadao_pec 
+                {where_clause}
+group by p.cidadao_pec	
+order by p.nome
+                """,
+            )
+            return response

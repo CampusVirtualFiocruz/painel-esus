@@ -27,3 +27,5 @@ def children_grouping_cares_by_professionals_composer():
 def children_get_nominal_list():
     return controller.get_nominal_list
 
+def children_get_nominal_list_download():
+    return controller.get_nominal_list_download

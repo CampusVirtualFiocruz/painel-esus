@@ -299,6 +299,46 @@ class CriancaNominalListAdapter:
                 tipo_alerta="indicador_atendimentos_medicos_enfermeiros_puericultura",
             )
         )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultima_medicao_peso_altura_ate2anos,
+                exibir_alerta=user.indicador_medicoes_peso_altura_ate2anos == 1,
+                descricao="data da última medição de peso/altura até dois anos",
+                tipo_alerta="data_ultima_medicao_peso_altura_ate2anos",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultima_visita_domiciliar_acs,
+                exibir_alerta=user.indicador_visitas_domiciliares_acs == 1,
+                descricao="data da última visita do ACS ",
+                tipo_alerta="data_ultima_visita_domiciliar_acs",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultimo_teste_pezinho,
+                exibir_alerta=user.indicador_teste_pezinho == 1,
+                descricao="data do último teste do pezinho ",
+                tipo_alerta="data_ultimo_teste_pezinho",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultimo_atendimento_odontologico,
+                exibir_alerta=user.indicador_atendimentos_odontologicos == 1,
+                descricao="data do último atendimento odontológico ",
+                tipo_alerta="data_ultimo_atendimento_odontologico",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultima_vacina_triplici,
+                exibir_alerta=user.indicador_vacinas_penta_polio_triplici == 1,
+                descricao="data do último registro de vacina Penta/Polio/Triplici ",
+                tipo_alerta="data_ultima_vacina_triplici",
+            )
+        )
 
     def to_dict(self):
         return dict(
@@ -372,7 +412,38 @@ class IdosoNominalListAdapter:
                 tipo_alerta="data_ultima_medicao_peso_altura",
             )
         )
-
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultimo_registro_creatinina,
+                exibir_alerta=user.indicador_registros_creatinina == 1,
+                descricao="data do último registro de creatinina ",
+                tipo_alerta="data_ultimo_registro_creatinina",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultima_vacina_influenza,
+                exibir_alerta=user.indicador_vacinas_influenza == 1,
+                descricao="data do último registro de vacina da Influenza ",
+                tipo_alerta="data_ultima_vacina_influenza",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultimo_atendimento_odontologico,
+                exibir_alerta=user.indicador_atendimento_odontologico == 1,
+                descricao="data do último registro de atendimento odontológico ",
+                tipo_alerta="data_ultimo_atendimento_odontologico",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultima_visita_domiciliar_acs,
+                exibir_alerta=user.indicador_visitas_domiciliares_acs == 1,
+                descricao="data da última visita do ACS ",
+                tipo_alerta="data_ultima_visita_domiciliar_acs",
+            )
+        )
     def to_dict(self):
         return dict(
             {

@@ -1,3 +1,4 @@
+import pandas as pd
 from src.infra.db.entities.equipes import Equipes
 from src.infra.db.entities.idoso import Idoso
 from src.infra.db.entities.pessoas import Pessoas
@@ -150,3 +151,74 @@ class ElderlyRepository:
                 "pagesCount": round(total / pagesize),
                 "items": list(users),
             }
+
+    def find_all_download(self, cnes: int = None, equipe: int = None):
+        with DBConnectionHandler() as db_con:
+            where_clause = ""
+            if cnes is not None and cnes:
+                where_clause +=  f' where e.codigo_unidade_saude = {cnes} '
+                if equipe is not None and equipe:
+                    where_clause +=  f' where e.codigo_equipe = {equipe} '
+            response = pd.read_sql_query(
+                con=db_con.get_engine(),
+                sql=f"""select
+                    p.cidadao_pec as codigo_cidadao,
+                    p.nome  as nome,
+                    p.cns as cns,
+                    p.cpf as cpf,
+                    p.sexo as sexo,
+                    p.raca_cor  as "raca/cor",
+                    group_concat(e.micro_area) micro_area,
+                    group_concat(e.nome_equipe) nome_equipe,
+                    e.nome_unidade_saude,
+                    p.data_nascimento ,
+                    p.idade ,
+                    p.tipo_endereco ,
+                    p.endereco || ' ' || p.numero logradouro,
+                    p.complemento,
+                    p.bairro ,
+                    p.cep,
+                    p.tipo_localidade ,
+                    i.atendimentos_medicos,
+                    i.data_ultimo_atendimento_medicos,
+                    i.medicoes_peso_altura , 
+                    i.data_ultima_medicao_peso_altura , 
+                    case 
+                        when i.indicador_medicoes_peso_altura  = 1 then 'SIM'
+                        when i.indicador_medicoes_peso_altura != 1 then 'NÃO'	
+                    end indicador_medicoes_peso_altura ,
+                    i.imc , 
+                    i.categoria_imc , 
+                    i.registros_creatinina , 
+                    i.data_ultimo_registro_creatinina , 
+                    case 
+                        when i.indicador_registros_creatinina   = 1 then 'SIM'
+                        when i.indicador_registros_creatinina  != 1 then 'NÃO'	
+                    end indicador_registros_creatinina  ,
+                    case 
+                        when i.indicador_visitas_domiciliares_acs   = 1 then 'SIM'
+                        when i.indicador_visitas_domiciliares_acs  != 1 then 'NÃO'	
+                    end indicador_visitas_domiciliares_acs  ,
+                    i.visitas_domiciliares_acs , 
+                    i.data_ultima_visita_domiciliar_acs , 
+                    i.vacinas_influenza , 
+                    i.data_ultima_vacina_influenza , 
+                    case 
+                        when i.indicador_vacinas_influenza   = 1 then 'SIM'
+                        when i.indicador_vacinas_influenza  != 1 then 'NÃO'	
+                    end indicador_vacinas_influenza  ,
+                    i.atendimentos_odontologicos , 
+                    i.data_ultimo_atendimento_odontologico , 
+                    case 
+                        when i.indicador_atendimento_odontologico 	   = 1 then 'SIM'
+                        when i.indicador_atendimento_odontologico 	  != 1 then 'NÃO'	
+                    end indicador_atendimento_odontologico 	  
+                from
+                    idoso i   join pessoas p on p.cidadao_pec = i.cidadao_pec 
+                    left join equipes e on e.cidadao_pec  = p.cidadao_pec 
+                {where_clause}
+group by p.cidadao_pec	
+order by p.nome
+                """,
+            )
+            return response

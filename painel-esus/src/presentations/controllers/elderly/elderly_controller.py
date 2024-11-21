@@ -75,3 +75,7 @@ class ElderlyController:
 
         result = self._adapter.nominal_list(response)
         return HttpResponse(status_code=200, body=result)
+
+    def get_nominal_list_download(self, request: HttpRequest):
+        cnes, equipe = self.parse_request(request)
+        return self.__use_case.find_all_download(cnes=cnes, equipe=equipe)

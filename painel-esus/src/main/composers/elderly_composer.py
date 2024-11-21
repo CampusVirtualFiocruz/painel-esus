@@ -31,3 +31,6 @@ def elderly_hipertesnion_diabetes_rate_composer():
 
 def elderly_get_nominal_list():
     return controller.get_nominal_list
+
+def elderly_get_nominal_list_download():
+    return controller.get_nominal_list_download
