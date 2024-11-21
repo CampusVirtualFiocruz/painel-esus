@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
 import { DonutChart } from "../charts/Donut";
 import {
@@ -79,10 +80,11 @@ const reportSections = [
 ];
 
 const Infantil = () => {
+  const [params] = useSearchParams();
+  const equipe = params.get("equipe");
+
   const reportData = useReportDataInfantil({ ubsId: "9" });
   const report = reportData?.data;
-
-  console.log({ report });
 
   if(reportData?.isLoading){
     return <center>Aguarde...</center>
@@ -92,7 +94,7 @@ const Infantil = () => {
     <ReportWrapper
       title="UBS Sérgio Arouca / Desenvolvimento Infantil de Cadastro"
       subtitle="(cuidado até o 2º ano de vida de acordo com a data da última atualização pelo município)"
-      footer={<ReportFooter />}
+      footer={<ReportFooter chaveListaNominal="Infantil" equipe={equipe} />}
     >
       {reportSections.map((chartList: any, colIndex) => (
         <div className="col-12 col-md-6">
