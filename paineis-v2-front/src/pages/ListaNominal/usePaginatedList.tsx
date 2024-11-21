@@ -14,20 +14,27 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
   const pathToReport = {
     Diabetes: "diabetes",
     Hipertensão: "arterial-hypertension",
+    Idosa: "elderly",
+    Infantil: "children",
   } as any;
 
   const { data: info, isLoading: isLoadingInfo } = useQuery(
-    ["nominal-list"+condicao+equipe+id, { condicao, equipe, id, pathToReport, searchTerm, ...params }],
+    [
+      "nominal-list" + condicao + equipe + id,
+      { condicao, equipe, id, pathToReport, searchTerm, ...params },
+    ],
     async () => {
       let path = `${pathToReport?.[condicao]}/get-nominal-list/${id}`;
+      
       const response = await Api.get(path, {
         params: {
           itemsPerPage: params.size,
           page: params.page,
           cpf: searchTerm,
-          equipe
+          equipe,
         },
       });
+
       return response?.data;
     },
     {

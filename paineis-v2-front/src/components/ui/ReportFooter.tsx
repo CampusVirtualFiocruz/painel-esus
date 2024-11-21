@@ -1,7 +1,7 @@
 import { Button, Link } from "bold-ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
-import { isUserFromUBS, userCanSelectUBS } from "../../App";
+import { userCanSelectUBS } from "../../App";
 
 const content = {
   buttonViewList: "Ver lista nominal",
@@ -17,14 +17,23 @@ export const ReportFooter = ({
   chaveListaNominal,
   equipe,
 }: {
-  chaveListaNominal?: "Hipertensão" | "Diabetes";
+  chaveListaNominal?:
+    | "Hipertensão"
+    | "Diabetes"
+    | "Idosa"
+    | "Qualidade"
+    | "Infantil";
   equipe?: any;
 }) => {
   const { id } = useParams<PainelParams>();
   const navigate = useNavigate();
 
   const handleToViewList = () =>
-    navigate(`/lista-nominal/${id}?condicao=${chaveListaNominal}${equipe ? `&equipe=${equipe || "undefined"}` : ""}`);
+    navigate(
+      `/lista-nominal/${id}?condicao=${chaveListaNominal}${
+        equipe ? `&equipe=${equipe || "undefined"}` : ""
+      }`
+    );
 
   const handleToPainelMunicipio = () => navigate("/painelx");
 

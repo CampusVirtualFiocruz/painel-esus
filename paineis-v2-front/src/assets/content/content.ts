@@ -27,10 +27,10 @@ export const content: any = {
   "excesso-peso": "Excesso de Peso",
 
   "vacinadas": "Vacinadas",
-  "nao-vacinadas": "Não Vacinadas",
+  "nao-vacinadas": "Não\nVacinadas",
 
   "atendidas": "Atendidas",
-  "nao-atendidas": "Sem atendimento",
+  "nao-atendidas": "Sem\natendimento",
 
   "hipertensao": "Hipertensão",
   "diabetes": "Diabetes",

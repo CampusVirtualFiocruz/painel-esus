@@ -1,4 +1,6 @@
+import { useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
+
 import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
 import { charts } from "../components/charts/idoso.mock";
 import { ReportFooter } from "../components/ui/ReportFooter";
@@ -42,25 +44,37 @@ const reportSections = [
         },
       },
     },
-    "total-proporcao-vacina-influenza": {
-      Chart: Donut,
-      config: {
-        formatterKind: "perc",
-        radiusStart: "0%",
-        colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
-        yAxis: {
-          name: content?.["total-cadastros"],
+    row: {
+      "total-proporcao-vacina-influenza": {
+        Chart: Donut,
+        config: {
+          formatterKind: "perc",
+          radiusStart: "0%",
+          colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
+          yAxis: {
+            name: content?.["total-cadastros"],
+          },
+          componentStyle: {
+            width: "100%",
+            minWidth: "140px",
+            height: "140px",
+          },
         },
       },
-    },
-    "total-proporcao-atendimento-odonto": {
-      Chart: Donut,
-      config: {
-        formatterKind: "perc",
-        radiusStart: "0%",
-        colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
-        yAxis: {
-          name: content?.["total-cadastros"],
+      "total-proporcao-atendimento-odonto": {
+        Chart: Donut,
+        config: {
+          formatterKind: "perc",
+          radiusStart: "0%",
+          colors: ["#0a406a", "#e4e4e4", "#84aaff", "#5c7ea0"],
+          yAxis: {
+            name: content?.["total-cadastros"],
+          },
+          componentStyle: {
+            width: "100%",
+            minWidth: "140px",
+            height: "140px",
+          },
         },
       },
     },
@@ -94,17 +108,60 @@ const reportSections = [
         yAxis: {
           name: content?.["total-cadastros"],
         },
+        invertAxis: true,
       },
     },
   },
 ];
 
+const RenderChartGroup = ({ chartList, renderSmall }: any) => {
+  return Object.keys(chartList).map((chartKey) => {
+    const CustomChart = chartList?.[chartKey]?.Chart;
+    const chartConfigs = chartList?.[chartKey]?.config;
+    const data = (charts as any)?.[chartKey]?.data;
+    const isRow = chartKey === "row";
+
+    if (chartConfigs) {
+      const xAxisNames = data?.map((d: any) => content?.[d?.tag] ?? d?.tag);
+      chartConfigs.xAxis = {};
+      chartConfigs.xAxis.data = xAxisNames;
+    }
+
+    if (isRow) {
+      return (
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            gap: "20px",
+          }}
+        >
+          <RenderChartGroup chartList={chartList?.[chartKey]} renderSmall />
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ marginBottom: "40px" }}>
+        <h5 style={{ fontWeight: "bold", textAlign: "center" }}>
+          {content?.[chartKey] || chartKey}
+        </h5>
+        <CustomChart data={data} config={chartConfigs} />
+      </div>
+    );
+  });
+};
+
 const Idosa = () => {
+  const [params] = useSearchParams();
+  const equipe = params.get("equipe");
+
   return (
     <ReportWrapper
       title="UBS Sérgio Arouca / Cuidado da Pessoa Idosa"
       subtitle="(referente aos últimos 12 meses)"
-      footer={<ReportFooter />}
+      footer={<ReportFooter chaveListaNominal="Idosa" equipe={equipe} />}
     >
       {reportSections.map((chartList: any, colIndex) => (
         <div className="col-12 col-md-6">
@@ -124,7 +181,7 @@ const Idosa = () => {
                     display: "flex",
                     flex: "1",
                     flexDirection: "row",
-                    gap: "30px",
+                    gap: "50px",
                     width: "100%",
                     maxWidth: "600px",
                     alignItems: "center",
@@ -136,6 +193,7 @@ const Idosa = () => {
                       const CustomChart = chartList?.[chartKey]?.Chart;
                       const chartConfigs = chartList?.[chartKey]?.config;
                       const data = (charts as any)?.[chartKey]?.data;
+
                       return <CustomChart data={data} config={chartConfigs} />;
                     })
                   )}
@@ -146,27 +204,7 @@ const Idosa = () => {
           {colIndex === 1 && (
             <div style={{ paddingTop: "60px", content: " " }} />
           )}
-          {Object.keys(chartList).map((chartKey) => {
-            const CustomChart = chartList?.[chartKey]?.Chart;
-            const chartConfigs = chartList?.[chartKey]?.config;
-            const data = (charts as any)?.[chartKey]?.data;
-            if (chartConfigs) {
-              const xAxisNames = data?.map(
-                (d: any) => content?.[d?.tag] ?? d?.tag
-              );
-              chartConfigs.xAxis = {};
-              chartConfigs.xAxis.data = xAxisNames;
-            }
-
-            return (
-              <div style={{ marginBottom: "40px" }}>
-                <h5 style={{ fontWeight: "bold", textAlign: "center" }}>
-                  {content?.[chartKey] || chartKey}
-                </h5>
-                <CustomChart data={data} config={chartConfigs} />
-              </div>
-            );
-          })}
+          <RenderChartGroup chartList={chartList} />
         </div>
       ))}
     </ReportWrapper>

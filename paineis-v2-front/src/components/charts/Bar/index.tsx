@@ -1,7 +1,8 @@
 import ReactECharts from "echarts-for-react";
-import "./style.scss";
-import { content } from "../../../assets/content/content";
 import { BarChart } from "../charts.types";
+import { content } from "../../../assets/content/content";
+import "./style.scss";
+
 export function Bar(props: BarChart) {
   const series = new Set<string>();
 
@@ -31,7 +32,7 @@ export function Bar(props: BarChart) {
     };
   });
 
-  const options = {
+  const options: any = {
     color: props?.config?.colors || ["#77B4D0", "#2775B0"],
     tooltip: {
       trigger: "item",
@@ -78,6 +79,12 @@ export function Bar(props: BarChart) {
     ],
     series: chartSeries,
   };
+
+  if (props?.config?.invertAxis) {
+    const aux = JSON.parse(JSON.stringify(options?.yAxis));
+    options.yAxis = options?.xAxis;
+    options.xAxis = aux;
+  }
 
   return (
     <ReactECharts

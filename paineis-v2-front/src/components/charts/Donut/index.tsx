@@ -57,7 +57,6 @@ export function Donut(props: DonutChart) {
                 name: content?.[curr?.tag] || curr?.tag,
                 label: {
                   formatter: formatters[f && f !== "undefined" ? f : "full"],
-                  
                   rich: {
                     a: {
                       color: "black",
@@ -87,6 +86,7 @@ export function Donut(props: DonutChart) {
         width: "100%",
         minWidth: "316px",
         height: "316px",
+        ...(props?.config?.componentStyle || {})
       }}
       opts={{ renderer: "svg" }}
     />

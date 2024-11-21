@@ -19,6 +19,7 @@ type generalConfigs = {
   isIsDevelopmentResponse?: boolean;
   colors?: Array<string>;
   formatterKind?: string;
+  componentStyle?: object;
 };
 
 type LinearChart = {
@@ -27,6 +28,7 @@ type LinearChart = {
     xAxis?: { name?: string };
     yAxis?: { name?: string };
     hideLegend?: boolean;
+    invertAxis?: boolean;
   } & generalConfigs;
 };
 
