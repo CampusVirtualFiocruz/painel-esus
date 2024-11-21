@@ -1,14 +1,15 @@
 # pylint: disable= R1703, W0612,C0103
+import os
+
 import pandas as pd
 import polars as pl
 from sqlalchemy import text
-from sqlalchemy.exc import OperationalError
-from sqlalchemy.exc import ResourceClosedError
+from sqlalchemy.exc import OperationalError, ResourceClosedError
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
-from src.errors import InvalidArgument
-from src.errors import NoSuchTableError
+from src.env.conf import getenv
+from src.errors import InvalidArgument, NoSuchTableError
 from src.errors.logging import logging
 from src.infra.db.repositories.sqls.pessoa.equipes import equipes as EQUIPES
 from src.infra.db.repositories.update_bases import UpdateBasesRepository
@@ -58,7 +59,7 @@ class CreateEquipesBaseRepository(CreateBasesRepositoryInterface):
             local_engine = local_db.get_engine()
             _next = True
             offset = 0
-            chunk_size = 1000
+            chunk_size = getenv("CHUNK_SIZE", 1000)
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()

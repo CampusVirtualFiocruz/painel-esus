@@ -7,6 +7,7 @@ from sqlalchemy.exc import OperationalError, ResourceClosedError
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
+from src.env.conf import getenv
 from src.errors import InvalidArgument, NoSuchTableError
 from src.errors.logging import logging
 from src.infra.db.repositories.sqls.pessoa.pessoas import pessoas as PESSOAS
@@ -52,7 +53,7 @@ class CreatePessoasBaseRepository(CreateBasesRepositoryInterface):
             local_engine = local_db.get_engine()
             _next = True
             offset = 0
-            chunk_size = 1000
+            chunk_size = getenv("CHUNK_SIZE", 1000)
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()

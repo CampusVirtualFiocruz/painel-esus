@@ -3,6 +3,7 @@ import os
 import subprocess
 from pathlib import Path
 
+from parquet_db import gerar_banco
 from src.data.use_cases.create_bases.create_bases_usecase import CreateBasesUseCase
 from src.env import env
 from src.errors.logging import logging
@@ -44,12 +45,9 @@ from src.infra.create_base.polars import (
     CreateCidacaoPecBaseRepository,
     CreateCidadaoBaseRepository,
     CreateCidCiapExplodeAtendimentosRepository,
-    CreateDimEquipesBaseRepository,
     CreateDimRacaCorBaseRepository,
-    CreateEquipeBaseRepository,
     CreateFamiliaTerrBaseRepository,
     CreateIndicadoresCriancasRepository,
-    CreateIndicadoresEquipeRepository,
     CreateIndicadoresIdososRepository,
     CreateProcedAtendBaseRepository,
     CreateTbDimCboRepository,
@@ -78,7 +76,6 @@ class CreateBasesController:
             _list = [
                 CreatePessoasBaseRepository(),
                 CreateEquipesBaseRepository(),
-                # CreateDimEquipesBaseRepository(),
                 CreateUnidadesSaudeBaseRepository(),
                 CreateTbDimCboRepository(),
                 CreateAtendIndivBaseRepository(),
@@ -107,18 +104,6 @@ class CreateBasesController:
             usecase = CreateBasesUseCase(bases_generators=_list)
             usecase.create_bases()
 
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-
-            script_path = os.path.abspath('parquet_db.py')
-            print("Script de conversao parquet:", script_path)
-            resultado = subprocess.run(
-                    ['python', script_path],
-                    check=True,             # Levanta uma exceção se o comando falhar
-                    stdout=subprocess.PIPE, # Captura a saída padrão
-                    stderr=subprocess.PIPE, # Captura a saída de erro
-                    text=True               # Retorna a saída como string
-                )
-            print("Script conversao de parquet realizado com sucesso:")
-            print(resultado.stdout)
+            gerar_banco()
         else:
             logging.info("Skipping base generation")

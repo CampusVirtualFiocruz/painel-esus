@@ -5,6 +5,7 @@ from sqlalchemy import text
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
+from src.env.conf import getenv
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -31,7 +32,7 @@ class CreateDimEquipesBaseRepository(CreateBasesRepositoryInterface):
             offset = 0
             parquet_file = f"{self._base}.parquet"
             # os.remove("dados/input/" + parquet_file)
-            chunk_size = 30000
+            chunk_size = getenv("CHUNK_SIZE", 3000)
             writer = None 
             while _next:
                 with DBConnectionHandler() as db:

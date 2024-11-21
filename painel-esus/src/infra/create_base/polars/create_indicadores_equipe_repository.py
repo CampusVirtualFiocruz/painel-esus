@@ -1,7 +1,7 @@
-#import pandas as pd
-#from sqlalchemy import text
-#import pyarrow as pa
-#import pyarrow.parquet as pq
+# import pandas as pd
+# from sqlalchemy import text
+# import pyarrow as pa
+# import pyarrow.parquet as pq
 import logging
 import os
 import subprocess
@@ -10,9 +10,10 @@ import polars
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
+from src.infra.create_base.polars.scripts_dados.tb_equipe import gerar_banco
 
 
-#tabela equipe criada a partir de varias outras
+# tabela equipe criada a partir de varias outras
 class CreateIndicadoresEquipeRepository(CreateBasesRepositoryInterface):
 
 
@@ -24,21 +25,7 @@ class CreateIndicadoresEquipeRepository(CreateBasesRepositoryInterface):
 
     def create_base(self):
         try:
-             current_dir = os.path.dirname(os.path.abspath(__file__))
-
-             script_path = os.path.join(current_dir, 'scripts_dados', 'tb_equipe.py')
-
-            # print(script_path)
-
-             resultado = subprocess.run(
-                    ['python', script_path],
-                    check=True,             # Levanta uma exceção se o comando falhar
-                    stdout=subprocess.PIPE, # Captura a saída padrão
-                    stderr=subprocess.PIPE, # Captura a saída de erro
-                    text=True               # Retorna a saída como string
-                )
-             print("Script equipe executado com sucesso:")
-             print(resultado.stdout)
+            gerar_banco()
          
         except subprocess.CalledProcessError as e:
                     # Log detalhado do erro

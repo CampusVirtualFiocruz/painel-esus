@@ -31,29 +31,29 @@ output_path = os.path.join(working_directory,"dados","output", os.sep)
 # In[4]:
 
 
-fat_cidadao_pec = pl.read_parquet(input_path+"tb_fat_cidadao_pec.parquet")
+fat_cidadao_pec = pl.read_parquet(input_path+os.sep+"tb_fat_cidadao_pec.parquet")
 
-fat_cad_ind = pl.read_parquet(input_path+"tb_fat_cad_individual.parquet")
+fat_cad_ind = pl.read_parquet(input_path+os.sep+"tb_fat_cad_individual.parquet")
 
-fat_atd_ind = pl.read_parquet(input_path+"tb_fat_atendimento_individual.parquet")
+fat_atd_ind = pl.read_parquet(input_path+os.sep+"tb_fat_atendimento_individual.parquet")
 
-fat_vis_dom = pl.read_parquet(input_path+"tb_fat_visita_domiciliar.parquet")
+fat_vis_dom = pl.read_parquet(input_path+os.sep+"tb_fat_visita_domiciliar.parquet")
 
-fat_atd_ind_odonto = pl.read_parquet(input_path+"tb_fat_atendimento_odonto.parquet")
+fat_atd_ind_odonto = pl.read_parquet(input_path+os.sep+"tb_fat_atendimento_odonto.parquet")
 
-fat_acomp_vinc = pl.read_parquet(input_path+"tb_acomp_cidadaos_vinculados.parquet")
+fat_acomp_vinc = pl.read_parquet(input_path+os.sep+"tb_acomp_cidadaos_vinculados.parquet")
 
-fat_fam_terr = pl.read_parquet(input_path+"tb_fat_familia_territorio.parquet")
+fat_fam_terr = pl.read_parquet(input_path+os.sep+"tb_fat_familia_territorio.parquet")
 
-tb_dim_equipe = pl.read_parquet(input_path+"tb_dim_equipe.parquet")
+tb_dim_equipe = pl.read_parquet(input_path+os.sep+"tb_dim_equipe.parquet")
 
-tb_dim_und_saude = pl.read_parquet(input_path+"tb_dim_unidade_saude.parquet")
+tb_dim_und_saude = pl.read_parquet(input_path+os.sep+"tb_dim_unidade_saude.parquet")
 
-fat_vac = pl.read_parquet(input_path+"tb_fat_vacinacao.parquet")
+fat_vac = pl.read_parquet(input_path+os.sep+"tb_fat_vacinacao.parquet")
 
-fcdt = pl.read_parquet(input_path+"tb_fat_cad_domiciliar.parquet")
+fcdt = pl.read_parquet(input_path+os.sep+"tb_fat_cad_domiciliar.parquet")
 
-tb_pessoa = pl.read_csv( input_path+"pessoas.csv"),separator=";",ignore_errors=True)
+tb_pessoa = pl.read_csv( input_path+os.sep+"pessoas.csv",sep=";")
 tb_pessoa = tb_pessoa.with_columns(pl.col("cidadao_pec").cast(pl.Int64))
 
 # ## Transformações

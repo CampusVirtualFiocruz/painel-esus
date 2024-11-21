@@ -10,10 +10,12 @@ import polars
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
+from src.infra.create_base.polars.scripts_dados.indicadores_crianca_polars import (
+    gerar_banco,
+)
 
 
 class CreateIndicadoresCriancasRepository(CreateBasesRepositoryInterface):
-
 
     def __init__(self):
         ...
@@ -23,26 +25,12 @@ class CreateIndicadoresCriancasRepository(CreateBasesRepositoryInterface):
 
     def create_base(self):
         try:
-             current_dir = os.path.dirname(os.path.abspath(__file__))
+            gerar_banco()
 
-             script_path = os.path.join(current_dir, 'scripts_dados', 'indicadores_crianca_polars.py')
-
-            # print(script_path)
-
-             resultado = subprocess.run(
-                    ['python', script_path],
-                    check=True,             # Levanta uma exceção se o comando falhar
-                    stdout=subprocess.PIPE, # Captura a saída padrão
-                    stderr=subprocess.PIPE, # Captura a saída de erro
-                    text=True               # Retorna a saída como string
-                )
-             print("Script criança executado com sucesso:")
-             print(resultado.stdout)
-         
         except subprocess.CalledProcessError as e:
-                    # Log detalhado do erro
-                    logging.error("Erro ao executar o script idosos.py:")
-                    logging.error(e.stderr)
+            # Log detalhado do erro
+            logging.error("Erro ao executar o script idosos.py:")
+            logging.error(e.stderr)
         except FileNotFoundError:
             # Trata o caso onde o interpretador Python não é encontrado
             logging.error("Python não encontrado. Verifique se o Python está instalado e no PATH.")
