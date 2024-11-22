@@ -3,10 +3,30 @@ import { getUserLocalStorage } from "../context/AuthProvider/util";
 
 const URL = window.location.host;
 const PROTOCOL = window.location.protocol;
-const API_URL =
-  process.env.REACT_APP_ENV === "production"
-    ? `${PROTOCOL}//${URL}/v1/`
-    : "http://localhost:5001/v1/";
+
+const get_url_env = ()=>{
+  let isProd = true; 
+  
+  if (parseInt(window.location.port) === 3000) {
+    isProd = false;
+  }
+  else if (process.env.hasOwnProperty('REACT_APP_ENV')) { 
+    isProd = process.env.REACT_APP_ENV?.indexOf('dev') === -1
+  }
+  else if (process.env.hasOwnProperty('REACT_APP_NODE_ENV')) { 
+    isProd = process.env.REACT_APP_NODE_ENV?.indexOf("dev") === -1;
+  }
+  console.log(
+    process.env.REACT_APP_ENV,
+    process.env.REACT_APP_ENV?.indexOf("dev"),
+    process.env.REACT_APP_ENV?.indexOf("dev") === -1,
+    isProd
+  );
+  return isProd ?
+    `${PROTOCOL}//${URL}/v1/` :
+    "http://localhost:5001/v1/";
+}
+const API_URL = get_url_env();
 
 export const Api = axios.create({
   baseURL: API_URL,
