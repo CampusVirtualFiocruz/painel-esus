@@ -16,12 +16,6 @@ const get_url_env = ()=>{
   else if (process.env.hasOwnProperty('REACT_APP_NODE_ENV')) { 
     isProd = process.env.REACT_APP_NODE_ENV?.indexOf("dev") === -1;
   }
-  console.log(
-    process.env.REACT_APP_ENV,
-    process.env.REACT_APP_ENV?.indexOf("dev"),
-    process.env.REACT_APP_ENV?.indexOf("dev") === -1,
-    isProd
-  );
   return isProd ?
     `${PROTOCOL}//${URL}/v1/` :
     "http://localhost:5001/v1/";
