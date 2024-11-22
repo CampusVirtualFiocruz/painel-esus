@@ -273,28 +273,28 @@ class CriancaNominalListAdapter:
         self.cep = user.cep
         self.telefone = user.telefone
         self.possui_alertas = (
-            user.indicador_atendimentos_medicos_enfermeiros == 1
-            or user.indicador_atendimentos_medicos_enfermeiros_puericultura == 1
-            or user.indicador_medicoes_peso_altura_ate2anos == 1
-            or user.indicador_visitas_domiciliares_acs == 1
-            or user.indicador_teste_pezinho == 1
-            or user.indicador_atendimentos_odontologicos == 1
-            or user.indicador_vacinas_penta_polio_triplici == 1
+            user.indicador_atendimentos_medicos_enfermeiros != 1
+            or user.indicador_atendimentos_medicos_enfermeiros_puericultura != 1
+            or user.indicador_medicoes_peso_altura_ate2anos != 1
+            or user.indicador_visitas_domiciliares_acs != 1
+            or user.indicador_teste_pezinho != 1
+            or user.indicador_atendimentos_odontologicos != 1
+            or user.indicador_vacinas_penta_polio_triplici != 1
         )
         self.registros=[]
         self.registros.append(
             AlertRecord(
                 data=user.data_ultimo_atendimento_medico_enfermeiro,
-                exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros == 1,
+                exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros != 1,
                 descricao="data do último atendimento médico/enfermeiro",
                 tipo_alerta="data_ultimo_atendimento_medico_enfermeiro",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.indicador_atendimentos_medicos_enfermeiros_puericultura,
+                data=user.data_ultimo_atendimento_medicos_enfermeiros_puericultura,
                 exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros_puericultura
-                == 1,
+                != 1,
                 descricao="data do último atendimento médico/enfermeiro de Puericultura",
                 tipo_alerta="indicador_atendimentos_medicos_enfermeiros_puericultura",
             )
@@ -302,7 +302,7 @@ class CriancaNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultima_medicao_peso_altura_ate2anos,
-                exibir_alerta=user.indicador_medicoes_peso_altura_ate2anos == 1,
+                exibir_alerta=user.indicador_medicoes_peso_altura_ate2anos != 1,
                 descricao="data da última medição de peso/altura até dois anos",
                 tipo_alerta="data_ultima_medicao_peso_altura_ate2anos",
             )
@@ -310,7 +310,7 @@ class CriancaNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultima_visita_domiciliar_acs,
-                exibir_alerta=user.indicador_visitas_domiciliares_acs == 1,
+                exibir_alerta=user.indicador_visitas_domiciliares_acs != 1,
                 descricao="data da última visita do ACS ",
                 tipo_alerta="data_ultima_visita_domiciliar_acs",
             )
@@ -318,7 +318,7 @@ class CriancaNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultimo_teste_pezinho,
-                exibir_alerta=user.indicador_teste_pezinho == 1,
+                exibir_alerta=user.indicador_teste_pezinho != 1,
                 descricao="data do último teste do pezinho ",
                 tipo_alerta="data_ultimo_teste_pezinho",
             )
@@ -326,7 +326,7 @@ class CriancaNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultimo_atendimento_odontologico,
-                exibir_alerta=user.indicador_atendimentos_odontologicos == 1,
+                exibir_alerta=user.indicador_atendimentos_odontologicos != 1,
                 descricao="data do último atendimento odontológico ",
                 tipo_alerta="data_ultimo_atendimento_odontologico",
             )
@@ -334,7 +334,7 @@ class CriancaNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultima_vacina_triplici,
-                exibir_alerta=user.indicador_vacinas_penta_polio_triplici == 1,
+                exibir_alerta=user.indicador_vacinas_penta_polio_triplici != 1,
                 descricao="data do último registro de vacina Penta/Polio/Triplici ",
                 tipo_alerta="data_ultima_vacina_triplici",
             )
@@ -388,18 +388,18 @@ class IdosoNominalListAdapter:
         self.cep = user.cep
         self.telefone = user.telefone
         self.possui_alertas = (
-            user.indicador_atendimentos_medicos == 1
-            or user.indicador_medicoes_peso_altura == 1
-            or user.indicador_registros_creatinina == 1
-            or user.indicador_vacinas_influenza == 1
-            or user.indicador_atendimento_odontologico == 1
-            or user.indicador_visitas_domiciliares_acs == 1
+            user.indicador_atendimentos_medicos != 1
+            or user.indicador_medicoes_peso_altura != 1
+            or user.indicador_registros_creatinina != 1
+            or user.indicador_vacinas_influenza != 1
+            or user.indicador_atendimento_odontologico != 1
+            or user.indicador_visitas_domiciliares_acs != 1
         )
         self.registros = []
         self.registros.append(
             AlertRecord(
                 data=user.data_ultimo_atendimento_medicos,
-                exibir_alerta=user.indicador_atendimentos_medicos == 1,
+                exibir_alerta=user.indicador_atendimentos_medicos != 1,
                 descricao="data do último atendimento médico/enfermeiro",
                 tipo_alerta="data_ultimo_atendimento_medicos",
             )
@@ -407,7 +407,7 @@ class IdosoNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultima_medicao_peso_altura,
-                exibir_alerta=user.indicador_medicoes_peso_altura == 1,
+                exibir_alerta=user.indicador_medicoes_peso_altura != 1,
                 descricao="data da última medição de peso e altura",
                 tipo_alerta="data_ultima_medicao_peso_altura",
             )
@@ -415,7 +415,7 @@ class IdosoNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultimo_registro_creatinina,
-                exibir_alerta=user.indicador_registros_creatinina == 1,
+                exibir_alerta=user.indicador_registros_creatinina != 1,
                 descricao="data do último registro de creatinina ",
                 tipo_alerta="data_ultimo_registro_creatinina",
             )
@@ -423,7 +423,7 @@ class IdosoNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultima_vacina_influenza,
-                exibir_alerta=user.indicador_vacinas_influenza == 1,
+                exibir_alerta=user.indicador_vacinas_influenza != 1,
                 descricao="data do último registro de vacina da Influenza ",
                 tipo_alerta="data_ultima_vacina_influenza",
             )
@@ -431,7 +431,7 @@ class IdosoNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultimo_atendimento_odontologico,
-                exibir_alerta=user.indicador_atendimento_odontologico == 1,
+                exibir_alerta=user.indicador_atendimento_odontologico != 1,
                 descricao="data do último registro de atendimento odontológico ",
                 tipo_alerta="data_ultimo_atendimento_odontologico",
             )
@@ -439,7 +439,7 @@ class IdosoNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=user.data_ultima_visita_domiciliar_acs,
-                exibir_alerta=user.indicador_visitas_domiciliares_acs == 1,
+                exibir_alerta=user.indicador_visitas_domiciliares_acs != 1,
                 descricao="data da última visita do ACS ",
                 tipo_alerta="data_ultima_visita_domiciliar_acs",
             )

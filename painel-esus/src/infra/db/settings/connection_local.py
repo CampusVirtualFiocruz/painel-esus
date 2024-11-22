@@ -13,7 +13,6 @@ class DBConnectionHandler:
     def __init__(self) -> None:
         if env["ENV"] == "instalador":
             path = self.get_db_path()
-            logging.info(f'DB Path: {path}')
         else:
             path = os.getcwd()
             path = Path(path.split("/painel-esus")[0])

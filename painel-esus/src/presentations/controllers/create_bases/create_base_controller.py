@@ -56,7 +56,13 @@ from src.infra.create_base.polars import (
     CreateVacinacaoBaseRepository,
     CreateVisistaDomiciliarBaseRepository,
 )
+from src.data.interfaces.create_bases.create_bases_repository import (
+    CreateBasesRepositoryInterface,
+)
+class ParquetConvertion(CreateBasesRepositoryInterface):
 
+    def create_base(self):
+        gerar_banco()
 
 class CreateBasesController:
 
@@ -70,10 +76,9 @@ class CreateBasesController:
             path = os.path.relpath(path)
         # os.remove(path)
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
-            logging.info("Starting structure generation")
-            CreateStructureBaseRepository().create_base()
             logging.info("Starting base generation")
             _list = [
+                CreateStructureBaseRepository(),
                 CreatePessoasBaseRepository(),
                 CreateEquipesBaseRepository(),
                 CreateUnidadesSaudeBaseRepository(),
@@ -100,10 +105,11 @@ class CreateBasesController:
                 CreateHypertensionBasesRepository(),
                 CreateDiabetesNominalListRepository(),
                 CreateHypertensionNominalListRepository(),
+                ParquetConvertion()
             ]
             usecase = CreateBasesUseCase(bases_generators=_list)
             usecase.create_bases()
 
-            gerar_banco()
+            
         else:
             logging.info("Skipping base generation")

@@ -18,15 +18,15 @@ const useReportDataIdosas = ({ ubsId, squadId }: reportBasicInfo) => {
             equipe: squadId,
           },
         }),
-        "total-raca-cor": Api.get(`/elderly/group-by-race`),
-        "total-imc": Api.get(`/elderly/group-by-age-location`),
+        "total-raca-cor": Api.get(`/elderly/group-by-race${ubsParam}`),
+        "total-imc": Api.get(`/elderly/group-by-age-location${ubsParam}`),
         "total-proporcao-vacina-influenza": Api.get(
           `/elderly/group-by-influenza-rate${ubsParam}`
         ),
         "total-proporcao-atendimento-odonto": Api.get(
           `/elderly/group-by-odonto-rate${ubsParam}`
         ),
-        "pessoas-por-faixa-etaria": Api.get(`/elderly/group-by-age-location`),
+        "pessoas-por-faixa-etaria": Api.get(`/elderly/group-by-age-location${ubsParam}`),
         "pessoas-por-sexo": Api.get(`/elderly/group-by-gender${ubsParam}`, {
           params: {
             equipe: squadId,

@@ -290,6 +290,8 @@ def create_env(
             "ARTEFACT=" + "web" + "\n",
             "ENV=" + "instalador" + "\n",
             "SECRET_TOKEN=" + "111111111111111111111" + "\n",
+            "GENERATE_BASE=True\n",
+            "CHUNK_SIZE=50000"
         ]
         f.writelines(lines)
         f.close()

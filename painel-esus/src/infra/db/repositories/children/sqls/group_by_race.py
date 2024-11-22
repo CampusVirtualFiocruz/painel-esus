@@ -4,7 +4,7 @@ from sqlalchemy import text
 def group_by_race(cnes: int= None, equipe: int = None):
     where_clause = ' '
     if cnes is not None and cnes:
-        where_clause += f" where equipes.codigo_unidade_saude  = {cnes} "
+        where_clause += f" where pessoas.raca_cor  is not NULL and equipes.codigo_unidade_saude  = {cnes} "
         if equipe is not None and equipe:
             where_clause += f" and equipes.codigo_equipe  = {equipe} "
     sql = f"""
@@ -28,6 +28,8 @@ def group_by_race(cnes: int= None, equipe: int = None):
                             pessoas.cidadao_pec = crianca.cidadao_pec
                         JOIN equipes ON
                             equipes.cidadao_pec = crianca.cidadao_pec
+                        where
+                            pessoas.raca_cor  is not NULL
             )
             select 
                 raca_cor, 
