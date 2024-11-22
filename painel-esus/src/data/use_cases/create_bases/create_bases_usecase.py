@@ -12,20 +12,24 @@ from tqdm import tqdm
 class CreateBasesUseCase(CreateBasesUsecasesInterface):
 
     def __init__(
-        self,
-        bases_generators: List[CreateBasesRepositoryInterface] = None
+        self, bases_generators: List[CreateBasesRepositoryInterface] = None
     ) -> None:
         self.__bases_generators = bases_generators
 
     def create_bases(self):
         if self.__bases_generators is None:
-            raise InvalidArgument('No bases to generate was passed.')
-        for base in tqdm(self.__bases_generators, ascii="░▒█", desc="Geração das Bases: "):
+            raise InvalidArgument("No bases to generate was passed.")
+        for base in tqdm(
+            self.__bases_generators,
+            ascii="░▒█",
+            desc="Geração das Bases: ",
+        ):
             if isinstance(base, CreateBasesRepositoryInterface):
                 base.create_base()
             else:
                 raise InvalidArgument(
-                    'Base is no instance of CreateBasesRepositoryInterface.')
+                    "Base is no instance of CreateBasesRepositoryInterface."
+                )
 
     def destroy_bases(self):
         pass
