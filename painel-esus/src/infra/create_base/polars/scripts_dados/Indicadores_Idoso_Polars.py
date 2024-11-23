@@ -8,6 +8,8 @@
 # In[27]:
 import time
 
+from src.infra.db.settings.connection_local import DBConnectionHandler
+
 start_time = time.time()
 
 
@@ -432,7 +434,9 @@ def gerar_banco():
 
 
     idoso_updated_v2.write_parquet(output_path + os.sep + "idoso.parquet")
-
+    with DBConnectionHandler() as con:
+        engine = con.get_engine()
+        idoso_updated_v2.to_sql(name='idoso', con=engine, if_exists="append")
     end_time = time.time()
     execution_time = end_time - start_time
 

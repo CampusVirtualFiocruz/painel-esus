@@ -40,7 +40,7 @@ class CreateTbDimCboRepository(CreateBasesRepositoryInterface):
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    print(text(f"{CBOS}  LIMIT {chunk_size} OFFSET {offset};"))
+                    #print(text(f"{CBOS}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f"{CBOS}  LIMIT {chunk_size} OFFSET {offset};"),
                         con=engine,

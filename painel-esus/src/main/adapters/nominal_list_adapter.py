@@ -6,6 +6,7 @@ from src.domain.entities.hypertension import Hypertension
 from src.infra.db.entities.crianca import Crianca
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.hipertensao_nominal import HipertensaoNominal
+from src.infra.db.entities.pessoas import Pessoas
 
 
 class AlertRecord:
@@ -444,6 +445,7 @@ class IdosoNominalListAdapter:
                 tipo_alerta="data_ultima_visita_domiciliar_acs",
             )
         )
+
     def to_dict(self):
         return dict(
             {
@@ -451,6 +453,84 @@ class IdosoNominalListAdapter:
                 "nomeSocialSelecionado": self.nome_social,
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
+                "possuiAlertas": self.possui_alertas,
+                "cpf": self.cpf,
+                "cns": self.cns,
+                "idade": self.idade,
+                "sexo": self.sexo,
+                "equipe": self.equipe,
+                "microarea": self.microarea,
+                "endereco": self.endereco,
+                "complemento": self.complemento,
+                "tipoLogradouro": self.tipo_logradouro,
+                "cep": self.cep,
+                "telefone": self.telefone,
+                "detalhesCondicaoSaude": [
+                    {
+                        "registros": [
+                            registro.to_dict() for registro in self.registros
+                        ],
+                    }
+                ],
+            }
+        )
+
+
+class CriancaNominalListAdapter:
+
+    def __init__(self, user: Pessoas):
+        self.nome = user.nome
+        self.nome_social = "-"
+        self.tipo_localidade = user.tipo_localidade
+        self.cpf = user.cpf
+        self.cns = user.cns
+        self.idade = user.idade
+        self.sexo = user.sexo
+        self.equipe = user.nome_equipe
+        self.microarea = user.micro_area
+        self.endereco = f"{user.endereco} {user.numero}, {user.bairro}"
+        self.tipo_logradouro = user.tipo_endereco
+        self.complemento = user.complemento
+        self.cep = user.cep
+        self.telefone = user.telefone
+
+        ultima_atualizacao_cidadao, ultima_atualizacao_fcd = True, True
+        
+        if user.diferenca_ultima_atualizacao_cidadao is not None and user.diferenca_ultima_atualizacao_cidadao < 24:
+            ultima_atualizacao_cidadao = False
+
+        if user.diferenca_ultima_atualizacao_fcd is not None and user.diferenca_ultima_atualizacao_fcd < 24:
+            ultima_atualizacao_fcd = False
+
+        self.possui_alertas = (
+            ultima_atualizacao_cidadao or
+            ultima_atualizacao_fcd
+        )
+        self.registros = []
+        self.registros.append(
+            AlertRecord(
+                data=user.ultima_atualizacao_cidadao,
+                exibir_alerta=ultima_atualizacao_cidadao,
+                descricao="data da última atualização da ficha de cadastro individual",
+                tipo_alerta="ultima_atualizacao_cidadao",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.ultima_atualizacao_fcd,
+                exibir_alerta=ultima_atualizacao_fcd,
+                descricao="data da última atualização da ficha de cadastro domiciliar e territorial",
+                tipo_alerta="ultima_atualizacao_fcd",
+            )
+        )
+
+    def to_dict(self):
+        return dict(
+            {
+                "nome": self.nome,
+                "nomeSocialSelecionado": self.nome_social,
+                "zonaUrbana": "urbana" in self.tipo_localidade.lower() ,
+                "zonaRural": "rural" in self.tipo_localidade.lower(),
                 "possuiAlertas": self.possui_alertas,
                 "cpf": self.cpf,
                 "cns": self.cns,

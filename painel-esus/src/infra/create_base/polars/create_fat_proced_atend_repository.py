@@ -40,7 +40,7 @@ class CreateProcedAtendBaseRepository(CreateBasesRepositoryInterface):
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    print(text(f"{SQL}  LIMIT {chunk_size} OFFSET {offset};"))
+                    #print(text(f"{SQL}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f'{SQL}  LIMIT {chunk_size} OFFSET {offset};'), con=engine,dtype_backend='pyarrow')
 

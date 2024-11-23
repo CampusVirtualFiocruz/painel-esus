@@ -8,6 +8,7 @@ TABELAS = [
     "DROP TABLE IF EXISTS autorreferidos;",
     "DROP TABLE IF EXISTS crianca;",
     "DROP TABLE IF EXISTS idoso;",
+    "DROP TABLE IF EXISTS status_records;",
     """
 		CREATE TABLE pessoas (
 			"index" BIGINT, 
@@ -32,10 +33,27 @@ TABELAS = [
 			bairro TEXT, 
 			cep TEXT, 
 			tipo_localidade TEXT,
+			possui_fci BOOLEAN,
+			possui_fcdt BOOLEAN,
+			dt_ultima_atualizacao_cidadao DATE,
+			diferenca_ultima_atualizacao_cidadao BIGINT,
+			dt_atualizacao_fcd DATE,
+			diferenca_ultima_atualizacao_fcd BIGINT,
+			codigo_equipe_vinculada BIGINT,
+			codigo_unidade_saude BIGINT,
+			st_usar_cadastro_individual BOOLEAN,
+    		st_recusa_cadastro BOOLEAN,
 			CONSTRAINT pk_pessoas PRIMARY KEY (cidadao_pec)
 		);
 	""",
     'CREATE INDEX ix_pessoas_index ON pessoas ("index");',
+    """CREATE TABLE status_records (
+        "index" BIGINT, 
+		tipo TEXT,
+		codigo_equipe BIGINT,
+		codigo_unidade_saude BIGINT,
+		quantidade BIGINT
+    );""",
     """CREATE TABLE hipertensao_nominal (
 		"index" BIGINT, 
 		co_fat_cidadao_pec BIGINT, 

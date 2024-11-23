@@ -28,7 +28,21 @@ select distinct on (p.co_seq_fat_cidadao_pec) p.co_seq_fat_cidadao_pec cidadao_p
         when tacv.no_bairro_tb_cidadao_filtro is not null
         and tacv.no_bairro_tb_cidadao_filtro not like '%zona rural%' then 'Zona Urbana'
         when tacv.no_bairro_tb_cidadao_filtro is null then 'N/I'
-    end tipo_localidade
+    end tipo_localidade,
+    tacv.st_possui_fci possui_fci,
+    tacv.st_possui_fcdt possui_fcdt,
+    tacv.dt_ultima_atualizacao_cidadao,
+    extract(year from age(current_date, tacv.dt_ultima_atualizacao_cidadao)) * 12 + extract(month from age(current_date, tacv.dt_ultima_atualizacao_cidadao)) diferenca_ultima_atualizacao_cidadao,
+    tacv.dt_atualizacao_fcd,
+    extract(year from age(current_date, tacv.dt_atualizacao_fcd)) * 12 + extract(month from age(current_date, tacv.dt_atualizacao_fcd)) diferenca_ultima_atualizacao_fcd,
+	tde.co_seq_dim_equipe codigo_equipe_vinculada,
+	tdus.co_seq_dim_unidade_saude codigo_unidade_saude,
+    tacv.st_usar_cadastro_individual,
+    tfci.st_recusa_cadastro
 from
     pessoas_id p
-    left join tb_acomp_cidadaos_vinculados tacv on p.co_cidadao = tacv.co_cidadao"""
+    left join tb_acomp_cidadaos_vinculados tacv on p.co_cidadao = tacv.co_cidadao
+    left join tb_dim_equipe tde on tde.nu_ine = tacv.nu_ine_vinc_equipe
+    left join tb_dim_unidade_saude tdus on tdus.nu_cnes = tacv.nu_cnes_vinc_equipe
+    left join tb_fat_cad_individual tfci  on tfci.co_fat_cidadao_pec = p.co_seq_fat_cidadao_pec
+    """

@@ -30,7 +30,7 @@ class CreateCidacaoPecBaseRepository(CreateBasesRepositoryInterface):
             # schema_fixo =  self.get_schema()
             # chunk_size = env["chunck_lenght"]
             # print(chunk_size)
-            # print(text(f"{chunk_size}"))
+            # #print(text(f"{chunk_size}"))
 
             local_db = LocalDBConnectionHandler()
             local_engine = local_db.get_engine()
@@ -44,7 +44,7 @@ class CreateCidacaoPecBaseRepository(CreateBasesRepositoryInterface):
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
+                    #print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f'{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};'), con=engine,dtype_backend='pyarrow')
 

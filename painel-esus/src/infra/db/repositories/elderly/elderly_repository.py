@@ -158,7 +158,7 @@ class ElderlyRepository:
             if cnes is not None and cnes:
                 where_clause +=  f' where e.codigo_unidade_saude = {cnes} '
                 if equipe is not None and equipe:
-                    where_clause +=  f' where e.codigo_equipe = {equipe} '
+                    where_clause +=  f' and e.codigo_equipe = {equipe} '
             response = pd.read_sql_query(
                 con=db_con.get_engine(),
                 sql=f"""select

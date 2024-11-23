@@ -4,6 +4,8 @@
 import os
 import time
 
+from src.infra.db.settings.connection_local import DBConnectionHandler
+
 start_time = time.time()
 
 
@@ -14,6 +16,7 @@ from datetime import datetime
 
 import polars as pl
 from dateutil.relativedelta import relativedelta
+
 
 def gerar_banco():
     working_directory  = os.getcwd()
@@ -28,16 +31,13 @@ def gerar_banco():
 
     fao = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet")
 
-
     faip = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
 
     fat_vis_dom = pl.read_parquet(input_path + os.sep +"tb_fat_visita_domiciliar.parquet")
 
-
     fat_vac = pl.read_parquet(input_path + os.sep +"tb_fat_vacinacao.parquet")
 
     fat_acomp_vinc = pl.read_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet")
-
 
     faip = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
     faip = faip.with_columns(pl.col("co_seq_fat_atd_ind").cast(pl.Int64) )
@@ -53,7 +53,6 @@ def gerar_banco():
     codigos_dentista = [485, 599, *range(699, 720)] # Códigos de cirurgião dentista
 
     acs_crianca = [483, 488, 489,526, 557, 589, 606, 617, 618, 620, 621, 780, 781, *range(522, 525), *range(623, 626)] 
-
 
     cod_assistente_social = [477]
     cod_farma = [*range(721, 727)]
@@ -80,17 +79,14 @@ def gerar_banco():
         cod_nutri
     )
 
-
     crianca = tb_pessoa.filter(
         (pl.col("idade").cast(pl.Int32) <= 2)).rename({"cidadao_pec" : "co_fat_cidadao_pec"}).with_columns(pl.col("co_fat_cidadao_pec").cast(pl.Int64) ).select("co_fat_cidadao_pec")
-
 
     crianca_fai = fai.join(
         crianca.select('co_fat_cidadao_pec'),
         on="co_fat_cidadao_pec",
         how="inner"
     )
-
 
     indicador_I_e_II_III_V = crianca_fai.select(
             ["co_fat_cidadao_pec", "co_dim_tempo", "co_dim_cbo_1", "co_dim_cbo_2","dt_nascimento","nu_peso", "nu_altura","co_seq_fat_atd_ind"]
@@ -125,7 +121,6 @@ def gerar_banco():
             .alias("atd_8dias")
         )
 
-
     indicador_I = indicador_I_e_II_III_V.group_by(
             "co_fat_cidadao_pec"
         ).agg([
@@ -146,7 +141,6 @@ def gerar_banco():
         .filter(pl.col("diff_dias") <= 729)
         )
 
-
     indicador_II =  ( indicador_II_III.group_by(
             "co_fat_cidadao_pec"
         ).agg([
@@ -164,7 +158,6 @@ def gerar_banco():
 
         )
     )
-
 
     indicador_III = (indicador_II_III
         .group_by(
@@ -184,8 +177,6 @@ def gerar_banco():
             .alias("indicador_medicoes_peso_altura_ate2anos")
         )
     )
-
-
 
     indicador_IV = (
         fat_vis_dom
@@ -268,7 +259,6 @@ def gerar_banco():
         )
     )
 
-
     indicador_vac = (
         fat_vac
         .select("co_fat_cidadao_pec","ds_filtro_imunobiologico","co_dim_tempo","dt_nascimento","co_seq_fat_vacinacao")
@@ -348,7 +338,6 @@ def gerar_banco():
             .alias("vacina_3")
         )
     )
-
 
     indicador_VI = (
         indicador_vac
@@ -452,7 +441,6 @@ def gerar_banco():
         on="co_fat_cidadao_pec",
         how="inner"
     ).select("co_dim_cbo_1","co_dim_cbo_2","co_fat_cidadao_pec")
-
 
     crianca_fai_fao = pl.concat([crianca_fai, crianca_fao])
 
@@ -574,12 +562,9 @@ def gerar_banco():
 
     )
 
-
-
     mapeamento_renomeacao = {
         "co_fat_cidadao_pec": "cidadao_pec",
     }
-
 
     crianca_updated = (crianca
                     .join(indicador_I , on ="co_fat_cidadao_pec",how="left" )
@@ -612,8 +597,11 @@ def gerar_banco():
 
     )
     crianca_updated.write_parquet(output_path+os.sep+"crianca.parquet")
-
+    with DBConnectionHandler() as con:
+        engine = con.get_engine()
+        crianca_updated.to_sql(name='crianca', con=engine, if_exists="append")
+        
     end_time = time.time()
     execution_time = end_time - start_time
-
+    time.sleep(2)
     print(f"Tempo total de execução: {execution_time:.2f} segundos")

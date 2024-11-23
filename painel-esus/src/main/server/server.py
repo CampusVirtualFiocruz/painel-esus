@@ -3,32 +3,24 @@ import os
 
 import blueprint_decr
 from dotenv import dotenv_values
-from flask import Flask
-from flask import send_from_directory
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from src.env import env as config
 from src.errors.logging import logging
-from src.main.routes.children_routes import children_bp
-from src.main.routes.children_routes import ChildrenPath
-from src.main.routes.city_informations_route import city_informations_bp
-from src.main.routes.city_informations_route import CityInfoPath
-from src.main.routes.demographics_info_route import DemographichInfoPath
-from src.main.routes.demographics_info_route import demographics_info_bp
-from src.main.routes.diabetes_routes import diabetes_bp
-from src.main.routes.diabetes_routes import DiabetesPath
-from src.main.routes.elderly_routes import elderly_bp
-from src.main.routes.elderly_routes import ElderlyPath
-from src.main.routes.hypertension_routes import hypertension_bp
-from src.main.routes.hypertension_routes import HypertensionPath
+from src.main.routes.children_routes import ChildrenPath, children_bp
+from src.main.routes.city_informations_route import CityInfoPath, city_informations_bp
+from src.main.routes.demographics_info_route import (
+    DemographichInfoPath,
+    demographics_info_bp,
+)
+from src.main.routes.diabetes_routes import DiabetesPath, diabetes_bp
+from src.main.routes.elderly_routes import ElderlyPath, elderly_bp
+from src.main.routes.hypertension_routes import HypertensionPath, hypertension_bp
 from src.main.routes.login_route import login_bp
-from src.main.routes.oral_health import oral_health_bp
-from src.main.routes.oral_health import OralHealthPath
-from src.main.routes.smoking import smoking_bp
-from src.main.routes.smoking import SmokingPath
-from src.main.routes.units_route import teams_bp
-from src.main.routes.units_route import TeamsPath
-from src.main.routes.units_route import units_bp
-from src.main.routes.units_route import UnitsPath
+from src.main.routes.oral_health import OralHealthPath, oral_health_bp
+from src.main.routes.records_routes import RecordsPath, records_bp
+from src.main.routes.smoking import SmokingPath, smoking_bp
+from src.main.routes.units_route import TeamsPath, UnitsPath, teams_bp, units_bp
 from src.main.server.cache import cache
 from src.main.server.decorators.token_required import token_required
 
@@ -127,4 +119,15 @@ register_blueprint(
     # token_required,
         cache.cached(timeout=24 * 60 * 60, query_string=True)
     ], 
+)
+
+
+records = RecordsPath()
+register_blueprint(
+    app,
+    (records_bp, records.root_path),
+    [
+        # token_required,
+        cache.cached(timeout=24 * 60 * 60, query_string=True)
+    ],
 )

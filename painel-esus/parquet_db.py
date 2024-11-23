@@ -1,4 +1,5 @@
 import os
+import time
 
 import pandas as pd
 from src.infra.db.settings.connection_local import DBConnectionHandler
@@ -14,6 +15,7 @@ def gerar_banco():
     ]
 
     def create_base(base):
+        time.sleep(5)
         data = pd.read_parquet(base[1])
 
         with DBConnectionHandler() as con:

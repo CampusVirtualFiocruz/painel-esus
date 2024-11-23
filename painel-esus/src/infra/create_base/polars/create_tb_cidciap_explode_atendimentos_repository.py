@@ -30,9 +30,9 @@ class CreateCidCiapExplodeAtendimentosRepository(CreateBasesRepositoryInterface)
             # Log detalhado do erro
             logging.error("Erro ao executar o script explode cid:")
             logging.error(e.stderr)
-        except FileNotFoundError:
+        except FileNotFoundError as e:
             # Trata o caso onde o interpretador Python não é encontrado
-            logging.error("Python não encontrado. Verifique se o Python está instalado e no PATH.")
+            logging.error(str(e))
         except Exception as e:
             # Trata quaisquer outras exceções
             logging.error(f"Ocorreu um erro inesperado: {str(e)}")

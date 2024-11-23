@@ -1,9 +1,11 @@
 # pylint: disable=E0401,C0301,W0612,W0611
 import os
-import subprocess
 from pathlib import Path
 
 from parquet_db import gerar_banco
+from src.data.interfaces.create_bases.create_bases_repository import (
+    CreateBasesRepositoryInterface,
+)
 from src.data.use_cases.create_bases.create_bases_usecase import CreateBasesUseCase
 from src.env import env
 from src.errors.logging import logging
@@ -23,14 +25,9 @@ from src.infra.create_base.create_nominal_lists_bases_repository import (
     CreateDiabetesNominalListRepository,
     CreateHypertensionNominalListRepository,
 )
-from src.infra.create_base.create_oral_health_bases_repository import (
-    CreateOralHealthBasesRepository,
-)
 from src.infra.create_base.create_pessoas_base_repository import (
     CreatePessoasBaseRepository,
-)
-from src.infra.create_base.create_smoking_bases_repository import (
-    CreateSmokingBasesRepository,
+    CreateStatusRecordsRepository,
 )
 from src.infra.create_base.create_structure_base_repository import (
     CreateStructureBaseRepository,
@@ -56,13 +53,7 @@ from src.infra.create_base.polars import (
     CreateVacinacaoBaseRepository,
     CreateVisistaDomiciliarBaseRepository,
 )
-from src.data.interfaces.create_bases.create_bases_repository import (
-    CreateBasesRepositoryInterface,
-)
-class ParquetConvertion(CreateBasesRepositoryInterface):
 
-    def create_base(self):
-        gerar_banco()
 
 class CreateBasesController:
 
@@ -80,6 +71,7 @@ class CreateBasesController:
             _list = [
                 CreateStructureBaseRepository(),
                 CreatePessoasBaseRepository(),
+                CreateStatusRecordsRepository(),
                 CreateEquipesBaseRepository(),
                 CreateUnidadesSaudeBaseRepository(),
                 CreateTbDimCboRepository(),
@@ -105,7 +97,6 @@ class CreateBasesController:
                 CreateHypertensionBasesRepository(),
                 CreateDiabetesNominalListRepository(),
                 CreateHypertensionNominalListRepository(),
-                ParquetConvertion()
             ]
             usecase = CreateBasesUseCase(bases_generators=_list)
             usecase.create_bases()

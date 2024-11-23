@@ -11,6 +11,7 @@ from src.env.conf import getenv
 from src.errors import InvalidArgument, NoSuchTableError
 from src.errors.logging import logging
 from src.infra.db.repositories.sqls.pessoa.pessoas import pessoas as PESSOAS
+from src.infra.db.repositories.sqls.pessoa.status_cadastro import status_cadastro
 from src.infra.db.repositories.update_bases import UpdateBasesRepository
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
@@ -73,3 +74,44 @@ class CreatePessoasBaseRepository(CreateBasesRepositoryInterface):
 
         except NoSuchTableError:
             logging.info(f'Erro {self._base} already destroyed!')
+
+
+class CreateStatusRecordsRepository(CreateBasesRepositoryInterface):
+    _base = "status_records"
+    def destroy_base(self):
+        if self._base is None:
+            raise InvalidArgument("Creation base not passed.")
+
+    def create_base(self):
+        if self._base is None:
+            raise InvalidArgument("Creation base not passed.")
+        try:
+            self.destroy_base()
+        except NoSuchTableError:
+            logging.info(f"Base {self._base} already destroyed!")
+        try:
+            local_db = LocalDBConnectionHandler()
+            local_engine = local_db.get_engine()
+            _next = True
+            offset = 0
+            chunk_size = getenv("CHUNK_SIZE", 1000)
+            while _next:
+                with DBConnectionHandler() as db:
+                    engine = db.get_engine()
+                    sql = status_cadastro()
+                    df = pd.read_sql_query(
+                        text(f"{sql}  LIMIT {chunk_size} OFFSET {offset};"),
+                        con=engine,
+                    )
+
+                    if df.shape[0] is not None and df.shape[0] > 0:
+                        _next = True
+                    else:
+                        _next = False
+
+                    offset += chunk_size
+
+                    df.to_sql(name=self._base, con=local_engine, if_exists="append")
+
+        except NoSuchTableError:
+            logging.info(f"Erro {self._base} already destroyed!")
