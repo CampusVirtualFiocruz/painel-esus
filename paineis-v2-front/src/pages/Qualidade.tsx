@@ -36,13 +36,13 @@ const reportSections = [
         colors: ["#b9b9b9", "#09406a"],
       },
     },
-    "status-cadastros-cidadaos": {
-      Chart: Donut,
-      config: {
-        formatterKind: "perc",
-        colors: ["#5CD2C8", "#b9b9b9"],
-      },
-    },
+    // "status-cadastros-cidadaos": {
+    //   Chart: Donut,
+    //   config: {
+    //     formatterKind: "perc",
+    //     colors: ["#5CD2C8", "#b9b9b9"],
+    //   },
+    // },
     "localizacao-domicilios-cadastrados": {
       Chart: Donut,
       config: {
