@@ -190,21 +190,21 @@ class ChildrenRepository:
                         when c.indicador_atendimentos_medicos_enfermeiros   = 1 then 'SIM'
                         when c.indicador_atendimentos_medicos_enfermeiros != 1 then 'NÃO'	
                     end indicador_atendimentos_medicos_enfermeiros,
-                    c.data_ultimo_atendimento_medico_enfermeiro, 
+                    STRFTIME( '%Y-%m-%d',c.data_ultimo_atendimento_medico_enfermeiro) data_ultimo_atendimento_medico_enfermeiro, 
                     c.atendimentos_medicos_enfermeiros_8d_vida, 
                     c.atendimentos_medicos_enfermeiros_puericult, 
-                    c.data_ultimo_atendimento_medicos_enfermeiros_puericult, 
+                    STRFTIME( '%Y-%m-%d',c.data_ultimo_atendimento_medicos_enfermeiros_puericult) data_ultimo_atendimento_medicos_enfermeiros_puericult, 
                     case 
                         when c.indicador_atendimentos_medicos_enfermeiros_puericult   = 1 then 'SIM'
                         when c.indicador_atendimentos_medicos_enfermeiros_puericult != 1 then 'NÃO'	
                     end indicador_atendimentos_medicos_enfermeiros_puericultura,
                     c.medicoes_peso_altura_ate2anos, 
-                    c.data_ultima_medicao_peso_altura_ate2anos, 
+                    STRFTIME( '%Y-%m-%d',c.data_ultima_medicao_peso_altura_ate2anos) data_ultima_medicao_peso_altura_ate2anos, 
                     case 
                         when c.indicador_medicoes_peso_altura_ate2anos   = 1 then 'SIM'
                         when c.indicador_medicoes_peso_altura_ate2anos != 1 then 'NÃO'	
                     end indicador_medicoes_peso_altura_ate2anos,
-                    c.data_ultima_visita_domiciliar_acs, 
+                    STRFTIME( '%Y-%m-%d',c.data_ultima_visita_domiciliar_acs) data_ultima_visita_domiciliar_acs, 
                     case 
                         when c.indicador_visitas_domiciliares_acs   = 1 then 'SIM'
                         when c.indicador_visitas_domiciliares_acs != 1 then 'NÃO'	
@@ -215,19 +215,19 @@ class ChildrenRepository:
                         when c.indicador_teste_pezinho   = 1 then 'SIM'
                         when c.indicador_teste_pezinho != 1 then 'NÃO'	
                     end indicador_teste_pezinho,
-                    c.data_ultimo_teste_pezinho, 
+                     STRFTIME( '%Y-%m-%d',c.data_ultimo_teste_pezinho) data_ultimo_teste_pezinho, 
                     c.n_penta, 
                     c.n_polio, 
                     c.n__triplici, 
                     c.data_ultima_vacina_penta, 
-                    c.data_ultima_vacina_polio, 
-                    c.data_ultima_vacina_triplici, 
+                    STRFTIME( '%Y-%m-%d',c.data_ultima_vacina_polio) data_ultima_vacina_polio, 
+                    STRFTIME( '%Y-%m-%d',c.data_ultima_vacina_triplici) data_ultima_vacina_triplici, 
                     case 
                         when c.indicador_vacinas_penta_polio_triplici   = 1 then 'SIM'
                         when c.indicador_vacinas_penta_polio_triplici != 1 then 'NÃO'	
                     end indicador_vacinas_penta_polio_triplici,
                     c.atendimentos_odontologicos, 
-                    c.data_ultimo_atendimento_odontologico, 
+                    STRFTIME( '%Y-%m-%d',c.data_ultimo_atendimento_odontologico) data_ultimo_atendimento_odontologico, 
                     case 
                         when c.indicador_atendimentos_odontologicos   = 1 then 'SIM'
                         when c.indicador_atendimentos_odontologicos != 1 then 'NÃO'	

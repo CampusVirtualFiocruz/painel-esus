@@ -7,7 +7,9 @@
 # usando a tabela pessoa gerada via sql do tales, script adaptado
 # In[27]:
 import time
+from datetime import datetime
 
+import pandas as pd
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
 start_time = time.time()
@@ -28,7 +30,6 @@ def gerar_banco():
     input_path = os.path.join(working_directory, "dados", "input") 
     output_path = os.path.join(working_directory, "dados", "output")  
 
-
     tb_pessoa = pl.read_csv(input_path+os.sep+"pessoas.csv",separator=";",ignore_errors=True)
     tb_pessoa = tb_pessoa.with_columns(pl.col("cidadao_pec").cast(pl.Int64))
 
@@ -44,7 +45,6 @@ def gerar_banco():
 
     tb_fat_vac = pl.read_parquet(input_path+os.sep+"tb_fat_vacinacao.parquet")
 
-
     dt_12meses = datetime.today() - relativedelta(months=12)
     # Define a data de hoje
     dt_hoje = datetime.today()
@@ -54,7 +54,6 @@ def gerar_banco():
     enfermeiro_codigos = [475, 479, 487, *range(627, 636), *range(782, 785)] # Códigos de enfermeiros
     creatinina = ["ABEX003", "0202010317"] # Códigos para creatinina
     cirurgiao_dentista = [485, 599] # Códigos de cirurgiões-dentistas
-
 
     # indicador 2 registro peso e altura
     # reusar o medicos_codigos e enfemerio_codigo do indicador 1
@@ -126,13 +125,10 @@ def gerar_banco():
         pl.col("indicador_atendimentos_medicos").fill_null(2),
     )
 
-
-
     faip_peso_altura = (
         faip.filter(pl.col("tipo") == "Procedimentos Avaliados").filter(pl.col("codigo").is_in(antropometrica))
             .unique(subset=["co_seq_fat_atd_ind"]) 
     )
-
 
     # Step 1: Process `fai` to create `indicador_medicoes_peso_altura`
     indicador_medicoes_peso_altura = fai.select(
@@ -159,7 +155,6 @@ def gerar_banco():
         # Create `indicador_medicoes_peso_altura` column based on the count
         pl.when(pl.col("medicoes_peso_altura") >= 1).then(1).otherwise(0).alias("indicador_medicoes_peso_altura")
     )
-
 
     last_peso_altura = fai.select(
         ["co_fat_cidadao_pec", "co_dim_tempo", "nu_peso", "nu_altura","co_dim_cbo_1","co_dim_cbo_2"]
@@ -197,7 +192,6 @@ def gerar_banco():
         how ="left"
     )
 
-
     # Step 4: Left join `idoso` with `indicador_medicoes_peso_altura` and replace NA values
     idoso = idoso.join(
         indicador_medicoes_peso_altura_v2,
@@ -209,16 +203,13 @@ def gerar_banco():
         pl.col("categoria_imc").fill_null(pl.lit("não informado")),
     )
 
-
     filtro_prof_ind_3 = medico_codigos + enfermeiro_codigos + nutri_cod + farma_cod
-
 
     # Filter for rows where `codigo` is in `creatinina` and remove duplicates
     faip_creatina = (
         faip.filter(pl.col("codigo").is_in(creatinina))
             .unique(subset=["co_seq_fat_atd_ind"])  # Remove duplicates based on `co_seq_fat_atd_ind`
     )
-
 
     indicador_III = (
         fai.select(["co_seq_fat_atd_ind", "co_fat_cidadao_pec", "co_dim_tempo","co_dim_cbo_1","co_dim_cbo_2"])
@@ -246,14 +237,11 @@ def gerar_banco():
         ])
     )
 
-
     # Final join with the `idoso` DataFrame
     idoso = (
         idoso.join(indicador_III, on="co_fat_cidadao_pec", how="left")
             .with_columns(pl.col("indicador_III").fill_null(2))  # Fill NA values with 2
     )
-
-
 
     indicador_IV = (
         fat_vis_dom
@@ -311,7 +299,6 @@ def gerar_banco():
             .with_columns(pl.col("indicador_visitas_domiciliares_acs").fill_null(2))  # Fill NA values with 2
     )
 
-
     # Step 1: Select relevant columns and filter based on `ds_filtro_imunobiologico`
     fai_vac = (
         tb_fat_vac
@@ -320,7 +307,6 @@ def gerar_banco():
             pl.col("ds_filtro_imunobiologico").str.contains("33|77")  # Filter for codes "33" or "77"
         )
     )
-
 
     indicador_vacinas_influenza = (
         fai_vac
@@ -399,7 +385,6 @@ def gerar_banco():
         ])
     )
 
-
     # Step 4: Join with idoso DataFrame and replace NAs with 2
     idoso_updated = (
         idoso
@@ -412,10 +397,7 @@ def gerar_banco():
         ])
     )
 
-
     colunas_para_remover = ["atendimentos"]
-
-
 
     mapeamento_renomeacao = {
         "co_fat_cidadao_pec": "cidadao_pec",
@@ -425,20 +407,53 @@ def gerar_banco():
         "indicador_III": "indicador_registros_creatinina",
     }
 
-
     idoso_updated_v2 = (idoso_updated
                         .drop(colunas_para_remover)
                         .rename(mapeamento_renomeacao)
     )
+    if idoso_updated_v2.schema["data_ultimo_atendimento_medicos"] == pl.Date:
+        idoso_updated_v2 = idoso_updated_v2.with_columns(
+            pl.col("data_ultimo_atendimento_medicos").cast(pl.Datetime)
+        )
 
+    if idoso_updated_v2.schema["data_ultimo_atendimento_medicos"] == pl.Date:
+        idoso_updated_v2 = idoso_updated_v2.with_columns(
+            pl.col("data_ultimo_atendimento_medicos").cast(pl.Datetime)
+        )
 
+    idoso_updated_v2 = idoso_updated_v2.with_columns(
+        pl.col("data_ultimo_atendimento_medicos")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultima_medicao_peso_altura")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultimo_registro_creatinina")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultima_visita_domiciliar_acs")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultimo_atendimento_odontologico")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultima_vacina_influenza")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+    )
 
     idoso_updated_v2.write_parquet(output_path + os.sep + "idoso.parquet")
     with DBConnectionHandler() as con:
         engine = con.get_engine()
-        idoso_updated_v2.to_sql(name='idoso', con=engine, if_exists="append")
+        idoso_updated_v2.write_database(
+                table_name="idoso",
+                connection=engine,
+                if_table_exists="append",
+                engine="sqlalchemy",
+            )
+
     end_time = time.time()
     execution_time = end_time - start_time
 
     print(f"Tempo total de execução idoso: {execution_time:.2f} segundos")
-
+    print(f"Tempo total de execução idoso: {execution_time:.2f} segundos")

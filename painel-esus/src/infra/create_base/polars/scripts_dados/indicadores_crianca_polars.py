@@ -596,11 +596,46 @@ def gerar_banco():
                     .rename(mapeamento_renomeacao)
 
     )
+    crianca_updated = crianca_updated.with_columns(
+        pl.col("data_ultimo_atendimento_medico_enfermeiro")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultimo_atendimento_medicos_enfermeiros_puericult")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultima_medicao_peso_altura_ate2anos")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultima_visita_domiciliar_acs")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultimo_teste_pezinho")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultima_vacina_penta")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultima_vacina_polio")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultima_vacina_triplici")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+        pl.col("data_ultimo_atendimento_odontologico")
+        .cast(pl.Datetime)
+        .dt.convert_time_zone("UTC"),
+    )
+
     crianca_updated.write_parquet(output_path+os.sep+"crianca.parquet")
     with DBConnectionHandler() as con:
         engine = con.get_engine()
-        crianca_updated.to_sql(name='crianca', con=engine, if_exists="append")
-        
+        crianca_updated.write_database(
+                table_name="crianca",
+                connection=engine,
+                if_table_exists="append",
+                engine="sqlalchemy",
+            )
+
     end_time = time.time()
     execution_time = end_time - start_time
     time.sleep(2)

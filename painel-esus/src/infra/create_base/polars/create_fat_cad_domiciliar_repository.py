@@ -59,7 +59,9 @@ class CreateCadDomiciliarBaseRepository(CreateBasesRepositoryInterface):
 
                         if writer is None:
 
-                            writer = pq.ParquetWriter("dados/input/"+parquet_file,schema=schema_fixo) #, schema=schema_fixo
+                            working_directory  = os.getcwd()
+                            input_path = os.path.join(working_directory, "dados", "input") 
+                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file,schema=schema_fixo) #, schema=schema_fixo
 
                         writer.write_table(table)
 

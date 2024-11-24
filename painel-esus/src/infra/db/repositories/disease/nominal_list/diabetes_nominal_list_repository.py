@@ -94,7 +94,7 @@ class DiabetesNominalListRepository:
 	dn.cids ,
 	dn.ciaps ,
 	dn.diagnostico 'grupo/condição',
-	dn.data_ultima_visita_acs,
+    STRFTIME( '%Y-%m-%d',dn.data_ultima_visita_acs) data_ultima_visita_acs,
 	case e
 		when dn.alerta_visita_acs = 1 then 'SIM'
 		when dn.alerta_visita_acs = 0 then 'NAO'
@@ -106,23 +106,23 @@ class DiabetesNominalListRepository:
 		when dn.alerta_total_de_consultas_medico = 1 then 'SIM'
 		when dn.alerta_total_de_consultas_medico = 0 then 'NAO'
 	end   alerta_total_de_consultas_medicas_enfermagem,
-	dn.ultimo_atendimento_medico_enfermeiro data_ultima_consulta_medica_enfermagem,
-	dn.ultimo_atendimento_odonto,
+    STRFTIME( '%Y-%m-%d',dn.ultimo_atendimento_medico_enfermeiro) data_ultima_consulta_medica_enfermagem,
+    STRFTIME( '%Y-%m-%d',dn.ultimo_atendimento_odonto) ultimo_atendimento_odonto,
 	case 
 		when dn.alerta_ultima_consulta_odontologica = 1 then 'SIM'
 		when dn.alerta_ultima_consulta_odontologica = 0 then 'NAO'
 	end  alerta_ultima_consulta_odontologica,
-	dn.ultima_data_afericao_pa ,
+    STRFTIME( '%Y-%m-%d',dn.ultima_data_afericao_pa) ultima_data_afericao_pa,
 	case 
 		when dn.alerta_afericao_pa = 1 then 'SIM'
 		when dn.alerta_afericao_pa = 0 then 'NAO'
 	end alerta_afericao_pa ,
-	dn.ultima_data_glicemia_capilar ,
+    STRFTIME( '%Y-%m-%d',dn.ultima_data_glicemia_capilar) ultima_data_glicemia_capilar,
 	case 
 		when dn.alerta_ultima_glicemia_capilar = 1 then 'SIM'
 		when dn.alerta_ultima_glicemia_capilar = 0 then 'NAO'
 	end  alerta_ultima_glicemia_capilar ,
-	dn.ultima_data_hemoglobina_glicada ,
+    STRFTIME( '%Y-%m-%d',dn.ultima_data_hemoglobina_glicada) ultima_data_hemoglobina_glicada,
 	case 
 		when dn.alerta_ultima_hemoglobina_glicada = 1 then 'SIM'
 		when dn.alerta_ultima_hemoglobina_glicada = 0 then 'NAO'

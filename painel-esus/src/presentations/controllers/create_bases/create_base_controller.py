@@ -71,11 +71,10 @@ class CreateBasesController:
             _list = [
                 CreateStructureBaseRepository(),
                 CreatePessoasBaseRepository(),
-                CreateStatusRecordsRepository(),
+                CreateAtendIndivBaseRepository(),
                 CreateEquipesBaseRepository(),
                 CreateUnidadesSaudeBaseRepository(),
                 CreateTbDimCboRepository(),
-                CreateAtendIndivBaseRepository(),
                 CreateAtendOdontoBaseRepository(),
                 CreateCadIndividualBaseRepository(),
                 CreateVacinacaoBaseRepository(),
@@ -89,14 +88,15 @@ class CreateBasesController:
                 CreateAcompCidadaosVinculadosBaseRepository(),
                 CreateVisistaDomiciliarBaseRepository(),
                 CreateCidCiapExplodeAtendimentosRepository(),
-                CreateIndicadoresIdososRepository(),
-                CreateIndicadoresCriancasRepository(),
                 CreateUnitsBaseRepository(),
                 CreateAutorreferidoBaseRepository(),
                 CreateDiabetesBasesRepository(),
                 CreateHypertensionBasesRepository(),
                 CreateDiabetesNominalListRepository(),
                 CreateHypertensionNominalListRepository(),
+                CreateStatusRecordsRepository(),
+                CreateIndicadoresIdososRepository(),
+                CreateIndicadoresCriancasRepository(),
             ]
             usecase = CreateBasesUseCase(bases_generators=_list)
             usecase.create_bases()

@@ -99,7 +99,7 @@ class HypertensionNominalListRepository:
 	hn.cids ,
 	hn.ciaps ,
 	hn.diagnostico 'grupo/condição',
-	hn.data_ultima_visita_acs,
+    STRFTIME( '%Y-%m-%d',hn.data_ultima_visita_acs) data_ultima_visita_acs,
 	case 
 		when hn.alerta_visita_acs = 1 then 'SIM'
 		when hn.alerta_visita_acs = 0 then 'NAO'
@@ -111,18 +111,18 @@ class HypertensionNominalListRepository:
 		when hn.alerta_total_de_consultas_medico = 1 then 'SIM'
 		when hn.alerta_total_de_consultas_medico = 0 then 'NAO'
 	end alerta_total_de_consultas_medicas_enfermagem,
-	hn.ultimo_atendimento_medico_enfermeiro data_ultima_consulta_medica_enfermagem,
-	hn.ultimo_atendimento_odonto,
+    STRFTIME( '%Y-%m-%d',hn.ultimo_atendimento_medico_enfermeiro) data_ultima_consulta_medica_enfermagem,
+    STRFTIME( '%Y-%m-%d',hn.ultimo_atendimento_odonto) ultimo_atendimento_odonto,
     case 
 		when hn.alerta_ultima_consulta_odontologica = 1 then 'SIM'
 		when hn.alerta_ultima_consulta_odontologica = 0 then 'NAO'
 	end alerta_ultima_consulta_odontologica	,
-	hn.ultima_data_afericao_pa ,
+    STRFTIME( '%Y-%m-%d',hn.ultima_data_afericao_pa) ultima_data_afericao_pa,
 	case 
 		when hn.alerta_afericao_pa = 1 then 'SIM'
 		when hn.alerta_afericao_pa = 0 then 'NAO'
 	end alerta_afericao_pa ,
-	hn.ultima_data_creatinina  ,
+    STRFTIME( '%Y-%m-%d',hn.ultima_data_creatinina) ultima_data_creatinina ,
 	case 
 		when hn.alerta_creatinina  = 1 then 'SIM'
 		when hn.alerta_creatinina  = 0 then 'NAO'

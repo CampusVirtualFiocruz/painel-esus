@@ -40,7 +40,7 @@ class CreateAtendIndivBaseRepository(CreateBasesRepositoryInterface):
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    #print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
+                    print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f'{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};'), con=engine,dtype_backend='pyarrow')
 
@@ -55,18 +55,19 @@ class CreateAtendIndivBaseRepository(CreateBasesRepositoryInterface):
                     #                  if_exists='append')
                     if not df.empty:
 
-                        table = pa.Table.from_pandas(df,schema=schema_fixo,preserve_index = False)
+                        table = pa.Table.from_pandas(df,schema=schema_fixo,preserve_index = False,)
 
                         if writer is None:
-
-                            writer = pq.ParquetWriter("dados/input/"+parquet_file, schema=schema_fixo)
+                            working_directory  = os.getcwd()
+                            input_path = os.path.join(working_directory, "dados", "input") 
+                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file, schema_fixo)
 
                         writer.write_table(table)
 
             if writer:
                 writer.close()  
         except Exception as e:
-            print(e)
+            print(str(e))
             print(f'Erro {self._base} already destroyed!')
 
     def get_schema(self):
@@ -141,14 +142,14 @@ class CreateAtendIndivBaseRepository(CreateBasesRepositoryInterface):
             pa.field('co_dim_tp_particip_cidadao', pa.int64()),
             pa.field('co_dim_tp_particip_prof_conv', pa.int64()),
             pa.field('st_conduta_agendamento_emulti', pa.string()),  # Mudança de null para string
-            pa.field('st_nasf', pa.int32()),
-            pa.field('nu_circ_abdominal', pa.int32()),  # Mudança de null para string
-            pa.field('nu_perim_panturrilha', pa.int32()),  # Mudança de null para string
+            pa.field('st_nasf', pa.int64()),
+            pa.field('nu_circ_abdominal', pa.float64()),  # Mudança de null para string
+            pa.field('nu_perim_panturrilha', pa.float64()),  # Mudança de null para string
             pa.field('nu_pressao_sistolica', pa.int32()),  # Mudança de null para string
             pa.field('nu_pressao_diastolica', pa.int32()),  # Mudança de null para string
             pa.field('nu_freq_respiratoria', pa.string()),  # Mudança de null para string
             pa.field('nu_freq_cardiaca', pa.int32()),  # Mudança de null para string
-            pa.field('nu_temperatura', pa.int32()),  # Mudança de null para string
+            pa.field('nu_temperatura', pa.float64()),  # Mudança de null para string
             pa.field('nu_saturacao_o2', pa.int32()),  # Mudança de null para string
             pa.field('nu_glicemia', pa.int32()),  # Mudança de null para string
             pa.field('co_dim_tipo_glicemia', pa.int64())  # Mudança de null para string

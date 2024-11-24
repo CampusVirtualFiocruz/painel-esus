@@ -180,9 +180,9 @@ class ElderlyRepository:
                     p.cep,
                     p.tipo_localidade ,
                     i.atendimentos_medicos,
-                    i.data_ultimo_atendimento_medicos,
+                    STRFTIME( '%Y-%m-%d',i.data_ultimo_atendimento_medicos) data_ultimo_atendimento_medicos,
                     i.medicoes_peso_altura , 
-                    i.data_ultima_medicao_peso_altura , 
+                    STRFTIME( '%Y-%m-%d',i.data_ultima_medicao_peso_altura) data_ultima_medicao_peso_altura, 
                     case 
                         when i.indicador_medicoes_peso_altura  = 1 then 'SIM'
                         when i.indicador_medicoes_peso_altura != 1 then 'NÃO'	
@@ -190,7 +190,7 @@ class ElderlyRepository:
                     i.imc , 
                     i.categoria_imc , 
                     i.registros_creatinina , 
-                    i.data_ultimo_registro_creatinina , 
+                    STRFTIME( '%Y-%m-%d',i.data_ultimo_registro_creatinina) data_ultimo_registro_creatinina, 
                     case 
                         when i.indicador_registros_creatinina   = 1 then 'SIM'
                         when i.indicador_registros_creatinina  != 1 then 'NÃO'	
@@ -200,15 +200,15 @@ class ElderlyRepository:
                         when i.indicador_visitas_domiciliares_acs  != 1 then 'NÃO'	
                     end indicador_visitas_domiciliares_acs  ,
                     i.visitas_domiciliares_acs , 
-                    i.data_ultima_visita_domiciliar_acs , 
+                    STRFTIME( '%Y-%m-%d',i.data_ultima_visita_domiciliar_acs) data_ultima_visita_domiciliar_acs, 
                     i.vacinas_influenza , 
-                    i.data_ultima_vacina_influenza , 
+                    STRFTIME( '%Y-%m-%d',i.data_ultima_vacina_influenza) data_ultima_vacina_influenza, 
                     case 
                         when i.indicador_vacinas_influenza   = 1 then 'SIM'
                         when i.indicador_vacinas_influenza  != 1 then 'NÃO'	
                     end indicador_vacinas_influenza  ,
                     i.atendimentos_odontologicos , 
-                    i.data_ultimo_atendimento_odontologico , 
+                    STRFTIME( '%Y-%m-%d',i.data_ultimo_atendimento_odontologico) data_ultimo_atendimento_odontologico, 
                     case 
                         when i.indicador_atendimento_odontologico 	   = 1 then 'SIM'
                         when i.indicador_atendimento_odontologico 	  != 1 then 'NÃO'	

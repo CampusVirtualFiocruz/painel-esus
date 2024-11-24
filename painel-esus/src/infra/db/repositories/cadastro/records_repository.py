@@ -160,12 +160,12 @@ class RecordsRepository:
                 pessoas.sexo,
                 pessoas.identidade_genero,
                 pessoas.telefone,
-                pessoas.ultima_atualizacao_cidadao,
+                STRFTIME( '%Y-%m-%d',pessoas.ultima_atualizacao_cidadao) ultima_atualizacao_cidadao,
                 case 
                     when pessoas.diferenca_ultima_atualizacao_cidadao > 24 then 'NÃO'
                     when pessoas.diferenca_ultima_atualizacao_cidadao <= 24 then 'SIM'
                 end fci_atualizada,
-                pessoas.ultima_atualizacao_fcd,
+                STRFTIME( '%Y-%m-%d',pessoas.ultima_atualizacao_fcd) ultima_atualizacao_fcd,
                 case 
                     when pessoas.diferenca_ultima_atualizacao_fcd > 24 then 'NÃO'
                     when pessoas.diferenca_ultima_atualizacao_fcd <= 24 then 'SIM'
