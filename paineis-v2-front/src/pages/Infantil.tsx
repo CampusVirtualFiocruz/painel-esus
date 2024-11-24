@@ -9,7 +9,7 @@ import {
 } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
-import useReportDataInfantil from "../hooks/sctions/infantil/useReportDataInfantil";
+import useReportDataInfantil from "../hooks/sections/infantil/useReportDataInfantil";
 import { PainelParams } from "./Hipertensao";
 
 const reportHeader = [

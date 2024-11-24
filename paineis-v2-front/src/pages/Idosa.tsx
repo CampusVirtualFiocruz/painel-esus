@@ -5,7 +5,7 @@ import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import { PainelParams } from "./Hipertensao";
-import useReportDataIdosas from "../hooks/sctions/idosas/useReportDataIdosas";
+import useReportDataIdosas from "../hooks/sections/idosas/useReportDataIdosas";
 
 const reportHeader = [
   {
