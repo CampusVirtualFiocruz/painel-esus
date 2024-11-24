@@ -72,7 +72,12 @@ class HypertensionNominalListRepository:
             )
             return users
 
-    def find_all_download(self, cnes: int = None) -> Dict:
+    def find_all_download(self, cnes: int = None, equipe:int = None) -> Dict:
+        where_clause = " "
+        if cnes is not None and cnes:
+            where_clause += f" where e.codigo_unidade_saude  = {cnes} "
+            if equipe is not None and equipe:
+                where_clause += f" and e.codigo_equipe  = {equipe} "
         with DBConnectionHandler() as db_con:
             response = pd.read_sql_query(
                 con=db_con.get_engine(),
@@ -87,7 +92,7 @@ class HypertensionNominalListRepository:
 	group_concat(e.micro_area) micro_area,
 	group_concat(e.nome_equipe) nome_equipe,
 	e.nome_unidade_saude,
-	p.data_nascimento ,
+	STRFTIME( '%d-%m-%Y',p.data_nascimento) data_nascimento,
 	p.idade ,
 	p.tipo_endereco ,
 	p.endereco || ' ' || p.numero logradouro,
@@ -95,42 +100,42 @@ class HypertensionNominalListRepository:
 	p.bairro ,
 	p.cep,
 	p.tipo_localidade ,
-	hn.min_date primeiro_atendimento,
+	STRFTIME( '%d-%m-%Y',hn.min_date) primeiro_atendimento,
 	hn.cids ,
 	hn.ciaps ,
 	hn.diagnostico 'grupo/condição',
-    STRFTIME( '%Y-%m-%d',hn.data_ultima_visita_acs) data_ultima_visita_acs,
+    STRFTIME( '%d-%m-%Y',hn.data_ultima_visita_acs) data_ultima_visita_acs,
 	case 
 		when hn.alerta_visita_acs = 1 then 'SIM'
-		when hn.alerta_visita_acs = 0 then 'NAO'
+		when hn.alerta_visita_acs = 0 or hn.alerta_visita_acs is null then 'NAO'
 	end alerta_visita_acs ,
 	hn.total_consulta_individual_medico ,
 	hn.total_consulta_individual_enfermeiro,
 	hn.total_consulta_individual_medico_enfermeiro total_de_consultas_medicas_enfermagem,
     case 
 		when hn.alerta_total_de_consultas_medico = 1 then 'SIM'
-		when hn.alerta_total_de_consultas_medico = 0 then 'NAO'
+		when hn.alerta_total_de_consultas_medico = 0 or hn.alerta_total_de_consultas_medico is null then 'NAO'
 	end alerta_total_de_consultas_medicas_enfermagem,
-    STRFTIME( '%Y-%m-%d',hn.ultimo_atendimento_medico_enfermeiro) data_ultima_consulta_medica_enfermagem,
-    STRFTIME( '%Y-%m-%d',hn.ultimo_atendimento_odonto) ultimo_atendimento_odonto,
+    STRFTIME( '%d-%m-%Y',hn.ultimo_atendimento_medico_enfermeiro) data_ultima_consulta_medica_enfermagem,
+    STRFTIME( '%d-%m-%Y',hn.ultimo_atendimento_odonto) ultimo_atendimento_odonto,
     case 
 		when hn.alerta_ultima_consulta_odontologica = 1 then 'SIM'
-		when hn.alerta_ultima_consulta_odontologica = 0 then 'NAO'
+		when hn.alerta_ultima_consulta_odontologica = 0 or hn.alerta_ultima_consulta_odontologica is null then 'NAO'
 	end alerta_ultima_consulta_odontologica	,
-    STRFTIME( '%Y-%m-%d',hn.ultima_data_afericao_pa) ultima_data_afericao_pa,
+    STRFTIME( '%d-%m-%Y',hn.ultima_data_afericao_pa) ultima_data_afericao_pa,
 	case 
 		when hn.alerta_afericao_pa = 1 then 'SIM'
-		when hn.alerta_afericao_pa = 0 then 'NAO'
+		when hn.alerta_afericao_pa = 0 or hn.alerta_afericao_pa is null then 'NAO'
 	end alerta_afericao_pa ,
-    STRFTIME( '%Y-%m-%d',hn.ultima_data_creatinina) ultima_data_creatinina ,
+    STRFTIME( '%d-%m-%Y',hn.ultima_data_creatinina) ultima_data_creatinina ,
 	case 
 		when hn.alerta_creatinina  = 1 then 'SIM'
-		when hn.alerta_creatinina  = 0 then 'NAO'
+		when hn.alerta_creatinina  = 0 or hn.alerta_creatinina  is null then 'NAO'
 	end alerta_creatinina   
 from
 	hipertensao_nominal hn  join pessoas p on p.cidadao_pec = hn.co_fat_cidadao_pec 
 	left join equipes e on e.cidadao_pec  = p.cidadao_pec 
-where e.codigo_unidade_saude = {cnes}
+{where_clause}
 group by p.cidadao_pec	
 order by p.nome
                 """,

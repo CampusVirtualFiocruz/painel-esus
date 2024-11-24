@@ -3,10 +3,13 @@ from sqlalchemy import text
 
 def group_by_race(cnes: int= None, equipe: int = None):
     where_clause = ' '
-    if cnes is not None and cnes:
-        where_clause += f" where pessoas.raca_cor  is not NULL and equipes.codigo_unidade_saude  = {cnes} "
-        if equipe is not None and equipe:
-            where_clause += f" and equipes.codigo_equipe  = {equipe} "
+    where_clause_total = ' '
+    if cnes is not None:
+        where_clause += f"""  where  pessoas.codigo_unidade_saude = {cnes}  """
+        where_clause_total = f" and pessoas.codigo_unidade_saude = {cnes}  "
+        if equipe and equipe is not None:
+            where_clause += f"  and pessoas.codigo_equipe_vinculada = {equipe} "
+            where_clause_total += f"  and pessoas.codigo_equipe_vinculada = {equipe} "
     sql = f"""
         with
             criancas as (
@@ -30,6 +33,7 @@ def group_by_race(cnes: int= None, equipe: int = None):
                             equipes.cidadao_pec = crianca.cidadao_pec
                         where
                             pessoas.raca_cor  is not NULL
+                        {where_clause_total}
             )
             select 
                 raca_cor, 

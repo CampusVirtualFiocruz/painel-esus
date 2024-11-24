@@ -99,10 +99,10 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             where_clause = ""
             if cnes is not None:
                 where_clause += f"""            where 
-                    e.codigo_unidade_saude = {cnes}
+                    p.codigo_unidade_saude = {cnes}
                 """
                 if equipe and equipe is not None:
-                    where_clause += f"  and e.codigo_equipe = {equipe} "
+                    where_clause += f"  and p.codigo_equipe_vinculada = {equipe} "
             sql = f"""
 with 
     cidadaos as ( select distinct p.cidadao_pec from 	pessoas p join equipes e on e.cidadao_pec = p.cidadao_pec 

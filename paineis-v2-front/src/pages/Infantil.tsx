@@ -24,10 +24,10 @@ const reportHeader = [
     "total-criancas-atendidas-2-anos": {
       Chart: ValueCard,
       config: {
-        description: "Porcentagem de cadastros atualizados",
+        description: "Total de crianças até 2 anos atendidas",
         icon: "paper",
       },
-    }, 
+    },
   },
 ];
 

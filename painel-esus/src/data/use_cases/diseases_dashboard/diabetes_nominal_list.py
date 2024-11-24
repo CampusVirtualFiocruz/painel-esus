@@ -26,8 +26,8 @@ class DiabetesNominalListUseCase:
         ]
         return response
 
-    def get_nominal_list_download(self, cnes: int = None):
+    def get_nominal_list_download(self, cnes: int = None, equipe:int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
-        response = self.__repository.find_all_download(cnes)
+        response = self.__repository.find_all_download(cnes, equipe)
         return response

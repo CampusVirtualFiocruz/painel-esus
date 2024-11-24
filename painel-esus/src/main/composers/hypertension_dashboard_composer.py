@@ -1,22 +1,32 @@
-from src.data.use_cases.diseases_dashboard.disease_dashboard import \
-    DiseaseUseCase
-from src.data.use_cases.diseases_dashboard.hypertension_nominal_list import HypertensionNominalListUseCase
+from src.data.use_cases.diseases_dashboard.disease_dashboard import DiseaseUseCase
+from src.data.use_cases.diseases_dashboard.hypertension_nominal_list import (
+    HypertensionNominalListUseCase,
+)
 from src.domain.entities.hypertension import Hypertension
-from src.domain.entities.hypertension_exams import HypertensionExams
-from src.domain.entities.hypertension_exams import IndividualHypertensionExams
-from src.infra.db.repositories.disease.diseases_dashboard_local import \
-    DiseasesDashboardLocalRepository as DiseasesDashboardRepository
-from src.infra.db.repositories.disease.nominal_list.hypertension_nominal_list_repository import HypertensionNominalListRepository
-from src.presentations.controllers.hypertension import HypertensionDashboardGetAgeGroupGender
-from src.presentations.controllers.hypertension import HypertensionDashboardGetAgeGroupsLocation
-from src.presentations.controllers.hypertension import HypertensionDashboardGetComplications
-from src.presentations.controllers.hypertension import HypertensionDashboardGetExamsCount
-from src.presentations.controllers.hypertension import HypertensionDashboardGetIMC
-from src.presentations.controllers.hypertension import HypertensionDashboardGetIndividualExamsCount
-from src.presentations.controllers.hypertension import HypertensionDashboardGetProfessionalsCount
-from src.presentations.controllers.hypertension import HypertensionDashboardGetTotal
-from src.presentations.controllers.hypertension.hypertension_dashboard_get_nominal_list import HypertensionDashboardGetNominalList
-from src.presentations.controllers.hypertension.hypertension_dashboard_get_nominal_list import HypertensionDashboardGetNominalListDownload
+from src.domain.entities.hypertension_exams import (
+    HypertensionExams,
+    IndividualHypertensionExams,
+)
+from src.infra.db.repositories.disease.diseases_dashboard_local import (
+    DiseasesDashboardLocalRepository as DiseasesDashboardRepository,
+)
+from src.infra.db.repositories.disease.nominal_list.hypertension_nominal_list_repository import (
+    HypertensionNominalListRepository,
+)
+from src.presentations.controllers.hypertension import (
+    HypertensionDashboardGetAgeGroupGender,
+    HypertensionDashboardGetAgeGroupsLocation,
+    HypertensionDashboardGetComplications,
+    HypertensionDashboardGetExamsCount,
+    HypertensionDashboardGetIMC,
+    HypertensionDashboardGetIndividualExamsCount,
+    HypertensionDashboardGetProfessionalsCount,
+    HypertensionDashboardGetTotal,
+)
+from src.presentations.controllers.hypertension.hypertension_dashboard_get_nominal_list import (
+    HypertensionDashboardGetNominalList,
+    HypertensionDashboardGetNominalListDownload,
+)
 
 
 def hypertension_dashboard_get_total():
@@ -110,4 +120,14 @@ def hypertension_dashboard_get_nominal_list_download(cnes):
     controller = HypertensionDashboardGetNominalListDownload(
         use_case)
 
-    return controller.handle(cnes)
+    return controller.handle
+    return controller.handle
+
+
+def hypertension_dashboard_get_nominal_list_download():
+    repository = HypertensionNominalListRepository()
+    use_case = HypertensionNominalListUseCase(repository)
+    controller = HypertensionDashboardGetNominalListDownload(
+        use_case)
+
+    return controller.handle

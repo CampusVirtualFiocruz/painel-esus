@@ -1,4 +1,4 @@
-from src.main.adapters.nominal_list_adapter import CriancaNominalListAdapter
+from src.main.adapters.nominal_list_adapter import RecordNominalListAdapter
 
 
 class RecordsAdapter:
@@ -99,6 +99,6 @@ class RecordsAdapter:
 
     def nominal_list(self, response):
         response["items"] = [
-            CriancaNominalListAdapter(r).to_dict() for r in response["items"]
+            RecordNominalListAdapter(r).to_dict() for r in response["items"]
         ]
         return response

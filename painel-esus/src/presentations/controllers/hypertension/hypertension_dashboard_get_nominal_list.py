@@ -1,8 +1,8 @@
 from src.data.use_cases.diseases_dashboard.hypertension_nominal_list import (
     HypertensionNominalListUseCase,
 )
-from src.presentations.http_types import HttpRequest
-from src.presentations.http_types import HttpResponse
+from src.presentations.controllers.utils.requests_utils import parse_request
+from src.presentations.http_types import HttpRequest, HttpResponse
 from src.presentations.interfaces.controller_interface import ControllerInterface
 
 
@@ -45,10 +45,9 @@ class HypertensionDashboardGetNominalListDownload():
     def __init__(self, use_case: HypertensionNominalListUseCase):
         self.__use_case = use_case
 
-    def handle(self, cnes=None):
-        if cnes is not None:
-            cnes = int(cnes)
-
-        response = self.__use_case.get_nominal_list_download(cnes)
-
+    def handle(self, request):
+        cnes, equipe = parse_request(request)
+        print(cnes, equipe)
+        response = self.__use_case.get_nominal_list_download(cnes, equipe)
+        print(response)
         return response

@@ -124,7 +124,7 @@ class RecordsRepository:
             if len(conditions) > 0:
                 users = users.filter(*conditions)
             users = users.group_by(Pessoas.cidadao_pec)
-            total = users.count()
+            total = users.count()+1
             users = (
                 users.order_by(Pessoas.nome)
                 .offset(max(0, page - 1) * pagesize)
@@ -142,12 +142,10 @@ class RecordsRepository:
         with DBConnectionHandler() as db_con:
             where_clause = ""
             if cnes is not None and cnes:
-                where_clause += f" where pessoas.codigo_equipe_vinculada = {cnes} "
+                where_clause += f" where pessoas.codigo_unidade_saude = {cnes} "
                 if equipe is not None and equipe:
                     where_clause += f" and pessoas.codigo_unidade_saude = {equipe} "
-            response = pd.read_sql_query(
-                con=db_con.get_engine(),
-                sql=f"""select 
+            sql = f"""select 
                 pessoas.cidadao_pec,
                 pessoas.co_cidadao,
                 pessoas.raca_cor,
@@ -155,19 +153,21 @@ class RecordsRepository:
                 pessoas.cns,
                 pessoas.nome,
                 pessoas.nome_social,
-                pessoas.data_nascimento,
+                STRFTIME( '%d-%m-%Y',pessoas.data_nascimento) data_nascimento,
                 pessoas.idade,
                 pessoas.sexo,
                 pessoas.identidade_genero,
                 pessoas.telefone,
-                STRFTIME( '%Y-%m-%d',pessoas.ultima_atualizacao_cidadao) ultima_atualizacao_cidadao,
+                STRFTIME( '%d-%m-%Y',pessoas.ultima_atualizacao_cidadao) ultima_atualizacao_cidadao,
                 case 
                     when pessoas.diferenca_ultima_atualizacao_cidadao > 24 then 'NÃO'
+                    when pessoas.diferenca_ultima_atualizacao_cidadao is null then 'NÃO'
                     when pessoas.diferenca_ultima_atualizacao_cidadao <= 24 then 'SIM'
                 end fci_atualizada,
-                STRFTIME( '%Y-%m-%d',pessoas.ultima_atualizacao_fcd) ultima_atualizacao_fcd,
+                STRFTIME( '%d-%m-%Y',pessoas.ultima_atualizacao_fcd) ultima_atualizacao_fcd,
                 case 
                     when pessoas.diferenca_ultima_atualizacao_fcd > 24 then 'NÃO'
+                    when pessoas.diferenca_ultima_atualizacao_fcd is null then 'NÃO'
                     when pessoas.diferenca_ultima_atualizacao_fcd <= 24 then 'SIM'
                 end fcd_atualizada,
                 pessoas.tipo_endereco,
@@ -183,6 +183,9 @@ class RecordsRepository:
             from pessoas 
                 left join equipes on pessoas.cidadao_pec = equipes.cidadao_pec and pessoas.codigo_equipe_vinculada = equipes.codigo_equipe and pessoas.codigo_unidade_saude = equipes.codigo_unidade_saude
             {where_clause}
-            order by equipes.micro_area desc """,
+            order by equipes.micro_area desc """
+            response = pd.read_sql_query(
+                con=db_con.get_engine(),
+                sql=sql,
             )
             return response

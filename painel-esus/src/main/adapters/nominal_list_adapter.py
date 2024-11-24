@@ -476,7 +476,7 @@ class IdosoNominalListAdapter:
         )
 
 
-class CriancaNominalListAdapter:
+class RecordNominalListAdapter:
 
     def __init__(self, user: Pessoas):
         self.nome = user.nome
@@ -495,7 +495,7 @@ class CriancaNominalListAdapter:
         self.telefone = user.telefone
 
         ultima_atualizacao_cidadao, ultima_atualizacao_fcd = True, True
-        
+
         if user.diferenca_ultima_atualizacao_cidadao is not None and user.diferenca_ultima_atualizacao_cidadao < 24:
             ultima_atualizacao_cidadao = False
 
