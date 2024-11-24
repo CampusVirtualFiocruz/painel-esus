@@ -3,7 +3,7 @@ import { content } from "../assets/content/content";
 import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
-import useReportDataQualidade from "../hooks/sctions/qualidade/useReportDataQualidade";
+import useReportDataQualidade from "../hooks/sections/qualidade/useReportDataQualidade";
 import { PainelParams } from "./Hipertensao";
 
 const reportHeader = [
