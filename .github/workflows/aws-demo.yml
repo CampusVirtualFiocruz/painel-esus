@@ -131,11 +131,11 @@ jobs:
             docker stop $(docker ps -a -q)
             docker rm $(docker ps -a -q)
             docker images -q | xargs docker rmi
+            docker pull painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}
+            echo 'DOCKER PULL'
             echo 'LIMPOU IMAGENS OBSOLETAS'
             docker stack deploy -c docker-compose.yml --resolve-image changed livramento-stack  
             echo 'DEPLOY SWARM'
-            docker pull $DOCKER_IMAGE
-            echo 'DOCKER PULL'
 
       # Stop VPN connection using stored client ID (always run, even on failure)
       - name: Stop VPN Connection Manually
