@@ -1,11 +1,11 @@
+# pylint: disable=C0411
 from typing import List
 
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
 from src.domain.use_cases.create_bases.create_bases import CreateBasesUsecasesInterface
-from src.errors import InvalidArgument, NoSuchTableError
-from src.errors.logging import logging
+from src.errors import InvalidArgument
 from tqdm import tqdm
 
 
@@ -23,6 +23,8 @@ class CreateBasesUseCase(CreateBasesUsecasesInterface):
             self.__bases_generators,
             ascii="░▒█",
             desc="Geração das Bases: ",
+            colour="blue",
+            leave=False,
         ):
             if isinstance(base, CreateBasesRepositoryInterface):
                 base.create_base()
