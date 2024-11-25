@@ -11,6 +11,7 @@ from src.infra.db.repositories.children.sqls import (
     children_total,
     children_total_cares,
     group_by_race,
+    professional_cares,
 )
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
@@ -153,6 +154,12 @@ class ChildrenRepository:
             result = con.execute(sql)
             return list(result)
 
+    def find_group_professionals_care(self, cnes: int = None, equipe: int = None):
+        with DBConnectionHandler().get_engine().connect() as con:
+            sql = professional_cares(cnes, equipe)
+            result = con.execute(sql)
+            return list(result)
+        
     def find_grouping_by_race(self, cnes: int = None, equipe: int = None):
         with DBConnectionHandler().get_engine().connect() as con:
             sql = group_by_race(cnes, equipe)

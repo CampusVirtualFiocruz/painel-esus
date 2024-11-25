@@ -8,6 +8,7 @@ from src.infra.db.repositories.elderly.sqls import (
     get_elderly_total_on_ubs_and_team,
     group_by_age_gender,
     group_by_age_location,
+    group_by_imc,
     group_by_race,
     total_hipertension_diabetes,
 )
@@ -101,6 +102,12 @@ class ElderlyRepository:
     def find_total_hipertension_diabetes(self, cnes: int = None, equipe: int = None):
         with DBConnectionHandler().get_engine().connect() as con:
             sql = total_hipertension_diabetes(cnes, equipe)
+            result = con.execute(sql)
+            return list(result)
+
+    def find_group_by_imc(self, cnes: int = None, equipe: int = None):
+        with DBConnectionHandler().get_engine().connect() as con:
+            sql = group_by_imc(cnes, equipe)
             result = con.execute(sql)
             return list(result)
 

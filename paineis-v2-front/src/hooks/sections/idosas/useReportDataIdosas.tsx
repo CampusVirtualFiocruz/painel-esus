@@ -19,7 +19,7 @@ const useReportDataIdosas = ({ ubsId, squadId }: reportBasicInfo) => {
           },
         }),
         "total-raca-cor": Api.get(`/elderly/group-by-race${ubsParam}`),
-        "total-imc": Api.get(`/elderly/group-by-age-location${ubsParam}`),
+        "total-imc": Api.get(`/elderly/group-by-imc${ubsParam}`),
         "total-proporcao-vacina-influenza": Api.get(
           `/elderly/group-by-influenza-rate${ubsParam}`
         ),

@@ -59,9 +59,9 @@ class ChildrenController:
         return HttpResponse(status_code=200, body=result)
 
     def grouping_cares_by_professionals(self, request: HttpRequest) -> HttpResponse:
-        # cnes, equipe = self.parse_request(request)
+        cnes, equipe = self.parse_request(request)
 
-        response = [] #self.__use_case.(cnes, equipe)
+        response = self.__use_case.find_group_professionals_care(cnes, equipe)
 
         result = self._adapter.children_cares_by_professionals(response)
         return HttpResponse(status_code=200, body=result)

@@ -28,6 +28,9 @@ def elderly_odonto_rate_composer():
 def elderly_hipertesnion_diabetes_rate_composer():
     return controller.grouping_total_disease_related
 
+def elderly_group_by_imc():
+    return controller.grouping_imc_rate
+
 
 def elderly_get_nominal_list():
     return controller.get_nominal_list
