@@ -1,4 +1,3 @@
-# pylint: disable=R1703
 import os
 
 import pandas as pd

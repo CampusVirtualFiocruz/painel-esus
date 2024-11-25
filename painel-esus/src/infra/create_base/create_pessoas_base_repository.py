@@ -37,7 +37,7 @@ class CreatePessoasBaseRepository(CreateBasesRepositoryInterface):
             try:
                 os.remove("dados/input/pessoas.csv")
             except FileNotFoundError:
-                logging.debug("pessoas.csv not found")
+                print('pessoas.csv not found')
         except (OperationalError, ResourceClosedError) as exc:
             raise NoSuchTableError(
                 f'No {self.get_base()} table found') from exc

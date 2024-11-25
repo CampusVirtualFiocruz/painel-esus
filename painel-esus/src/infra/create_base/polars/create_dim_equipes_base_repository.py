@@ -1,6 +1,3 @@
-# pylint: disable=C0413,R1703
-import os
-
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq
@@ -15,6 +12,7 @@ from src.infra.db.settings.connection_local import (
 )
 
 EQUIPES = "select * from tb_dim_equipe"
+import os
 
 
 class CreateDimEquipesBaseRepository(CreateBasesRepositoryInterface):
@@ -28,6 +26,8 @@ class CreateDimEquipesBaseRepository(CreateBasesRepositoryInterface):
 
     def create_base(self):
         try:
+            local_db = LocalDBConnectionHandler()
+            local_engine = local_db.get_engine()
             _next = True
             offset = 0
             parquet_file = f"{self._base}.parquet"
@@ -48,6 +48,8 @@ class CreateDimEquipesBaseRepository(CreateBasesRepositoryInterface):
 
                     offset += chunk_size
 
+                    #  df.to_sql(name=self._base, con=local_engine,
+                    #             if_exists='append')
                     if not df.empty:
 
                         table = pa.Table.from_pandas(df,preserve_index = False)
