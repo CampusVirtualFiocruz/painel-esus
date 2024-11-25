@@ -17,8 +17,8 @@ def get_elderly_total_on_ubs_and_team(cnes: int = None, equipe:int = None):
 	    idosos as (
             SELECT
                 DISTINCT idoso.cidadao_pec AS cidadao_pec,
-                equipes.codigo_unidade_saude,
-                equipes.codigo_equipe 
+                pessoas.codigo_unidade_saude,
+                pessoas.codigo_equipe_vinculada codigo_equipe
             FROM
                 idoso
             JOIN pessoas ON

@@ -5,7 +5,7 @@ import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import { PainelParams } from "./Hipertensao";
-import useReportDataIdosas from "../hooks/sctions/idosas/useReportDataIdosas";
+import useReportDataIdosas from "../hooks/sections/idosas/useReportDataIdosas";
 
 const reportHeader = [
   {
@@ -34,7 +34,7 @@ const reportSections = [
         colors: ["#0b5b98", "#6595ff", "#0066b4", "#49e8db", "#0066b4"],
       },
     },
-    /* "total-imc": {
+    "total-imc": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
@@ -44,7 +44,7 @@ const reportSections = [
           name: content?.["total-cadastros"],
         },
       },
-    },  */
+    },  
     row: {
       "total-proporcao-vacina-influenza": {
         Chart: Donut,

@@ -13,7 +13,7 @@ const useReportDataInfantil = ({ ubsId, squadId }: reportBasicInfo) => {
       const ubsParam = ubsId ? `/${ubsId}` : "";
 
       const requests = {
-        indicadores: Api.get(`/children/total`),
+        indicadores: Api.get(`/children/total${ubsParam}`),
         "total-cadastros-criancas-raca-cor": Api.get(
           `/children/group-by-race${ubsParam}`,
           {
@@ -23,7 +23,7 @@ const useReportDataInfantil = ({ ubsId, squadId }: reportBasicInfo) => {
           }
         ),
         "distribuicao-criancas-faixa-etaria": Api.get(
-          `/children/group-by-age-location`
+          `/children/group-by-age-location${ubsParam}`
         ),
         "distribuicao-criancas-sexo": Api.get(
           `/children/group-by-gender${ubsParam}`,

@@ -1,22 +1,21 @@
 # pylint: disable=W0613
 import io
 
-from flask import Blueprint
-from flask import jsonify
-from flask import request
-from flask import Response
+from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_age_group_gender
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_age_groups_location
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_complications
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_exams_count
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_imc
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_individual_exams_count
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_nominal_list
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_nominal_list_download
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_professionals_count
-from src.main.composers.diabetes_dashboard_composer import diabetes_dashboard_get_total
+from src.main.composers.diabetes_dashboard_composer import (
+    diabetes_dashboard_get_age_group_gender,
+    diabetes_dashboard_get_age_groups_location,
+    diabetes_dashboard_get_complications,
+    diabetes_dashboard_get_exams_count,
+    diabetes_dashboard_get_imc,
+    diabetes_dashboard_get_individual_exams_count,
+    diabetes_dashboard_get_nominal_list,
+    diabetes_dashboard_get_nominal_list_download,
+    diabetes_dashboard_get_professionals_count,
+    diabetes_dashboard_get_total,
+)
 from src.main.server.cache import cache
 from src.presentations.validators.base_validation import _validation
 from src.presentations.validators.schema.nominal_list import schema
@@ -238,8 +237,9 @@ def get_nominal_list_download(cnes=None):
 
     try:
         _validation(request.args.to_dict(), schema)
-        response = diabetes_dashboard_get_nominal_list_download(cnes)
-
+        response = request_adapter(
+            request, diabetes_dashboard_get_nominal_list_download()
+        )
         buffer = io.BytesIO()
         response.to_excel(buffer)
 

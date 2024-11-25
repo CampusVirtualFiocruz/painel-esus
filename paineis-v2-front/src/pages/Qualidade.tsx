@@ -1,9 +1,10 @@
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
 import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
-import { charts } from "../components/charts/qualidade.mock";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
+import useReportDataQualidade from "../hooks/sections/qualidade/useReportDataQualidade";
+import { PainelParams } from "./Hipertensao";
 
 const reportHeader = [
   {
@@ -35,13 +36,13 @@ const reportSections = [
         colors: ["#b9b9b9", "#09406a"],
       },
     },
-    "status-cadastros-cidadaos": {
-      Chart: Donut,
-      config: {
-        formatterKind: "perc",
-        colors: ["#5CD2C8", "#b9b9b9"],
-      },
-    },
+    // "status-cadastros-cidadaos": {
+    //   Chart: Donut,
+    //   config: {
+    //     formatterKind: "perc",
+    //     colors: ["#5CD2C8", "#b9b9b9"],
+    //   },
+    // },
     "localizacao-domicilios-cadastrados": {
       Chart: Donut,
       config: {
@@ -72,8 +73,16 @@ const reportSections = [
 ];
 
 const Qualidade = () => {
+  const { id } = useParams<PainelParams>();
   const [params] = useSearchParams();
-  const equipe = params.get("equipe");
+  const equipe = params.get("equipe") as any;
+
+  const reportData = useReportDataQualidade({ ubsId: id, squadId: equipe });
+  const report = reportData?.data;
+
+  if (reportData?.isLoading) {
+    return <center>Aguarde...</center>;
+  }
 
   return (
     <ReportWrapper
@@ -105,7 +114,7 @@ const Qualidade = () => {
               Object.keys(chartList).map((chartKey) => {
                 const CustomChart = chartList?.[chartKey]?.Chart;
                 const chartConfigs = chartList?.[chartKey]?.config;
-                const data = (charts as any)?.[chartKey]?.data;
+                const data = (report as any)?.[chartKey]?.data;
                 return <CustomChart data={data} config={chartConfigs} />;
               })
             )}
@@ -119,7 +128,7 @@ const Qualidade = () => {
           {Object.keys(chartList).map((chartKey) => {
             const CustomChart = chartList?.[chartKey]?.Chart;
             const chartConfigs = chartList?.[chartKey]?.config;
-            const data = (charts as any)?.[chartKey]?.data;
+            const data = (report as any)?.[chartKey]?.data;
 
             if (chartConfigs) {
               const xAxisNames = data?.map(

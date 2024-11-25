@@ -76,22 +76,23 @@ class ChildrenAdapter:
         return result
 
     def children_cares_by_professionals(self, response):
-        result_item = lambda x,y: { "tag": str(x), "value": int(y)}
+        result_item = lambda x,y: { "tag": str(x), "value": float(y)}
         professional_list = [
-            "Assistente Social",
-            "Cirurgião Dentista",
-            "Enfermeiro",
-            "Farmacêutico",
-            "Fisioterapeuta",
-            "Fonoaudiólogo",
-            "Médico",
-            "Nutricionista",
-            "Professor da Educação Física",
-            "Psicólogo",
-            "Terapeuta Ocupacional",
-            "Outros",
+            ("Médico", 0),
+            ("Enfermeiro", 1),
+            ("Fonoaudiólogo", 2),
+            ("Psicólogo", 3),
+            ("Professor de Educação Física", 4),
+            ("Assistente Social", 5),
+            ("Terapeuta Ocupacional",6),
+            ("Farmacêutico", 7),
+            ("Fisioterapeuta", 8),
+            ("Nutricionista", 9),
+            ("Cirurgião Dentista", 10),
+            ("Outros", 11),
         ]
-        result = [ result_item(p, 0) for p in professional_list]
+        response = response.pop()
+        result = [ result_item(p[0], response[p[1]]) for p in professional_list]
 
         return result
 

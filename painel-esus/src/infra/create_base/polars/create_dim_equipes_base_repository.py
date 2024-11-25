@@ -5,6 +5,7 @@ from sqlalchemy import text
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
+from src.env.conf import getenv
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -31,12 +32,12 @@ class CreateDimEquipesBaseRepository(CreateBasesRepositoryInterface):
             offset = 0
             parquet_file = f"{self._base}.parquet"
             # os.remove("dados/input/" + parquet_file)
-            chunk_size = 30000
+            chunk_size = getenv("CHUNK_SIZE", 3000)
             writer = None 
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
+                    #print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f'{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};'), con=engine,dtype_backend='pyarrow')
 
@@ -55,7 +56,9 @@ class CreateDimEquipesBaseRepository(CreateBasesRepositoryInterface):
 
                         if writer is None:
 
-                            writer = pq.ParquetWriter("dados/input/"+parquet_file,table.schema) #, schema=schema_fixo
+                            working_directory  = os.getcwd()
+                            input_path = os.path.join(working_directory, "dados", "input") 
+                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file,table.schema) #, schema=schema_fixo
 
                         writer.write_table(table)
 

@@ -7,7 +7,7 @@ from sqlalchemy import text
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
-from src.env.conf import env
+from src.env.conf import env, getenv
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -27,16 +27,16 @@ class CreateCidacaoPecBaseRepository(CreateBasesRepositoryInterface):
     def create_base(self):
         try:
 
-            #schema_fixo =  self.get_schema() 
-           # chunk_size = env["chunck_lenght"]
-            #print(chunk_size)
-            #print(text(f"{chunk_size}"))
+            # schema_fixo =  self.get_schema()
+            # chunk_size = env["chunck_lenght"]
+            # print(chunk_size)
+            # #print(text(f"{chunk_size}"))
 
             local_db = LocalDBConnectionHandler()
             local_engine = local_db.get_engine()
             _next = True
             offset = 0
-            chunk_size = 50000
+            chunk_size = getenv("CHUNK_SIZE", 25000)
             parquet_file = f"{self._base}.parquet"
             # os.remove("dados/input/" + parquet_file)
             writer = None 
@@ -44,7 +44,7 @@ class CreateCidacaoPecBaseRepository(CreateBasesRepositoryInterface):
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
+                    #print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f'{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};'), con=engine,dtype_backend='pyarrow')
 
@@ -63,8 +63,9 @@ class CreateCidacaoPecBaseRepository(CreateBasesRepositoryInterface):
 
                         if writer is None:
 
-                            writer = pq.ParquetWriter("dados/input/"+parquet_file,table.schema) #, schema=schema_fixo
-
+                            working_directory  = os.getcwd()
+                            input_path = os.path.join(working_directory, "dados", "input") 
+                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file,table.schema) #, schema=schema_fixo
 
                         writer.write_table(table)
 

@@ -7,6 +7,7 @@ from sqlalchemy import text
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
+from src.env.conf import getenv
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -32,14 +33,14 @@ class CreateAtendIndivBaseRepository(CreateBasesRepositoryInterface):
             local_engine = local_db.get_engine()
             _next = True
             offset = 0
-            chunk_size = 25000
+            chunk_size = getenv("CHUNK_SIZE", 25000)
             parquet_file = f"{self._base}.parquet"
             # os.remove("dados/input/" + parquet_file)
             writer = None 
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
+                    # print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f'{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};'), con=engine,dtype_backend='pyarrow')
 
@@ -50,28 +51,27 @@ class CreateAtendIndivBaseRepository(CreateBasesRepositoryInterface):
 
                     offset += chunk_size
 
-              #      df.to_sql(name=self._base, con=local_engine,
-              #                  if_exists='append')
+                    #      df.to_sql(name=self._base, con=local_engine,
+                    #                  if_exists='append')
                     if not df.empty:
 
-                        table = pa.Table.from_pandas(df,schema=schema_fixo,preserve_index = False)
+                        table = pa.Table.from_pandas(df,schema=schema_fixo,preserve_index = False,)
 
                         if writer is None:
-
-                            writer = pq.ParquetWriter("dados/input/"+parquet_file, schema=schema_fixo)
-
+                            working_directory  = os.getcwd()
+                            input_path = os.path.join(working_directory, "dados", "input") 
+                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file, schema_fixo)
 
                         writer.write_table(table)
 
             if writer:
                 writer.close()  
         except Exception as e:
-            print(e)
+            print(str(e))
             print(f'Erro {self._base} already destroyed!')
 
-
     def get_schema(self):
-         # Definindo o schema fixo
+        # Definindo o schema fixo
         schema = pa.schema([
             pa.field('co_seq_fat_atd_ind', pa.int64()),
             pa.field('co_dim_municipio', pa.int64()),
@@ -142,14 +142,14 @@ class CreateAtendIndivBaseRepository(CreateBasesRepositoryInterface):
             pa.field('co_dim_tp_particip_cidadao', pa.int64()),
             pa.field('co_dim_tp_particip_prof_conv', pa.int64()),
             pa.field('st_conduta_agendamento_emulti', pa.string()),  # Mudança de null para string
-            pa.field('st_nasf', pa.int32()),
-            pa.field('nu_circ_abdominal', pa.int32()),  # Mudança de null para string
-            pa.field('nu_perim_panturrilha', pa.int32()),  # Mudança de null para string
+            pa.field('st_nasf', pa.int64()),
+            pa.field('nu_circ_abdominal', pa.float64()),  # Mudança de null para string
+            pa.field('nu_perim_panturrilha', pa.float64()),  # Mudança de null para string
             pa.field('nu_pressao_sistolica', pa.int32()),  # Mudança de null para string
             pa.field('nu_pressao_diastolica', pa.int32()),  # Mudança de null para string
             pa.field('nu_freq_respiratoria', pa.string()),  # Mudança de null para string
             pa.field('nu_freq_cardiaca', pa.int32()),  # Mudança de null para string
-            pa.field('nu_temperatura', pa.int32()),  # Mudança de null para string
+            pa.field('nu_temperatura', pa.float64()),  # Mudança de null para string
             pa.field('nu_saturacao_o2', pa.int32()),  # Mudança de null para string
             pa.field('nu_glicemia', pa.int32()),  # Mudança de null para string
             pa.field('co_dim_tipo_glicemia', pa.int64())  # Mudança de null para string

@@ -128,6 +128,22 @@ class ElderlyAdapter:
         )
         return result
 
+    def group_by_imc(self, response):
+        result_item = lambda x,y: {"tag":x, "value":float(y)}
+        labels = {
+            'normal':0,
+            'baixo-peso':0,
+            'excesso-de-peso':0,
+            'nao-informado':0 
+        }
+
+        for resp in response:
+            print(resp)
+            tag = resp[0].replace(' ', '-').replace('ã', 'a')
+            value = resp[1]
+            labels[tag] = value
+        return [result_item(label, labels[label]) for label in labels.keys()]
+
     def nominal_list(self, response):
         response["items"] = [
             IdosoNominalListAdapter(r).to_dict() for r in response["items"]

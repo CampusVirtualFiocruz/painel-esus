@@ -1,8 +1,8 @@
 from src.data.use_cases.diseases_dashboard.diabetes_nominal_list import (
     DiabetesNominalListUseCase,
 )
-from src.presentations.http_types import HttpRequest
-from src.presentations.http_types import HttpResponse
+from src.presentations.controllers.utils.requests_utils import parse_request
+from src.presentations.http_types import HttpRequest, HttpResponse
 from src.presentations.interfaces.controller_interface import ControllerInterface
 
 
@@ -47,10 +47,8 @@ class DiabetesDashboardGetNominalListDownload:
     def __init__(self, use_case: DiabetesNominalListUseCase):
         self.__use_case = use_case
 
-    def handle(self, cnes=None):
-        if cnes is not None:
-            cnes = int(cnes)
-
-        response = self.__use_case.get_nominal_list_download(cnes)
+    def handle(self, request):
+        cnes, equipe = parse_request(request)
+        response = self.__use_case.get_nominal_list_download(cnes, equipe)
 
         return response

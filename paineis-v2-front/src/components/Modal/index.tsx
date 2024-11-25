@@ -225,24 +225,7 @@ export function bodyDetalhesCadastro(item: any) {
                         "data-da-ultima-glicemia-capilar" && (
                         <>
                           <strong>
-                            {registro?.descricao
-                              .split("-")
-                              .map((s: string) => capitalize(s))
-                              .join(" ")
-                              .replace("S/n", "S/N")
-                              .replace("Ultimo", "Último")
-                              .replace("Ultima", "Última")
-                              .replace("Afericao", "Aferição")
-                              .replace("Acs", "ACS")
-                              .replace("Pa", "PA")
-                              .replace("Medico", "Médico")
-                              .replace("Medica", "Médica")
-                              .replace("Medicas", "Médicas")
-                              .replace("Odontologica", "Odontológica")
-                              .replace(/De /g, "de ")
-                              .replace(/Da /g, "da ")
-                              .replace(/Do /g, "do ")
-                              .replace(/Ou /g, "ou ")}
+                            {registro?.descricao}
                           </strong>
                           <div>
                             <p>

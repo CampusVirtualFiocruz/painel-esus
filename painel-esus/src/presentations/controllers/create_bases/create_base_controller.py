@@ -1,8 +1,11 @@
 # pylint: disable=E0401,C0301,W0612,W0611
 import os
-import subprocess
 from pathlib import Path
 
+from parquet_db import gerar_banco
+from src.data.interfaces.create_bases.create_bases_repository import (
+    CreateBasesRepositoryInterface,
+)
 from src.data.use_cases.create_bases.create_bases_usecase import CreateBasesUseCase
 from src.env import env
 from src.errors.logging import logging
@@ -22,14 +25,9 @@ from src.infra.create_base.create_nominal_lists_bases_repository import (
     CreateDiabetesNominalListRepository,
     CreateHypertensionNominalListRepository,
 )
-from src.infra.create_base.create_oral_health_bases_repository import (
-    CreateOralHealthBasesRepository,
-)
 from src.infra.create_base.create_pessoas_base_repository import (
     CreatePessoasBaseRepository,
-)
-from src.infra.create_base.create_smoking_bases_repository import (
-    CreateSmokingBasesRepository,
+    CreateStatusRecordsRepository,
 )
 from src.infra.create_base.create_structure_base_repository import (
     CreateStructureBaseRepository,
@@ -44,19 +42,16 @@ from src.infra.create_base.polars import (
     CreateCidacaoPecBaseRepository,
     CreateCidadaoBaseRepository,
     CreateCidCiapExplodeAtendimentosRepository,
-    CreateDimEquipesBaseRepository,
     CreateDimRacaCorBaseRepository,
-    CreateEquipeBaseRepository,
     CreateFamiliaTerrBaseRepository,
     CreateIndicadoresCriancasRepository,
-    CreateIndicadoresEquipeRepository,
     CreateIndicadoresIdososRepository,
     CreateProcedAtendBaseRepository,
+    CreateTbDimCboRepository,
     CreateTipoEquipeBaseRepository,
     CreateUnidadesSaudeBaseRepository,
     CreateVacinacaoBaseRepository,
     CreateVisistaDomiciliarBaseRepository,
-    CreateTbDimCboRepository,
 )
 
 
@@ -72,16 +67,14 @@ class CreateBasesController:
             path = os.path.relpath(path)
         # os.remove(path)
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
-            logging.info("Starting structure generation")
-            CreateStructureBaseRepository().create_base()
             logging.info("Starting base generation")
             _list = [
+                CreateStructureBaseRepository(),
                 CreatePessoasBaseRepository(),
+                CreateAtendIndivBaseRepository(),
                 CreateEquipesBaseRepository(),
-                # CreateDimEquipesBaseRepository(),
                 CreateUnidadesSaudeBaseRepository(),
                 CreateTbDimCboRepository(),
-                CreateAtendIndivBaseRepository(),
                 CreateAtendOdontoBaseRepository(),
                 CreateCadIndividualBaseRepository(),
                 CreateVacinacaoBaseRepository(),
@@ -95,29 +88,19 @@ class CreateBasesController:
                 CreateAcompCidadaosVinculadosBaseRepository(),
                 CreateVisistaDomiciliarBaseRepository(),
                 CreateCidCiapExplodeAtendimentosRepository(),
-                CreateIndicadoresIdososRepository(),
-                CreateIndicadoresCriancasRepository(),
                 CreateUnitsBaseRepository(),
                 CreateAutorreferidoBaseRepository(),
                 CreateDiabetesBasesRepository(),
                 CreateHypertensionBasesRepository(),
                 CreateDiabetesNominalListRepository(),
                 CreateHypertensionNominalListRepository(),
+                CreateStatusRecordsRepository(),
+                CreateIndicadoresIdososRepository(),
+                CreateIndicadoresCriancasRepository(),
             ]
             usecase = CreateBasesUseCase(bases_generators=_list)
             usecase.create_bases()
-            
-            current_dir = os.path.dirname(os.path.abspath(__file__))
 
-            script_path = os.path.abspath('parquet_db.py')
-            resultado = subprocess.run(
-                    ['python', script_path],
-                    check=True,             # Levanta uma exceção se o comando falhar
-                    stdout=subprocess.PIPE, # Captura a saída padrão
-                    stderr=subprocess.PIPE, # Captura a saída de erro
-                    text=True               # Retorna a saída como string
-                )
-            print("Script conversao de parquet realizado com sucesso:")
-            print(resultado.stdout)
+            
         else:
             logging.info("Skipping base generation")

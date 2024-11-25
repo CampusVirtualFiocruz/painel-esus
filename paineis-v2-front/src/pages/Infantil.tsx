@@ -9,7 +9,7 @@ import {
 } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
-import useReportDataInfantil from "../hooks/sctions/infantil/useReportDataInfantil";
+import useReportDataInfantil from "../hooks/sections/infantil/useReportDataInfantil";
 import { PainelParams } from "./Hipertensao";
 
 const reportHeader = [
@@ -24,10 +24,10 @@ const reportHeader = [
     "total-criancas-atendidas-2-anos": {
       Chart: ValueCard,
       config: {
-        description: "Porcentagem de cadastros atualizados",
+        description: "Total de crianças até 2 anos atendidas",
         icon: "paper",
       },
-    }, 
+    },
   },
 ];
 

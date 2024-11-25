@@ -1,9 +1,6 @@
 # pylint: disable=invalid-name
 # pylint: disable=too-many-arguments
-from sqlalchemy import Column
-from sqlalchemy import Date
-from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import Boolean, Column, Date, Integer, String
 from src.infra.db.settings.base import Base
 
 
@@ -30,7 +27,13 @@ class Pessoas(Base):
     bairro = Column(String)
     cep = Column(String)
     tipo_localidade = Column(String)
-    
+    diferenca_ultima_atualizacao_cidadao = Column(Integer)
+    diferenca_ultima_atualizacao_fcd = Column(Integer)
+    codigo_equipe_vinculada = Column(Integer)
+    codigo_unidade_saude = Column(Integer)
+    st_usar_cadastro_individual = Column(Boolean)
+    st_recusa_cadastro = Column(Boolean)
+
     def __repr__(self):
         return f"""
         Nome: {self.nome}

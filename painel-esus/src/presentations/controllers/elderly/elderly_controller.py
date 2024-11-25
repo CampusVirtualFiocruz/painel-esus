@@ -44,9 +44,10 @@ class ElderlyController:
         return HttpResponse(status_code=200, body=result)
 
     def grouping_imc_rate(self, request: HttpRequest) -> HttpResponse:
-        # cnes, equipe = self.parse_request(request)
-
-        return HttpResponse(status_code=200,body=[])
+        cnes, equipe = self.parse_request(request)
+        response = self.__use_case.find_group_by_imc(cnes, equipe)
+        result = self._adapter.group_by_imc(response)
+        return HttpResponse(status_code=200, body=result)
 
     def grouping_influenza_rate(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
