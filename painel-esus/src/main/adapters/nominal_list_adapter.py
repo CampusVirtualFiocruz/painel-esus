@@ -71,8 +71,8 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             self.registros.append(
                 AlertRecord(
                     data=user.ultima_data_afericao_pa,
-                    exibir_alerta=True,
-                    descricao="data da última aferição de PA",
+                    exibir_alerta=user.alerta_afericao_pa,
+                    descricao="Data da última aferição de PA",
                     tipo_alerta="alerta-afericao-pa-maior-6-meses",
                 )
             )
@@ -80,8 +80,8 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             self.registros.append(
                 AlertRecord(
                     data=user.ultima_data_creatinina,
-                    exibir_alerta=True,
-                    descricao="data do último exame de creatinina",
+                    exibir_alerta=user.alerta_creatinina,
+                    descricao="Data do último exame de creatinina",
                     tipo_alerta="alerta-creatinina-maior-6-meses",
                 )
             )
@@ -89,8 +89,8 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             self.registros.append(
                 AlertRecord(
                     data=user.total_consulta_individual_medico,
-                    exibir_alerta=True,
-                    descricao="total de consultas médicas ou de enfermagem",
+                    exibir_alerta=user.alerta_ultima_consulta_medico,
+                    descricao="Total de consultas Médicas ou de Enfermagem",
                     tipo_alerta="alerta-total-de-consultas-medico-menor-2",
                 )
             )
@@ -98,8 +98,8 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             self.registros.append(
                 AlertRecord(
                     data=user.ultimo_atendimento_medico,
-                    exibir_alerta=True,
-                    descricao="data da última consulta médica ou de enfermagem",
+                    exibir_alerta=user.alerta_ultima_consulta_medico,
+                    descricao="Data da última consulta médica ou de Enfermagem",
                     tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
                 )
             )
@@ -107,8 +107,8 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             self.registros.append(
                 AlertRecord(
                     data=user.ultimo_atendimento_odonto,
-                    exibir_alerta=True,
-                    descricao="data da última consulta odontológica",
+                    exibir_alerta=user.alerta_ultima_consulta_odontologica,
+                    descricao="Data da última consulta odontológica",
                     tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
                 )
             )
@@ -117,8 +117,8 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             self.registros.append(
                 AlertRecord(
                     data=user.data_ultima_visita_acs,
-                    exibir_alerta=True,
-                    descricao="data da última visita ACS",
+                    exibir_alerta=user.alerta_visita_acs,
+                    descricao="Data da última visita ACS",
                     tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
                 )
             )
@@ -175,7 +175,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user.ultima_data_afericao_pa,
                 exibir_alerta=user.alerta_afericao_pa,
-                descricao="data da última aferição de PA",
+                descricao="Data da última aferição de PA",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
         )
@@ -184,7 +184,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user.total_consulta_individual_medico,
                 exibir_alerta=user.alerta_total_de_consultas_medico,
-                descricao="total de consultas médicas ou de enfermagem",
+                descricao="Total de consultas Médicas ou de Enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
         )
@@ -192,7 +192,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user.ultimo_atendimento_medico,
                 exibir_alerta=user.alerta_ultima_consulta_medico,
-                descricao="data da última consulta médica ou de enfermagem",
+                descricao="Data da última consulta Médica ou de Enfermagem",
                 tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
             )
         )
@@ -201,7 +201,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user.ultimo_atendimento_odonto,
                 exibir_alerta=user.alerta_ultima_consulta_odontologica,
-                descricao="data da última consulta odontológica",
+                descricao="Data da última consulta Odontológica",
                 tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
             )
         )
@@ -210,7 +210,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user.data_ultima_visita_acs,
                 exibir_alerta=user.alerta_visita_acs,
-                descricao="data da última visita ACS",
+                descricao="Data da última visita ACS",
                 tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
             )
         )
@@ -218,7 +218,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user.ultima_data_hemoglobina_glicada or "-",
                 exibir_alerta=user.alerta_ultima_hemoglobina_glicada,
-                descricao="data-da-ultima-hemoglobina-glicada",
+                descricao="Data da última Hemoglobina Glicada",
                 tipo_alerta="alerta-ultima-data-hemoglobina-glicada-maior-6-meses",
             )
         )
@@ -287,7 +287,7 @@ class CriancaNominalListAdapter:
             AlertRecord(
                 data=user.data_ultimo_atendimento_medico_enfermeiro,
                 exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros != 1,
-                descricao="data do último atendimento médico/enfermeiro",
+                descricao="Data do último atendimento Médico/Enfermeiro",
                 tipo_alerta="data_ultimo_atendimento_medico_enfermeiro",
             )
         )
@@ -296,7 +296,7 @@ class CriancaNominalListAdapter:
                 data=user.data_ultimo_atendimento_medicos_enfermeiros_puericultura,
                 exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros_puericultura
                 != 1,
-                descricao="data do último atendimento médico/enfermeiro de Puericultura",
+                descricao="Data do último atendimento Médico/Enfermeiro de Puericultura",
                 tipo_alerta="indicador_atendimentos_medicos_enfermeiros_puericultura",
             )
         )
@@ -304,7 +304,7 @@ class CriancaNominalListAdapter:
             AlertRecord(
                 data=user.data_ultima_medicao_peso_altura_ate2anos,
                 exibir_alerta=user.indicador_medicoes_peso_altura_ate2anos != 1,
-                descricao="data da última medição de peso/altura até dois anos",
+                descricao="Data da última medição de peso/altura até dois anos",
                 tipo_alerta="data_ultima_medicao_peso_altura_ate2anos",
             )
         )
@@ -312,7 +312,7 @@ class CriancaNominalListAdapter:
             AlertRecord(
                 data=user.data_ultima_visita_domiciliar_acs,
                 exibir_alerta=user.indicador_visitas_domiciliares_acs != 1,
-                descricao="data da última visita do ACS ",
+                descricao="Data da última visita do ACS ",
                 tipo_alerta="data_ultima_visita_domiciliar_acs",
             )
         )
@@ -320,7 +320,7 @@ class CriancaNominalListAdapter:
             AlertRecord(
                 data=user.data_ultimo_teste_pezinho,
                 exibir_alerta=user.indicador_teste_pezinho != 1,
-                descricao="data do último teste do pezinho ",
+                descricao="Data do último Teste do pezinho ",
                 tipo_alerta="data_ultimo_teste_pezinho",
             )
         )
@@ -328,7 +328,7 @@ class CriancaNominalListAdapter:
             AlertRecord(
                 data=user.data_ultimo_atendimento_odontologico,
                 exibir_alerta=user.indicador_atendimentos_odontologicos != 1,
-                descricao="data do último atendimento odontológico ",
+                descricao="Data do último atendimento Odontológico ",
                 tipo_alerta="data_ultimo_atendimento_odontologico",
             )
         )
@@ -336,7 +336,7 @@ class CriancaNominalListAdapter:
             AlertRecord(
                 data=user.data_ultima_vacina_triplici,
                 exibir_alerta=user.indicador_vacinas_penta_polio_triplici != 1,
-                descricao="data do último registro de vacina Penta/Polio/Triplici ",
+                descricao="Data do último registro de vacina Penta/Polio/Triplici ",
                 tipo_alerta="data_ultima_vacina_triplici",
             )
         )
@@ -401,7 +401,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=user.data_ultimo_atendimento_medicos,
                 exibir_alerta=user.indicador_atendimentos_medicos != 1,
-                descricao="data do último atendimento médico/enfermeiro",
+                descricao="Data do último atendimento Médico/Enfermeiro",
                 tipo_alerta="data_ultimo_atendimento_medicos",
             )
         )
@@ -409,7 +409,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=user.data_ultima_medicao_peso_altura,
                 exibir_alerta=user.indicador_medicoes_peso_altura != 1,
-                descricao="data da última medição de peso e altura",
+                descricao="Data da última medição de peso e altura",
                 tipo_alerta="data_ultima_medicao_peso_altura",
             )
         )
@@ -417,7 +417,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=user.data_ultimo_registro_creatinina,
                 exibir_alerta=user.indicador_registros_creatinina != 1,
-                descricao="data do último registro de creatinina ",
+                descricao="Data do último registro de Creatinina ",
                 tipo_alerta="data_ultimo_registro_creatinina",
             )
         )
@@ -425,7 +425,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=user.data_ultima_vacina_influenza,
                 exibir_alerta=user.indicador_vacinas_influenza != 1,
-                descricao="data do último registro de vacina da Influenza ",
+                descricao="Data do último registro de vacina da Influenza ",
                 tipo_alerta="data_ultima_vacina_influenza",
             )
         )
@@ -433,7 +433,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=user.data_ultimo_atendimento_odontologico,
                 exibir_alerta=user.indicador_atendimento_odontologico != 1,
-                descricao="data do último registro de atendimento odontológico ",
+                descricao="Data do último registro de atendimento Odontológico ",
                 tipo_alerta="data_ultimo_atendimento_odontologico",
             )
         )
@@ -441,7 +441,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=user.data_ultima_visita_domiciliar_acs,
                 exibir_alerta=user.indicador_visitas_domiciliares_acs != 1,
-                descricao="data da última visita do ACS ",
+                descricao="Data da última visita do ACS ",
                 tipo_alerta="data_ultima_visita_domiciliar_acs",
             )
         )
@@ -511,7 +511,7 @@ class RecordNominalListAdapter:
             AlertRecord(
                 data=user.ultima_atualizacao_cidadao,
                 exibir_alerta=ultima_atualizacao_cidadao,
-                descricao="data da última atualização da ficha de cadastro individual",
+                descricao="Data da última atualização da ficha de Cadastro Individual",
                 tipo_alerta="ultima_atualizacao_cidadao",
             )
         )
@@ -519,7 +519,7 @@ class RecordNominalListAdapter:
             AlertRecord(
                 data=user.ultima_atualizacao_fcd,
                 exibir_alerta=ultima_atualizacao_fcd,
-                descricao="data da última atualização da ficha de cadastro domiciliar e territorial",
+                descricao="Data da última atualização da ficha de Cadastro Domiciliar e Territorial",
                 tipo_alerta="ultima_atualizacao_fcd",
             )
         )
