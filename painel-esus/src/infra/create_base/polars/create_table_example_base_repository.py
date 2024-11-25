@@ -1,3 +1,4 @@
+# pylint: disable=W2301:
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )

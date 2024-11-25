@@ -1,5 +1,4 @@
-import os
-
+# pylint: disable=R1703
 import pandas as pd
 import pyarrow as pa
 import pyarrow.parquet as pq

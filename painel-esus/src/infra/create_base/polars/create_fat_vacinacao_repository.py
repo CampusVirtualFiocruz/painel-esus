@@ -1,3 +1,4 @@
+# pylint: disable=W0702, R1703
 import os
 
 import pandas as pd

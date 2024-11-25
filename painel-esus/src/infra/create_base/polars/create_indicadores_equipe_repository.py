@@ -3,10 +3,8 @@
 # import pyarrow as pa
 # import pyarrow.parquet as pq
 import logging
-import os
 import subprocess
 
-import polars
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
@@ -17,7 +15,7 @@ from src.infra.create_base.polars.scripts_dados.tb_equipe import gerar_banco
 class CreateIndicadoresEquipeRepository(CreateBasesRepositoryInterface):
 
     def __init__(self):
-        ...
+        self._base=''
 
     def get_base(self):
         return self._base
