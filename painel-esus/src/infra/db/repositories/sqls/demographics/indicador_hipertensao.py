@@ -12,15 +12,16 @@ def get_indicators_hipertensao(cnes: int = None, equipe: int = None):
     return f"""with lista as (
 	    select distinct co_fat_cidadao_pec , co_dim_tipo_localizacao from hipertensao
         {where_clause}
-    )
+    ), lista_localidade as (
     select 
         case 
             when co_dim_tipo_localizacao = 1 then 'nao_informado'
             when co_dim_tipo_localizacao = 2 then 'urbano'
             when co_dim_tipo_localizacao = 3 then 'rural'
-        end co_dim_tipo_localizacao, count(*) total 
+        end co_dim_tipo_localizacao
     from lista
-    group by 1"""
+    )
+    select *, count(*) total  from lista_localidade group by 1"""
 
 
 def get_indicators_hipertensao_plus_autorreferidos(cnes: int = None, equipe: int = None):

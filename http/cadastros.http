@@ -1,0 +1,55 @@
+@path=http://localhost:5001/v1/cadastros
+GET {{path}}/total
+content-type: application/json
+
+###
+GET {{path}}/total/25?equipe=18
+content-type: application/json
+
+
+###
+GET {{path}}/cpf_cns_rate
+content-type: application/json
+###
+GET {{path}}/cpf_cns_rate/25?equipe=18
+content-type: application/json
+
+###
+GET {{path}}/group-by-location
+content-type: application/json
+###
+GET {{path}}/group-by-location/25?equipe=18
+content-type: application/json
+
+###
+GET {{path}}/group-by-race
+content-type: application/json
+###
+GET {{path}}/group-by-race/25?equipe=18
+content-type: application/json
+
+###
+GET {{path}}/group-by-origin
+content-type: application/json
+###
+GET {{path}}/group-by-origin/25?equipe=18
+content-type: application/json
+
+###
+GET {{path}}/group-by-status
+content-type: application/json
+###
+GET {{path}}/group-by-status/25?equipe=18
+content-type: application/json
+
+###
+GET {{path}}/get-nominal-list
+content-type: application/json
+###
+GET {{path}}/get-nominal-list/25?equipe=18
+content-type: application/json
+
+
+###
+GET {{path}}/get-nominal-list/download/25?equipe=18
+content-type: application/json

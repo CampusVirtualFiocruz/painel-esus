@@ -81,7 +81,7 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             "95 a 99 anos": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
             "100 ou mais": {"Rural": 0, "Urbano": 0, "Nao Informado": 0},
         }
-        return OrderedDict(reversed(body.items()))
+        return OrderedDict(reversed(body.items())).copy()
 
     def __create_age_groups(self, response) -> Dict:
         body = {
@@ -92,6 +92,7 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             print(resp)
             if resp[0] is not None and resp[1] is not None:
                 body[resp[0]][resp[1]][resp[2]] = int(resp[3])
+        print(body)
         return body
 
     def get_total_people(self, cnes: int = None, equipe: int = None):

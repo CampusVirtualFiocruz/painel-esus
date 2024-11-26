@@ -85,21 +85,35 @@ app.register_blueprint(teams_bp, url_prefix=teams.root_path)
 
 demographics_info = DemographichInfoPath()
 register_blueprint(
-    app, (demographics_info_bp, demographics_info.root_path), [token_required]
+    app,
+    (demographics_info_bp, demographics_info.root_path),
+    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
 )
 
 diabetes = DiabetesPath()
-register_blueprint(app, (diabetes_bp, diabetes.root_path), [token_required])
+register_blueprint(
+    app,
+    (diabetes_bp, diabetes.root_path),
+    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
+)
 
 hypertension = HypertensionPath()
-register_blueprint(app, (hypertension_bp, hypertension.root_path), [token_required])
+register_blueprint(
+    app,
+    (hypertension_bp, hypertension.root_path),
+    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
+)
 
 
 oral_path = OralHealthPath()
 register_blueprint(app, (oral_health_bp, oral_path.root_path), [token_required])
 
 smoking = SmokingPath()
-register_blueprint(app, (smoking_bp, smoking.root_path), [token_required])
+register_blueprint(
+    app,
+    (smoking_bp, smoking.root_path),
+    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
+)
 
 children = ChildrenPath()
 register_blueprint(
@@ -115,10 +129,7 @@ elderly = ElderlyPath()
 register_blueprint(
     app,
     (elderly_bp, elderly.root_path),
-    [
-    # token_required,
-        cache.cached(timeout=24 * 60 * 60, query_string=True)
-    ], 
+    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
 )
 
 
@@ -127,7 +138,7 @@ register_blueprint(
     app,
     (records_bp, records.root_path),
     [
-        # token_required,
+        token_required,
         cache.cached(timeout=24 * 60 * 60, query_string=True)
     ],
 )
