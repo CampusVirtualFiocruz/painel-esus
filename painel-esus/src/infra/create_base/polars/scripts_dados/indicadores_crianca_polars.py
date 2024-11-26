@@ -22,7 +22,7 @@ def gerar_banco():
     working_directory  = os.getcwd()
     input_path = os.path.join(working_directory, "dados", "input") 
     output_path = os.path.join(working_directory, "dados", "output")  
-    print(os.path.join(working_directory, "dados", "input"))
+    
     tb_pessoa = pl.read_csv(input_path + os.sep + "pessoas.csv", separator=";", ignore_errors=True)
     tb_pessoa = tb_pessoa.with_columns(pl.col("cidadao_pec").cast(pl.Int64))
 

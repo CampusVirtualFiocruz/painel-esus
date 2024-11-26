@@ -67,61 +67,55 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         )
         hipertensao = Hypertension()
         self.cids = list(set(user.cids.split("|")) & set(hipertensao.target))
-        if user.alerta_afericao_pa:
-            self.registros.append(
-                AlertRecord(
-                    data=user.ultima_data_afericao_pa,
-                    exibir_alerta=user.alerta_afericao_pa,
-                    descricao="Data da última aferição de PA",
-                    tipo_alerta="alerta-afericao-pa-maior-6-meses",
-                )
+        self.registros.append(
+            AlertRecord(
+                data=user.ultima_data_afericao_pa,
+                exibir_alerta=user.alerta_afericao_pa,
+                descricao="Data da última aferição de PA",
+                tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
-        if user.alerta_creatinina:
-            self.registros.append(
-                AlertRecord(
-                    data=user.ultima_data_creatinina,
-                    exibir_alerta=user.alerta_creatinina,
-                    descricao="Data do último exame de creatinina",
-                    tipo_alerta="alerta-creatinina-maior-6-meses",
-                )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.ultima_data_creatinina,
+                exibir_alerta=user.alerta_creatinina,
+                descricao="Data do último exame de creatinina",
+                tipo_alerta="alerta-creatinina-maior-6-meses",
             )
-        if user.alerta_total_de_consultas_medico:
-            self.registros.append(
-                AlertRecord(
-                    data=user.total_consulta_individual_medico,
-                    exibir_alerta=user.alerta_ultima_consulta_medico,
-                    descricao="Total de consultas Médicas ou de Enfermagem",
-                    tipo_alerta="alerta-total-de-consultas-medico-menor-2",
-                )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.total_consulta_individual_medico,
+                exibir_alerta=user.alerta_ultima_consulta_medico,
+                descricao="Total de consultas Médicas ou de Enfermagem",
+                tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
-        if user.alerta_ultima_consulta_medico:
-            self.registros.append(
-                AlertRecord(
-                    data=user.ultimo_atendimento_medico,
-                    exibir_alerta=user.alerta_ultima_consulta_medico,
-                    descricao="Data da última consulta médica ou de Enfermagem",
-                    tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
-                )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.ultimo_atendimento_medico,
+                exibir_alerta=user.alerta_ultima_consulta_medico,
+                descricao="Data da última consulta médica ou de Enfermagem",
+                tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
             )
-        if user.alerta_ultima_consulta_odontologica:
-            self.registros.append(
-                AlertRecord(
-                    data=user.ultimo_atendimento_odonto,
-                    exibir_alerta=user.alerta_ultima_consulta_odontologica,
-                    descricao="Data da última consulta odontológica",
-                    tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
-                )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user.ultimo_atendimento_odonto,
+                exibir_alerta=user.alerta_ultima_consulta_odontologica,
+                descricao="Data da última consulta odontológica",
+                tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
             )
+        )
 
-        if user.alerta_visita_acs:
-            self.registros.append(
-                AlertRecord(
-                    data=user.data_ultima_visita_acs,
-                    exibir_alerta=user.alerta_visita_acs,
-                    descricao="Data da última visita ACS",
-                    tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
-                )
+        self.registros.append(
+            AlertRecord(
+                data=user.data_ultima_visita_acs,
+                exibir_alerta=user.alerta_visita_acs,
+                descricao="Data da última visita ACS",
+                tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
             )
+        )
 
     def to_dict(self):
         return dict(

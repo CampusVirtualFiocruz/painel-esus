@@ -454,7 +454,7 @@ export function Painel() {
                   </div>
                 </div>
               )}
-              {Boolean(dadosPainel?.indicators?.crianca) && (
+              {/* {Boolean(dadosPainel?.indicators?.crianca) && (
                 <div className="card-condicao p-2" onClick={handleToInfantil}>
                   <span className="nome-condicao">
                     Desenvolvimento Infantil
@@ -485,7 +485,7 @@ export function Painel() {
                     <Condicao data={dadosPainel?.indicators?.idosa} />
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
 
             <div className="d-flex my-5 justify-content-center">

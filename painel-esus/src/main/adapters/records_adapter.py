@@ -15,7 +15,7 @@ class RecordsAdapter:
         if response[0] is not None:
             result["total-cadastros-ubs"]["data"] = int(response[0])
         if response[1] is not None:
-            result["porcentagem-cadastros-atualizados"]["data"] = float(response[1])
+            result["porcentagem-cadastros-atualizados"]["data"] = float(response[1])*100
         return result
 
     def get_cpf_cns_rate(self, response):
