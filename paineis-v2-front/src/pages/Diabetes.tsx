@@ -31,6 +31,13 @@ type PainelParams = {
   id: string;
 };
 
+const footerNote = `
+O número de pessoas com Diabetes equivale ao total de indivíduos que tiveram atendimentos
+individuais realizados nos últimos 12 meses com registro do código CID e/ou CIAP correspondente
+à condição de saúde em Ficha de Atendimento Individual, somado ao conjunto de pessoas com
+registro autorreferido da condição de saúde em Ficha de Cadastro Individual.
+`;
+
 export function Diabetes() {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
@@ -228,7 +235,7 @@ export function Diabetes() {
   return (
     <div id="page-painel-diabetes-hipertensao">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
-      <ReportWrapper title={title}>
+      <ReportWrapper title={title} footerNote={footerNote} footer={<ReportFooter chaveListaNominal="Diabetes" equipe={equipe} />}>
         <TwoColumnSection>
           <TwoColumnSection.Col>
             <div>
@@ -469,7 +476,7 @@ export function Diabetes() {
             </div>
           </TwoColumnSection.Col>
         </TwoColumnSection>
-        <ReportFooter chaveListaNominal="Diabetes" equipe={equipe} />
+        
       </ReportWrapper>
     </div>
   );

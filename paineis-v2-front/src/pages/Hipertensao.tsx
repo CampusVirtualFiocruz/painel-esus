@@ -32,6 +32,13 @@ export type PainelParams = {
   id: string;
 };
 
+const footerNote = `
+O número de pessoas com Hipertensão Arterial equivale ao total de indivíduos que tiveram
+atendimentos individuais realizados nos últimos 12 meses com registro do código CID e/ou CIAP
+correspondente à condição de saúde em Ficha de Atendimento Individual, somado ao conjunto de
+pessoas com registro autorreferido da condição de saúde em Ficha de Cadastro Individual.
+`;
+
 export function Hipertensao() {
   const { id } = useParams<PainelParams>();
   const [showModal, setShowModal] = useState(false);
@@ -238,7 +245,13 @@ export function Hipertensao() {
   return (
     <div id="page-painel-diabetes-hipertensao">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
-      <ReportWrapper title={title}>
+      <ReportWrapper
+        title={title}
+        footerNote={footerNote}
+        footer={
+          <ReportFooter chaveListaNominal="Hipertensão" equipe={equipe} />
+        }
+      >
         <TwoColumnSection>
           <TwoColumnSection.Col>
             <div className="painel-lateral">
@@ -479,7 +492,6 @@ export function Hipertensao() {
             </div>
           </TwoColumnSection.Col>
         </TwoColumnSection>
-        <ReportFooter chaveListaNominal="Hipertensão" equipe={equipe} />
       </ReportWrapper>
     </div>
   );

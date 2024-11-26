@@ -11,7 +11,7 @@ import { Api } from "../../services/api";
 import "../../styles/gestanteList.scss";
 import "../../styles/listaNominal.scss";
 import usePaginatedList from "./usePaginatedList";
-import { columns, Footer } from "./ListaNominal.utils";
+import { columns, Footer, footerNotes } from "./ListaNominal.utils";
 
 type PainelParams = {
   id: string;
@@ -37,7 +37,6 @@ const ListaNominal = () => {
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<any>({ loaded: 7 });
   const [searchTerm, setSearchTerm] = useState("");
-
   const [params] = useSearchParams();
   const equipe = params.get("equipe");
 
@@ -49,6 +48,7 @@ const ListaNominal = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const condicao = String(queryParams.get("condicao"));
+  const footerNote = footerNotes?.[condicao];
 
   const { city } = useInfo();
   const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
@@ -101,7 +101,7 @@ const ListaNominal = () => {
   return (
     <div id="page-painel">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
-      <ReportWrapper title={title} subtitle={subtitle}>
+      <ReportWrapper title={title} subtitle={subtitle} footerNote={footerNote}>
         <div className="search">
           <TextField
             name="iconized"

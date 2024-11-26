@@ -2,6 +2,28 @@ import { Api } from "../../services/api";
 import { Icon } from "bold-ui";
 import { capitalizeName } from "../../utils/stringUtils";
 
+export const footerNotes = {
+  Diabetes: `
+O número total de pessoas com Diabetes atendidas nos últimos 12 meses incluídas na Lista Nominal
+equivale ao conjunto de indivíduos que tiveram atendimentos individuais realizados nos últimos
+12 meses com registro do código CID e/ou CIAP correspondente ao Diabetes em Ficha de
+Atendimento Individual, somado ao conjunto de pessoas com registro autorreferido de Diabetes em
+Ficha de Cadastro Individual que também tiveram atendimentos individuais realizados nos últimos 12 meses.
+Todas essas pessoas serão contabilizadas em todas as Listas nominais de cada uma das UBS e Equipes em que
+tiver ocorrido contato assistencial registrado em Ficha de Atendimento Individual, Ficha de Atendimento
+Odontológico ou Ficha de Procedimentos.
+  `,
+  Hipertensão: `
+O número total de pessoas com Hipertensão atendidas nos últimos 12 meses incluídas na Lista Nominal
+equivale ao conjunto de indivíduos que tiveram atendimentos individuais realizados nos últimos 12 meses
+com registro do código CID e/ou CIAP correspondente à Hipertensão em Ficha de Atendimento Individual,
+somado ao conjunto de pessoas com registro autorreferido de Hipertensão em Ficha de Cadastro Individual
+que também tiveram atendimentos individuais realizados nos últimos 12 meses. Todas essas pessoas serão
+contabilizadas em todas as Listas nominais de cada uma das UBS e Equipes em que tiver ocorrido contato
+assistencial registrado em Ficha de Atendimento Individual, Ficha de Atendimento Odontológico ou Ficha de Procedimentos.
+`,
+} as any;
+
 export const columns = ({ handleClick }: any) => [
   {
     name: "nome",

@@ -8,6 +8,7 @@ const ReportWrapper = ({
   children,
   header,
   footer,
+  footerNote,
   ...props
 }: {
   title: string;
@@ -15,8 +16,8 @@ const ReportWrapper = ({
   header?: ReactNode;
   footer?: ReactNode;
   children: ReactNode;
+  footerNote?: string;
 } & HTMLProps<HTMLDivElement>) => {
-
   return (
     <div
       style={{
@@ -74,13 +75,23 @@ const ReportWrapper = ({
             </p>
           )}
         </div>
-        <div style={{ width: "100%" }}>
-          {header}
-          </div>
+        <div style={{ width: "100%" }}>{header}</div>
         <div className="container" style={{ marginTop: "20px" }}>
           <div className="row justify-content-center">{children}</div>
+          {Boolean(footerNote) && (
+            <div
+              style={{
+                backgroundColor: "#edf3f8",
+                borderRadius: "10px",
+                padding: "16px 20px",
+                marginBottom: "26px"
+              }}
+            >
+              {footerNote}
+            </div>
+          )}
         </div>
-      {footer}
+        {footer}
       </div>
       <Footer />
     </div>
