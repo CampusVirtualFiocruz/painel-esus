@@ -11,8 +11,8 @@ select distinct on (p.co_seq_fat_cidadao_pec) p.co_seq_fat_cidadao_pec cidadao_p
     extract(year from age(now(), coalesce(tacv.dt_nascimento_cidadao, p.dt_nascimento) )) idade,
     coalesce(tacv.no_sexo_cidadao, p.sexo) sexo,
     tacv.tp_identidade_genero_cidadao identidade_genero,
-    (
-        tacv.nu_telefone_celular || tacv.nu_telefone_contato || tacv.nu_fone_residencial
+    coalesce(
+        tacv.nu_telefone_celular, tacv.nu_telefone_contato, tacv.nu_fone_residencial
     ) telefone,
     tacv.dt_ultima_atualizacao_cidadao ultima_atualizacao_cidadao,
     tacv.dt_atualizacao_fcd ultima_atualizacao_fcd,
