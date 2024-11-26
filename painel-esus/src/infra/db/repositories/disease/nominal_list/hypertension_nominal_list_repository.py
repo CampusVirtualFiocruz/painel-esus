@@ -2,6 +2,7 @@
 from typing import Dict
 
 import pandas as pd
+from sqlalchemy import or_
 from src.domain.entities.hypertension import Hypertension
 from src.infra.db.entities.equipes import Equipes
 from src.infra.db.entities.hipertensao_nominal import HipertensaoNominal
@@ -164,6 +165,7 @@ order by p.nome
         nome: str = None,
         cpf: str = None,
         equipe: int = None,
+        query: str = None,
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
@@ -180,16 +182,27 @@ order by p.nome
                     Equipes.cidadao_pec == HipertensaoNominal.co_fat_cidadao_pec,
                 )
             )
+            conditions, or_conditions = [], []
+            if cnes is not None and cnes:
+                conditions+=[Equipes.codigo_unidade_saude == cnes]
 
-            users = users.filter(
-                Equipes.codigo_unidade_saude == cnes
-            )
             if nome is not None and nome:
-                users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
-            if cpf is not None and cpf:
-                users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
+                conditions+=[Pessoas.nome.ilike(f"%{nome}%")]
+
+            if query is not None and query:
+                or_conditions += [
+                    Pessoas.cpf.ilike(f"%{query}%"),
+                    Pessoas.nome.ilike(f"%{query}%"),
+                    Pessoas.cns.ilike(f"%{query}%"),
+                ]
+
             if equipe is not None and equipe:
-                users = users.filter(Equipes.codigo_equipe == equipe)
+                conditions+=[Equipes.codigo_equipe == equipe]
+
+            if len(conditions)>0:
+                users = users.filter(*conditions)
+            if len(or_conditions)>0:
+                users = users.filter(or_(*or_conditions))
             users = users.group_by(HipertensaoNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (
@@ -197,7 +210,7 @@ order by p.nome
                 .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
-            # print(str(users))
+
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,

@@ -1,4 +1,5 @@
 import pandas as pd
+from sqlalchemy import or_
 from src.infra.db.entities.equipes import Equipes
 from src.infra.db.entities.idoso import Idoso
 from src.infra.db.entities.pessoas import Pessoas
@@ -119,6 +120,7 @@ class ElderlyRepository:
         nome: str = None,
         cpf: str = None,
         equipe: int = None,
+        query: str = None,
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
@@ -136,14 +138,31 @@ class ElderlyRepository:
                 )
             )
 
-            users = users.filter(Equipes.codigo_unidade_saude == cnes)
-            if nome is not None and nome:
-                users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
-            if cpf is not None and cpf:
-                users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
-            if equipe is not None and equipe:
-                users = users.filter(Equipes.codigo_equipe == equipe)
+            conditions, or_conditions = [],[]
+            if cnes is not None and cnes:
+                conditions+=[Equipes.codigo_unidade_saude == cnes]
 
+            if nome is not None and nome:
+                conditions+=[Pessoas.nome.ilike(f"%{nome}%")]
+
+            if cpf is not None and cpf:
+                conditions=+[Pessoas.cpf.ilike(f"%{cpf}%")]
+
+            if equipe is not None and equipe:
+                conditions+=[Equipes.codigo_equipe == equipe]
+
+            if query is not None and query:
+                or_conditions += [
+                    Pessoas.cpf.ilike(f"%{query}%"),
+                    Pessoas.cns.ilike(f"%{query}%"),
+                    Pessoas.nome.ilike(f"%{query}%"),
+                ]
+            if len(conditions) > 0:
+                users = users.filter(*conditions)
+
+            if len(or_conditions) > 0:
+                users = users.filter(or_(*or_conditions))
+                
             users = users.group_by(Idoso.cidadao_pec)
             total = users.count()
             users = (

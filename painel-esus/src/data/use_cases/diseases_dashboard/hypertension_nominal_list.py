@@ -8,19 +8,28 @@ class HypertensionNominalListUseCase:
     def __init__(self, repository):
         self.__repository = repository
 
-    def get_nominal_list(self, cnes: int = None, page: int = 0, page_size: int = 10,  nome: str = None, cpf: str = None, equipe: int = None):
+    def get_nominal_list(
+        self,
+        cnes: int = None,
+        page: int = 0,
+        page_size: int = 10,
+        nome: str = None,
+        cpf: str = None,
+        equipe: int = None,
+        query: str = None,
+    ):
         if cnes and not isinstance(cnes, int):
-            raise InvalidArgument('CNES must be int')
+            raise InvalidArgument("CNES must be int")
         response = self.__repository.find_filter(
-            cnes, page, page_size, nome, cpf, equipe
+            cnes, page, page_size, nome, cpf, equipe, query
         )
-        response['items'] = [HypertensionNominalListAdapter(
-            r).to_dict() for r in response['items']]
+        response["items"] = [
+            HypertensionNominalListAdapter(r).to_dict() for r in response["items"]
+        ]
         return response
 
     def get_nominal_list_download(self, cnes: int = None, equipe: int = None):
         if cnes and not isinstance(cnes, int):
-            raise InvalidArgument('CNES must be int')
-        response = self.__repository.find_all_download(
-            cnes, equipe)
+            raise InvalidArgument("CNES must be int")
+        response = self.__repository.find_all_download(cnes, equipe)
         return response

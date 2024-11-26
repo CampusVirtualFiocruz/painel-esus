@@ -2,6 +2,7 @@
 from typing import Dict
 
 import pandas as pd
+from sqlalchemy import or_
 from src.domain.entities.diabetes import Diabetes
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.equipes import Equipes
@@ -167,6 +168,7 @@ order by p.nome
         nome: str = None,
         cpf: str = None,
         equipe: int = None,
+        query: str = None,
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
@@ -176,15 +178,32 @@ order by p.nome
             )\
             .join(Pessoas, Pessoas.cidadao_pec == DiabetesNominal.co_fat_cidadao_pec,)\
             .join(Equipes, Equipes.cidadao_pec == DiabetesNominal.co_fat_cidadao_pec,)
-            users = users.filter(
+
+            or_conditions, conditions = [], []
+            if cnes is not None and cnes:
+                conditions += [
                 Equipes.codigo_unidade_saude == cnes
-            )
+                ]
             if nome is not None and nome:
-                users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
+                conditions += [Pessoas.nome.ilike(f"%{nome}%")]
             if cpf is not None and cpf:
-                users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
+                conditions += [Pessoas.cpf.ilike(f"%{cpf}%")]
+
+            if query is not None and query:
+                or_conditions += [
+                    Pessoas.cpf.ilike(f"%{query}%"),
+                    Pessoas.cns.ilike(f"%{query}%"),
+                    Pessoas.nome.ilike(f"%{query}%"),
+                ]
             if equipe is not None and equipe:
-                users = users.filter(Equipes.codigo_equipe == equipe)
+                conditions += [Equipes.
+                                     codigo_equipe == equipe]
+            if len(conditions) > 0:
+                users = users.filter(*conditions)
+
+            if len(or_conditions) > 0:
+                users = users.filter(or_(*or_conditions))
+
             users = users.group_by(DiabetesNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (

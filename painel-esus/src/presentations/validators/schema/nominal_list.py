@@ -21,6 +21,11 @@ schema = {
         "required": False,
         "empty": True,
     },
+    "q": {
+        "type": "string",
+        "required": False,
+        "empty": True,
+    },
     "equipe": {
         "type": "integer",
         "coerce": int,

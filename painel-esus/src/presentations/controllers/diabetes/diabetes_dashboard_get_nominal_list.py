@@ -11,7 +11,7 @@ class DiabetesDashboardGetNominalList(ControllerInterface):
         self.__use_case = use_case
 
     def handle(self, request: HttpRequest) -> HttpResponse:
-        cnes, equipe, nome, cpf, page, page_size = None, None, None, None, 0, 10
+        cnes, equipe, nome, cpf, page, page_size, q = None, None, None, None, 0, 10, None
 
         if request.path_params and "cnes" in request.path_params:
             cnes = int(request.path_params["cnes"])
@@ -30,7 +30,9 @@ class DiabetesDashboardGetNominalList(ControllerInterface):
 
         if request.query_params and "equipe" in request.query_params:
             equipe = int(request.query_params["equipe"])
-
+        
+        if request.query_params and "q" in request.query_params:
+            q = request.query_params["q"]
         response = self.__use_case.get_nominal_list(
             cnes,
             page,
@@ -38,6 +40,7 @@ class DiabetesDashboardGetNominalList(ControllerInterface):
             nome,
             cpf,
             equipe,
+            q
         )
 
         return HttpResponse(status_code=200, body=response)

@@ -1,6 +1,6 @@
 # pylint: disable=R0913,W0611
 import pandas as pd
-from sqlalchemy import extract
+from sqlalchemy import extract, or_
 from src.infra.db.entities.crianca import Crianca
 from src.infra.db.entities.equipes import Equipes
 from src.infra.db.entities.pessoas import Pessoas
@@ -102,6 +102,7 @@ class ChildrenRepository:
         nome: str = None,
         cpf: str = None,
         equipe: int = None,
+        query:str = None,
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
@@ -119,21 +120,35 @@ class ChildrenRepository:
                 )
             )
 
-            users = users.filter(Equipes.codigo_unidade_saude == cnes)
-            if nome is not None and nome:
-                users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
+            conditions, or_conditions = [],[]
+            if cnes is not None and cnes:
+                conditions+=[Equipes.codigo_unidade_saude == cnes]
+
             if cpf is not None and cpf:
-                users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
+                conditions += [Pessoas.cpf.ilike(f"%{query}%")]
+                
+            if query is not None and query:
+                or_conditions+=[
+                    Pessoas.cpf.ilike(f"%{query}%"),
+                    Pessoas.cns.ilike(f"%{query}%"),
+                    Pessoas.nome.ilike(f"%{query}%"),
+                    ]
             if equipe is not None and equipe:
-                users = users.filter(Equipes.codigo_equipe == equipe)
+                conditions+=[Equipes.codigo_equipe == equipe]
+            if len(conditions)>0:
+                users = users.filter(*conditions)
+
+            if len(or_conditions)>0:
+                users = users.filter(or_(*or_conditions))
 
             users = users.group_by(Crianca.cidadao_pec)
-            total = users.count()
+
             users = (
                 users.order_by(Pessoas.nome)
                 .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
+            total = users.count()
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,
@@ -159,7 +174,7 @@ class ChildrenRepository:
             sql = professional_cares(cnes, equipe)
             result = con.execute(sql)
             return list(result)
-        
+
     def find_grouping_by_race(self, cnes: int = None, equipe: int = None):
         with DBConnectionHandler().get_engine().connect() as con:
             sql = group_by_race(cnes, equipe)

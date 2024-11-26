@@ -1,6 +1,6 @@
 # pylint: disable=R0913,W0611
 import pandas as pd
-from sqlalchemy import and_
+from sqlalchemy import and_, or_
 from src.infra.db.entities.equipes import Equipes
 from src.infra.db.entities.pessoas import Pessoas
 from src.infra.db.repositories.cadastro.sqls import (
@@ -92,6 +92,7 @@ class RecordsRepository:
         nome: str = None,
         cpf: str = None,
         equipe: int = None,
+        query:str=None
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
@@ -109,22 +110,26 @@ class RecordsRepository:
                 )
             )
             conditions = []
+            or_conditions = []
             if cnes is not None and cnes:
                 conditions+=[ Pessoas.codigo_unidade_saude == cnes]
 
-            if nome is not None and nome:
-                # users = users.filter(Pessoas.nome.ilike(f"%{nome}%"))
-                conditions+=[Pessoas.nome.ilike(f"%{nome}%")]
-            if cpf is not None and cpf:
-                # users = users.filter(Pessoas.cpf.ilike(f"%{cpf}%"))
-                conditions+=[Pessoas.cpf.ilike(f"%{cpf}%")]
+            if query is not None and query:
+                or_conditions += [
+                    Pessoas.cpf.ilike(f"%{query}%"),
+                    Pessoas.nome.ilike(f"%{query}%"),
+                    Pessoas.cns.ilike(f"%{query}%"),
+                ]
             if equipe is not None and equipe:
                 # users = users.filter(Equipes.codigo_equipe == equipe)
                 conditions += [Pessoas.codigo_equipe_vinculada == equipe]
             if len(conditions) > 0:
                 users = users.filter(*conditions)
+
+            if len(or_conditions) > 0:
+                users = users.filter(or_(*or_conditions))
             users = users.group_by(Pessoas.cidadao_pec)
-            total = users.count()+1
+            total = users.count()
             users = (
                 users.order_by(Pessoas.nome)
                 .offset(max(0, page - 1) * pagesize)

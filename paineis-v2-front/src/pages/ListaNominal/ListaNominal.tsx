@@ -106,7 +106,7 @@ const ListaNominal = () => {
           <TextField
             name="iconized"
             id="iconized"
-            placeholder="Busca por CPF"
+            placeholder="Busca por CPF, CNS, Nome"
             icon="zoomOutline"
             required
             value={searchTerm}

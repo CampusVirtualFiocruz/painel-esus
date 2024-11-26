@@ -31,7 +31,7 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
         params: {
           itemsPerPage: params.size,
           page: params.page,
-          cpf: searchTerm,
+          q: searchTerm,
           equipe,
         },
       });

@@ -30,9 +30,10 @@ class HypertensionDashboardGetNominalList(ControllerInterface):
 
         if request.query_params and "equipe" in request.query_params:
             equipe = request.query_params["equipe"]
-
+        if request.query_params and "q" in request.query_params:
+            q = request.query_params["q"]
         response = self.__use_case.get_nominal_list(
-            cnes, page, page_size, nome, cpf, equipe
+            cnes, page, page_size, nome, cpf, equipe, q
         )
 
         return HttpResponse(

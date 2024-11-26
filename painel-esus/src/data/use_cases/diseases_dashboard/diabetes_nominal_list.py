@@ -16,10 +16,11 @@ class DiabetesNominalListUseCase:
         nome: str = None,
         cpf: str = None,
         equipe: int = None,
+        query: str = None,
     ):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
-        response = self.__repository.find_filter(cnes, page, page_size, nome, cpf, equipe)
+        response = self.__repository.find_filter(cnes, page, page_size, nome, cpf, equipe, query)
 
         response["items"] = [
             DiabetesNominalListAdapter(r).to_dict() for r in response["items"]
