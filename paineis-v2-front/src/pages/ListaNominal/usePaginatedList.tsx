@@ -16,7 +16,7 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
     Hipertensão: "arterial-hypertension",
     Idosa: "elderly",
     Infantil: "children",
-    Cadastros: "cadastros",
+    Qualidade: "cadastros",
   } as any;
 
   const { data: info, isLoading: isLoadingInfo } = useQuery(

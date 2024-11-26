@@ -1,6 +1,4 @@
 # pylint: disable= R1703,W0612, C0103
-import os
-
 import pandas as pd
 import polars as pl
 from sqlalchemy import text

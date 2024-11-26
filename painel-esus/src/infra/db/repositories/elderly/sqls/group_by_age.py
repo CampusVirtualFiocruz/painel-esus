@@ -36,10 +36,12 @@ IDOSO_BASE_SQL = """SELECT
 
 def group_by_age_gender(cnes:int = None, equipe:int = None):
     where_clause = ' '
-    if cnes is not None and cnes:
-        where_clause += f" where equipes.codigo_unidade_saude  = {cnes} "
-        if equipe is not None and equipe:
-            where_clause += f" and equipes.codigo_equipe  = {equipe} "
+    if cnes is not None:
+        where_clause += f"""            where 
+                    pessoas.codigo_unidade_saude = {cnes}
+                """
+        if equipe and equipe is not None:
+            where_clause += f"  and pessoas.codigo_equipe_vinculada = {equipe} "
     sql = f"""
     WITH
         idosos as ( {IDOSO_BASE_SQL} {where_clause})
@@ -54,10 +56,12 @@ def group_by_age_gender(cnes:int = None, equipe:int = None):
 
 def group_by_age_location(cnes: int = None, equipe: int = None):
     where_clause = ' '
-    if cnes is not None and cnes:
-        where_clause += f" where equipes.codigo_unidade_saude  = {cnes} "
-        if equipe is not None and equipe:
-            where_clause += f" and equipes.codigo_equipe  = {equipe} "
+    if cnes is not None:
+        where_clause += f"""            where 
+                    pessoas.codigo_unidade_saude = {cnes}
+                """
+        if equipe and equipe is not None:
+            where_clause += f"  and pessoas.codigo_equipe_vinculada = {equipe} "
     sql = f"""
     WITH
         idosos as ( {IDOSO_BASE_SQL} {where_clause})

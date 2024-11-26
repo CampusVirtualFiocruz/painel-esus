@@ -1,5 +1,5 @@
-from .group_by_age import group_by_age_gender
-from .group_by_age import group_by_age_location
+from .group_by_age import group_by_age_gender, group_by_age_location
+from .group_by_imc import group_by_imc
 from .group_by_race import group_by_race
 from .total_elderly import get_elderly_total_on_ubs_and_team
 from .total_elderly_influenza import get_elderly_total_influenza

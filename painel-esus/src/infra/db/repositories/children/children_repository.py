@@ -11,6 +11,7 @@ from src.infra.db.repositories.children.sqls import (
     children_total,
     children_total_cares,
     group_by_race,
+    professional_cares,
 )
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
@@ -153,6 +154,12 @@ class ChildrenRepository:
             result = con.execute(sql)
             return list(result)
 
+    def find_group_professionals_care(self, cnes: int = None, equipe: int = None):
+        with DBConnectionHandler().get_engine().connect() as con:
+            sql = professional_cares(cnes, equipe)
+            result = con.execute(sql)
+            return list(result)
+        
     def find_grouping_by_race(self, cnes: int = None, equipe: int = None):
         with DBConnectionHandler().get_engine().connect() as con:
             sql = group_by_race(cnes, equipe)
@@ -178,7 +185,7 @@ class ChildrenRepository:
                     group_concat(e.micro_area) micro_area,
                     group_concat(e.nome_equipe) nome_equipe,
                     e.nome_unidade_saude,
-                    p.data_nascimento ,
+                    STRFTIME( '%d-%m-%Y',p.data_nascimento) data_nascimento ,
                     p.idade ,
                     p.tipo_endereco ,
                     p.endereco || ' ' || p.numero logradouro,
@@ -187,50 +194,53 @@ class ChildrenRepository:
                     p.cep,
                     p.tipo_localidade ,
                     case 
-                        when c.indicador_atendimentos_medicos_enfermeiros   = 1 then 'SIM'
-                        when c.indicador_atendimentos_medicos_enfermeiros != 1 then 'NÃO'	
+                        when c.indicador_atendimentos_medicos_enfermeiros   == 1 then 'SIM'
+                        when c.indicador_atendimentos_medicos_enfermeiros != 1 or  c.indicador_atendimentos_medicos_enfermeiros is null then 'NÃO'	
                     end indicador_atendimentos_medicos_enfermeiros,
-                    STRFTIME( '%Y-%m-%d',c.data_ultimo_atendimento_medico_enfermeiro) data_ultimo_atendimento_medico_enfermeiro, 
-                    c.atendimentos_medicos_enfermeiros_8d_vida, 
+                    STRFTIME( '%d-%m-%Y',c.data_ultimo_atendimento_medico_enfermeiro) data_ultimo_atendimento_medico_enfermeiro, 
+                    case
+                        when c.atendimentos_medicos_enfermeiros_8d_vida == 1 then 'SIM'
+                        when c.atendimentos_medicos_enfermeiros_8d_vida != 1 or  c.atendimentos_medicos_enfermeiros_8d_vida is null then 'NÃO'
+                    end atendimentos_medicos_enfermeiros_8d_vida, 
                     c.atendimentos_medicos_enfermeiros_puericult, 
-                    STRFTIME( '%Y-%m-%d',c.data_ultimo_atendimento_medicos_enfermeiros_puericult) data_ultimo_atendimento_medicos_enfermeiros_puericult, 
+                    STRFTIME( '%d-%m-%Y',c.data_ultimo_atendimento_medicos_enfermeiros_puericult) data_ultimo_atendimento_medicos_enfermeiros_puericult, 
                     case 
                         when c.indicador_atendimentos_medicos_enfermeiros_puericult   = 1 then 'SIM'
-                        when c.indicador_atendimentos_medicos_enfermeiros_puericult != 1 then 'NÃO'	
+                        when c.indicador_atendimentos_medicos_enfermeiros_puericult != 1 or  c.indicador_atendimentos_medicos_enfermeiros_puericult is null then 'NÃO'	
                     end indicador_atendimentos_medicos_enfermeiros_puericultura,
                     c.medicoes_peso_altura_ate2anos, 
-                    STRFTIME( '%Y-%m-%d',c.data_ultima_medicao_peso_altura_ate2anos) data_ultima_medicao_peso_altura_ate2anos, 
+                    STRFTIME( '%d-%m-%Y',c.data_ultima_medicao_peso_altura_ate2anos) data_ultima_medicao_peso_altura_ate2anos, 
                     case 
                         when c.indicador_medicoes_peso_altura_ate2anos   = 1 then 'SIM'
-                        when c.indicador_medicoes_peso_altura_ate2anos != 1 then 'NÃO'	
+                        when c.indicador_medicoes_peso_altura_ate2anos != 1 or  c.indicador_medicoes_peso_altura_ate2anos is null then 'NÃO'	
                     end indicador_medicoes_peso_altura_ate2anos,
-                    STRFTIME( '%Y-%m-%d',c.data_ultima_visita_domiciliar_acs) data_ultima_visita_domiciliar_acs, 
+                    STRFTIME( '%d-%m-%Y',c.data_ultima_visita_domiciliar_acs) data_ultima_visita_domiciliar_acs, 
                     case 
                         when c.indicador_visitas_domiciliares_acs   = 1 then 'SIM'
-                        when c.indicador_visitas_domiciliares_acs != 1 then 'NÃO'	
+                        when c.indicador_visitas_domiciliares_acs != 1 or  c.indicador_visitas_domiciliares_acs is null then 'NÃO'	
                     end indicador_visitas_domiciliares_acs,
                     c.visitas_domiciliares_acs, 
                     c.teste_pezinho, 
                     case 
                         when c.indicador_teste_pezinho   = 1 then 'SIM'
-                        when c.indicador_teste_pezinho != 1 then 'NÃO'	
+                        when c.indicador_teste_pezinho != 1 or  c.indicador_teste_pezinho is null then 'NÃO'	
                     end indicador_teste_pezinho,
-                     STRFTIME( '%Y-%m-%d',c.data_ultimo_teste_pezinho) data_ultimo_teste_pezinho, 
+                     STRFTIME( '%d-%m-%Y',c.data_ultimo_teste_pezinho) data_ultimo_teste_pezinho, 
                     c.n_penta, 
                     c.n_polio, 
                     c.n__triplici, 
-                    c.data_ultima_vacina_penta, 
-                    STRFTIME( '%Y-%m-%d',c.data_ultima_vacina_polio) data_ultima_vacina_polio, 
-                    STRFTIME( '%Y-%m-%d',c.data_ultima_vacina_triplici) data_ultima_vacina_triplici, 
+                    STRFTIME( '%d-%m-%Y',c.data_ultima_vacina_penta) data_ultima_vacina_penta, 
+                    STRFTIME( '%d-%m-%Y',c.data_ultima_vacina_polio) data_ultima_vacina_polio, 
+                    STRFTIME( '%d-%m-%Y',c.data_ultima_vacina_triplici) data_ultima_vacina_triplici, 
                     case 
-                        when c.indicador_vacinas_penta_polio_triplici   = 1 then 'SIM'
-                        when c.indicador_vacinas_penta_polio_triplici != 1 then 'NÃO'	
+                        when c.indicador_vacinas_penta_polio_triplici   == 1 then 'SIM'
+                        when c.indicador_vacinas_penta_polio_triplici != 1 or  c.indicador_vacinas_penta_polio_triplici is null then 'NÃO'	
                     end indicador_vacinas_penta_polio_triplici,
                     c.atendimentos_odontologicos, 
-                    STRFTIME( '%Y-%m-%d',c.data_ultimo_atendimento_odontologico) data_ultimo_atendimento_odontologico, 
+                    STRFTIME( '%d-%m-%Y',c.data_ultimo_atendimento_odontologico) data_ultimo_atendimento_odontologico, 
                     case 
-                        when c.indicador_atendimentos_odontologicos   = 1 then 'SIM'
-                        when c.indicador_atendimentos_odontologicos != 1 then 'NÃO'	
+                        when c.indicador_atendimentos_odontologicos   == 1 then 'SIM'
+                        when c.indicador_atendimentos_odontologicos != 1 or  c.indicador_atendimentos_odontologicos is null  then 'NÃO'	
                     end indicador_atendimentos_odontologicos
                 from
                     crianca c   join pessoas p on p.cidadao_pec = c.cidadao_pec 

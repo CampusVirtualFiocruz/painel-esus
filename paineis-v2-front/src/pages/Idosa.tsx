@@ -34,7 +34,7 @@ const reportSections = [
         colors: ["#0b5b98", "#6595ff", "#0066b4", "#49e8db", "#0066b4"],
       },
     },
-    /* "total-imc": {
+    "total-imc": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
@@ -44,7 +44,7 @@ const reportSections = [
           name: content?.["total-cadastros"],
         },
       },
-    },  */
+    },  
     row: {
       "total-proporcao-vacina-influenza": {
         Chart: Donut,

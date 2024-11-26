@@ -1,22 +1,29 @@
-from src.data.use_cases.diseases_dashboard.diabetes_nominal_list import DiabetesNominalListUseCase
-from src.data.use_cases.diseases_dashboard.disease_dashboard import \
-    DiseaseUseCase
+from src.data.use_cases.diseases_dashboard.diabetes_nominal_list import (
+    DiabetesNominalListUseCase,
+)
+from src.data.use_cases.diseases_dashboard.disease_dashboard import DiseaseUseCase
 from src.domain.entities.diabetes import Diabetes
-from src.domain.entities.diabetes_exams import DiabetesExams
-from src.domain.entities.diabetes_exams import IndividualDiabetesExams
-from src.infra.db.repositories.disease.diseases_dashboard_local import \
-    DiseasesDashboardLocalRepository as DiseasesDashboardRepository
-from src.infra.db.repositories.disease.nominal_list.diabetes_nominal_list_repository import DiabetesNominalListRepository
-from src.presentations.controllers.diabetes import DiabetesDashboardGetAgeGroupGender
-from src.presentations.controllers.diabetes import DiabetesDashboardGetAgeGroupsLocation
-from src.presentations.controllers.diabetes import DiabetesDashboardGetComplications
-from src.presentations.controllers.diabetes import DiabetesDashboardGetExamsCount
-from src.presentations.controllers.diabetes import DiabetesDashboardGetIMC
-from src.presentations.controllers.diabetes import DiabetesDashboardGetIndividualExamsCount
-from src.presentations.controllers.diabetes import DiabetesDashboardGetProfessionalsCount
-from src.presentations.controllers.diabetes import DiabetesDashboardGetTotal
-from src.presentations.controllers.diabetes.diabetes_dashboard_get_nominal_list import DiabetesDashboardGetNominalList
-from src.presentations.controllers.diabetes.diabetes_dashboard_get_nominal_list import DiabetesDashboardGetNominalListDownload
+from src.domain.entities.diabetes_exams import DiabetesExams, IndividualDiabetesExams
+from src.infra.db.repositories.disease.diseases_dashboard_local import (
+    DiseasesDashboardLocalRepository as DiseasesDashboardRepository,
+)
+from src.infra.db.repositories.disease.nominal_list.diabetes_nominal_list_repository import (
+    DiabetesNominalListRepository,
+)
+from src.presentations.controllers.diabetes import (
+    DiabetesDashboardGetAgeGroupGender,
+    DiabetesDashboardGetAgeGroupsLocation,
+    DiabetesDashboardGetComplications,
+    DiabetesDashboardGetExamsCount,
+    DiabetesDashboardGetIMC,
+    DiabetesDashboardGetIndividualExamsCount,
+    DiabetesDashboardGetProfessionalsCount,
+    DiabetesDashboardGetTotal,
+)
+from src.presentations.controllers.diabetes.diabetes_dashboard_get_nominal_list import (
+    DiabetesDashboardGetNominalList,
+    DiabetesDashboardGetNominalListDownload,
+)
 
 
 def diabetes_dashboard_get_total():
@@ -104,10 +111,11 @@ def diabetes_dashboard_get_nominal_list():
     return controller.handle
 
 
-def diabetes_dashboard_get_nominal_list_download(cnes):
+def diabetes_dashboard_get_nominal_list_download():
     repository = DiabetesNominalListRepository()
     use_case = DiabetesNominalListUseCase(repository)
     controller = DiabetesDashboardGetNominalListDownload(
         use_case)
 
-    return controller.handle(cnes)
+    return controller.handle
+

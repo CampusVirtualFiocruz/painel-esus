@@ -8,6 +8,7 @@ from src.infra.db.repositories.elderly.sqls import (
     get_elderly_total_on_ubs_and_team,
     group_by_age_gender,
     group_by_age_location,
+    group_by_imc,
     group_by_race,
     total_hipertension_diabetes,
 )
@@ -104,6 +105,12 @@ class ElderlyRepository:
             result = con.execute(sql)
             return list(result)
 
+    def find_group_by_imc(self, cnes: int = None, equipe: int = None):
+        with DBConnectionHandler().get_engine().connect() as con:
+            sql = group_by_imc(cnes, equipe)
+            result = con.execute(sql)
+            return list(result)
+
     def find_filter_nominal(
         self,
         cnes: int,
@@ -171,7 +178,7 @@ class ElderlyRepository:
                     group_concat(e.micro_area) micro_area,
                     group_concat(e.nome_equipe) nome_equipe,
                     e.nome_unidade_saude,
-                    p.data_nascimento ,
+                    STRFTIME( '%d-%m-%Y',p.data_nascimento) data_nascimento,
                     p.idade ,
                     p.tipo_endereco ,
                     p.endereco || ' ' || p.numero logradouro,
@@ -180,9 +187,9 @@ class ElderlyRepository:
                     p.cep,
                     p.tipo_localidade ,
                     i.atendimentos_medicos,
-                    STRFTIME( '%Y-%m-%d',i.data_ultimo_atendimento_medicos) data_ultimo_atendimento_medicos,
+                    STRFTIME( '%d-%m-%Y',i.data_ultimo_atendimento_medicos) data_ultimo_atendimento_medicos,
                     i.medicoes_peso_altura , 
-                    STRFTIME( '%Y-%m-%d',i.data_ultima_medicao_peso_altura) data_ultima_medicao_peso_altura, 
+                    STRFTIME( '%d-%m-%Y',i.data_ultima_medicao_peso_altura) data_ultima_medicao_peso_altura, 
                     case 
                         when i.indicador_medicoes_peso_altura  = 1 then 'SIM'
                         when i.indicador_medicoes_peso_altura != 1 then 'NÃO'	
@@ -190,7 +197,7 @@ class ElderlyRepository:
                     i.imc , 
                     i.categoria_imc , 
                     i.registros_creatinina , 
-                    STRFTIME( '%Y-%m-%d',i.data_ultimo_registro_creatinina) data_ultimo_registro_creatinina, 
+                    STRFTIME( '%d-%m-%Y',i.data_ultimo_registro_creatinina) data_ultimo_registro_creatinina, 
                     case 
                         when i.indicador_registros_creatinina   = 1 then 'SIM'
                         when i.indicador_registros_creatinina  != 1 then 'NÃO'	
@@ -200,15 +207,15 @@ class ElderlyRepository:
                         when i.indicador_visitas_domiciliares_acs  != 1 then 'NÃO'	
                     end indicador_visitas_domiciliares_acs  ,
                     i.visitas_domiciliares_acs , 
-                    STRFTIME( '%Y-%m-%d',i.data_ultima_visita_domiciliar_acs) data_ultima_visita_domiciliar_acs, 
+                    STRFTIME( '%d-%m-%Y',i.data_ultima_visita_domiciliar_acs) data_ultima_visita_domiciliar_acs, 
                     i.vacinas_influenza , 
-                    STRFTIME( '%Y-%m-%d',i.data_ultima_vacina_influenza) data_ultima_vacina_influenza, 
+                    STRFTIME( '%d-%m-%Y',i.data_ultima_vacina_influenza) data_ultima_vacina_influenza, 
                     case 
                         when i.indicador_vacinas_influenza   = 1 then 'SIM'
                         when i.indicador_vacinas_influenza  != 1 then 'NÃO'	
                     end indicador_vacinas_influenza  ,
                     i.atendimentos_odontologicos , 
-                    STRFTIME( '%Y-%m-%d',i.data_ultimo_atendimento_odontologico) data_ultimo_atendimento_odontologico, 
+                    STRFTIME( '%d-%m-%Y',i.data_ultimo_atendimento_odontologico) data_ultimo_atendimento_odontologico, 
                     case 
                         when i.indicador_atendimento_odontologico 	   = 1 then 'SIM'
                         when i.indicador_atendimento_odontologico 	  != 1 then 'NÃO'	

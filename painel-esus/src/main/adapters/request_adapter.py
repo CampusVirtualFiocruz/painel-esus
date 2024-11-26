@@ -5,7 +5,6 @@ from src.presentations.http_types import HttpRequest, HttpResponse
 
 
 def request_adapter(request: FlaskRequest, controller: Callable) -> HttpResponse:
-
     http_request = create_request_adapter(request)
     http_response = controller(http_request)
     return http_response

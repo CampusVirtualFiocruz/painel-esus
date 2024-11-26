@@ -8,6 +8,7 @@ from src.main.composers.elderly_composer import (
     elderly_get_nominal_list_download,
     elderly_group_by_age_location_composer,
     elderly_group_by_gender_composer,
+    elderly_group_by_imc,
     elderly_group_by_race_composer,
     elderly_hipertesnion_diabetes_rate_composer,
     elderly_imc_rate_composer,
@@ -27,6 +28,7 @@ class ElderlyPath:
         "group_by_age_location": "/group-by-age-location",
         "group_by_gender": "/group-by-gender",
         "group_by_race": "/group-by-race",
+        "group_by_imc": "/group-by-imc",
         "grouping_by_imc_rate": "/group-by-imc-rate",
         "grouping_by_influenza_rate": "/group-by-influenza-rate",
         "grouping_by_odonto_rate": "/group-by-odonto-rate",
@@ -203,6 +205,29 @@ def elderly_grouping_hipertesnion_diabetes_rate(cnes=None):
     response = None
     try:
         http_response = request_adapter(request, elderly_hipertesnion_diabetes_rate_composer())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+
+@elderly_bp.route(
+    urls["group_by_imc"],
+    methods=["GET"],
+    endpoint="group_by_imc",
+)
+@elderly_bp.route(
+    urls["group_by_imc"] + "/<cnes>",
+    methods=["GET"],
+    endpoint="group_by_imc_id",
+)
+def elderly_group_by_imc(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, elderly_imc_rate_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)

@@ -3,10 +3,7 @@
 # import pyarrow as pa
 # import pyarrow.parquet as pq
 import logging
-import os
-import subprocess
 
-import polars
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
@@ -18,7 +15,7 @@ from src.infra.create_base.polars.scripts_dados.indicadores_crianca_polars impor
 class CreateIndicadoresCriancasRepository(CreateBasesRepositoryInterface):
 
     def __init__(self):
-        ...
+        self._base=''
 
     def get_base(self):
         return self._base
@@ -27,10 +24,6 @@ class CreateIndicadoresCriancasRepository(CreateBasesRepositoryInterface):
         try:
             gerar_banco()
 
-        except subprocess.CalledProcessError as e:
-            # Log detalhado do erro
-            logging.error("Erro ao executar o script idosos.py:")
-            logging.error(e.stderr)
         except FileNotFoundError as e:
             # Trata o caso onde o interpretador Python não é encontrado
             logging.error(e)
