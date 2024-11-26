@@ -15,7 +15,7 @@ def filter_by_gender_age(cnes: int = None, equipe: int = None):
 	        pessoas p        
 	    join equipes e on e.cidadao_pec = p.cidadao_pec
     {where_clause}
-    )
+    ), lista as (
     select 
         UPPER(substr(sexo, 1,1))||LOWER(substr( sexo, 2)) sexo, case 
     when idade  >= 0 and idade <= 4 then '0 a 4 anos'
@@ -44,8 +44,9 @@ def filter_by_gender_age(cnes: int = None, equipe: int = None):
 		when LOWER(tipo_localidade) is null then 'Nao Informado'
 		when LOWER(tipo_localidade) = 'zona rural' then 'Rural'
 		when LOWER(tipo_localidade) is not null  and LOWER(tipo_localidade) != 'zona rural' then 'Urbano'
-	end localidade	,
-        count(*) total
+	end localidade	
         from cidadaos
+        )
+    select *, count(*) total from lista
         group by sexo, tipo, localidade
     """
