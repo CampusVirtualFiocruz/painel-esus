@@ -40,6 +40,7 @@ class BaseNominalAdapter:
         self.tipo_localidade = user.tipo_localidade
         self.cpf = user.cpf
         self.cns = user.cns
+        self.data_nascimento = user.data_nascimento
         self.idade = user.idade
         self.diagnostico = user.diagnostico
         self.sexo = user.sexo
@@ -52,6 +53,7 @@ class BaseNominalAdapter:
         self.telefone = user.telefone
         self.registros = []
         self.primeiro_registro = user.min_date
+
 
 class HypertensionNominalListAdapter(BaseNominalAdapter):
 
@@ -127,6 +129,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
                 "possuiAlertas": self.possui_alertas,
                 "cpf": self.cpf,
                 "cns": self.cns,
+                "dataNascimento": self.data_nascimento,
                 "idade": self.idade,
                 "diagnostico": self.diagnostico,
                 "sexo": self.sexo,
@@ -227,6 +230,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
                 "possuiAlertas": self.possui_alertas,
                 "cpf": self.cpf,
                 "cns": self.cns,
+                "dataNascimento": self.data_nascimento,
                 "idade": self.idade,
                 "diagnostico": self.diagnostico,
                 "sexo": self.sexo,
@@ -258,6 +262,7 @@ class CriancaNominalListAdapter:
         self.tipo_localidade = user.tipo_localidade
         self.cpf = user.cpf
         self.cns = user.cns
+        self.data_nascimento = user.data_nascimento
         self.idade = user.idade
         self.sexo = user.sexo
         self.equipe = user.nome_equipe
@@ -276,7 +281,7 @@ class CriancaNominalListAdapter:
             or user.indicador_atendimentos_odontologicos != 1
             or user.indicador_vacinas_penta_polio_triplici != 1
         )
-        self.registros=[]
+        self.registros = []
         self.registros.append(
             AlertRecord(
                 data=user.data_ultimo_atendimento_medico_enfermeiro,
@@ -345,6 +350,7 @@ class CriancaNominalListAdapter:
                 "possuiAlertas": self.possui_alertas,
                 "cpf": self.cpf,
                 "cns": self.cns,
+                "dataNascimento": self.data_nascimento,
                 "idade": self.idade,
                 "sexo": self.sexo,
                 "equipe": self.equipe,
@@ -373,6 +379,7 @@ class IdosoNominalListAdapter:
         self.tipo_localidade = user.tipo_localidade
         self.cpf = user.cpf
         self.cns = user.cns
+        self.data_nascimento = user.data_nascimento
         self.idade = user.idade
         self.sexo = user.sexo
         self.equipe = user.nome_equipe
@@ -450,6 +457,7 @@ class IdosoNominalListAdapter:
                 "possuiAlertas": self.possui_alertas,
                 "cpf": self.cpf,
                 "cns": self.cns,
+                "dataNascimento": self.data_nascimento,
                 "idade": self.idade,
                 "sexo": self.sexo,
                 "equipe": self.equipe,
@@ -478,6 +486,7 @@ class RecordNominalListAdapter:
         self.tipo_localidade = user.tipo_localidade
         self.cpf = user.cpf
         self.cns = user.cns
+        self.data_nascimento = user.data_nascimento
         self.idade = user.idade
         self.sexo = user.sexo
         self.equipe = user.nome_equipe
@@ -490,16 +499,19 @@ class RecordNominalListAdapter:
 
         ultima_atualizacao_cidadao, ultima_atualizacao_fcd = True, True
 
-        if user.diferenca_ultima_atualizacao_cidadao is not None and user.diferenca_ultima_atualizacao_cidadao < 24:
+        if (
+            user.diferenca_ultima_atualizacao_cidadao is not None
+            and user.diferenca_ultima_atualizacao_cidadao < 24
+        ):
             ultima_atualizacao_cidadao = False
 
-        if user.diferenca_ultima_atualizacao_fcd is not None and user.diferenca_ultima_atualizacao_fcd < 24:
+        if (
+            user.diferenca_ultima_atualizacao_fcd is not None
+            and user.diferenca_ultima_atualizacao_fcd < 24
+        ):
             ultima_atualizacao_fcd = False
 
-        self.possui_alertas = (
-            ultima_atualizacao_cidadao or
-            ultima_atualizacao_fcd
-        )
+        self.possui_alertas = ultima_atualizacao_cidadao or ultima_atualizacao_fcd
         self.registros = []
         self.registros.append(
             AlertRecord(
@@ -523,11 +535,12 @@ class RecordNominalListAdapter:
             {
                 "nome": self.nome,
                 "nomeSocialSelecionado": self.nome_social,
-                "zonaUrbana": "urbana" in self.tipo_localidade.lower() ,
+                "zonaUrbana": "urbana" in self.tipo_localidade.lower(),
                 "zonaRural": "rural" in self.tipo_localidade.lower(),
                 "possuiAlertas": self.possui_alertas,
                 "cpf": self.cpf,
                 "cns": self.cns,
+                "dataNascimento": self.data_nascimento,
                 "idade": self.idade,
                 "sexo": self.sexo,
                 "equipe": self.equipe,

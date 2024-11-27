@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from "react";
 import ReactDom from "react-dom";
 import { CgClose } from "react-icons/cg";
+import moment from "moment";
 
 import { VFlow, Radio } from "bold-ui";
 
@@ -186,9 +187,14 @@ export function bodyDetalhesCadastro(item: any) {
           <p>
             <strong>CPF:</strong> {item?.cpf} <br />
             <strong>CNS:</strong> {item?.cns} <br />
+            <strong>Data de nascimento:</strong>{" "}
+            {item?.dataNascimento
+              ? moment.utc(item.dataNascimento).format("DD/MM/YYYY")
+              : "-"}
+            <br />
             {item?.tipoLogradouro && (
               <>
-                <strong>Tipo Logradouro:</strong>
+                <strong>Tipo Logradouro: </strong>
                 {item.tipoLogradouro}
                 <br />
               </>
@@ -208,15 +214,30 @@ export function bodyDetalhesCadastro(item: any) {
         {Array.isArray(item?.detalhesCondicaoSaude) &&
           item?.detalhesCondicaoSaude.map((condicao: any) => (
             <>
-              {Boolean(condicao?.cidCondicaoSaude || condicao?.primeiroDiagnostico) ? <div className="health-condition">
-                {condicao?.cidCondicaoSaude && <><p>
-                  Condição de saúde: CID {condicao?.cidCondicaoSaude.join(", ")}
-                </p></>}
-                {condicao?.primeiroDiagnostico && <><p>
-                  Data do primeiro registro da condição:{" "}
-                  {parseText(condicao?.primeiroDiagnostico)}
-                </p></>}
-              </div> : <br />}
+              {Boolean(
+                condicao?.cidCondicaoSaude || condicao?.primeiroDiagnostico
+              ) ? (
+                <div className="health-condition">
+                  {condicao?.cidCondicaoSaude && (
+                    <>
+                      <p>
+                        Condição de saúde: CID{" "}
+                        {condicao?.cidCondicaoSaude.join(", ")}
+                      </p>
+                    </>
+                  )}
+                  {condicao?.primeiroDiagnostico && (
+                    <>
+                      <p>
+                        Data do primeiro registro da condição:{" "}
+                        {parseText(condicao?.primeiroDiagnostico)}
+                      </p>
+                    </>
+                  )}
+                </div>
+              ) : (
+                <br />
+              )}
               {Array.isArray(condicao?.registros) &&
                 condicao?.registros.map((registro: any) => (
                   <div className="latest-checkups">
@@ -224,9 +245,7 @@ export function bodyDetalhesCadastro(item: any) {
                       {registro?.descricao !==
                         "data-da-ultima-glicemia-capilar" && (
                         <>
-                          <strong>
-                            {registro?.descricao}
-                          </strong>
+                          <strong>{registro?.descricao}</strong>
                           <div>
                             <p>
                               {registro?.data === null ||
