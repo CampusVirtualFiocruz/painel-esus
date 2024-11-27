@@ -1,11 +1,15 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
+import { useQuery } from "react-query";
 
 import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import { PainelParams } from "./Hipertensao";
 import useReportDataIdosas from "../hooks/sections/idosas/useReportDataIdosas";
+import { getNomeUbs } from "../utils";
+import { Api } from "../services/api";
+import { useInfo } from "../context/infoProvider/useInfo";
 
 const reportHeader = [
   {
@@ -44,7 +48,7 @@ const reportSections = [
           name: content?.["total-cadastros"],
         },
       },
-    },  
+    },
     row: {
       "total-proporcao-vacina-influenza": {
         Chart: Donut,
@@ -163,6 +167,33 @@ const Idosa = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
+  const { city } = useInfo();
+  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
+    "ubs",
+    async () => {
+      const response = await Api.get<any>("get-units");
+      const data = response.data;
+
+      const listData: any[] = data.data.map((ubs: any) => {
+        return {
+          label: ubs.no_unidade_saude,
+          value: ubs.co_seq_dim_unidade_saude,
+          id: ubs.co_seq_dim_unidade_saude,
+        };
+      });
+
+      return listData;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
+
+  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
+  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
+
+  const title = `${UBS} / Cuidado da Pessoa Idosa`;
+
   const reportData = useReportDataIdosas({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
 
@@ -172,7 +203,7 @@ const Idosa = () => {
 
   return (
     <ReportWrapper
-      title="UBS Sérgio Arouca / Cuidado da Pessoa Idosa"
+      title={title}
       subtitle="(referente aos últimos 12 meses)"
       footer={<ReportFooter chaveListaNominal="Idosa" equipe={equipe} />}
     >
