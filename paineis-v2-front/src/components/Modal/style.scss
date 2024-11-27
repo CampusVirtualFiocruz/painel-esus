@@ -15,7 +15,7 @@
 .container-modal .modal {
   z-index: 1;
   width: 100%;
-  height: auto;
+  height: 90%;
   max-width: 598px;
   background: white;
   display: flex;
@@ -27,6 +27,7 @@
   font-size: 1.125rem;
   font-weight: 500;
   color: #343131;
+  overflow: auto;
 }
 
 .modal .separador {
