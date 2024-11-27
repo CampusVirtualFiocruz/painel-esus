@@ -1,3 +1,5 @@
+import io
+
 from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
@@ -13,7 +15,7 @@ from src.main.composers.children_composer import (
 )
 
 children_bp = Blueprint("children", __name__)
-import io
+
 
 
 class ChildrenPath:

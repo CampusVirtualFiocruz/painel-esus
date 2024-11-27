@@ -11,3 +11,5 @@ def test_nominal_list():
 
     print(result["items"][0])
     assert total > equipe
+
+def test_

@@ -1,12 +1,13 @@
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from src.data.use_cases.create_bases.create_cache import CreateCacheUseCase
 from src.env.conf import env
 from src.errors.logging import logging
-from src.presentations.controllers.create_bases.create_base_controller import \
-    CreateBasesController
+from src.main.server.cache import cache
+from src.presentations.controllers.create_bases.create_base_controller import (
+    CreateBasesController,
+)
 
 
 def generate_base_scheduled(scheduler: BackgroundScheduler):
@@ -16,6 +17,7 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
 
     def cache_init():
         try:
+            cache.clear()
             logging.info('Start cache generator.')
             create_cache = CreateCacheUseCase()
             create_cache.generate_cache()

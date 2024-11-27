@@ -11,7 +11,7 @@ def filter_by_localidade(cnes: int = None, equipe: int = None):
 select
     distinct p.*,
     case 
-        when LOWER(tipo_localidade) is null then 'nao_definido'
+        when LOWER(tipo_localidade) is null or LOWER(tipo_localidade) = 'n/i' then 'nao_definido'
         when LOWER(tipo_localidade) = 'zona rural' then 'rural'
         when LOWER(tipo_localidade) is not null  and LOWER(tipo_localidade) != 'zona rural' then 'urbano'
     end tipo    

@@ -84,6 +84,7 @@ class RecordsRepository:
             sql = group_records_by_origin(cnes, equipe)
             result = con.execute(sql)
             return list(result)
+    
     def find_filter_nominal(
         self,
         cnes: int = None,

@@ -291,7 +291,8 @@ def create_env(
             "ENV=" + "instalador" + "\n",
             "SECRET_TOKEN=" + "111111111111111111111" + "\n",
             "GENERATE_BASE=True\n",
-            "CHUNK_SIZE=50000"
+            "CHUNK_SIZE=50000\n",
+            "POLARS_SKIP_CPU_CHECK=True"
         ]
         f.writelines(lines)
         f.close()

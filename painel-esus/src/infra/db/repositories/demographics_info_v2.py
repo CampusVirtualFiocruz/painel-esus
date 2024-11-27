@@ -192,7 +192,11 @@ select count(*) total  from 	cidadaos """
             "hipertensao": {"rural": 0, "urbano": 0, "nao_informado": 0},
             "crianca": {"rural": 0, "urbano": 0, "nao_informado": 0},
             "idosa": {"rural": 0, "urbano": 0, "nao_informado": 0},
-            "qualidade": location_body,
+            "qualidade": {
+                "rural": location_body["rural"],
+                "urbano": location_body["urbano"],
+                "nao_informado": location_body['nao_definido'],
+            },
         }
         with LocalDBConnectionHandler().get_engine().connect() as local_con:
             indicator_diabetes_sql = get_indicators_diabetes_plus_autorreferidos(
