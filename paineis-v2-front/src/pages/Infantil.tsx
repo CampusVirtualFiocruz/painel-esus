@@ -62,7 +62,6 @@ const reportSections = [
     "distribuicao-criancas-sexo": {
       Chart: Bar,
       config: {
-        hideLegend: true,
         colors: ["rgba(57,150,193,255)", "rgba(92,210,200,255)", "#dddddd"],
         yAxis: {
           name: content?.["total-cadastros"],
