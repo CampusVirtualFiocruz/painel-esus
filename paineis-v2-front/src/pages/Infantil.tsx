@@ -1,4 +1,6 @@
 import { useParams, useSearchParams } from "react-router-dom";
+import { useQuery } from "react-query";
+
 import { content } from "../assets/content/content";
 import {
   Bar,
@@ -11,6 +13,9 @@ import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import useReportDataInfantil from "../hooks/sections/infantil/useReportDataInfantil";
 import { PainelParams } from "./Hipertensao";
+import { getNomeUbs } from "../utils";
+import { Api } from "../services/api";
+import { useInfo } from "../context/infoProvider/useInfo";
 
 const reportHeader = [
   {
@@ -38,13 +43,13 @@ const reportSections = [
       config: {
         colors: ["#0b5b98", "#6595ff", "#0066b4", "#49e8db", "#0066b4"],
       },
-    },  
+    },
     "total-extratificacao-por-profissional": {
       Chart: ProgressBar,
-    },  
+    },
   },
   {
-     "distribuicao-criancas-faixa-etaria": {
+    "distribuicao-criancas-faixa-etaria": {
       Chart: Bar,
       config: {
         hideLegend: true,
@@ -54,7 +59,7 @@ const reportSections = [
         },
       },
     },
-   "distribuicao-criancas-sexo": {
+    "distribuicao-criancas-sexo": {
       Chart: Bar,
       config: {
         hideLegend: true,
@@ -74,7 +79,7 @@ const reportSections = [
           name: content?.["total-cadastros"],
         },
       },
-    }, 
+    },
   },
 ];
 
@@ -83,22 +88,49 @@ const Infantil = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
+  const { city } = useInfo();
+  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
+    "ubs",
+    async () => {
+      const response = await Api.get<any>("get-units");
+      const data = response.data;
+
+      const listData: any[] = data.data.map((ubs: any) => {
+        return {
+          label: ubs.no_unidade_saude,
+          value: ubs.co_seq_dim_unidade_saude,
+          id: ubs.co_seq_dim_unidade_saude,
+        };
+      });
+
+      return listData;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
+
+  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
+  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
+
+  const title = `${UBS} / Desenvolvimento Infantil`;
+
   const reportData = useReportDataInfantil({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
 
-  if(reportData?.isLoading){
-    return <center>Aguarde...</center>
+  if (reportData?.isLoading) {
+    return <center>Aguarde...</center>;
   }
 
   return (
     <ReportWrapper
-      title="UBS Sérgio Arouca / Desenvolvimento Infantil de Cadastro"
+      title={title}
       subtitle="(cuidado até o 2º ano de vida de acordo com a data da última atualização pelo município)"
       footer={<ReportFooter chaveListaNominal="Infantil" equipe={equipe} />}
     >
       {reportSections.map((chartList: any, colIndex) => (
         <div className="col-12 col-md-6">
-           {colIndex === 0 && (
+          {colIndex === 0 && (
             <>
               <div
                 style={{
@@ -132,7 +164,7 @@ const Infantil = () => {
                 </div>
               </div>
             </>
-          )} 
+          )}
           {colIndex === 1 && (
             <div style={{ paddingTop: "60px", content: " " }} />
           )}

@@ -1,10 +1,15 @@
 import { useParams, useSearchParams } from "react-router-dom";
+import { useQuery } from "react-query";
+
 import { content } from "../assets/content/content";
 import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import useReportDataQualidade from "../hooks/sections/qualidade/useReportDataQualidade";
 import { PainelParams } from "./Hipertensao";
+import { getNomeUbs } from "../utils";
+import { Api } from "../services/api";
+import { useInfo } from "../context/infoProvider/useInfo";
 
 const reportHeader = [
   {
@@ -77,6 +82,33 @@ const Qualidade = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
+  const { city } = useInfo();
+  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
+    "ubs",
+    async () => {
+      const response = await Api.get<any>("get-units");
+      const data = response.data;
+
+      const listData: any[] = data.data.map((ubs: any) => {
+        return {
+          label: ubs.no_unidade_saude,
+          value: ubs.co_seq_dim_unidade_saude,
+          id: ubs.co_seq_dim_unidade_saude,
+        };
+      });
+
+      return listData;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
+
+  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
+  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
+
+  const subtitle = `${UBS}`;
+
   const reportData = useReportDataQualidade({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
 
@@ -86,8 +118,8 @@ const Qualidade = () => {
 
   return (
     <ReportWrapper
-      title="UBS Sérgio Arouca / Qualidade de Cadastro"
-      subtitle="(registrados a partir de 2019)"
+      title="Pessoas Atendidas nos últimos 12 meses / Qualidade de Cadastro"
+      subtitle={subtitle}
       header={
         <div
           style={{
