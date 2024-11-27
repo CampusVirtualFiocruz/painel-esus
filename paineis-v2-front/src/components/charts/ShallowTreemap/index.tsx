@@ -8,8 +8,12 @@ export function ShallowTreemap(props: DonutChart) {
     color: props?.config?.colors || ["#09406A", "#5CD2C8"],
     tooltip: {
       trigger: "item",
-      label: {
-        formatter: "ai papai",
+      formatter: (val: any) => { 
+          console.log(val)
+              return [
+                `<strong>${val.data.name} (${val.data.percent}%)</strong>`,
+                `${val.data.value}`,
+              ].join("<br/>");
       },
     },
     legend: {
@@ -45,6 +49,7 @@ export function ShallowTreemap(props: DonutChart) {
                 value: Number(curr?.value ?? 0) ,
                 name: content?.[curr?.tag] || curr?.tag,
                 percent: Number(curr?.percent ?? 0)*100,
+                
                 label: {
                   formatter: (val:any) => { 
                     return [
