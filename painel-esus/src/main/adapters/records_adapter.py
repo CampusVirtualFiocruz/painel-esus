@@ -3,9 +3,9 @@ from src.main.adapters.nominal_list_adapter import RecordNominalListAdapter
 
 class RecordsAdapter:
     def get_total_group(self, response):
-        result =  {
+        result = {
             "total-cadastros-ubs": {
-                "data":0,
+                "data": 0,
             },
             "porcentagem-cadastros-atualizados": {
                 "data": 0,
@@ -15,7 +15,9 @@ class RecordsAdapter:
         if response[0] is not None:
             result["total-cadastros-ubs"]["data"] = int(response[0])
         if response[1] is not None:
-            result["porcentagem-cadastros-atualizados"]["data"] = float(response[1])*100
+            result["porcentagem-cadastros-atualizados"]["data"] = (
+                float(response[1]) * 100
+            )
         return result
 
     def get_cpf_cns_rate(self, response):
@@ -40,26 +42,31 @@ class RecordsAdapter:
         result = []
         for resp in response:
             tag = resp[0].lower().replace("zona ", "").replace("n/i", "nao-informado")
-            result.append({
-                "tag":tag,
-                "value": float(resp[2])
-            })
+            result.append(
+                {"tag": tag, "value": float(resp[2]), "total": float(resp[1])}
+            )
 
         return result
 
     def group_raca_cor(self, response):
         result = []
         for resp in response:
-            tag='indefinido'
+            tag = "indefinido"
             if resp[0] is not None:
                 tag = resp[0].lower()
-            result.append({"tag": tag, "value": float(resp[2])})
+            result.append(
+                {
+                    "tag": tag,
+                    "value": float(resp[2]),
+                    "total": float(resp[1]),
+                }
+            )
 
         return result
 
     def group_records_by_origin(self, response):
         result = []
-        response=response.pop()
+        response = response.pop()
         result = [
             {
                 "tag": "fci",
@@ -85,15 +92,17 @@ class RecordsAdapter:
 
     def records_status(self, response):
         response = response.pop()
-        
+
         return [
             {
                 "tag": "ativo",
                 "value": float(response[1]),
+                "total": float(response[0]),
             },
             {
                 "tag": "inconsistente",
                 "value": float(response[3]),
+                "total": float(response[2]),
             },
         ]
 
