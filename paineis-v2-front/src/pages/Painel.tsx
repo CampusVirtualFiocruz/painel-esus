@@ -444,12 +444,7 @@ export function Painel() {
                   <span className="nome-condicao">Qualidade de Cadastros</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.qualidade)}</h4>
                   <div className="d-flex align-items-center">
-                    <img
-                      width={"30%"}
-                      src={quality}
-                      alt="Qualidade"
-                      className="mx-2"
-                    />
+                    <img src={quality} alt="Qualidade" className="mx-2" />
                     <Condicao data={dadosPainel?.indicators?.qualidade} />
                   </div>
                 </div>
