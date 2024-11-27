@@ -82,8 +82,7 @@ const ListaNominal = () => {
   const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
   const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
   const title = `Pessoas Atendidas nos últimos 12 meses / ${condicao}`;
-  const subtitle =
-    `${UBS}`;
+  const subtitle = `${UBS}`;
 
   const handleSortChange = (sort: string[]) =>
     setParams((state: any) => ({ ...state, sort }));
@@ -124,7 +123,7 @@ const ListaNominal = () => {
             onPageChange={handlePageChange}
             onSizeChange={handleSizeChange}
             loading={isLoadingInfo}
-            columns={columns({ handleClick })}
+            columns={columns({ handleClick, condicao })}
           />
         </LocaleContext.Provider>
         <Footer pathToReport={pathToReport} condicao={condicao} id={id} />
