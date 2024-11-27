@@ -34,19 +34,18 @@ export function ShallowTreemap(props: DonutChart) {
           },
         },
         breadcrumb: {
-          show: false
+          show: false,
         },
+        roam: false,
         data: props.data.reduce(
           (prev, curr) =>
             [
               ...prev,
               {
-                value: curr?.value ?? 0,
+                value: Number(curr?.value ?? 0) * 100,
                 name: content?.[curr?.tag] || curr?.tag,
                 label: {
-                  formatter: ["{b|{@2012}}%", "{a|{b}}"].join(
-                    "\n"
-                  ),
+                  formatter: ["{b|{@2012}}%", "{a|{b}}"].join("\n"),
                   rich: {
                     a: {
                       color: "white",
