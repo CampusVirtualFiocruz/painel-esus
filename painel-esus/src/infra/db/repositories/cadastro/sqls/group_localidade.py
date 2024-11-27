@@ -21,6 +21,6 @@ def group_localidade(cnes: int = None, equipe: int = None):
             select count(*) from lista_pessoas
         ),
         group_localidade as (select tipo_localidade, count(*) quantidade from lista_pessoas group by 1)
-        select tipo_localidade, quantidade, {porcentagem} porcentagem from group_localidade
+        select tipo_localidade, quantidade from group_localidade
         """
     return text(sql)

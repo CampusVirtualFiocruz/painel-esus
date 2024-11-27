@@ -43,7 +43,7 @@ class RecordsAdapter:
         for resp in response:
             tag = resp[0].lower().replace("zona ", "").replace("n/i", "nao-informado")
             result.append(
-                {"tag": tag, "value": float(resp[2]), "total": float(resp[1])}
+                {"tag": tag, "value": float(resp[1])}
             )
 
         return result
@@ -57,8 +57,7 @@ class RecordsAdapter:
             result.append(
                 {
                     "tag": tag,
-                    "value": float(resp[2]),
-                    "total": float(resp[1]),
+                    "value": float(resp[1]),
                 }
             )
 
@@ -96,13 +95,11 @@ class RecordsAdapter:
         return [
             {
                 "tag": "ativo",
-                "value": float(response[1]),
-                "total": float(response[0]),
+                "value": float(response[0]),
             },
             {
                 "tag": "inconsistente",
-                "value": float(response[3]),
-                "total": float(response[2]),
+                "value": float(response[1]),
             },
         ]
 

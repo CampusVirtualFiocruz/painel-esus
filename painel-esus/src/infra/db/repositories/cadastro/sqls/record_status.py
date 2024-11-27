@@ -23,7 +23,6 @@ def group_records_by_status(cnes: int = None, equipe: int = None):
                 total as (select sum(quantidade) quantidade from status_records sr where tipo in ( 'cadastros_invalidos', 'cadastros_ativos') {where_clause})
                 select 
                 (select quantidade from cadastros where tipo !='cadastros_invalidos')  cadastros_validos,
-                {valido} cadastros_invalidos_porcentagem,
-                (select quantidade from cadastros where tipo ='cadastros_invalidos')  cadastros_invalidos,
-                {invalido}  cadastros_invalidos_porcentagem"""
+                (select quantidade from cadastros where tipo ='cadastros_invalidos')  cadastros_invalidos
+              """
     return text(sql)

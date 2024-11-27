@@ -21,6 +21,6 @@ def group_raca_cor(cnes: int = None, equipe: int = None):
             select count(*) from lista_pessoas
         ),
         group_raca_cor as (select raca_cor, count(*) quantidade from lista_pessoas group by 1)
-        select raca_cor, quantidade, {porcentagem} porcentagem from group_raca_cor
+        select raca_cor, quantidade from group_raca_cor
         """
     return text(sql)
