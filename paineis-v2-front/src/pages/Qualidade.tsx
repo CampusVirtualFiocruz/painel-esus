@@ -53,7 +53,7 @@ const reportSections = [
       config: {
         formatterKind: "perc",
         radiusStart: "0%",
-        colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
+        colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
   },
