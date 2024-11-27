@@ -57,6 +57,7 @@ class RecordsAdapter:
             result.append(
                 {
                     "tag": tag,
+                    "percent": float(resp[2]),
                     "value": float(resp[1]),
                 }
             )

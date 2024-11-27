@@ -42,10 +42,16 @@ export function ShallowTreemap(props: DonutChart) {
             [
               ...prev,
               {
-                value: Number(curr?.value ?? 0) * 100,
+                value: Number(curr?.value ?? 0) ,
                 name: content?.[curr?.tag] || curr?.tag,
+                percent: Number(curr?.percent ?? 0)*100,
                 label: {
-                  formatter: ["{b|{@2012}}%", "{a|{b}}"].join("\n"),
+                  formatter: (val:any) => { 
+                    return [
+                      `{b|${val.data.percent}%}`,
+                      `{a|${val.data.name}}`,
+                    ].join("\n")
+                      },
                   rich: {
                     a: {
                       color: "white",

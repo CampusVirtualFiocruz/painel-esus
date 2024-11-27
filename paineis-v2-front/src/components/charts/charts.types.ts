@@ -11,6 +11,7 @@ export type groupedValuesInput = Array<{
 type valueInput = Array<{
   value: Number;
   tag: string;
+  percent?: Number;
 }>;
 
 type generalConfigs = {
