@@ -13,7 +13,7 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_fat_cad_domiciliar"
+EQUIPES = "select * from tb_fat_cad_domiciliar order by co_seq_fat_cad_domiciliar"
 
 class CreateCadDomiciliarBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_fat_cad_domiciliar'

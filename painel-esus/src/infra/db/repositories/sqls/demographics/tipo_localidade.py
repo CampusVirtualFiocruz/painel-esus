@@ -16,7 +16,6 @@ select
         when LOWER(tipo_localidade) is not null  and LOWER(tipo_localidade) != 'zona rural' then 'urbano'
     end tipo    
 from
-    pessoas p
-join equipes e on e.cidadao_pec = p.cidadao_pec
+    pessoas p 
 {where_clause})
 select tipo, count(*) total  from cidadaos group by 1 """

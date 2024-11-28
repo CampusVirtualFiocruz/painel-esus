@@ -72,15 +72,17 @@ export const ReportFooter = ({
             {content.buttonViewList}
           </Button>
         )}
-        <Button
-          kind="primary"
-          onClick={handleToPainelUBS}
-          style={{
-            width: "250px",
-          }}
-        >
-          {content.buttonBackToUbs}
-        </Button>
+        {id != undefined && (
+            <Button
+              kind="primary"
+              onClick={handleToPainelUBS}
+              style={{
+                width: "250px",
+              }}
+            >
+              {content.buttonBackToUbs}
+            </Button>
+        )}
       </div>
 
       {userCanSelectUBS() && (

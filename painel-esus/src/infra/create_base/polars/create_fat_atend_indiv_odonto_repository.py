@@ -13,7 +13,7 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_fat_atendimento_odonto"
+EQUIPES = "select * from tb_fat_atendimento_odonto order by co_seq_fat_atd_odnt"
 
 class CreateAtendOdontoBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_fat_atendimento_odonto'

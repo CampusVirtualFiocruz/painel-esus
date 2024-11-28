@@ -13,7 +13,7 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_dim_unidade_saude"
+EQUIPES = "select * from tb_dim_unidade_saude order by co_seq_dim_unidade_saude"
 
 class CreateUnidadesSaudeBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_dim_unidade_saude'

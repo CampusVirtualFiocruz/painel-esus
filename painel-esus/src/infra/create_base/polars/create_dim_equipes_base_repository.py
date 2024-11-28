@@ -11,7 +11,7 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_dim_equipe"
+EQUIPES = "select * from tb_dim_equipe order by co_seq_dim_equipe"
 import os
 
 

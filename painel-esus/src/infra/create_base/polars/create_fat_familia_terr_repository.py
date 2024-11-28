@@ -13,7 +13,9 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_fat_familia_territorio"
+EQUIPES = (
+    "select * from tb_fat_familia_territorio order by co_seq_fat_familia_territorio"
+)
 
 class CreateFamiliaTerrBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_fat_familia_territorio'

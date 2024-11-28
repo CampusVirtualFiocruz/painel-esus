@@ -13,7 +13,9 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_acomp_cidadaos_vinculados"
+EQUIPES = (
+    "select * from tb_acomp_cidadaos_vinculados order by co_seq_acomp_cidadaos_vinc"
+)
 
 class CreateAcompCidadaosVinculadosBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_acomp_cidadaos_vinculados'

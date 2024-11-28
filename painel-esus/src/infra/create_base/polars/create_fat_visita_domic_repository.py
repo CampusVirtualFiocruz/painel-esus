@@ -13,7 +13,7 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_fat_visita_domiciliar"
+EQUIPES = "select * from tb_fat_visita_domiciliar order by co_seq_fat_visita_domiciliar"
 
 class CreateVisistaDomiciliarBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_fat_visita_domiciliar'

@@ -11,7 +11,7 @@ import { getNomeUbs } from "../utils";
 import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
 
-const reportHeader = [
+let reportHeader = [
   {
     "total-cadastros-ubs": {
       Chart: ValueCard,
@@ -83,6 +83,10 @@ const Qualidade = () => {
   const equipe = params.get("equipe") as any;
 
   const { city } = useInfo();
+  if (id == undefined) {
+    reportHeader[0]['total-cadastros-ubs'].config.description =
+      "Total de Cadastros no Município";
+  }
   const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
     "ubs",
     async () => {

@@ -13,7 +13,7 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_dim_raca_cor"
+EQUIPES = "select * from tb_dim_raca_cor order by co_seq_dim_raca_cor"
 
 class CreateDimRacaCorBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_dim_raca_cor'

@@ -13,7 +13,7 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-SQL = "select * from tb_fat_proced_atend"
+SQL = "select * from tb_fat_proced_atend order by co_seq_fat_proced_atend"
 
 class CreateProcedAtendBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_fat_proced_atend'

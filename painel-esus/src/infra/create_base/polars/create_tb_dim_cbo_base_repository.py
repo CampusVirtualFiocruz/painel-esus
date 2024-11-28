@@ -13,7 +13,7 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-CBOS = "select * from tb_dim_cbo"
+CBOS = "select * from tb_dim_cbo order by co_seq_dim_cbo"
 
 
 class CreateTbDimCboRepository(CreateBasesRepositoryInterface):
