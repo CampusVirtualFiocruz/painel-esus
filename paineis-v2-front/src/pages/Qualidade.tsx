@@ -84,7 +84,7 @@ const Qualidade = () => {
 
   const { city } = useInfo();
   if (id == undefined) {
-    reportHeader[0]['total-cadastros-ubs'].config.description =
+    reportHeader[0]["total-cadastros-ubs"].config.description =
       "Total de Cadastros no Município";
   }
   const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
@@ -108,11 +108,6 @@ const Qualidade = () => {
     }
   );
 
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
-  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
-
-  const subtitle = `${UBS}`;
-
   const reportData = useReportDataQualidade({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
 
@@ -122,8 +117,8 @@ const Qualidade = () => {
 
   return (
     <ReportWrapper
-      title="Pessoas Atendidas nos últimos 12 meses / Qualidade de Cadastro"
-      subtitle={subtitle}
+      title="Qualidade de Cadastro"
+      subtitle={"(Pessoas registradas a partir de 2019)"}
       header={
         <div
           style={{

@@ -1,6 +1,13 @@
 import { HTMLProps, ReactNode } from "react";
 import { Header } from "../Header";
 import { Footer } from "../Footer";
+import { getNomeUbs } from "../../utils";
+import { useInfo } from "../../context/infoProvider/useInfo";
+import { useQuery } from "react-query";
+import { Api } from "../../services/api";
+import { useParams } from "react-router-dom";
+import { PainelParams } from "./ReportFooter";
+
 
 const ReportWrapper = ({
   title,
@@ -18,6 +25,35 @@ const ReportWrapper = ({
   children: ReactNode;
   footerNote?: string;
 } & HTMLProps<HTMLDivElement>) => {
+  const { id } = useParams<PainelParams>();
+  const { city } = useInfo();
+
+  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
+    "ubs",
+    async () => {
+      const response = await Api.get<any>("get-units");
+      const data = response.data;
+
+      const listData: any[] = data.data.map((ubs: any) => {
+        return {
+          label: ubs.no_unidade_saude,
+          value: ubs.co_seq_dim_unidade_saude,
+          id: ubs.co_seq_dim_unidade_saude,
+          qtd: ubs.qtd,
+        };
+      });
+
+      return listData;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
+
+  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
+  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
+  const titleWithDetails = `${UBS ? UBS + "/" : ""} ${title}`; 
+
   return (
     <div
       style={{
@@ -63,7 +99,7 @@ const ReportWrapper = ({
               marginRight: "10px",
             }}
           >
-            {title}
+            {titleWithDetails}
           </h1>
           {Boolean(subtitle) && (
             <p

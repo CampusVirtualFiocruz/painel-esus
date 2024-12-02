@@ -58,12 +58,8 @@ export const SaudeBucal = () => {
     }
   );
 
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
-  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
-  const title = `${UBS} / Painel Saúde Bucal`;
-
   return (
-    <ReportWrapper title={title} subtitle="(referente aos últimos 12 meses)">
+    <ReportWrapper title={"Saúde Bucal"} subtitle="(referente aos últimos 12 meses)">
       <TwoColumnSection>
         <TwoColumnSection.Col>
           <TotalAtendimentos />

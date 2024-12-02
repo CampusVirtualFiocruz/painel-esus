@@ -100,7 +100,7 @@ export function Bar({ data, titulo }: BarData) {
     },
     series: [
       {
-        name: "Área Rural",
+        name: "Zona Rural",
         type: "bar",
         stack: "one",
         barMinHeight: 10,
@@ -111,7 +111,7 @@ export function Bar({ data, titulo }: BarData) {
         data: dataRural,
       },
       {
-        name: "Área Urbana",
+        name: "Zona Urbana",
         type: "bar",
         stack: "one",
         barMinHeight: 10,

@@ -79,11 +79,6 @@ const ListaNominal = () => {
     searchTerm,
   });
 
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
-  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
-  const title = `Pessoas Atendidas nos últimos 12 meses / ${condicao}`;
-  const subtitle = `${UBS}`;
-
   const handleSortChange = (sort: string[]) =>
     setParams((state: any) => ({ ...state, sort }));
 
@@ -100,7 +95,11 @@ const ListaNominal = () => {
   return (
     <div id="page-painel">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
-      <ReportWrapper title={title} subtitle={subtitle} footerNote={footerNote}>
+      <ReportWrapper
+        title={condicao}
+        subtitle={condicao === "Qualidade" ? "(Pessoas registradas a partir de 2019)" : "(Pessoas atendidas nos últimos 12 meses)" }
+        footerNote={footerNote}
+      >
         <div className="search">
           <TextField
             name="iconized"

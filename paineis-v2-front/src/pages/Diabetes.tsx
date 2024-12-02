@@ -204,38 +204,15 @@ export function Diabetes() {
     navigate(`/lista-nominal?condicao=Diabetes`);
   }
 
-  const { city } = useInfo();
-
-  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
-    "ubs",
-    async () => {
-      const response = await Api.get<any>("get-units");
-      const data = response.data;
-
-      const listData: any[] = data.data.map((ubs: any) => {
-        return {
-          label: ubs.no_unidade_saude,
-          value: ubs.co_seq_dim_unidade_saude,
-          id: ubs.co_seq_dim_unidade_saude,
-          qtd: ubs.qtd,
-        };
-      });
-
-      return listData;
-    },
-    {
-      staleTime: 1000 * 60 * 10, //10 minutos
-    }
-  );
-
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
-  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
-  const title = `${UBS} / Diabetes`;
-
   return (
     <div id="page-painel-diabetes-hipertensao">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
-      <ReportWrapper title={title} footerNote={footerNote} footer={<ReportFooter chaveListaNominal="Diabetes" equipe={equipe} />}>
+      <ReportWrapper
+        title={"Diabetes"}
+        subtitle="(Pessoas atendidas nos últimos 12 meses)"
+        footerNote={footerNote}
+        footer={<ReportFooter chaveListaNominal="Diabetes" equipe={equipe} />}
+      >
         <TwoColumnSection>
           <TwoColumnSection.Col>
             <div>
@@ -476,7 +453,6 @@ export function Diabetes() {
             </div>
           </TwoColumnSection.Col>
         </TwoColumnSection>
-        
       </ReportWrapper>
     </div>
   );

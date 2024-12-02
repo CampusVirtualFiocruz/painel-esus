@@ -51,7 +51,7 @@ const reportSections = [
 const Tabagismo = () => {
   return (
     <ReportWrapper
-      title="UBS Sérgio Arouca / Painel Tabagismo"
+      title="Tabagismo"
       subtitle="(últimos 12 meses)"
     >
       {reportSections.map((chartList: any) => (

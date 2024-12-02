@@ -36,7 +36,7 @@ export function Header() {
           <div className="logoName" onClick={handleHome}>
             <img src={imgLogo} alt="e-SUS" />
             <strong>
-              Painel e-SUS /{" "}
+              PAINEL e-SUS APS /{" "}
               <span>
                 {city?.municipio} - {city?.uf}
               </span>

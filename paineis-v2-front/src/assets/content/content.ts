@@ -1,7 +1,7 @@
 export const content: any = {
   //comum
-  urbana: "Área Urbana",
-  rural: "Área Rural",
+  urbana: "Zona Urbana",
+  rural: "Zona Rural",
   sim: "Sim",
   nao: "Não",
   masc: "Masculino",
@@ -85,7 +85,7 @@ export const content: any = {
   "via-cadastros-cidadaos": "Via de cadastros dos cidadãos",
   "total-cadastros-pessoas-raca-cor":
     "Total de cadastros de pessoas por raça e cor",
-  "sem-cpf-cnf": "Sem CPF/CNS",
+  "sem-cpf-cnf": "sem CPF e CNS",
   "cadastros-identificados-por-cpf-cns":
     "Cadastros identificados\npor CPF e/ou CNS",
   ativo: "Cadastro Ativo",

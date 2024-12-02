@@ -189,11 +189,6 @@ const Idosa = () => {
     }
   );
 
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
-  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
-
-  const title = `${UBS} / Cuidado da Pessoa Idosa`;
-
   const reportData = useReportDataIdosas({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
 
@@ -203,7 +198,7 @@ const Idosa = () => {
 
   return (
     <ReportWrapper
-      title={title}
+      title={"Cuidado da Pessoa Idosa"}
       subtitle="(referente aos últimos 12 meses)"
       footer={<ReportFooter chaveListaNominal="Idosa" equipe={equipe} />}
     >

@@ -109,11 +109,6 @@ const Infantil = () => {
     }
   );
 
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
-  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
-
-  const title = `${UBS} / Desenvolvimento Infantil`;
-
   const reportData = useReportDataInfantil({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
 
@@ -123,7 +118,7 @@ const Infantil = () => {
 
   return (
     <ReportWrapper
-      title={title}
+      title={"Desenvolvimento Infantil"}
       subtitle="(cuidado até o 2º ano de vida de acordo com a data da última atualização pelo município)"
       footer={<ReportFooter chaveListaNominal="Infantil" equipe={equipe} />}
     >

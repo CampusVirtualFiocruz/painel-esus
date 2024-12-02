@@ -259,7 +259,7 @@ export function Painel() {
               <div className="col-xl-3">
                 <div className="container-card d-flex flex-column flex-md-row align-items-center justify-content-center my-2 py-2 px-4">
                   <div className="w-50 d-flex flex-column align-items-center justify-content-center">
-                    <h4 className="text-center">Cidadãos Cadastrados</h4>
+                    <h4 className="text-center">Tipo de localização</h4>
                     <span>{formataNumero(dadosPainel?.total)}</span>
                   </div>
                   <div className="w-50 d-flex flex-column align-items-center justify-content-center">
@@ -308,7 +308,7 @@ export function Painel() {
                     </div>
                     <div>
                       <Typography.Details>
-                        Cidadãos Cadastrados
+                        Tipo de localização
                       </Typography.Details>
                       <div
                         className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2"
@@ -401,11 +401,11 @@ export function Painel() {
               <div className="d-flex align-items-center justify-content-between mt-5">
                 <div className="d-flex align-items-center mx-3">
                   <div className="box-container-light me-2"></div>
-                  <h5 className="mb-0">Área Urbana</h5>
+                  <h5 className="mb-0">Zona Urbana</h5>
                 </div>
                 <div className="d-flex align-items-center mx-3">
                   <div className="box-container-dark me-2"></div>
-                  <h5 className="mb-0">Área Rural</h5>
+                  <h5 className="mb-0">Zona Rural</h5>
                 </div>
                 <div className="d-flex align-items-center mx-3">
                   <div className="box-container-nonactive me-2"></div>
@@ -486,12 +486,12 @@ export function Painel() {
             <div className="d-flex my-5 justify-content-center">
               <div className="container-areas d-flex align-items-center me-4">
                 <div className="box-container-light me-2"></div>
-                <h4>Área Urbana</h4>
+                <h4>Zona Urbana</h4>
               </div>
 
               <div className="container-areas d-flex align-items-center ms-4">
                 <div className="box-container-dark me-2"></div>
-                <h4>Área Rural</h4>
+                <h4>Zona Rural</h4>
               </div>
               <div className="container-areas d-flex align-items-center ms-4">
                 <div className="box-container-nonactive me-2"></div>

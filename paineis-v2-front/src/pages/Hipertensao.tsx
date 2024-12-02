@@ -33,7 +33,7 @@ export type PainelParams = {
 };
 
 const footerNote = `
-O número de pessoas com Hipertensão Arterial equivale ao total de indivíduos que tiveram
+¹ O número de pessoas com Hipertensão Arterial equivale ao total de indivíduos que tiveram
 atendimentos individuais realizados nos últimos 12 meses com registro do código CID e/ou CIAP
 correspondente à condição de saúde em Ficha de Atendimento Individual, somado ao conjunto de
 pessoas com registro autorreferido da condição de saúde em Ficha de Cadastro Individual.
@@ -238,15 +238,12 @@ export function Hipertensao() {
     }
   );
 
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
-  const UBS = id ? (!isLoadingUbs ? nomeUbs : "Carregando...") : nomeUbs;
-  const title = `${UBS} / Hipertensão`;
-
   return (
     <div id="page-painel-diabetes-hipertensao">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
       <ReportWrapper
-        title={title}
+        title={"Hipertensão"}
+        subtitle={"(Pessoas atendidas nos últimos 12 meses)"}
         footerNote={footerNote}
         footer={
           <ReportFooter chaveListaNominal="Hipertensão" equipe={equipe} />
@@ -362,14 +359,14 @@ export function Hipertensao() {
                 >
                   <RenderSingleValue
                     icon="people"
-                    title="Nº de pessoas com hipertensão (CID/CIAP)"
+                    title="Nº de pessoas com hipertensão (CID/CIAP)¹"
                     value={dataTotalHipertensao?.total_pacientes?.toLocaleString(
                       "pt-BR"
                     )}
                   />
                   <RenderSingleValue
                     icon="people"
-                    title="Nº de pessoas com hipertensão (autorreferida)"
+                    title="Nº de pessoas com hipertensão (autorreferida)¹"
                     value={dataTotalHipertensao?.total_auto_referido?.toLocaleString(
                       "pt-BR"
                     )}
