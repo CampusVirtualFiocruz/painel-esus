@@ -97,10 +97,6 @@ export function SelecionarVisualizacao() {
   const { data: teamsData } = useQuery(
     "get-teams/"+currentUbs,
     async () => {
-      if(currentUbs){
-        return [];
-      }
-
       const response = await Api.get<ResponseData>("get-teams/"+currentUbs);
       const data = response.data;
       const listData: TypeUbs[] = data.data.map((i: any) => {
@@ -117,17 +113,6 @@ export function SelecionarVisualizacao() {
       staleTime: 1000 * 60 * 10, //10 minutos
     }
   );
-/* 
-  const canSelect = userCanSelectUBS();
-
-  useEffect(() => {
-    if (!canSelect) {
-      const selectedUBS = getUBS();
-      if (selectedUBS) {
-        navigate(`/painel/${Number(String(selectedUBS))}`);
-      }
-    }
-  }, [canSelect]); */
 
   const handleToPainel = () => {
     navigate("/painelx");

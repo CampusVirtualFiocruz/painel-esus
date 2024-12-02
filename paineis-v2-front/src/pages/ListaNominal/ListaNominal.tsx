@@ -96,7 +96,7 @@ const ListaNominal = () => {
     <div id="page-painel">
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
       <ReportWrapper
-        title={condicao}
+        title={"Lista Nominal / "+ condicao}
         subtitle={condicao === "Qualidade" ? "(Pessoas registradas a partir de 2019)" : "(Pessoas atendidas nos últimos 12 meses)" }
         footerNote={footerNote}
       >
