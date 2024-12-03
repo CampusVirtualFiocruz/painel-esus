@@ -32,7 +32,7 @@ type PainelParams = {
 };
 
 const footerNote = `
-O número de pessoas com Diabetes equivale ao total de indivíduos que tiveram atendimentos
+¹ O número de pessoas com Diabetes equivale ao total de indivíduos que tiveram atendimentos
 individuais realizados nos últimos 12 meses com registro do código CID e/ou CIAP correspondente
 à condição de saúde em Ficha de Atendimento Individual, somado ao conjunto de pessoas com
 registro autorreferido da condição de saúde em Ficha de Cadastro Individual.
@@ -323,14 +323,14 @@ export function Diabetes() {
                 >
                   <RenderSingleValue
                     icon="people"
-                    title="Nº de pessoas com diabetes (CID/CIAP)"
+                    title="Nº de pessoas com diabetes (CID/CIAP)¹"
                     value={Number(
                       dataTotalDiabetes?.total_pacientes
                     )?.toLocaleString("pt-BR")}
                   />
                   <RenderSingleValue
                     icon="people"
-                    title="Nº de pessoas com diabetes (autorreferido)"
+                    title="Nº de pessoas com diabetes (autorreferido)¹"
                     value={Number(
                       dataTotalDiabetes?.total_auto_referido
                     )?.toLocaleString("pt-BR")}

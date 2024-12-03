@@ -35,12 +35,8 @@ export function Login() {
   const auth = useAuth();
   let navigate = useNavigate();
 
-  const [username, setUsername] = useState("admin");
-
-  //const [password, setPassword] = useState("painelfiocruz22");
-  const [password, setPassword] = useState("FCadmin23");
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [city, setCity] = useState("");
   const infoContext = useInfo();
 
