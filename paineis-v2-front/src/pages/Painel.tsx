@@ -172,6 +172,8 @@ export function Painel() {
     }
   );
 
+  console.log({ dataUbs });
+
   const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : "-";
 
   function handleToPainelMunicipio() {
@@ -254,7 +256,10 @@ export function Painel() {
               : cityInformation?.municipio + " - " + cityInformation?.uf}
           </h2>
 
-          <div className="container container-cards-principal" style={{ overflow: "visible" }}>
+          <div
+            className="container container-cards-principal"
+            style={{ overflow: "visible" }}
+          >
             <div className="row align-items-start">
               <div className="col-xl-3">
                 <div className="container-card d-flex flex-column flex-md-row align-items-center justify-content-center my-2 py-2 px-4">
@@ -321,9 +326,13 @@ export function Painel() {
                             />
                           </TooltipTrigger>
                           <TooltipContent className="Tooltip">
-                          "Não informado" refere-se aos cadastros realizados em<br />
-                          Ficha de Cadastro Individual sem associação com uma<br />
-                          Ficha de Cadastro Domiciliar e Territorial.</TooltipContent>
+                            "Não informado" refere-se aos cadastros realizados
+                            em
+                            <br />
+                            Ficha de Cadastro Individual sem associação com uma
+                            <br />
+                            Ficha de Cadastro Domiciliar e Territorial.
+                          </TooltipContent>
                         </Typography.Details>
                       </Tooltip>
                       <div
@@ -518,11 +527,9 @@ export function Painel() {
 
           <div className="my-5">
             {id ? (
-              userCanSelectUBS() ? (
-                <Button onClick={handleToPainelMunicipio}>
-                  Visualizar dados do painel do Município
-                </Button>
-              ) : null
+              <Button onClick={handleToPainelMunicipio}>
+                Visualizar dados do painel do Município
+              </Button>
             ) : (
               <>
                 {isLoadingUbs ? (
@@ -538,7 +545,7 @@ export function Painel() {
                     isClearable
                     placeholder="Selecione UBS"
                     noOptionsMessage={() => "Nenhuma UBS encontrada"}
-                    options={dataUbs?.filter((i) => i.qtd && i.qtd > 0)}
+                    options={dataUbs}
                     styles={selectStyle}
                     onChange={onChangeSelection}
                   />
@@ -548,7 +555,6 @@ export function Painel() {
           </div>
         </div>
       )}
-
       <Footer />
     </div>
   );

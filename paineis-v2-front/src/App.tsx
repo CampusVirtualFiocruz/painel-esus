@@ -84,6 +84,8 @@ export function userCanSelectUBS() {
 
   const decodedPayload = atob(payload);
 
+  console.log({ decodedPayload })
+
   return (
     String(JSON.parse(decodedPayload)?.profiles[0]).toUpperCase() === "ADMIN"
   );
