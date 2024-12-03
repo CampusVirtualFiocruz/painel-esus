@@ -1,15 +1,16 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { useQuery } from "react-query";
-
+import { MdInfoOutline } from "react-icons/md";
 import { content } from "../assets/content/content";
 import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import useReportDataQualidade from "../hooks/sections/qualidade/useReportDataQualidade";
 import { PainelParams } from "./Hipertensao";
-import { getNomeUbs } from "../utils";
-import { Api } from "../services/api";
-import { useInfo } from "../context/infoProvider/useInfo";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "../components/ui/Tooltip";
 
 let reportHeader = [
   {
@@ -46,6 +47,16 @@ const reportSections = [
       config: {
         formatterKind: "perc",
         colors: ["#5CD2C8", "#b9b9b9"],
+        info: (
+          <>
+            ”Cadastro Ativo” equivale a todas os cadastros cujas pessoas estão
+            vivas e permanecem domiciliadas no território da UBS/ Equipe de
+            Saúde.
+            <br />
+            ”Cadastro Inativo” equivale a todos os cadastros de pessoas que se
+            mudaram do território da UBS/ Equipe de Saúde ou falecidas.
+          </>
+        ),
       },
     },
     "localizacao-domicilios-cadastrados": {
@@ -69,44 +80,27 @@ const reportSections = [
       },
     },
     "total-cadastros-pessoas-raca-cor": {
-      Chart: ShallowTreemap,
+      Chart: Donut,
       config: {
-        colors: ["#0b5b98", "#6595ff", "#0066b4", "#49e8db", "#0066b4"],
+        formatterKind: "perc",
+        radiusStart: "0%",
+        colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
   },
 ];
+
+const footer = `O número de pessoas cuja Qualidade do Cadastro foi avaliada equivale ao total de indivíduos registrados a partir do ano de 2019 por meio das Fichas de Cadastro Individual (FCI), Módulo Cidadão PEC (Prontuário Eletrônico do Cidadão) e da Recusa de Cadastro.`;
 
 const Qualidade = () => {
   const { id } = useParams<PainelParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
-  const { city } = useInfo();
   if (id == undefined) {
     reportHeader[0]["total-cadastros-ubs"].config.description =
       "Total de Cadastros no Município";
   }
-  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
-    "ubs",
-    async () => {
-      const response = await Api.get<any>("get-units");
-      const data = response.data;
-
-      const listData: any[] = data.data.map((ubs: any) => {
-        return {
-          label: ubs.no_unidade_saude,
-          value: ubs.co_seq_dim_unidade_saude,
-          id: ubs.co_seq_dim_unidade_saude,
-        };
-      });
-
-      return listData;
-    },
-    {
-      staleTime: 1000 * 60 * 10, //10 minutos
-    }
-  );
 
   const reportData = useReportDataQualidade({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
@@ -119,6 +113,7 @@ const Qualidade = () => {
     <ReportWrapper
       title="Qualidade de Cadastro"
       subtitle={"(Pessoas registradas a partir de 2019)"}
+      footerNote={footer}
       header={
         <div
           style={{
@@ -169,11 +164,40 @@ const Qualidade = () => {
               chartConfigs.xAxis.data = xAxisNames;
             }
 
+            const Title = () => {
+              const TitleText = () => (
+                <h5 style={{ fontWeight: "bold", textAlign: "center" }}>
+                  {content?.[chartKey] || chartKey}{" "}
+                  {Boolean(chartConfigs?.info) && (
+                    <MdInfoOutline
+                      style={{
+                        cursor: "pointer",
+                        color: "#222222",
+                        height: 20,
+                        width: 20,
+                      }}
+                    />
+                  )}
+                </h5>
+              );
+
+              return chartConfigs?.info ? (
+                <Tooltip>
+                  <TooltipTrigger>
+                    <TitleText />
+                  </TooltipTrigger>
+                  <TooltipContent className="Tooltip">
+                    {chartConfigs?.info}
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <TitleText />
+              );
+            };
+
             return (
               <div style={{ marginBottom: "70px" }}>
-                <h5 style={{ fontWeight: "bold", textAlign: "center" }}>
-                  {content?.[chartKey] || chartKey}
-                </h5>
+                <Title />
                 <CustomChart data={data} config={chartConfigs} />
               </div>
             );

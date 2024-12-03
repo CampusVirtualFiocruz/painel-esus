@@ -89,7 +89,7 @@ export const content: any = {
   "cadastros-identificados-por-cpf-cns":
     "Cadastros identificados\npor CPF e/ou CNS",
   ativo: "Cadastro Ativo",
-  inconsistente: "Cadastro Inconsistente",
+  inconsistente: "Cadastro Inativo",
   "total-cadastros": "Total de cadastros",
   fci: "Ficha de Cadastro\nIndividual (FCI)",
   pec: "Módulo Cidadão\n(PEC)",

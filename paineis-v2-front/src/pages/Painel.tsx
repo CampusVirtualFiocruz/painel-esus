@@ -254,7 +254,7 @@ export function Painel() {
               : cityInformation?.municipio + " - " + cityInformation?.uf}
           </h2>
 
-          <div className="container container-cards-principal">
+          <div className="container container-cards-principal" style={{ overflow: "visible" }}>
             <div className="row align-items-start">
               <div className="col-xl-3">
                 <div className="container-card d-flex flex-column flex-md-row align-items-center justify-content-center my-2 py-2 px-4">
@@ -297,7 +297,7 @@ export function Painel() {
                 </div>
               </div>
 
-              <div className="col-xl-6">
+              <div className="col-xl-6" style={{ overflow: "visible" }}>
                 <Card
                   className="container-card-alt"
                   style={{ padding: 0, marginTop: "8px" }}
@@ -307,9 +307,25 @@ export function Painel() {
                       <Zonas data={dadosPainel?.locationArea} />
                     </div>
                     <div>
-                      <Typography.Details>
-                        Tipo de localização
-                      </Typography.Details>
+                      <Tooltip>
+                        <Typography.Details>
+                          <TooltipTrigger>
+                            Tipo de localização&nbsp;
+                            <MdInfoOutline
+                              style={{
+                                cursor: "pointer",
+                                color: "#222222",
+                                height: 20,
+                                width: 20,
+                              }}
+                            />
+                          </TooltipTrigger>
+                          <TooltipContent className="Tooltip">
+                          "Não informado" refere-se aos cadastros realizados em<br />
+                          Ficha de Cadastro Individual sem associação com uma<br />
+                          Ficha de Cadastro Domiciliar e Territorial.</TooltipContent>
+                        </Typography.Details>
+                      </Tooltip>
                       <div
                         className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2"
                         style={{ gap: "15px" }}
