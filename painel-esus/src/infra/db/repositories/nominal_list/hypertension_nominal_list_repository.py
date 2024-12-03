@@ -228,7 +228,13 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
 
         nominal_list = nominal_list.join(min_date_atendimentos, on='cidadao_pec', how='left')
 
-        nominal_list = nominal_list.join(visita_acs, on="cidadao_pec", how="left")
+        if visita_acs is not None and visita_acs.shape[0] > 0:
+            nominal_list = nominal_list.join(visita_acs, on="cidadao_pec", how="left")
+        else:
+            nominal_list = nominal_list.with_columns(
+                pl.lit(None).alias('data_ultima_visita_acs'),
+                pl.lit(99).alias('meses_desde_ultima_visita')
+            )
 
         atendimentos_medicos = fai.filter(
             pl.col("nu_cbo").str.contains_any(["2251", "2252", "2253"])
@@ -315,33 +321,50 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
             how="left",
         )
         odonto = self.get_atendimento_odonto()
-        nominal_list = nominal_list.join(
-            odonto,
-            left_on="cidadao_pec",
-            right_on="cidadao_pec",
-            how="left",
-        )
+        if odonto is not None and odonto.shape[0] > 0:
+            nominal_list = nominal_list.join(
+                odonto,
+                left_on="cidadao_pec",
+                right_on="cidadao_pec",
+                how="left",
+            )
+        else:
+            nominal_list = nominal_list.with_columns(
+                pl.lit(None).alias("ultimo_atendimento_odonto"),
+                pl.lit(99).alias("meses_desde_ultima_visita_odontologica"),
+            )
 
-        afericao_pa = self.get_afericao_pa().with_columns(
-            pl.col("meses_ultima_data_afericao_pa").cast(pl.Int64)
-        )
-        nominal_list = nominal_list.join(
-            afericao_pa,
-            left_on="cidadao_pec",
-            right_on="cidadao_pec",
-            how="left",
-        )
+        afericao_pa = self.get_afericao_pa()
+        if afericao_pa is not None and afericao_pa.shape[0] > 0:
+            nominal_list = nominal_list.join(
+                afericao_pa,
+                left_on="cidadao_pec",
+                right_on="cidadao_pec",
+                how="left",
+            )
+        else:
+            nominal_list = nominal_list.with_columns(
+                pl.lit(None).alias("ultima_data_afericao_pa"),
+                pl.lit(99).alias("meses_ultima_data_afericao_pa"),
+            )
+
         creatinina = self.get_creatinina()
+        if creatinina is not None and creatinina.shape[0] > 0:
+            nominal_list = nominal_list.join(
+                creatinina,
+                left_on="cidadao_pec",
+                right_on="cidadao_pec",
+                how="left",
+            )
+        else:
+            nominal_list = nominal_list.with_columns(
+                pl.lit(None).alias("ultima_data_creatinina"),
+                pl.lit(99).alias("meses_ultima_data_creatinina"),
+            )
 
-        nominal_list = nominal_list.join(
-            creatinina,
-            left_on="cidadao_pec",
-            right_on="cidadao_pec",
-            how="left",
-        )
         nominal_list = nominal_list.with_columns(
             alerta_visita_acs=(
-                pl.when(pl.col("meses_desde_ultima_visita") > 6)
+                pl.when(pl.col("meses_desde_ultima_visita") < 6)
                 .then(False)
                 .otherwise(True)
             ),
@@ -373,29 +396,33 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
                             "ultimo_atendimento_enfermeiro",
                         ).cast(pl.Date)
                     ).dt.total_days()
-                    > 180
+                    < 180
                 )
                 .then(False)
                 .otherwise(True)
             ),
             alerta_ultima_consulta_odontologica=(
-                pl.when(pl.col("meses_desde_ultima_visita_odontologica") > 6)
+                pl.when(pl.col("meses_desde_ultima_visita_odontologica") < 6)
                 .then(False)
                 .otherwise(True)
             ),
             alerta_afericao_pa=(
-                pl.when(pl.col("meses_ultima_data_afericao_pa") > 6)
+                pl.when(pl.col("meses_ultima_data_afericao_pa") < 6)
                 .then(False)
                 .otherwise(True)
             ),
             alerta_creatinina=(
-                pl.when(pl.col("meses_ultima_data_creatinina").cast(pl.Int64) > 6)
+                pl.when(pl.col("meses_ultima_data_creatinina").cast(pl.Int64) < 6)
                 .then(False)
                 .otherwise(True)
             ),
         )
         nominal_list = nominal_list.filter(pl.col("cidadao_pec").is_in(fai_cids))
-
+        # print(
+        #     nominal_list.filter(pl.col("co_fat_cidadao_pec") == 10242)[
+        #         ["alerta_ultima_consulta_medico", "total_days"]
+        #     ]
+        # )
         nominal_list_output = nominal_list.select(
                 "co_fat_cidadao_pec",
                 "diagnostico",
@@ -429,6 +456,7 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
             pl.col("ultima_data_afericao_pa").cast(pl.String).str.to_datetime("%Y-%m-%d"),
             pl.col("ultima_data_creatinina").cast(pl.String).str.to_datetime("%Y-%m-%d"),
         )
+
         with LocalDBConnectionHandler() as con:
             engine = con.get_engine()
             nominal_list_output.write_database(

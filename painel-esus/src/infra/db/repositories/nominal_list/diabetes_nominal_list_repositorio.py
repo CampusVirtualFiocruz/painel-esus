@@ -347,22 +347,33 @@ class DiabeteNominalListRepository(CreateBasesRepositoryInterface):
             how="left",
         )
         odonto = self.get_atendimento_odonto()
-        nominal_list = nominal_list.join(
-            odonto,
-            left_on="cidadao_pec",
-            right_on="cidadao_pec",
-            how="left",
-        )
+        if odonto is not None and odonto.shape[0] > 0:
+            nominal_list = nominal_list.join(
+                odonto,
+                left_on="cidadao_pec",
+                right_on="cidadao_pec",
+                how="left",
+            )
+        else:
+            nominal_list = nominal_list.with_columns(
+                pl.lit(None).alias("ultimo_atendimento_odonto"),
+                pl.lit(99).alias("meses_desde_ultima_visita_odontologica"),
+            )
 
-        afericao_pa = self.get_afericao_pa().with_columns(
-            pl.col("meses_ultima_data_afericao_pa").cast(pl.Int64)
-        )
-        nominal_list = nominal_list.join(
-            afericao_pa,
-            left_on="cidadao_pec",
-            right_on="cidadao_pec",
-            how="left",
-        )
+        afericao_pa = self.get_afericao_pa()
+        if afericao_pa is not None and afericao_pa.shape[0] > 0:
+            nominal_list = nominal_list.join(
+                afericao_pa,
+                left_on="cidadao_pec",
+                right_on="cidadao_pec",
+                how="left",
+            )
+        else:
+            nominal_list = nominal_list.with_columns(
+                pl.lit(None).alias("ultima_data_afericao_pa"),
+                pl.lit(99).alias("meses_ultima_data_afericao_pa"),
+            )
+        
 
         hemoglobina_glicada = self.get_hemoglobina_glicada()
 
@@ -383,12 +394,12 @@ class DiabeteNominalListRepository(CreateBasesRepositoryInterface):
         else:
             nominal_list = nominal_list.with_columns(
                 pl.lit(None).alias('ultima_data_hemoglobina_glicada'),
-                pl.lit(0).alias('meses_ultima_data_hemoglobina_glicada')
+                pl.lit(99).alias('meses_ultima_data_hemoglobina_glicada')
             )
-            
+
         nominal_list = nominal_list.with_columns(
             alerta_visita_acs=(
-                pl.when(pl.col("meses_desde_ultima_visita") > 6)
+                pl.when(pl.col("meses_desde_ultima_visita") < 6)
                 .then(False)
                 .otherwise(True)
             ),
@@ -420,24 +431,24 @@ class DiabeteNominalListRepository(CreateBasesRepositoryInterface):
                             "ultimo_atendimento_enfermeiro",
                         ).cast(pl.Date)
                     ).dt.total_days()
-                    > 180
+                    < 180
                 )
                 .then(False)
                 .otherwise(True)
             ),
             alerta_ultima_consulta_odontologica=(
-                pl.when(pl.col("meses_desde_ultima_visita_odontologica") > 6)
+                pl.when(pl.col("meses_desde_ultima_visita_odontologica") < 6)
                 .then(False)
                 .otherwise(True)
             ),
             alerta_afericao_pa=(
-                pl.when(pl.col("meses_ultima_data_afericao_pa") > 6)
+                pl.when(pl.col("meses_ultima_data_afericao_pa") < 6)
                 .then(False)
                 .otherwise(True)
             ),
             alerta_ultima_hemoglobina_glicada=(
                 pl.when(
-                    pl.coalesce(pl.col("meses_ultima_data_hemoglobina_glicada"), 0) > 6
+                    pl.coalesce(pl.col("meses_ultima_data_hemoglobina_glicada"), 0) < 6
                 )
                 .then(False)
                 .otherwise(True)
