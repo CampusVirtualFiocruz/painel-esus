@@ -53,6 +53,12 @@ from src.infra.create_base.polars import (
     CreateVacinacaoBaseRepository,
     CreateVisistaDomiciliarBaseRepository,
 )
+from src.infra.db.repositories.nominal_list.diabetes_nominal_list_repositorio import (
+    DiabeteNominalListRepository,
+)
+from src.infra.db.repositories.nominal_list.hypertension_nominal_list_repository import (
+    HypertensionNominalListRepository,
+)
 
 
 class CreateBasesController:
@@ -92,8 +98,10 @@ class CreateBasesController:
                 CreateAutorreferidoBaseRepository(),
                 CreateDiabetesBasesRepository(),
                 CreateHypertensionBasesRepository(),
-                CreateDiabetesNominalListRepository(),
-                CreateHypertensionNominalListRepository(),
+                # CreateDiabetesNominalListRepository(),
+                # CreateHypertensionNominalListRepository(),
+                HypertensionNominalListRepository(),
+                DiabeteNominalListRepository(),
                 CreateStatusRecordsRepository(),
                 CreateIndicadoresIdososRepository(),
                 CreateIndicadoresCriancasRepository(),

@@ -15,7 +15,7 @@ def get_indicators_idoso(cnes: int = None, equipe: int = None):
             idoso
         JOIN pessoas ON
             pessoas.cidadao_pec = idoso.cidadao_pec
-        JOIN equipes ON
+        left JOIN equipes ON
             equipes.cidadao_pec = idoso.cidadao_pec
         {where_clause}    )
 select 

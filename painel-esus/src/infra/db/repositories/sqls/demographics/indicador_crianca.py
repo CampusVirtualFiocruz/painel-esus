@@ -16,7 +16,7 @@ def get_indicators_crianca(cnes: int = None, equipe: int = None):
             crianca
         JOIN pessoas ON
             pessoas.cidadao_pec = crianca.cidadao_pec
-        JOIN equipes ON
+        left JOIN equipes ON
             equipes.cidadao_pec = crianca.cidadao_pec
         {where_clause}
     )

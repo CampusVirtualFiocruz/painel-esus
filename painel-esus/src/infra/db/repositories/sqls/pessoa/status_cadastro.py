@@ -36,19 +36,73 @@ def status_cadastro(cnes: int = None, equipe: int = None):
                     st_faleceu = 0 and dt_obito is null and ( co_dim_tipo_saida_cadastro = 3 or co_dim_tipo_saida_cadastro is null)
             ),
             lista_cadastros_validos as (
-                select * from lista where (
-                        tb_cidadao_ativo = 1
-                        and co_dim_tipo_saida_cadastro = 3
-                        and nu_ine is not null
-                        and st_ficha_inativa = 0
+                with
+        lista_cidadao_pec_from_fichas as ( 
+                select distinct co_fat_cidadao_pec  from tb_fat_atendimento_individual tfai  
+                union all 
+                select distinct co_fat_cidadao_pec  from tb_fat_atendimento_odonto tfao
+                union all  
+                select distinct co_fat_cidadao_pec  from tb_fat_cad_individual tfci 
+                union all 
+                select distinct co_fat_cidadao_pec  from tb_fat_proced_atend tfpa  
+                union all 
+                select distinct co_fat_cidadao_pec   from tb_fat_familia_territorio tfft join tb_fat_cad_domiciliar tfcd  on tfft.co_fat_cad_domiciliar = tfcd.co_seq_fat_cad_domiciliar
+),
+        pessoas_id as ( 
+            select distinct
+                                    tfcp.co_seq_fat_cidadao_pec,
+                                    tfcp.co_cidadao,
+                                    tdrc.ds_raca_cor,
+                                    tds.ds_sexo sexo,
+                                    tfcp.co_dim_tempo_nascimento::text::date as dt_nascimento,
+                                    tfcp.no_cidadao
+                            from
+                                    tb_fat_cidadao_pec tfcp
+                                    inner join tb_cidadao tc on tfcp.co_cidadao = tc.co_seq_cidadao
+                                    left join tb_fat_cad_individual tfci on tc.co_unico_ultima_ficha = tfci.nu_uuid_ficha
+                                    left join tb_dim_equipe tde on tde.co_seq_dim_equipe = tfcp.co_dim_equipe_vinc
+                                    or tde.co_seq_dim_equipe = tfci.co_dim_equipe
+                                    left join tb_equipe te on te.nu_ine = tde.nu_ine --equipe cc
+                                    left join tb_tipo_equipe tte on te.tp_equipe = tte.co_seq_tipo_equipe
+                                    left join tb_fat_familia_territorio tfft on tfft.co_fat_cidadao_pec = tfcp.co_seq_fat_cidadao_pec
+                                    left join tb_fat_cad_domiciliar tfcd on tfcd.co_seq_fat_cad_domiciliar = tfft.co_fat_cad_domiciliar
+                                    left join tb_dim_raca_cor tdrc on tfci.co_dim_raca_cor = tdrc.co_seq_dim_raca_cor
+                                    join tb_dim_sexo tds on tds.co_seq_dim_sexo = tfcp.co_dim_sexo
+                            where
+                                    exists (select 1 from lista_cidadao_pec_from_fichas ll  where tfcp.co_seq_fat_cidadao_pec = ll.co_fat_cidadao_pec) and
+                                    (
+                                            (
+                                                    tc.st_ativo = 1
+                                                    and tfci.co_dim_tipo_saida_cadastro = 3
+                                                    and tde.nu_ine is not null
+                                                    and tfci.st_ficha_inativa = 0
+                                            )
+                                            or (
+                                                    tfci.co_dim_tipo_saida_cadastro is null
+                                                    and tc.st_ativo = 1
+                                                    and tc.st_faleceu = 0
+                                                    and te.st_ativo = 1
+                                                    and tte.nu_ms in ('70', '76')
+                                            )
+                                    )
+                            order by
+                                    1 asc 
+            ),
+                    pessoas as ( 
+            select distinct on (p.co_seq_fat_cidadao_pec) p.co_seq_fat_cidadao_pec cidadao_pec,
+                    tde.co_seq_dim_equipe codigo_equipe,
+                    tdus.co_seq_dim_unidade_saude codigo_unidade_saude    
+            from
+                pessoas_id p
+                left join tb_acomp_cidadaos_vinculados tacv on p.co_cidadao = tacv.co_cidadao
+                left join tb_dim_equipe tde on tde.nu_ine = tacv.nu_ine_vinc_equipe
+                left join tb_dim_unidade_saude tdus on tdus.nu_cnes = tacv.nu_cnes_vinc_equipe
+                left join tb_fat_cad_individual tfci  on tfci.co_fat_cidadao_pec = p.co_seq_fat_cidadao_pec
                 )
-                or (
-                        co_dim_tipo_saida_cadastro is null
-                        and tb_cidadao_ativo = 1
-                        and st_faleceu = 0
-                        and tb_equipe_ativo = 1
-                        and nu_ms in ('70', '76')
-                )
+            select
+                    *
+            from
+                    pessoas order by cidadao_pec asc
             ),
             lista_cadastros_invalidos as (
                 select * from lista where

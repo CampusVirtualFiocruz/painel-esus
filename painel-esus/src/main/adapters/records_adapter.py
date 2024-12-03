@@ -33,9 +33,9 @@ class RecordsAdapter:
         ]
         response = response.pop()
         if response[0] is not None:
-            result[1]["value"] = float(response[0])
+            result[1]["value"] = float(response[0] if response[0] is not None else 0)
         if response[1] is not None:
-            result[0]["value"] = float(response[1])
+            result[0]["value"] = float(response[1] if response[1] is not None else 0)
         return result
 
     def group_localidade(self, response):
@@ -57,8 +57,8 @@ class RecordsAdapter:
             result.append(
                 {
                     "tag": tag,
-                    "percent": float(resp[2]),
-                    "value": float(resp[1]),
+                    "percent": float(resp[2] if response[2] is not None else 0),
+                    "value": float(resp[1] if response[1] is not None else 0),
                 }
             )
 
@@ -71,19 +71,19 @@ class RecordsAdapter:
             {
                 "tag": "fci",
                 "value": {
-                    "fci": int(response[2]),
+                    "fci": int(response[2] if response[2] is not None else 0),
                 },
             },
             {
                 "tag": "pec",
                 "value": {
-                    "pec": int(response[5]),
+                    "pec": int(response[5] if response[5] is not None else 0),
                 },
             },
             {
                 "tag": "recusa",
                 "value": {
-                    "recusa": int(response[1]),
+                    "recusa": int(response[1] if response[1] is not None else 0),
                 },
             },
         ]
@@ -96,11 +96,11 @@ class RecordsAdapter:
         return [
             {
                 "tag": "ativo",
-                "value": float(response[0]),
+                "value": float(response[0] if response[0] is not None else 0),
             },
             {
                 "tag": "inconsistente",
-                "value": float(response[1]),
+                "value": float(response[1] if response[1] is not None else 0),
             },
         ]
 
