@@ -24,8 +24,6 @@ columns = [
     DiabetesNominal.alerta_ultima_consulta_odontologica,
     DiabetesNominal.ultima_data_afericao_pa,
     DiabetesNominal.alerta_afericao_pa,
-    DiabetesNominal.ultima_data_glicemia_capilar,
-    DiabetesNominal.alerta_ultima_glicemia_capilar,
     DiabetesNominal.ultima_data_hemoglobina_glicada,
     DiabetesNominal.alerta_ultima_hemoglobina_glicada,
     Pessoas.co_cidadao,
@@ -59,10 +57,12 @@ class DiabetesNominalListRepository:
                 .join(
                     Pessoas,
                     Pessoas.cidadao_pec == DiabetesNominal.co_fat_cidadao_pec,
+                    isouter=True,
                 )
                 .join(
                     Equipes,
                     Equipes.cidadao_pec == DiabetesNominal.co_fat_cidadao_pec,
+                    isouter=True,
                 )
                 .filter(Equipes.codigo_unidade_saude == cnes)
                 .all()

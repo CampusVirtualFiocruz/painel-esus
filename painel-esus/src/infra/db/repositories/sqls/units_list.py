@@ -15,4 +15,5 @@ select
   	us.cnes nu_cnes, 
    	COALESCE (u.qtd, 0) 
 qtd  from unidades_saude us left join unidades u on us.codigo_unidade_saude = u.co_dim_unidade_saude 
+where qtd > 0
 """

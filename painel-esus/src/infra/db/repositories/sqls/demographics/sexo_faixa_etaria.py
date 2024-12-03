@@ -13,7 +13,7 @@ def filter_by_gender_age(cnes: int = None, equipe: int = None):
 	        distinct p.*
 	    from
 	        pessoas p        
-	    join equipes e on e.cidadao_pec = p.cidadao_pec
+	    left join equipes e on e.cidadao_pec = p.cidadao_pec
     {where_clause}
     ), lista as (
     select 

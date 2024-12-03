@@ -30,5 +30,5 @@ def get_total_cadastros(cnes:int = None, equipe:int=None):
     select
         ( select * from total) total,
         {round_sql} cadastros_atualizados """
-
+    print(sql)
     return text(sql)

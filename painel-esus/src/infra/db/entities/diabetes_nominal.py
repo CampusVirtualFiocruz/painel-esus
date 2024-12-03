@@ -1,13 +1,7 @@
 # pylint: disable=invalid-name
 # pylint: disable=too-many-arguments
-from sqlalchemy import Boolean
-from sqlalchemy import Column
-from sqlalchemy import Date
-from sqlalchemy import ForeignKey
-from sqlalchemy import Integer
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import relationship
+from sqlalchemy import Boolean, Column, Date, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, relationship
 from src.infra.db.entities.pessoas import Pessoas
 from src.infra.db.settings.base import Base
 
@@ -21,7 +15,7 @@ from src.infra.db.settings.base import Base
 #     no_raca_cor = Column(String)
 #     nu_micro_area = Column(String)
 #     nu_area = Column(String)
-#     dt_nascimento = Column(Date)
+#     dt_nascimento = Column(DateTime)
 #     idade = Column(Integer)
 #     cids = Column(String)
 #     min_date = Column(String)
@@ -35,20 +29,20 @@ from src.infra.db.settings.base import Base
 #     no_tipo_logradouro = Column(String)
 #     co_dim_equipe = Column(Integer)
 #     co_dim_unidade_saude = Column(String)
-#     co_dim_tempo = Column(Date)
+#     co_dim_tempo = Column(DateTime)
 #     data_ultima_visita_acs = Column(Integer)
 #     alerta_visita_acs = Column(Boolean)
 #     total_consulta_individual_medico = Column(Integer)
 #     alerta_total_de_consultas_medico = Column(Boolean)
-#     ultimo_atendimento_medico = Column(Date)
+#     ultimo_atendimento_medico = Column(DateTime)
 #     alerta_ultima_consulta_medico = Column(Boolean)
-#     ultimo_atendimento_odonto = Column(Date)
+#     ultimo_atendimento_odonto = Column(DateTime)
 #     alerta_ultima_consulta_odontologica = Column(Boolean)
-#     ultima_data_afericao_pa = Column(Date)
+#     ultima_data_afericao_pa = Column(DateTime)
 #     alerta_afericao_pa = Column(Boolean)
-#     ultima_data_glicemia_capilar = Column(Date)
+#     ultima_data_glicemia_capilar = Column(DateTime)
 #     alerta_ultima_glicemia_capilar = Column(Boolean)
-#     ultima_data_hemoglobina_glicada = Column(Date)
+#     ultima_data_hemoglobina_glicada = Column(DateTime)
 #     alerta_ultima_hemoglobina_glicada = Column(Boolean)
 #     ds_tipo_localizacao = Column(String)
 #     equipe = Column(String)
@@ -70,15 +64,13 @@ class DiabetesNominal(Base):
     alerta_visita_acs = Column(Boolean)
     total_consulta_individual_medico = Column(Integer)
     alerta_total_de_consultas_medico = Column(Boolean)
-    ultimo_atendimento_medico = Column(Date)
+    ultimo_atendimento_medico = Column(DateTime)
     alerta_ultima_consulta_medico = Column(Boolean)
-    ultimo_atendimento_odonto = Column(Date)
+    ultimo_atendimento_odonto = Column(DateTime)
     alerta_ultima_consulta_odontologica = Column(Boolean)
-    ultima_data_afericao_pa = Column(Date)
+    ultima_data_afericao_pa = Column(DateTime)
     alerta_afericao_pa = Column(Boolean)
-    ultima_data_glicemia_capilar = Column(Date)
-    alerta_ultima_glicemia_capilar = Column(Boolean)
-    ultima_data_hemoglobina_glicada = Column(Date)
+    ultima_data_hemoglobina_glicada = Column(DateTime)
     alerta_ultima_hemoglobina_glicada = Column(Boolean)
 
     def get_pessoa(self) ->Pessoas:

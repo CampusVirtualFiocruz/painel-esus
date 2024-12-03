@@ -151,7 +151,11 @@ order by p.nome
         with DBConnectionHandler() as db_con:
             users = (
                 db_con.session.query(HipertensaoNominal)
-                .join(Pessoas, Pessoas.cidadao_pec == HipertensaoNominal.co_fat_cidadao_pec, )
+                .join(
+                    Pessoas,
+                    Pessoas.cidadao_pec == HipertensaoNominal.co_fat_cidadao_pec,
+                    isouter=True,
+                )
                 .filter(Pessoas.nome.ilike(f"%{nome}%"))
                 .all()
             )
@@ -176,10 +180,12 @@ order by p.nome
                 .join(
                     Pessoas,
                     Pessoas.cidadao_pec == HipertensaoNominal.co_fat_cidadao_pec,
+                    isouter=True,
                 )
                 .join(
                     Equipes,
                     Equipes.cidadao_pec == HipertensaoNominal.co_fat_cidadao_pec,
+                    isouter=True,
                 )
             )
             conditions, or_conditions = [], []
