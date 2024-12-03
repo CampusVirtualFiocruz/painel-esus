@@ -164,7 +164,6 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             or user.alerta_ultima_consulta_odontologica
             or user.alerta_visita_acs
             or user.alerta_ultima_hemoglobina_glicada
-            or user.alerta_ultima_glicemia_capilar
         )
         diabetes = Diabetes()
         self.cids = list(set(user.cids.split("|")) & set(diabetes.target))

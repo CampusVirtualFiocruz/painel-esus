@@ -213,9 +213,6 @@ lista as (
         pa.ultima_data_afericao_pa,
         coalesce((meses_ultima_data_afericao_pa > 6), true) as alerta_afericao_pa,
         ---
-        gc.ultima_data_glicemia_capilar,
-        coalesce((meses_ultima_data_glicemia_capilar > 6), true) as alerta_ultima_glicemia_capilar,
-        ---
         hg.ultima_data_hemoglobina_glicada,
         coalesce((meses_ultima_data_hemoglobina_glicada > 6), true) as alerta_ultima_hemoglobina_glicada
         from 

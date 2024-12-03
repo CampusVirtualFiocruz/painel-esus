@@ -123,11 +123,6 @@ class DiabetesNominalListRepository:
 		when dn.alerta_afericao_pa = 1 then 'SIM'
 		when dn.alerta_afericao_pa = 0 or dn.alerta_afericao_pa  is null then 'NAO'
 	end alerta_afericao_pa ,
-    STRFTIME( '%d-%m-%Y',dn.ultima_data_glicemia_capilar) ultima_data_glicemia_capilar,
-	case 
-		when dn.alerta_ultima_glicemia_capilar = 1 then 'SIM'
-		when dn.alerta_ultima_glicemia_capilar = 0 or dn.alerta_ultima_glicemia_capilar  is null then 'NAO'
-	end  alerta_ultima_glicemia_capilar ,
     STRFTIME( '%d-%m-%Y',dn.ultima_data_hemoglobina_glicada) ultima_data_hemoglobina_glicada,
 	case 
 		when dn.alerta_ultima_hemoglobina_glicada = 1 then 'SIM'

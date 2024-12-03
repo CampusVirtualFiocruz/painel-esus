@@ -102,7 +102,6 @@ TABELAS = [
 		ultima_data_afericao_pa DATE, 
 		alerta_afericao_pa BOOLEAN, 
 		ultima_data_glicemia_capilar DATE, 
-		alerta_ultima_glicemia_capilar BOOLEAN, 
 		ultima_data_hemoglobina_glicada TEXT, 
 		alerta_ultima_hemoglobina_glicada BOOLEAN,
 		FOREIGN KEY(co_fat_cidadao_pec) REFERENCES pessoas(cidadao_pec)
