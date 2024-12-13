@@ -75,15 +75,15 @@ class CreateBasesController:
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
             logging.info("Starting base generation")
             _list = [
-                # CreateStructureBaseRepository(),
+                CreateStructureBaseRepository(),
                 
-                # CreateAtendIndivBaseRepository(),
-                # CreateCadIndividualBaseRepository(),
+                CreateAtendIndivBaseRepository(),
+                CreateCadIndividualBaseRepository(),
                 
-                # CreatePessoasBaseRepository(),
-                # CreateEquipesBaseRepository(),
+                CreatePessoasBaseRepository(),
+                CreateEquipesBaseRepository(),
                 # CreateUnidadesSaudeBaseRepository(),
-                # CreateTbDimCboRepository(),
+                CreateTbDimCboRepository(),
                
                 # CreateAtendOdontoBaseRepository(),
                 # CreateVacinacaoBaseRepository(),
@@ -98,11 +98,11 @@ class CreateBasesController:
                 # CreateVisistaDomiciliarBaseRepository(),
                 # CreateCidCiapExplodeAtendimentosRepository(),
                 
-                # CreateUnitsBaseRepository(),
+                CreateUnitsBaseRepository(),
                
-                # CreateAutorreferidoBaseRepository(),
-                # CreateDiabetesBasesRepository(),
-                # CreateHypertensionBasesRepository(),
+                CreateAutorreferidoBaseRepository(),
+                CreateDiabetesBasesRepository(),
+                CreateHypertensionBasesRepository(),
                 
                 HypertensionNominalListRepository(),
                 DiabeteNominalListRepository(),
