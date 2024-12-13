@@ -9,7 +9,7 @@ export const content: any = {
   masculino: "Masculino",
   feminino: "Feminino",
   "nao-informado": "Não informado",
-  "total": "Total",
+  total: "Total",
 
   "1-meses": "1 mês",
   "2-meses": "2 meses",
@@ -26,27 +26,28 @@ export const content: any = {
   "80-a-84-anos": "80 a 84 anos",
   "85-a-89-anos": "85 a 89 anos",
   "90-a-94-anos": "90 a 94 anos",
+  "95-a-99-anos": "95 a 99 anos",
+  "100-ou-mais": "100 ou mais",
 
-  "amarela": "Amarela",
-  "parda": "Parda",
-  "branca": "Branca",
-  "indigena": "Indígena",
-  "preta": "Preta",
+  amarela: "Amarela",
+  parda: "Parda",
+  branca: "Branca",
+  indigena: "Indígena",
+  preta: "Preta",
 
-  "normal": "Normal",
+  normal: "Normal",
   "baixo-peso": "Baixo Peso",
   "excesso-peso": "Excesso de Peso",
 
-  "vacinadas": "Vacinadas",
+  vacinadas: "Vacinadas",
   "nao-vacinadas": "Não\nVacinadas",
 
-  "atendidas": "Atendidas",
+  atendidas: "Atendidas",
   "nao-atendidas": "Sem\natendimento",
 
-  "hipertensao": "Hipertensão",
-  "diabetes": "Diabetes",
+  hipertensao: "Hipertensão",
+  diabetes: "Diabetes",
   "hipertensao-diabetes-associadas": "Hipertensão\ne Diabetes\nAssociadas",
-
 
   //tabagismo
   "proporcao-tabagistas-acompanhadas":

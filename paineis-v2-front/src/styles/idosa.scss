@@ -1,0 +1,14 @@
+@import "./_exports.module.scss";
+.is-row {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  div {
+    display: grid;
+  }
+
+  @media (max-width: 1400px) {
+    flex-direction: column;
+  }
+}

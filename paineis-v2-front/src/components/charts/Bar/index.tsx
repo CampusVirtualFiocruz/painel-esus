@@ -91,7 +91,7 @@ export function Bar(props: BarChart) {
       style={{
         width: "100%",
         minWidth: "316px",
-        height: "500px",
+        height: "600px",
       }}
       opts={{ renderer: "svg" }}
     />

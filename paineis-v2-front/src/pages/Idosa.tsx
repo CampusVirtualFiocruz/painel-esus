@@ -10,6 +10,7 @@ import useReportDataIdosas from "../hooks/sections/idosas/useReportDataIdosas";
 import { getNomeUbs } from "../utils";
 import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
+import "../styles/idosa.scss";
 
 const reportHeader = [
   {
@@ -76,7 +77,7 @@ const reportSections = [
             name: content?.["total-cadastros"],
           },
           componentStyle: {
-            width: "100%",
+            width: "110%",
             minWidth: "150px",
             height: "150px",
           },
@@ -129,13 +130,7 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
 
     if (isRow) {
       return (
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
+        <div className="is-row">
           <RenderChartGroup
             report={report}
             chartList={chartList?.[chartKey]}
