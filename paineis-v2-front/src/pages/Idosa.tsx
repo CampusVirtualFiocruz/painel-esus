@@ -228,6 +228,21 @@ const Idosa = () => {
                       const chartConfigs = chartList?.[chartKey]?.config;
                       const data = (report as any)?.[chartKey]?.data;
 
+                      // "100+ anos" como item final dos gráficos
+                      const pessoasPorFaixaEtaria =
+                        report["pessoas-por-faixa-etaria"].data;
+                      const pessoasPorSexo = report["pessoas-por-sexo"].data;
+
+                      if (pessoasPorFaixaEtaria[0].tag === "100-ou-mais") {
+                        const cemOuMaisItem = pessoasPorFaixaEtaria.shift();
+                        pessoasPorFaixaEtaria.push(cemOuMaisItem);
+                      }
+
+                      if (pessoasPorSexo[0].tag === "100-ou-mais") {
+                        const cemOuMaisItem = pessoasPorSexo.shift();
+                        pessoasPorSexo.push(cemOuMaisItem);
+                      }
+
                       return <CustomChart data={data} config={chartConfigs} />;
                     })
                   )}

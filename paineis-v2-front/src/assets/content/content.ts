@@ -27,7 +27,7 @@ export const content: any = {
   "85-a-89-anos": "85 a 89 anos",
   "90-a-94-anos": "90 a 94 anos",
   "95-a-99-anos": "95 a 99 anos",
-  "100-ou-mais": "100 ou mais",
+  "100-ou-mais": "100+ anos",
 
   amarela: "Amarela",
   parda: "Parda",
