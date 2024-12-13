@@ -42,23 +42,23 @@ const reportSections = [
         colors: ["#b9b9b9", "#09406a"],
       },
     },
-    "status-cadastros-cidadaos": {
-      Chart: Donut,
-      config: {
-        formatterKind: "perc",
-        colors: ["#5CD2C8", "#b9b9b9"],
-        info: (
-          <>
-            ”Cadastro Ativo” equivale a todas os cadastros cujas pessoas estão
-            vivas e permanecem domiciliadas no território da UBS/ Equipe de
-            Saúde.
-            <br />
-            ”Cadastro Inativo” equivale a todos os cadastros de pessoas que se
-            mudaram do território da UBS/ Equipe de Saúde ou falecidas.
-          </>
-        ),
-      },
-    },
+    // "status-cadastros-cidadaos": {
+    //   Chart: Donut,
+    //   config: {
+    //     formatterKind: "perc",
+    //     colors: ["#5CD2C8", "#b9b9b9"],
+    //     info: (
+    //       <>
+    //         ”Cadastro Ativo” equivale a todas os cadastros cujas pessoas estão
+    //         vivas e permanecem domiciliadas no território da UBS/ Equipe de
+    //         Saúde.
+    //         <br />
+    //         ”Cadastro Inativo” equivale a todos os cadastros de pessoas que se
+    //         mudaram do território da UBS/ Equipe de Saúde ou falecidas.
+    //       </>
+    //     ),
+    //   },
+    // },
     "localizacao-domicilios-cadastrados": {
       Chart: Donut,
       config: {

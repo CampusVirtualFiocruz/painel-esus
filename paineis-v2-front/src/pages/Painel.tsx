@@ -264,7 +264,7 @@ export function Painel() {
               <div className="col-xl-3">
                 <div className="container-card d-flex flex-column flex-md-row align-items-center justify-content-center my-2 py-2 px-4">
                   <div className="w-50 d-flex flex-column align-items-center justify-content-center">
-                    <h4 className="text-center">Tipo de localização</h4>
+                    <h4 className="text-center">Cidadãos Cadastrados</h4>
                     <span>{formataNumero(dadosPainel?.total)}</span>
                   </div>
                   <div className="w-50 d-flex flex-column align-items-center justify-content-center">

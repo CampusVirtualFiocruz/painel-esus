@@ -199,6 +199,7 @@ order by p.nome
             if len(or_conditions) > 0:
                 users = users.filter(or_(*or_conditions))
 
+            users = users.filter(Pessoas.cidadao_pec.is_not(None))
             users = users.group_by(DiabetesNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (

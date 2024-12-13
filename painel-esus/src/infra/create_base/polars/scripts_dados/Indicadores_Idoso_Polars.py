@@ -1,29 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
-# # Indicadores Idosos
-#
-# A tabela pessoa foi gerada a partir da tabela de acompanhamento do cidadão vinculado.O script realiza o cálculo de diversos indicadores baseados em nas fichas de atendimento individual e odontológico de população idosa. O processo inclui a leitura de dados, criação de filtros temporais e categóricos, cálculo de frequências de atendimentos e procedimentos (como creatinina e peso/altura), e geração de colunas de indicadores binários (1 ou 0). Esses indicadores são então integrados ao conjunto de dados final de idosos para análise posterior.
-#
-# usando a tabela pessoa gerada via sql do tales, script adaptado
-# In[27]:
-import time
-from datetime import datetime
-
-import pandas as pd
-from src.infra.db.settings.connection_local import DBConnectionHandler
-
-start_time = time.time()
-
-
-# In[28]:
-
 
 import os
+import time
 from datetime import datetime
 
 import polars as pl
 from dateutil.relativedelta import relativedelta
+from src.infra.db.settings.connection_local import DBConnectionHandler
 
+start_time = time.time()
 
 def gerar_banco():
     working_directory  = os.getcwd()
@@ -46,14 +32,11 @@ def gerar_banco():
     tb_fat_vac = pl.read_parquet(input_path+os.sep+"tb_fat_vacinacao.parquet")
 
     dt_12meses = datetime.today() - relativedelta(months=12)
-    # Define a data de hoje
-    dt_hoje = datetime.today()
 
     ## Definir códigos para identificar médicos, enfermeiros e outros procedimentos
     medico_codigos = [476, 484, *range(636, 699), *range(785, 789)] # Códigos de médicos
     enfermeiro_codigos = [475, 479, 487, *range(627, 636), *range(782, 785)] # Códigos de enfermeiros
     creatinina = ["ABEX003", "0202010317"] # Códigos para creatinina
-    cirurgiao_dentista = [485, 599] # Códigos de cirurgiões-dentistas
 
     # indicador 2 registro peso e altura
     # reusar o medicos_codigos e enfemerio_codigo do indicador 1
@@ -67,7 +50,6 @@ def gerar_banco():
     terap_ocup_codi = [749]
     nutri_cod = [481]
     fonod_cod = [480,*range(732, 735),*range(799, 803)]
-    antropometrica = ['0101040024']
 
     cods_ind_peso_altura = tec_aux_enferm_cod + tec_age_comun_cod+asc_cod+cirur_den_cod+farma_cod+fisio_cod + prof_edu_fisic_cod+terap_ocup_codi+nutri_cod+fonod_cod+medico_codigos+enfermeiro_codigos
 
@@ -125,10 +107,6 @@ def gerar_banco():
         pl.col("indicador_atendimentos_medicos").fill_null(2),
     )
 
-    faip_peso_altura = (
-        faip.filter(pl.col("tipo") == "Procedimentos Avaliados").filter(pl.col("codigo").is_in(antropometrica))
-            .unique(subset=["co_seq_fat_atd_ind"]) 
-    )
 
     # Step 1: Process `fai` to create `indicador_medicoes_peso_altura`
     indicador_medicoes_peso_altura = fai.select(
@@ -211,7 +189,7 @@ def gerar_banco():
             .unique(subset=["co_seq_fat_atd_ind"])  # Remove duplicates based on `co_seq_fat_atd_ind`
     )
 
-    indicador_III = (
+    indicador_iii = (
         fai.select(["co_seq_fat_atd_ind", "co_fat_cidadao_pec", "co_dim_tempo","co_dim_cbo_1","co_dim_cbo_2"])
         .with_columns([
             pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, format="%Y%m%d").alias("dt_atendimento")
@@ -231,19 +209,19 @@ def gerar_banco():
             .max()                                           
             .alias("data_ultimo_registro_creatinina")
         ])
-        # Now calculate indicador_III based on num_creatina_III
+        # Now calculate indicador_iii based on num_creatina_III
         .with_columns([
-            pl.when(pl.col("num_creatina_III") >= 1).then(1).otherwise(0).alias("indicador_III")
+            pl.when(pl.col("num_creatina_III") >= 1).then(1).otherwise(0).alias("indicador_iii")
         ])
     )
 
     # Final join with the `idoso` DataFrame
     idoso = (
-        idoso.join(indicador_III, on="co_fat_cidadao_pec", how="left")
-            .with_columns(pl.col("indicador_III").fill_null(2))  # Fill NA values with 2
+        idoso.join(indicador_iii, on="co_fat_cidadao_pec", how="left")
+            .with_columns(pl.col("indicador_iii").fill_null(2))  # Fill NA values with 2
     )
 
-    indicador_IV = (
+    indicador_iv = (
         fat_vis_dom
         .select([
             "co_seq_fat_visita_domiciliar", "co_fat_cidadao_pec", "dt_nascimento", "co_dim_tempo", "co_dim_cbo"
@@ -295,7 +273,7 @@ def gerar_banco():
 
     # Final join with the `idoso` DataFrame
     idoso = (
-        idoso.join(indicador_IV, on="co_fat_cidadao_pec", how="left")
+        idoso.join(indicador_iv, on="co_fat_cidadao_pec", how="left")
             .with_columns(pl.col("indicador_visitas_domiciliares_acs").fill_null(2))  # Fill NA values with 2
     )
 
@@ -404,7 +382,7 @@ def gerar_banco():
         "num_med_enf_medicos": "atendimentos_medicos", #enfermeiros tbm esta aqui
         "num_creatina_III": "registros_creatinina",
         #"num_creatina_III": "registros_creatinina",
-        "indicador_III": "indicador_registros_creatinina",
+        "indicador_iii": "indicador_registros_creatinina",
     }
 
     idoso_updated_v2 = (idoso_updated

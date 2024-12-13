@@ -218,31 +218,31 @@ select count(*) total  from 	cidadaos """
             for resp in result_hipertensao:
                 idicators_body["hipertensao"][resp[0]] = int(resp[1])
 
-            indicator_idoso_sql = get_indicators_idoso(
-                cnes, equipe
-            )
-            result_idoso = local_con.execute(
-                text(indicator_idoso_sql),
-            )
-            for resp in result_idoso:
-                key = (
-                    resp[0]
-                    .lower()
-                    .replace("zona ", "")
-                    .replace("n/i", "nao_informado")
-                    .replace("urbana", "urbano")
-                )
-                idicators_body["idosa"][key] = int(resp[1])
+            # indicator_idoso_sql = get_indicators_idoso(
+            #     cnes, equipe
+            # )
+            # result_idoso = local_con.execute(
+            #     text(indicator_idoso_sql),
+            # )
+            # for resp in result_idoso:
+            #     key = (
+            #         resp[0]
+            #         .lower()
+            #         .replace("zona ", "")
+            #         .replace("n/i", "nao_informado")
+            #         .replace("urbana", "urbano")
+            #     )
+            #     idicators_body["idosa"][key] = int(resp[1])
 
-            indicator_crianca_sql = get_indicators_crianca(cnes, equipe)
-            result_crianca = local_con.execute(
-                text(indicator_crianca_sql),
-            )
-            for resp in result_crianca:
-                key = (
-                    resp[0].lower().replace("zona ", "").replace("n/i", "nao_informado").replace("urbana", "urbano")
-                )
-                idicators_body["crianca"][key] = int(resp[1])
+            # indicator_crianca_sql = get_indicators_crianca(cnes, equipe)
+            # result_crianca = local_con.execute(
+            #     text(indicator_crianca_sql),
+            # )
+            # for resp in result_crianca:
+            #     key = (
+            #         resp[0].lower().replace("zona ", "").replace("n/i", "nao_informado").replace("urbana", "urbano")
+            #     )
+            #     idicators_body["crianca"][key] = int(resp[1])
 
             return {
                 "total": total_people,

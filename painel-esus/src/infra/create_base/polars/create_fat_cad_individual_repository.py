@@ -13,8 +13,22 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_fat_cad_individual order by co_seq_fat_cad_individual"
+fai_vars = [
+    "co_seq_fat_cad_individual",
+    "nu_uuid_ficha",
+    "st_recusa_cadastro",
+    "nu_cns",
+    "dt_nascimento",
+    "co_dim_tempo",
+    "st_hipertensao_arterial",
+    "st_diabete",
+    "co_fat_cidadao_pec",
 
+]
+fai_vars_str = ", ".join(fai_vars)
+
+
+EQUIPES = f"select {fai_vars_str} from tb_fat_cad_individual order by co_seq_fat_cad_individual"
 class CreateCadIndividualBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_fat_cad_individual'
 
@@ -72,7 +86,7 @@ class CreateCadIndividualBaseRepository(CreateBasesRepositoryInterface):
             print(f'Erro {self._base} already destroyed!')
 
 
-    def get_schema(self):
+    def get_schema2(self):
             # Definindo o schema fixo
         schema = pa.schema([
             pa.field('co_seq_fat_cad_individual', pa.int64()),
@@ -211,6 +225,23 @@ class CreateCadIndividualBaseRepository(CreateBasesRepositoryInterface):
             pa.field('co_dim_povo_comunidad_trad', pa.int64()),
             pa.field('st_comeu_que_tinha_dnheir_acab', pa.int64()),
             pa.field('st_alimentos_acab_sem_dinheiro', pa.int64()),
+        ])
+
+        return schema
+    
+    def get_schema(self):
+                # Definindo o schema fixo
+        schema = pa.schema([
+            pa.field('co_seq_fat_cad_individual', pa.int64()),
+            pa.field('nu_uuid_ficha', pa.string()),
+            pa.field('st_recusa_cadastro', pa.int64()),
+            pa.field('nu_cns', pa.string()),
+            pa.field('dt_nascimento', pa.string()),
+            pa.field('co_dim_tempo', pa.int64()),
+            pa.field('st_hipertensao_arterial', pa.int64()),
+            pa.field('st_diabete', pa.int64()),
+            pa.field('co_fat_cidadao_pec', pa.int64()),
+
         ])
 
         return schema

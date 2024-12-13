@@ -17,7 +17,9 @@ select co_fat_cidadao_pec cidadao_pec, st_hipertensao_arterial, st_diabete from 
 
 def autorreferidos_check(cnes, status, table, equipe:int = None):
     cnes_condition, status_condition= "",""
+    join = ""
     if cnes is not None and cnes:
+        join = " join equipes e on e.cidadao_pec  = a.cidadao_pec  "
         cnes_condition = f'e.codigo_unidade_saude = {cnes} and '
         if equipe is not None and equipe:
             cnes_condition = f"e.codigo_equipe = {equipe} and "
@@ -30,15 +32,14 @@ def autorreferidos_check(cnes, status, table, equipe:int = None):
 
     return f"""select 	distinct a.cidadao_pec co_fat_cidadao_pec, 
 			CASE 
-				when p.tipo_localidade = 'N/I' then 1
-				when p.tipo_localidade = 'Zona Urbana' then 2
-				when p.tipo_localidade = 'Zona Rural' then 3
+				when p.tipo_localidade = 'N/I' or p.tipo_localidade is null then 1
+				when p.tipo_localidade = 'Urbana' then 2
+				when p.tipo_localidade = 'Rural' then 3
 			END co_dim_tipo_localizacao   
 from 
 	autorreferidos a 
-	join equipes e on e.cidadao_pec  = a.cidadao_pec 
     join pessoas p on p.cidadao_pec = a.cidadao_pec 
+    {join}
 where 
 	{cnes_condition}
-	{status_condition}
-	not EXISTS ( select 1 from {table} d where d.co_fat_cidadao_pec = e.cidadao_pec )"""
+	{status_condition} """

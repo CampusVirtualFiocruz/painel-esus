@@ -1,7 +1,6 @@
 # pylint: disable=duplicate-string-formatting-argument
 # pylint: disable=E0401,W0613
-from typing import Dict
-from typing import List
+from typing import Dict, List
 
 import pandas as pd
 from sqlalchemy import text
@@ -20,8 +19,7 @@ from src.infra.db.repositories.sqls.nominal_list.autoreferido import (
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
 from ..sqls import LISTA_PESOS_ALTURAS
-from ..sqls.disease.by_gender import get_patients_by_gender
-from ..sqls.disease.by_gender import get_patients_by_location
+from ..sqls.disease.by_gender import get_patients_by_gender, get_patients_by_location
 
 
 class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
@@ -35,8 +33,19 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         equipe: int = None,
     ):
         with DBConnectionHandler().get_engine().connect() as db_con:
-            sql = autorreferidos_check(
-                cnes, self.disease.name, self.disease.name, equipe
+            where_clause = ""
+            if cnes is not None:
+                where_clause += f""" and co_dim_unidade_saude = {cnes} """
+                if equipe is not None:
+                    where_clause += f""" and co_dim_equipe = {equipe} """
+
+            sql = f"""with 
+            {self.disease.name}list as (
+                select distinct co_fat_cidadao_pec , co_dim_tipo_localizacao from {self.disease.name} where co_fat_cidadao_pec NOT NULL and co_dim_tempo_nascimento > 0 {where_clause}
+            ), lista as ("""
+            sql += (
+                autorreferidos_check(cnes, self.disease.name, self.disease.name, equipe)
+                + f" not EXISTS ( select 1 from {self.disease.name}list d where d.co_fat_cidadao_pec = p.cidadao_pec )) select * from lista"
             )
             sql = text(sql)
             print(sql)

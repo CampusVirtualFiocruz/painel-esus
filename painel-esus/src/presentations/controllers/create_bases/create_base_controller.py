@@ -75,36 +75,43 @@ class CreateBasesController:
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
             logging.info("Starting base generation")
             _list = [
-                CreateStructureBaseRepository(),
-                CreatePessoasBaseRepository(),
-                CreateAtendIndivBaseRepository(),
-                CreateEquipesBaseRepository(),
-                CreateUnidadesSaudeBaseRepository(),
-                CreateTbDimCboRepository(),
-                CreateAtendOdontoBaseRepository(),
-                CreateCadIndividualBaseRepository(),
-                CreateVacinacaoBaseRepository(),
-                CreateCidacaoPecBaseRepository(),
-                CreateProcedAtendBaseRepository(),
-                CreateFamiliaTerrBaseRepository(),
-                CreateCidadaoBaseRepository(),
-                CreateCadDomiciliarBaseRepository(),
-                CreateDimRacaCorBaseRepository(),
-                CreateTipoEquipeBaseRepository(),
-                CreateAcompCidadaosVinculadosBaseRepository(),
-                CreateVisistaDomiciliarBaseRepository(),
-                CreateCidCiapExplodeAtendimentosRepository(),
-                CreateUnitsBaseRepository(),
-                CreateAutorreferidoBaseRepository(),
-                CreateDiabetesBasesRepository(),
-                CreateHypertensionBasesRepository(),
-                # CreateDiabetesNominalListRepository(),
-                # CreateHypertensionNominalListRepository(),
+                # CreateStructureBaseRepository(),
+                
+                # CreateAtendIndivBaseRepository(),
+                # CreateCadIndividualBaseRepository(),
+                
+                # CreatePessoasBaseRepository(),
+                # CreateEquipesBaseRepository(),
+                # CreateUnidadesSaudeBaseRepository(),
+                # CreateTbDimCboRepository(),
+               
+                # CreateAtendOdontoBaseRepository(),
+                # CreateVacinacaoBaseRepository(),
+                # CreateCidacaoPecBaseRepository(),
+                # CreateProcedAtendBaseRepository(),
+                # CreateFamiliaTerrBaseRepository(),
+                # CreateCidadaoBaseRepository(),
+                # CreateCadDomiciliarBaseRepository(),
+                # CreateDimRacaCorBaseRepository(),
+                # CreateTipoEquipeBaseRepository(),
+                # CreateAcompCidadaosVinculadosBaseRepository(),
+                # CreateVisistaDomiciliarBaseRepository(),
+                # CreateCidCiapExplodeAtendimentosRepository(),
+                
+                # CreateUnitsBaseRepository(),
+               
+                # CreateAutorreferidoBaseRepository(),
+                # CreateDiabetesBasesRepository(),
+                # CreateHypertensionBasesRepository(),
+                
                 HypertensionNominalListRepository(),
                 DiabeteNominalListRepository(),
-                CreateStatusRecordsRepository(),
-                CreateIndicadoresIdososRepository(),
-                CreateIndicadoresCriancasRepository(),
+               
+                # CreateDiabetesNominalListRepository(),
+                # CreateHypertensionNominalListRepository(),
+                # CreateStatusRecordsRepository(),
+                # CreateIndicadoresIdososRepository(),
+                # CreateIndicadoresCriancasRepository(),
             ]
             usecase = CreateBasesUseCase(bases_generators=_list)
             usecase.create_bases()

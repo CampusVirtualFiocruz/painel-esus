@@ -41,7 +41,10 @@ class RecordsAdapter:
     def group_localidade(self, response):
         result = []
         for resp in response:
-            tag = resp[0].lower().replace("zona ", "").replace("n/i", "nao-informado")
+            if resp[0] is None:
+                tag = "nao-informado"
+            else:
+                tag = resp[0].lower().replace("zona ", "").replace("n/i", "nao-informado")
             result.append(
                 {"tag": tag, "value": float(resp[1])}
             )

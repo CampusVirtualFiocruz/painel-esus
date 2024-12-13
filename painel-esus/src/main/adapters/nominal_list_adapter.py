@@ -534,8 +534,8 @@ class RecordNominalListAdapter:
             {
                 "nome": self.nome,
                 "nomeSocialSelecionado": self.nome_social,
-                "zonaUrbana": "urbana" in self.tipo_localidade.lower(),
-                "zonaRural": "rural" in self.tipo_localidade.lower(),
+                "zonaUrbana": False,
+                "zonaRural": False,
                 "possuiAlertas": self.possui_alertas,
                 "cpf": self.cpf,
                 "cns": self.cns,
