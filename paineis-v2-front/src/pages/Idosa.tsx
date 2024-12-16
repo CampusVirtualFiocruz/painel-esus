@@ -10,6 +10,7 @@ import useReportDataIdosas from "../hooks/sections/idosas/useReportDataIdosas";
 import { getNomeUbs } from "../utils";
 import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
+import "../styles/idosa.scss";
 
 const reportHeader = [
   {
@@ -76,7 +77,7 @@ const reportSections = [
             name: content?.["total-cadastros"],
           },
           componentStyle: {
-            width: "100%",
+            width: "110%",
             minWidth: "150px",
             height: "150px",
           },
@@ -129,13 +130,7 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
 
     if (isRow) {
       return (
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "row",
-          }}
-        >
+        <div className="is-row">
           <RenderChartGroup
             report={report}
             chartList={chartList?.[chartKey]}
@@ -232,6 +227,21 @@ const Idosa = () => {
                       const CustomChart = chartList?.[chartKey]?.Chart;
                       const chartConfigs = chartList?.[chartKey]?.config;
                       const data = (report as any)?.[chartKey]?.data;
+
+                      // "100+ anos" como item final dos gráficos
+                      const pessoasPorFaixaEtaria =
+                        report["pessoas-por-faixa-etaria"].data;
+                      const pessoasPorSexo = report["pessoas-por-sexo"].data;
+
+                      if (pessoasPorFaixaEtaria[0].tag === "100-ou-mais") {
+                        const cemOuMaisItem = pessoasPorFaixaEtaria.shift();
+                        pessoasPorFaixaEtaria.push(cemOuMaisItem);
+                      }
+
+                      if (pessoasPorSexo[0].tag === "100-ou-mais") {
+                        const cemOuMaisItem = pessoasPorSexo.shift();
+                        pessoasPorSexo.push(cemOuMaisItem);
+                      }
 
                       return <CustomChart data={data} config={chartConfigs} />;
                     })
