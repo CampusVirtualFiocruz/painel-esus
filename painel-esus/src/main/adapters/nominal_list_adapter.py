@@ -1,5 +1,4 @@
 # pylint: disable=R0902, W4901, W0611, C0103
-from lib2to3.pytree import Base
 
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
