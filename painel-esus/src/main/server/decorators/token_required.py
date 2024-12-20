@@ -6,13 +6,10 @@ from functools import wraps
 from typing import List
 
 import jwt
-from flask import jsonify
-from flask import Request
-from flask import request
+from flask import Request, jsonify, request
 from src.errors import HttpBadTokenError
+from src.errors.logging import logging
 from src.main.adapters.request_adapter import HttpResponse
-
-logging.basicConfig(level=logging.DEBUG)
 
 SECRET_PASS = "OM3VpHNkEsKA"
 

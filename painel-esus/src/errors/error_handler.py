@@ -1,12 +1,13 @@
-import logging
-
+from src.errors.logging import logging
 from src.presentations.http_types import HttpResponse
 
-from .types import (HttpBadRequestError, HttpCredentialsFailError,
-                    HttpNotFoundError, HttpUnprocessableEntityError,
-                    InvalidIMC)
-
-logging.basicConfig(level=logging.DEBUG)
+from .types import (
+    HttpBadRequestError,
+    HttpCredentialsFailError,
+    HttpNotFoundError,
+    HttpUnprocessableEntityError,
+    InvalidIMC,
+)
 
 
 def handle_errors(error: Exception) -> HttpResponse:

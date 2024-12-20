@@ -2,17 +2,14 @@ import logging
 
 from src.data.use_cases.login import LoginUseCase
 from src.domain.entities.user_payload import UserPayload
+from src.errors.logging import logging
 from src.infra.bridge_provider.login_bridge import LoginBridgeRepository
 from src.infra.db.repositories.login_adm_repository import LoginAdmRepository
 from src.infra.db.repositories.login_repository import (
     LoginRepository as LoginUserRepository,
 )
-from src.main.server.decorators.token_required import generate_token
-from src.main.server.decorators.token_required import validate_token
-from src.presentations.http_types import HttpRequest
-from src.presentations.http_types import HttpResponse
-
-logging.basicConfig(level=logging.DEBUG)
+from src.main.server.decorators.token_required import generate_token, validate_token
+from src.presentations.http_types import HttpRequest, HttpResponse
 
 
 def login_composer(request: HttpRequest):
