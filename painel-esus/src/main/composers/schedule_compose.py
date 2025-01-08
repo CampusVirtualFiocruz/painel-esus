@@ -53,6 +53,7 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
             logging.info("skipping base Cache generation.")
 
     if weekly == "True":
+        logging.info("Atualizacao semanal agendada.")
         scheduler.add_job(
             init,
             trigger="cron",
@@ -61,6 +62,7 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
             day_of_week=DAY_OF_WEEK,
         )
     else:
+        logging.info("Atualizacao diária agendada.")
         scheduler.add_job(
             init,
             trigger="cron",
