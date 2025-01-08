@@ -21,6 +21,7 @@ class RecordsPath:
         "group_by_origin": "/group-by-origin",
         "group_by_status": "/group-by-status",
         "get_nominal_list": "/get-nominal-list",
+        "people_who_get_care": "/people-who-get-care",
     }
 
 
@@ -140,6 +141,27 @@ def records_group_by_status(cnes=None):
     response = None
     try:
         http_response = request_adapter(request, composer.group_records_status())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+
+@records_bp.route(
+    urls["people_who_get_care"], methods=["GET"], endpoint="records_people_who_get_care"
+)
+@records_bp.route(
+    urls["people_who_get_care"] + "/<cnes>",
+    methods=["GET"],
+    endpoint="records_people_who_get_care_id",
+)
+def records_people_who_get_care(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, composer.people_who_get_care())
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)

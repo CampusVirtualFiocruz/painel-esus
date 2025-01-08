@@ -84,3 +84,9 @@ class RecordsController:
     def nominal_list_download(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = parse_request(request)
         return self.__use_case.find_all_download(cnes=cnes, equipe=equipe)
+
+    def people_who_get_care(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = parse_request(request)
+        response = self.__use_case.people_who_get_care(cnes=cnes, equipe=equipe)
+        result = self._adapter.people_who_get_care(response)
+        return HttpResponse(status_code=200, body=result)

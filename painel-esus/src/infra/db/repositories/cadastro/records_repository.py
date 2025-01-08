@@ -10,6 +10,7 @@ from src.infra.db.repositories.cadastro.sqls import (
     group_raca_cor,
     group_records_by_origin,
     group_records_by_status,
+    people_who_get_care,
 )
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
@@ -36,6 +37,10 @@ columns = [
     Pessoas.bairro,
     Pessoas.cep,
     Pessoas.tipo_localidade,
+    Pessoas.acompanhamento,
+    Pessoas.status_cadastro,
+    Pessoas.alerta_status_cadastro,
+    Pessoas.alerta,
     Equipes.nome_unidade_saude,
     Equipes.nome_equipe,
     Equipes.micro_area,
@@ -79,6 +84,12 @@ class RecordsRepository:
             result = con.execute(sql)
             return list(result)
 
+    def people_who_get_care(self, cnes: int = None, equipe: int = None):
+        with DBConnectionHandler().get_engine().connect() as con:
+            sql = people_who_get_care(cnes, equipe)
+            result = con.execute(sql)
+            return list(result)
+
     def nominal_list(self, cnes: int = None, equipe: int = None):
         with DBConnectionHandler().get_engine().connect() as con:
             sql = group_records_by_origin(cnes, equipe)
@@ -112,7 +123,7 @@ class RecordsRepository:
             )
             conditions = []
             or_conditions = []
-            
+
             if cnes is not None and cnes:
                 conditions+=[ Pessoas.codigo_unidade_saude == cnes]
 
@@ -137,6 +148,7 @@ class RecordsRepository:
                 .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
+            print(list(users))
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,

@@ -12,8 +12,13 @@ def get_cpf_cns_rate(cnes: int = None, equipe: int = None):
             partial = f" and pessoas.codigo_equipe_vinculada  = {equipe} "
             where_clause += partial
 
-    com_cns_sql = sql_round("select * from com_cpf_cns ", "select * from total")
-    sem_cns_sql = sql_round("select * from sem_cpf_cns ", "select * from total")
+    com_cns_sql = sql_round(
+        "select qtd from com_cpf_cns where tipo_ident_cpf_cns = 1 ", "select * from total"
+    )
+    sem_cns_sql = sql_round(
+        "select qtd from com_cpf_cns where tipo_ident_cpf_cns = 0 ",
+        "select * from total",
+    )
 
     sql = f"""with
     lista_pessoas as (
@@ -22,13 +27,11 @@ def get_cpf_cns_rate(cnes: int = None, equipe: int = None):
         select count(*) from lista_pessoas
     ),
     com_cpf_cns as (
-        select count(distinct cidadao_pec) from lista_pessoas  where cpf is NOT NULL or cns is not null
-    ),
-    sem_cpf_cns as (
-        select count(distinct cidadao_pec) from lista_pessoas  where cpf is NULL and cns is null
+        select tipo_ident_cpf_cns, count(*) qtd from pessoas group by 1
     )
     select
 {com_cns_sql} "cadastros-identificados-por-cpf-cns",
 {sem_cns_sql} "sem-cpf-cnf" """
 
+    print(text(sql))
     return text(sql)

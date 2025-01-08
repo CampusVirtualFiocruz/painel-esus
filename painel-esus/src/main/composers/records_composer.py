@@ -29,3 +29,6 @@ def nominal_list():
 
 def nominal_list_download():
     return controller.nominal_list_download
+
+def people_who_get_care():
+    return controller.people_who_get_care

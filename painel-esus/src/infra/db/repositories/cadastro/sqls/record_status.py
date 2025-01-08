@@ -6,23 +6,13 @@ from .total import sql_round
 def group_records_by_status(cnes: int = None, equipe: int = None):
     where_clause = " "
     if cnes is not None and cnes:
-        where_clause += f" and sr.codigo_unidade_saude   = {cnes} "
+        where_clause += f" where pessoas.codigo_unidade_saude   = {cnes} "
         if equipe is not None and equipe:
-            where_clause += f" and sr.codigo_equipe  = {equipe} "
+            where_clause += f" and pessoas.codigo_equipe_vinculada  = {equipe} "
 
-    invalido = sql_round(
-        "select quantidade from cadastros where tipo ='cadastros_invalidos'",
-        "select * from total",
-    )
-    valido = sql_round(
-        "select quantidade from cadastros where tipo !='cadastros_invalidos'",
-        "select * from total",
-    )
-    sql = f"""with 
-                cadastros as (select tipo, sum(quantidade) quantidade from status_records sr where tipo in ( 'cadastros_invalidos', 'cadastros_ativos') {where_clause} group by 1),
-                total as (select sum(quantidade) quantidade from status_records sr where tipo in ( 'cadastros_invalidos', 'cadastros_ativos') {where_clause})
-                select 
-                (select quantidade from cadastros where tipo !='cadastros_invalidos')  cadastros_validos,
-                (select quantidade from cadastros where tipo ='cadastros_invalidos')  cadastros_invalidos
+    sql = f"""with
+                listas as ( select * from pessoas {where_clause}),
+                total as ( select count(*) from listas)
+                select status_cadastro, count(*) value from listas group by 1;
               """
     return text(sql)

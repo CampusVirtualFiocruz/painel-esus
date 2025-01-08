@@ -13,16 +13,16 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-vac_vars = ['co_seq_fat_vacinacao','co_fat_cidadao_pec','ds_filtro_imunobiologico','co_dim_tempo','dt_nascimento']
-vac_vars_str = ', '.join(vac_vars)
+lista_vars = ['co_seq_fat_atvdd_cltv_part','co_fat_cidadao_pec','co_dim_tempo']
+lista_vars_str = ', '.join(lista_vars)
 
-EQUIPES = f"SELECT {vac_vars_str} FROM tb_fat_vacinacao order by co_seq_fat_vacinacao"
+EQUIPES = f"SELECT {lista_vars_str} FROM tb_fat_atvdd_coletiva_part order by co_seq_fat_atvdd_cltv_part"
 
 
-class CreateVacinacaoBaseRepository(
+class CreateAtvddColetivaBaseRepository(
     CreateBasesRepositoryInterface
 ):
-    _base = 'tb_fat_vacinacao'
+    _base = 'tb_fat_atvdd_coletiva_part'
 
     def __init__(self):
         ...
@@ -37,7 +37,7 @@ class CreateVacinacaoBaseRepository(
             schema_fixo =  self.get_schema() 
             _next = True
             offset = 0
-            chunk_size = getenv("CHUNK_SIZE", 25000)
+            chunk_size = getenv("CHUNK_SIZE", 1000000)
             parquet_file = f"{self._base}.parquet"
             writer = None 
             while _next:
@@ -77,11 +77,9 @@ class CreateVacinacaoBaseRepository(
         # Definindo o schema fixo
 
         schema = pa.schema([
-            pa.field('co_seq_fat_vacinacao', pa.int64()),
+            pa.field('co_seq_fat_atvdd_cltv_part', pa.int64()),
             pa.field('co_fat_cidadao_pec', pa.int64()),
-            pa.field('ds_filtro_imunobiologico', pa.string()),
             pa.field('co_dim_tempo', pa.int64()),
-            pa.field('dt_nascimento', pa.string()),
         ])
 
         return schema

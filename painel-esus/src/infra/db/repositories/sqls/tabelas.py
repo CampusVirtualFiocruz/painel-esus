@@ -41,9 +41,19 @@ TABELAS = [
 			diferenca_ultima_atualizacao_fcd BIGINT,
 			codigo_equipe_vinculada BIGINT,
 			codigo_unidade_saude BIGINT,
-			st_usar_cadastro_individual BOOLEAN,
-    		st_recusa_cadastro BOOLEAN,
-			CONSTRAINT pk_pessoas PRIMARY KEY (cidadao_pec)
+			acompanhamento TEXT,
+            status_cadastro TEXT,
+            nu_micro_area_domicilio TEXT,
+            nome_equipe TEXT,
+            nome_unidade_saude TEXT,
+            fci_att_2anos BOOLEAN,
+            fcdt_att_2anos BOOLEAN,
+            alerta_status_cadastro BOOLEAN,
+            alerta BOOLEAN,
+            tipo_ident_cpf_cns BOOLEAN,
+            faixa_etaria TEXT,
+            st_recusa_cadastro BOOLEAN,
+			CONSTRAINT pk_pessoas PRIMARY KEY (co_cidadao)
 		);
 	""",
     'CREATE INDEX ix_pessoas_index ON pessoas ("index");',

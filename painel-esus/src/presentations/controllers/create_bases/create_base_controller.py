@@ -37,15 +37,19 @@ from src.infra.create_base.polars import (
     CreateAcompCidadaosVinculadosBaseRepository,
     CreateAtendIndivBaseRepository,
     CreateAtendOdontoBaseRepository,
+    CreateAtvddColetivaBaseRepository,
     CreateCadDomiciliarBaseRepository,
     CreateCadIndividualBaseRepository,
     CreateCidacaoPecBaseRepository,
     CreateCidadaoBaseRepository,
     CreateCidCiapExplodeAtendimentosRepository,
+    CreateDimEquipesBaseRepository,
     CreateDimRacaCorBaseRepository,
     CreateFamiliaTerrBaseRepository,
+    CreateIndicadoresCadastroRepository,
     CreateIndicadoresCriancasRepository,
     CreateIndicadoresIdososRepository,
+    CreateMarcaConsumoBaseRepository,
     CreateProcedAtendBaseRepository,
     CreateTbDimCboRepository,
     CreateTipoEquipeBaseRepository,
@@ -77,14 +81,26 @@ class CreateBasesController:
             _list = [
                 CreateStructureBaseRepository(),
                 
-                CreateAtendIndivBaseRepository(),
                 CreateCadIndividualBaseRepository(),
+                CreateVacinacaoBaseRepository(),
+                CreateDimEquipesBaseRepository(),
+                CreateVisistaDomiciliarBaseRepository(),
+                CreateMarcaConsumoBaseRepository(),
+                CreateAtvddColetivaBaseRepository(),
+                CreateProcedAtendBaseRepository(),
+                CreateUnidadesSaudeBaseRepository(),
+                CreateDimRacaCorBaseRepository(),
                 
-                CreatePessoasBaseRepository(),
+                CreateAtendIndivBaseRepository(),
+                # CreatePessoasBaseRepository(),
                 CreateEquipesBaseRepository(),
+                
+                CreateAcompCidadaosVinculadosBaseRepository(),
+                CreateAtendOdontoBaseRepository(),
+                CreateIndicadoresCadastroRepository(),
+                
                 # CreateUnidadesSaudeBaseRepository(),
                 CreateTbDimCboRepository(),
-               
                 # CreateAtendOdontoBaseRepository(),
                 # CreateVacinacaoBaseRepository(),
                 # CreateCidacaoPecBaseRepository(),
@@ -97,16 +113,12 @@ class CreateBasesController:
                 # CreateAcompCidadaosVinculadosBaseRepository(),
                 # CreateVisistaDomiciliarBaseRepository(),
                 # CreateCidCiapExplodeAtendimentosRepository(),
-                
                 CreateUnitsBaseRepository(),
-               
                 CreateAutorreferidoBaseRepository(),
                 CreateDiabetesBasesRepository(),
                 CreateHypertensionBasesRepository(),
-                
                 HypertensionNominalListRepository(),
                 DiabeteNominalListRepository(),
-               
                 # CreateDiabetesNominalListRepository(),
                 # CreateHypertensionNominalListRepository(),
                 # CreateStatusRecordsRepository(),
@@ -116,6 +128,5 @@ class CreateBasesController:
             usecase = CreateBasesUseCase(bases_generators=_list)
             usecase.create_bases()
 
-            
         else:
             logging.info("Skipping base generation")

@@ -484,7 +484,7 @@ class RecordNominalListAdapter:
         self.tipo_localidade = user.tipo_localidade
         self.cpf = user.cpf
         self.cns = user.cns
-        self.data_nascimento = user.data_nascimento
+        self.data_nascimento = user.data_nascimento.date()
         self.idade = user.idade
         self.sexo = user.sexo
         self.equipe = user.nome_equipe
@@ -494,6 +494,9 @@ class RecordNominalListAdapter:
         self.complemento = user.complemento
         self.cep = user.cep
         self.telefone = user.telefone
+        self.alerta_status_cadastro = user.alerta_status_cadastro
+        self.status_cadastro = user.status_cadastro
+        self.alerta = user.alerta
 
         ultima_atualizacao_cidadao, ultima_atualizacao_fcd = True, True
 
@@ -509,7 +512,6 @@ class RecordNominalListAdapter:
         ):
             ultima_atualizacao_fcd = False
 
-        self.possui_alertas = ultima_atualizacao_cidadao or ultima_atualizacao_fcd
         self.registros = []
         self.registros.append(
             AlertRecord(
@@ -527,6 +529,20 @@ class RecordNominalListAdapter:
                 tipo_alerta="ultima_atualizacao_fcd",
             )
         )
+        label_map = {
+            "cadastro_completo": "Cadastro Completo",
+            "cadastro_incompleto": "Cadastro Incompleto",
+            "pessoa_ident_nao_cadastrada": "Pessoa não cadastrada",
+            "outro": "Outro",
+        }
+        self.registros.append(
+            AlertRecord(
+                data=label_map[user.status_cadastro],
+                exibir_alerta=self.alerta_status_cadastro == 1,
+                descricao="Status de cadastro",
+                tipo_alerta="status_de_cadastro",
+            )
+        )
 
     def to_dict(self):
         return dict(
@@ -535,7 +551,7 @@ class RecordNominalListAdapter:
                 "nomeSocialSelecionado": self.nome_social,
                 "zonaUrbana": False,
                 "zonaRural": False,
-                "possuiAlertas": self.possui_alertas,
+                "possuiAlertas": self.alerta,
                 "cpf": self.cpf,
                 "cns": self.cns,
                 "dataNascimento": self.data_nascimento,
