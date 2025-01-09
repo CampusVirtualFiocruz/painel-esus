@@ -42,24 +42,14 @@ const reportSections = [
         colors: ["#b9b9b9", "#09406a"],
       },
     },
-    "status-cadastros-cidadaos": {
+    "Total de cidadãos conforme situação cadastral": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
-        colors: ["#5CD2C8", "#b9b9b9", "#0069d0", "#5c7ea0"],
-        info: (
-          <>
-            ”Cadastro Ativo” equivale a todas os cadastros cujas pessoas estão
-            vivas e permanecem domiciliadas no território da UBS/ Equipe de
-            Saúde.
-            <br />
-            ”Cadastro Inativo” equivale a todos os cadastros de pessoas que se
-            mudaram do território da UBS/ Equipe de Saúde ou falecidas.
-          </>
-        ),
+        colors: ["#0069d0", "#84aaff", "#e4e4e4", "#5c7ea0"],
       },
     },
-    "localizacao-domicilios-cadastrados": {
+    "Localização dos imóveis cadastrados": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
@@ -69,7 +59,7 @@ const reportSections = [
     },
   },
   {
-    "total-pessoas-acompanhadas": {
+    "Total de cidadãos acompanhados": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
@@ -99,7 +89,7 @@ const Qualidade = () => {
     reportHeader[0]["total-cadastros-ubs"].config.description =
       "Total de Cadastros no Município";
   } else {
-    delete reportSections[0]["total-pessoas-acompanhadas"];
+    delete reportSections[0]["Total de cidadãos acompanhados"];
   }
 
   const reportData = useReportDataQualidade({ ubsId: id, squadId: equipe });

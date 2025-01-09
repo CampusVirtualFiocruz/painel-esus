@@ -23,15 +23,15 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
           `/cadastros/cpf_cns_rate${ubsParam}`,
           defaultParam
         ),
-        "status-cadastros-cidadaos": Api.get(
+        "Total de cidadãos conforme situação cadastral": Api.get(
           `/cadastros/group-by-status${ubsParam}`,
           defaultParam
         ),
-        "localizacao-domicilios-cadastrados": Api.get(
+        "Localização dos imóveis cadastrados": Api.get(
           `/cadastros/group-by-location${ubsParam}`,
           defaultParam
         ),
-        "total-pessoas-acompanhadas": Api.get(
+        "Total de cidadãos acompanhados": Api.get(
           `/cadastros/people-who-get-care${ubsParam}`,
           defaultParam
         ),

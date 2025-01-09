@@ -198,7 +198,12 @@ class RecordsRepository:
                 pessoas.tipo_localidade,
                 equipes.nome_unidade_saude,
                 equipes.nome_equipe,
-                equipes.micro_area
+                equipes.micro_area,
+                case 
+                    when pessoas.acompanhamento = 1 then "SIM"
+                    when pessoas.acompanhamento = 0 then "NÃO"
+                end acompanhamento,
+                pessoas.status_cadastro
             from pessoas 
                 left join equipes on pessoas.cidadao_pec = equipes.cidadao_pec and pessoas.codigo_equipe_vinculada = equipes.codigo_equipe and pessoas.codigo_unidade_saude = equipes.codigo_unidade_saude
             {where_clause}
