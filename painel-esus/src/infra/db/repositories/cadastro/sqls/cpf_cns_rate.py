@@ -22,7 +22,7 @@ def get_cpf_cns_rate(cnes: int = None, equipe: int = None):
 
     sql = f"""with
     lista_pessoas as (
-        select distinct cidadao_pec, codigo_unidade_saude, codigo_equipe_vinculada, cpf, cns from pessoas {where_clause}),
+        select distinct co_cidadao, codigo_unidade_saude, codigo_equipe_vinculada, cpf, cns from pessoas {where_clause}),
     total as ( 
         select count(*) from lista_pessoas
     ),
@@ -30,8 +30,8 @@ def get_cpf_cns_rate(cnes: int = None, equipe: int = None):
         select tipo_ident_cpf_cns, count(*) qtd from pessoas group by 1
     )
     select
-{com_cns_sql} "cadastros-identificados-por-cpf-cns",
-{sem_cns_sql} "sem-cpf-cnf" """
+(select qtd from com_cpf_cns where tipo_ident_cpf_cns = 1)  "cadastros-identificados-por-cpf-cns",
+(select qtd from com_cpf_cns where tipo_ident_cpf_cns = 0)  "sem-cpf-cnf" """
 
     print(text(sql))
     return text(sql)

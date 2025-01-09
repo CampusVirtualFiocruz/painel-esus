@@ -106,7 +106,7 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
                     where_clause += f"  and p.codigo_equipe_vinculada = {equipe} "
             sql = f"""
 with 
-    cidadaos as ( select distinct p.cidadao_pec from 	pessoas p 
+    cidadaos as ( select distinct p.co_cidadao from 	pessoas p 
     left join equipes e on e.cidadao_pec = p.cidadao_pec     
     {where_clause}
 )
