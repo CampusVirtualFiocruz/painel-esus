@@ -67,7 +67,7 @@ const reportSections = [
         colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
-    "Total de cadastros de cidadãos conforme raça/cor": {
+    "total-cadastros-pessoas-raca-cor": {
       Chart: Donut,
       config: {
         formatterKind: "perc",

@@ -81,11 +81,12 @@ export const content: any = {
   "total-cadastros-cidadaos-por-tipo-identificacao":
     "Total de cadastros de cidadãos por tipo de identificação",
   "total-cidadaos-conforme-situação-cadastral":
-    "Total de cidadãos conforme situação cadastral",
+    "Total de cadastros de cidadãos conforme situação cadastral",
   "localizacao-imoveis-cadastrados": "Localização dos imóveis cadastrados",
-  "total-cidadaos-acompanhados": "Total de cidadãos acompanhados",
+  "total-cidadaos-acompanhados":
+    "Total de cadastros de cidadãos conforme situação de acompanhamento",
   "total-cadastros-pessoas-raca-cor":
-    "Total de cadastros de pessoas por raça e cor",
+    "Total de cadastros de cidadãos conforme raça/cor",
   "sem-cpf-cnf": "sem CPF e CNS",
   "cadastros-identificados-por-cpf-cns":
     "Cadastros identificados\npor CPF e/ou CNS",
