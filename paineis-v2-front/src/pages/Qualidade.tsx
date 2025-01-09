@@ -42,7 +42,7 @@ const reportSections = [
         colors: ["#b9b9b9", "#09406a"],
       },
     },
-    "Total de cidadãos conforme situação cadastral": {
+    "Total de cadastros de cidadãos conforme situação cadastral": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
@@ -59,7 +59,7 @@ const reportSections = [
     },
   },
   {
-    "Total de cidadãos acompanhados": {
+    "Total de cadastros de cidadãos conforme situação de acompanhamento": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
@@ -67,7 +67,7 @@ const reportSections = [
         colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
-    "total-cadastros-pessoas-raca-cor": {
+    "Total de cadastros de cidadãos conforme raça/cor": {
       Chart: Donut,
       config: {
         formatterKind: "perc",
@@ -89,7 +89,7 @@ const Qualidade = () => {
     reportHeader[0]["total-cadastros-ubs"].config.description =
       "Total de Cadastros no Município";
   } else {
-    delete reportSections[0]["Total de cidadãos acompanhados"];
+    delete reportSections[0]["Total de cadastros de cidadãos conforme situação de acompanhamento"];
   }
 
   const reportData = useReportDataQualidade({ ubsId: id, squadId: equipe });

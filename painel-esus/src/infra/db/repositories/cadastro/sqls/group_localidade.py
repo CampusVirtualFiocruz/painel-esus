@@ -16,7 +16,7 @@ def group_localidade(cnes: int = None, equipe: int = None):
 
     sql = f"""with
         lista_pessoas as (
-            select distinct cidadao_pec, codigo_unidade_saude, codigo_equipe_vinculada, tipo_localidade  from pessoas {where_clause} ),
+            select distinct co_cidadao, codigo_unidade_saude, codigo_equipe_vinculada, tipo_localidade  from pessoas {where_clause} ),
         total as ( 
             select count(*) from lista_pessoas
         ),

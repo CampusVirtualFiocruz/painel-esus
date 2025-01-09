@@ -24,9 +24,9 @@ def get_total_cadastros(cnes:int = None, equipe:int=None):
 
     sql = f"""with
     total as ( 
-        select count(distinct cidadao_pec) from pessoas {where_clause}),
+        select count(distinct co_cidadao) from pessoas {where_clause}),
         cadastros_atualizados as (
-            select count(distinct cidadao_pec) from pessoas where pessoas.fci_att_2anos = 1 {where_clause2})
+            select count(distinct co_cidadao) from pessoas where pessoas.fci_att_2anos = 1 {where_clause2})
     select
         ( select * from total) total,
         {round_sql} cadastros_atualizados """

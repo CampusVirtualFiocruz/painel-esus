@@ -23,7 +23,7 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
           `/cadastros/cpf_cns_rate${ubsParam}`,
           defaultParam
         ),
-        "Total de cidadãos conforme situação cadastral": Api.get(
+        "Total de cadastros de cidadãos conforme situação cadastral": Api.get(
           `/cadastros/group-by-status${ubsParam}`,
           defaultParam
         ),
@@ -31,11 +31,9 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
           `/cadastros/group-by-location${ubsParam}`,
           defaultParam
         ),
-        "Total de cidadãos acompanhados": Api.get(
-          `/cadastros/people-who-get-care${ubsParam}`,
-          defaultParam
-        ),
-        "total-cadastros-pessoas-raca-cor": Api.get(
+        "Total de cadastros de cidadãos conforme situação de acompanhamento":
+          Api.get(`/cadastros/people-who-get-care${ubsParam}`, defaultParam),
+        "Total de cadastros de cidadãos conforme raça/cor": Api.get(
           `/cadastros/group-by-race${ubsParam}`,
           defaultParam
         ),
