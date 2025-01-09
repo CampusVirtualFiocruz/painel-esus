@@ -33,8 +33,9 @@ function parseText(text: string): number | string {
     // Retorna a data formatada para o padrão localizado
     return parsedDate.toLocaleDateString("pt-BR");
   }
-  if (text == "-") return text;
-  throw new Error("O texto não é nem um número nem uma data válida.");
+  return text;
+  // if (text == "-") return text;
+  // throw new Error("O texto não é nem um número nem uma data válida.");
 }
 
 export function bodyPrimeiroTrimestre() {

@@ -42,23 +42,23 @@ const reportSections = [
         colors: ["#b9b9b9", "#09406a"],
       },
     },
-    // "status-cadastros-cidadaos": {
-    //   Chart: Donut,
-    //   config: {
-    //     formatterKind: "perc",
-    //     colors: ["#5CD2C8", "#b9b9b9"],
-    //     info: (
-    //       <>
-    //         ”Cadastro Ativo” equivale a todas os cadastros cujas pessoas estão
-    //         vivas e permanecem domiciliadas no território da UBS/ Equipe de
-    //         Saúde.
-    //         <br />
-    //         ”Cadastro Inativo” equivale a todos os cadastros de pessoas que se
-    //         mudaram do território da UBS/ Equipe de Saúde ou falecidas.
-    //       </>
-    //     ),
-    //   },
-    // },
+    "status-cadastros-cidadaos": {
+      Chart: Donut,
+      config: {
+        formatterKind: "perc",
+        colors: ["#5CD2C8", "#b9b9b9", "#0069d0", "#5c7ea0"],
+        info: (
+          <>
+            ”Cadastro Ativo” equivale a todas os cadastros cujas pessoas estão
+            vivas e permanecem domiciliadas no território da UBS/ Equipe de
+            Saúde.
+            <br />
+            ”Cadastro Inativo” equivale a todos os cadastros de pessoas que se
+            mudaram do território da UBS/ Equipe de Saúde ou falecidas.
+          </>
+        ),
+      },
+    },
     "localizacao-domicilios-cadastrados": {
       Chart: Donut,
       config: {
@@ -69,14 +69,12 @@ const reportSections = [
     },
   },
   {
-    "via-cadastros-cidadaos": {
-      Chart: Bar,
+    "total-pessoas-acompanhadas": {
+      Chart: Donut,
       config: {
-        hideLegend: true,
-        colors: ["rgba(57,150,193,255)", "rgba(92,210,200,255)", "#dddddd"],
-        yAxis: {
-          name: content?.["total-cadastros"],
-        },
+        formatterKind: "perc",
+        radiusStart: "0%",
+        colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
     "total-cadastros-pessoas-raca-cor": {
@@ -100,6 +98,8 @@ const Qualidade = () => {
   if (id == undefined) {
     reportHeader[0]["total-cadastros-ubs"].config.description =
       "Total de Cadastros no Município";
+  } else {
+    delete reportSections[0]["total-pessoas-acompanhadas"];
   }
 
   const reportData = useReportDataQualidade({ ubsId: id, squadId: equipe });
