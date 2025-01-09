@@ -44,10 +44,10 @@ class RecordsAdapter:
             if resp[0] is None:
                 tag = "nao-informado"
             else:
-                tag = resp[0].lower().replace("zona ", "").replace("n/i", "nao-informado")
-            result.append(
-                {"tag": tag, "value": float(resp[1])}
-            )
+                tag = (
+                    resp[0].lower().replace("zona ", "").replace("n/i", "nao-informado")
+                )
+            result.append({"tag": tag, "value": float(resp[1])})
 
         return result
 
@@ -96,21 +96,24 @@ class RecordsAdapter:
     def records_status(self, response):
         result = []
         label_map = {
-            'cadastro_completo': 'Cadastro Completo',
-            'cadastro_incompleto': 'Cadastro Incompleto',
-            'pessoa_ident_nao_cadastrada' : 'Pessoa não cadastrada',
-            'outro': 'Outro'
+            "cadastro_completo": "Cadastro Completo",
+            "cadastro_incompleto": "Cadastro Incompleto",
+            "pessoa_ident_nao_cadastrada": "Pessoa não cadastrada",
+            "outro": "Outro",
         }
-        return [{
-                    "tag": label_map[resp[0]],
-                    "value": float(resp[1]),
-                } for resp in response]
+        return [
+            {
+                "tag": label_map[resp[0]],
+                "value": float(resp[1]),
+            }
+            for resp in response
+        ]
 
     def people_who_get_care(self, response):
         result = []
         label_map = {
-            "0": "Não Acompanhadas",
-            "1": "Acompanhadas",
+            "0": "Não Acompanhados",
+            "1": "Acompanhados",
         }
         return [
             {
