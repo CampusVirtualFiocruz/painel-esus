@@ -1,3 +1,5 @@
-.env
-src/bases/*
-dados/*
+/painel-esus/.env
+/painel-esus/src/bases/*
+/painel-esus/dados/*
+/painel-esus/*.db
+/painel-esus/painel-esus/*.db
