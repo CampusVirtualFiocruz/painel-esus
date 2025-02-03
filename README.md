@@ -83,6 +83,8 @@ Ana Cristina da Matta Furniel, cientista social, tecnologista em saúde pública
 
 Adriano Neves de Paula e Souza, cientista da computação
 
+Igor Caldeira Brandão da Silveira, engenheiro da computação
+
 Joaquim Alves C Junior, engenheiro mecatrônico
 
 Leandro Brandão, cientista da computação
