@@ -5,12 +5,10 @@ import time
 
 import customtkinter as ctk
 import pandas as pd
-from customtkinter import CTkProgressBar
-from customtkinter import IntVar
+from customtkinter import CTkProgressBar, IntVar
 from PIL import Image
+from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
-
-logging.basicConfig(level=logging.DEBUG)
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")

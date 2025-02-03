@@ -10,7 +10,7 @@ def filter_by_sexo(cnes: int = None, equipe: int = None):
     return f"""
         with cidadaos as (
             select
-                distinct p.sexo, p.cidadao_pec
+                distinct p.sexo, p.co_cidadao
             from
                 pessoas p
             left join equipes e on e.cidadao_pec = p.cidadao_pec

@@ -80,12 +80,13 @@ export const content: any = {
   "porcentagem-cadastros-atualizados": "Porcentagem de cadastros atualizados*",
   "total-cadastros-cidadaos-por-tipo-identificacao":
     "Total de cadastros de cidadãos por tipo de identificação",
-  "status-cadastros-cidadaos": "Status do cadastro dos cidadãos",
-  "localizacao-domicilios-cadastrados":
-    "Localização dos domicílios cadastrados",
-  "via-cadastros-cidadaos": "Via de cadastros dos cidadãos",
+  "total-cidadaos-conforme-situação-cadastral":
+    "Total de cadastros de cidadãos conforme situação cadastral",
+  "localizacao-imoveis-cadastrados": "Localização dos imóveis cadastrados",
+  "total-cidadaos-acompanhados":
+    "Total de cadastros de cidadãos conforme situação de acompanhamento",
   "total-cadastros-pessoas-raca-cor":
-    "Total de cadastros de pessoas por raça e cor",
+    "Total de cadastros de cidadãos conforme raça/cor",
   "sem-cpf-cnf": "sem CPF e CNS",
   "cadastros-identificados-por-cpf-cns":
     "Cadastros identificados\npor CPF e/ou CNS",

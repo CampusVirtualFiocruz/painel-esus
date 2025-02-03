@@ -1,7 +1,6 @@
 # pylint: disable=duplicate-string-formatting-argument
 # pylint: disable=E0401,C0301,W0612,W0611
-from typing import Dict
-from typing import List
+from typing import Dict, List
 
 import pandas as pd
 from src.data.interfaces.diseases_dashboard import DiseasesDashboardRepositoryInterface
@@ -16,11 +15,9 @@ from src.infra.db.repositories.disease.age_groups_location import AgeGroupsLocat
 from src.infra.db.repositories.disease.professional_group import ProfessionalsGroup
 from src.infra.db.repositories.sqls import (
     ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS,
-)
-from src.infra.db.repositories.sqls import (
     ATENDIMENTO_INDIVIDUAL_PROCEDIMENTOS_NASCIMENTO,
+    MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL,
 )
-from src.infra.db.repositories.sqls import MAX_DT_ATENDIMENTO_ATENDIMENTO_INDIVIDUAL
 from src.infra.db.settings.connection import DBConnectionHandler
 
 
@@ -53,12 +50,13 @@ class DiseasesDashboardRepository(DiseasesDashboardRepositoryInterface):
                 .tolist()
             )
             sql = ATENDIMENTO_INDIVIDUAL_CID_CIAPS_PROCEDIMENTOS(cids)
-            sql += """
-                    where
-                        co_seq_fat_atd_ind in ({})
-                """.format(
-                ", ".join([f"'{id}'" for id in ids])
-            )
+            if len(ids) > 0 :
+                sql += """
+                        where
+                            co_seq_fat_atd_ind in ({})
+                    """.format(
+                    ", ".join([f"'{id}'" for id in ids])
+                )
             return pd.read_sql_query(sql, con=engine)
 
     def _retrieve_cares(self, cnes: int = None):

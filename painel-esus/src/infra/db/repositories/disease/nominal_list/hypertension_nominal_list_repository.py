@@ -209,6 +209,9 @@ order by p.nome
                 users = users.filter(*conditions)
             if len(or_conditions)>0:
                 users = users.filter(or_(*or_conditions))
+
+            users = users.filter(Pessoas.cidadao_pec.is_not(None))
+
             users = users.group_by(HipertensaoNominal.co_fat_cidadao_pec)
             total = users.count()
             users = (
@@ -216,7 +219,6 @@ order by p.nome
                 .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
-
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,

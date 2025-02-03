@@ -5,8 +5,6 @@ from .pessoas_id import pessoas_id
 
 equipes = f"""
 with
-	lista_cidadao_pec_from_fichas as ({lista_cidadao_pec_from_fichas}),
-	pessoas_id as ( {pessoas_id} ),
 	cidadao_equipe as ( {cidadao_equipe} ),
 	equipes as ( {equipes_join} ) 
 select

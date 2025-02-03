@@ -41,9 +41,9 @@ def filter_by_gender_age(cnes: int = None, equipe: int = None):
     when idade  >= 100  then '100 ou mais'
         end as tipo ,
      case 
-		when LOWER(tipo_localidade) is null or LOWER(tipo_localidade) = 'n/i' then 'Nao Informado'
-		when LOWER(tipo_localidade) = 'zona rural' then 'Rural'
-		when LOWER(tipo_localidade) is not null  and LOWER(tipo_localidade) != 'zona rural' then 'Urbano'
+		when LOWER(tipo_localidade) is null then 'Nao Informado'
+		when LOWER(tipo_localidade) = 'rural' then 'Rural'
+		when LOWER(tipo_localidade) = 'urbana' then 'Urbano'
 	end localidade	
         from cidadaos
         )

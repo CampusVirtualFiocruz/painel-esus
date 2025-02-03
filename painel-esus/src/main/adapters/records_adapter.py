@@ -41,10 +41,13 @@ class RecordsAdapter:
     def group_localidade(self, response):
         result = []
         for resp in response:
-            tag = resp[0].lower().replace("zona ", "").replace("n/i", "nao-informado")
-            result.append(
-                {"tag": tag, "value": float(resp[1])}
-            )
+            if resp[0] is None:
+                tag = "nao-informado"
+            else:
+                tag = (
+                    resp[0].lower().replace("zona ", "").replace("n/i", "nao-informado")
+                )
+            result.append({"tag": tag, "value": float(resp[1])})
 
         return result
 
@@ -91,20 +94,37 @@ class RecordsAdapter:
         return result
 
     def records_status(self, response):
-        response = response.pop()
-
+        result = []
+        label_map = {
+            "cadastro_completo": "Cadastro Completo",
+            "cadastro_incompleto": "Cadastro Incompleto",
+            "pessoa_ident_nao_cadastrada": "Pessoa não cadastrada",
+            "outro": "Outro",
+        }
         return [
             {
-                "tag": "ativo",
-                "value": float(response[0] if response[0] is not None else 0),
-            },
+                "tag": label_map[resp[0]],
+                "value": float(resp[1]),
+            }
+            for resp in response
+        ]
+
+    def people_who_get_care(self, response):
+        result = []
+        label_map = {
+            "0": "Não Acompanhados",
+            "1": "Acompanhados",
+        }
+        return [
             {
-                "tag": "inconsistente",
-                "value": float(response[1] if response[1] is not None else 0),
-            },
+                "tag": label_map[str(resp[0])],
+                "value": float(resp[1]),
+            }
+            for resp in response
         ]
 
     def nominal_list(self, response):
+        print(response)
         response["items"] = [
             RecordNominalListAdapter(r).to_dict() for r in response["items"]
         ]

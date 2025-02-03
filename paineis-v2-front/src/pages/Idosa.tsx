@@ -233,12 +233,12 @@ const Idosa = () => {
                         report["pessoas-por-faixa-etaria"].data;
                       const pessoasPorSexo = report["pessoas-por-sexo"].data;
 
-                      if (pessoasPorFaixaEtaria[0].tag === "100-ou-mais") {
+                      if (pessoasPorFaixaEtaria[0]?.tag === "100-ou-mais") {
                         const cemOuMaisItem = pessoasPorFaixaEtaria.shift();
                         pessoasPorFaixaEtaria.push(cemOuMaisItem);
                       }
 
-                      if (pessoasPorSexo[0].tag === "100-ou-mais") {
+                      if (pessoasPorSexo[0]?.tag === "100-ou-mais") {
                         const cemOuMaisItem = pessoasPorSexo.shift();
                         pessoasPorSexo.push(cemOuMaisItem);
                       }

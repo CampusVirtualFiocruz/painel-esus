@@ -10,6 +10,7 @@ from src.infra.db.repositories.cadastro.sqls import (
     group_raca_cor,
     group_records_by_origin,
     group_records_by_status,
+    people_who_get_care,
 )
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
@@ -36,6 +37,10 @@ columns = [
     Pessoas.bairro,
     Pessoas.cep,
     Pessoas.tipo_localidade,
+    Pessoas.acompanhamento,
+    Pessoas.status_cadastro,
+    Pessoas.alerta_status_cadastro,
+    Pessoas.alerta,
     Equipes.nome_unidade_saude,
     Equipes.nome_equipe,
     Equipes.micro_area,
@@ -79,12 +84,18 @@ class RecordsRepository:
             result = con.execute(sql)
             return list(result)
 
+    def people_who_get_care(self, cnes: int = None, equipe: int = None):
+        with DBConnectionHandler().get_engine().connect() as con:
+            sql = people_who_get_care(cnes, equipe)
+            result = con.execute(sql)
+            return list(result)
+
     def nominal_list(self, cnes: int = None, equipe: int = None):
         with DBConnectionHandler().get_engine().connect() as con:
             sql = group_records_by_origin(cnes, equipe)
             result = con.execute(sql)
             return list(result)
-    
+
     def find_filter_nominal(
         self,
         cnes: int = None,
@@ -112,6 +123,7 @@ class RecordsRepository:
             )
             conditions = []
             or_conditions = []
+
             if cnes is not None and cnes:
                 conditions+=[ Pessoas.codigo_unidade_saude == cnes]
 
@@ -136,6 +148,7 @@ class RecordsRepository:
                 .offset(max(0, page - 1) * pagesize)
                 .limit(pagesize)
             )
+            print(list(users))
             return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,
@@ -185,7 +198,12 @@ class RecordsRepository:
                 pessoas.tipo_localidade,
                 equipes.nome_unidade_saude,
                 equipes.nome_equipe,
-                equipes.micro_area
+                equipes.micro_area,
+                case 
+                    when pessoas.acompanhamento = 1 then "SIM"
+                    when pessoas.acompanhamento = 0 then "NÃO"
+                end acompanhamento,
+                pessoas.status_cadastro
             from pessoas 
                 left join equipes on pessoas.cidadao_pec = equipes.cidadao_pec and pessoas.codigo_equipe_vinculada = equipes.codigo_equipe and pessoas.codigo_unidade_saude = equipes.codigo_unidade_saude
             {where_clause}

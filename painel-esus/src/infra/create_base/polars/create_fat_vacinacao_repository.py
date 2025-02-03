@@ -13,9 +13,15 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = "select * from tb_fat_vacinacao order by co_seq_fat_vacinacao"
+vac_vars = ['co_seq_fat_vacinacao','co_fat_cidadao_pec','ds_filtro_imunobiologico','co_dim_tempo','dt_nascimento']
+vac_vars_str = ', '.join(vac_vars)
 
-class CreateVacinacaoBaseRepository(CreateBasesRepositoryInterface):
+EQUIPES = f"SELECT {vac_vars_str} FROM tb_fat_vacinacao order by co_seq_fat_vacinacao"
+
+
+class CreateVacinacaoBaseRepository(
+    CreateBasesRepositoryInterface
+):
     _base = 'tb_fat_vacinacao'
 
     def __init__(self):
@@ -28,16 +34,16 @@ class CreateVacinacaoBaseRepository(CreateBasesRepositoryInterface):
         try:
             local_db = LocalDBConnectionHandler()
             local_engine = local_db.get_engine()
+            schema_fixo =  self.get_schema() 
             _next = True
             offset = 0
             chunk_size = getenv("CHUNK_SIZE", 25000)
             parquet_file = f"{self._base}.parquet"
-            # os.remove("dados/input/" + parquet_file)
             writer = None 
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    #print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
+                    print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f'{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};'),  con=engine,dtype_backend='pyarrow')
 
@@ -48,17 +54,17 @@ class CreateVacinacaoBaseRepository(CreateBasesRepositoryInterface):
 
                     offset += chunk_size
 
-                    df.to_sql(name=self._base, con=local_engine,
-                              if_exists='append')
+                    # df.to_sql(name=self._base, con=local_engine,
+                    #          if_exists='append')
                     if not df.empty:
 
-                        table = pa.Table.from_pandas(df,preserve_index = False)
+                        table = pa.Table.from_pandas(df,preserve_index = False,schema=schema_fixo)
 
                         if writer is None:
 
                             working_directory  = os.getcwd()
                             input_path = os.path.join(working_directory, "dados", "input") 
-                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file, table.schema)
+                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file, schema_fixo)
 
                         writer.write_table(table)
 
@@ -66,3 +72,16 @@ class CreateVacinacaoBaseRepository(CreateBasesRepositoryInterface):
                 writer.close()  
         except:
             print(f'Erro {self._base} already destroyed!')
+
+    def get_schema(self):
+        # Definindo o schema fixo
+
+        schema = pa.schema([
+            pa.field('co_seq_fat_vacinacao', pa.int64()),
+            pa.field('co_fat_cidadao_pec', pa.int64()),
+            pa.field('ds_filtro_imunobiologico', pa.string()),
+            pa.field('co_dim_tempo', pa.int64()),
+            pa.field('dt_nascimento', pa.string()),
+        ])
+
+        return schema

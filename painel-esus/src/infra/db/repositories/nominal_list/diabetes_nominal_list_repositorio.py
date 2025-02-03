@@ -248,17 +248,21 @@ class DiabeteNominalListRepository(CreateBasesRepositoryInterface):
             "tipo",
         )
 
-        print("nominal_lis head", nominal_list.head())
+        # print("nominal_lis head", nominal_list.head())
         visita_acs = self.visita_acs()
         print("nominal_list: ", nominal_list.shape)
         print("visita_acs: ", visita_acs.shape)
-
         nominal_list = nominal_list.join(
             min_date_atendimentos, on="cidadao_pec", how="left"
         )
-
-        nominal_list = nominal_list.join(visita_acs, on="cidadao_pec", how="left")
-        print("nominal_list - visita_acs: ", nominal_list.shape)
+        if visita_acs is not None and visita_acs.shape[0] > 0:
+            nominal_list = nominal_list.join(visita_acs, on="cidadao_pec", how="left")
+            print("nominal_list - visita_acs: ", nominal_list.shape)
+        else:
+            nominal_list = nominal_list.with_columns(
+                pl.lit(None).alias("data_ultima_visita_acs"),
+                pl.lit(99).alias("meses_desde_ultima_visita"),
+            )
 
         atendimentos_medicos = fai.filter(
             pl.col("nu_cbo").str.contains_any(["2251", "2252", "2253"])
@@ -373,7 +377,6 @@ class DiabeteNominalListRepository(CreateBasesRepositoryInterface):
                 pl.lit(None).alias("ultima_data_afericao_pa"),
                 pl.lit(99).alias("meses_ultima_data_afericao_pa"),
             )
-        
 
         hemoglobina_glicada = self.get_hemoglobina_glicada()
 

@@ -15,13 +15,11 @@ def group_records_by_origin(cnes: int = None, equipe: int = None):
 
     sql = f"""with 
                 total_pessoas as (select count(*) from pessoas {where_clause_pessoas}),
-                recusa_cadastro as (select count(*) from pessoas  where pessoas.st_recusa_cadastro =1  {where_clause}),
                 usar_cadastro_individual as (select count(*) from pessoas  where pessoas.st_usar_cadastro_individual  = 1  {where_clause}),
                 nao_usar_cadastro_individual as (select count(*) from pessoas  where pessoas.st_usar_cadastro_individual  = 0  {where_clause}),
                 somente_pec as (select count(*) from pessoas  where pessoas.st_usar_cadastro_individual  is null  {where_clause})
             select 
-                (select * from total_pessoas ) total_pessoas,
-                (select * from recusa_cadastro) recusa_cadastro,
+                (select * from total_pessoas ) total_pessoas,                
                 (select * from usar_cadastro_individual) usar_cadastro_individual,
                 (select * from nao_usar_cadastro_individual) nao_usar_cadastro_individual,
                 (select * from somente_pec) somente_pec,
