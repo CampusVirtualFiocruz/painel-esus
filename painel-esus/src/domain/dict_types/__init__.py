@@ -1,1 +1,0 @@
-from .disease_dashboard_total import DiseaseDashboardTotal
