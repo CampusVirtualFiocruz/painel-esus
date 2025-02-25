@@ -6,6 +6,7 @@ from src.infra.db.settings.base import Base
 
 class Pessoas(Base):
     __tablename__ = "pessoas"
+    
     cidadao_pec = Column(Integer,  primary_key=True, autoincrement=True)
     co_cidadao = Column(Integer)
     raca_cor = Column(String)

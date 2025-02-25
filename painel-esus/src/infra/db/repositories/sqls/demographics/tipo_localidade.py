@@ -1,21 +1,18 @@
-def filter_by_localidade(cnes: int = None, equipe: int = None):
-    where_clause = ""
-    if cnes is not None:
-        where_clause += f"""            where 
-                    p.codigo_unidade_saude = {cnes}
-                """
-        if equipe and equipe is not None:
-            where_clause += f"  and p.codigo_equipe_vinculada = {equipe} "
+from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import get_pessoas
 
-    return f"""WITH cidadaos as (
-select
-    distinct p.*,
-    case 
-        when LOWER(tipo_localidade) is null  then 'nao_definido'
-        when LOWER(tipo_localidade) = 'rural' then 'rural'
-        when LOWER(tipo_localidade) = 'urbana' then 'urbano'
-    end tipo    
-from
-    pessoas p 
-{where_clause})
-select tipo, count(*) total  from cidadaos group by 1 """
+
+def filter_by_localidade(cnes: int = None, equipe: int = None):
+    sql_pessoas = get_pessoas(cnes, equipe)
+
+    return f"""WITH pessoas as ({sql_pessoas}),
+                cidadaos as (
+            select
+                distinct p.*,
+                case 
+                    when LOWER(tipo_localidade) is null  then 'nao_definido'
+                    when LOWER(tipo_localidade) = 'rural' then 'rural'
+                    when LOWER(tipo_localidade) = 'urbana' then 'urbano'
+                end tipo    
+            from
+                pessoas p )
+            select tipo, count(*) total  from cidadaos group by 1 """

@@ -13,15 +13,12 @@ from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
 
-EQUIPES = (
-    "select * from tb_acomp_cidadaos_vinculados order by co_seq_acomp_cidadaos_vinc"
-)
+SQL = "select * from tb_acomp_cidadaos_vinculados order by co_seq_acomp_cidadaos_vinc"
 
 class CreateAcompCidadaosVinculadosBaseRepository(CreateBasesRepositoryInterface):
-    _base = 'tb_acomp_cidadaos_vinculados'
+    _base = "tb_acomp_cidadaos_vinculados"
 
-    def __init__(self):
-        ...
+    def __init__(self): ...
 
     def get_base(self):
         return self._base
@@ -35,16 +32,18 @@ class CreateAcompCidadaosVinculadosBaseRepository(CreateBasesRepositoryInterface
             local_engine = local_db.get_engine()
             _next = True
             offset = 0
-            chunk_size = getenv("CHUNK_SIZE", 25000)
+            chunk_size = getenv("CHUNK_SIZE", 2500000)
             parquet_file = f"{self._base}.parquet"
-            # os.remove("dados/input/" + parquet_file)
-            writer = None 
+            writer = None
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    #print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
+                    #print(text(f"{SQL}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
-                        text(f'{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};'), con=engine,dtype_backend='pyarrow')
+                        text(f"{SQL}  LIMIT {chunk_size} OFFSET {offset};"),
+                        con=engine,
+                        dtype_backend="pyarrow",
+                    )
 
                     if df.shape[0] is not None and df.shape[0] > 0:
                         _next = True
@@ -53,22 +52,22 @@ class CreateAcompCidadaosVinculadosBaseRepository(CreateBasesRepositoryInterface
 
                     offset += chunk_size
 
-                    df.to_sql(name=self._base, con=local_engine,
-                                if_exists='append')
+                    # df.to_sql(name=self._base, con=local_engine,
+                    #             if_exists='append')
                     if not df.empty:
 
-                        table = pa.Table.from_pandas(df,preserve_index = False)
+                        table = pa.Table.from_pandas(df, preserve_index=False)
 
                         if writer is None:
 
-                            working_directory  = os.getcwd()
-                            input_path = os.path.join(working_directory, "dados", "input") 
-                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file,table.schema) #, schema=schema_fixo
+                            writer = pq.ParquetWriter(
+                                "dados/input/" + parquet_file, table.schema
+                            )  # , schema=schema_fixo
 
                         writer.write_table(table)
 
             if writer:
-                writer.close()  
+                writer.close()
         except Exception as e:
             print(e)
-            print(f'Erro {self._base} already destroyed!')
+            print(f"Erro {self._base} already destroyed!")

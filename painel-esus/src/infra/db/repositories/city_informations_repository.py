@@ -3,12 +3,12 @@ import json
 from math import e
 from typing import Dict
 
+import duckdb
 import pandas as pd
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from src.data.interfaces.city_information_repository import CityInformationRepository
 from src.infra.db.entities.equipes import Equipes
-from src.infra.db.repositories.sqls import CITY_INFORMATION
-from src.infra.db.repositories.sqls import UNITS_LIST
+from src.infra.db.repositories.sqls import CITY_INFORMATION, UNITS_LIST
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -42,10 +42,8 @@ class CityInformationsRepository(CityInformationRepository):
             return res
 
     def get_units(self) -> Dict:
-        with LocalDBConnectionHandler() as db_con:
-            engine = db_con.get_engine()
-            res = pd.read_sql_query(UNITS_LIST, con=engine)
-            return res
+        res = duckdb.sql(UNITS_LIST).df()
+        return res
 
     def get_teams(self, cnes: int = None):
         with LocalDBConnectionHandler() as db_con:

@@ -6,7 +6,6 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import Dict
 
-import duckdb
 import pandas as pd
 from sqlalchemy import text
 from src.data.interfaces.demographics_info import (
@@ -24,7 +23,6 @@ from src.infra.db.repositories.sqls.demographics import (
     get_indicators_hipertensao_plus_autorreferidos,
     get_indicators_idoso,
 )
-from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import get_pessoas
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -98,15 +96,28 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         return body
 
     def get_total_people(self, cnes: int = None, equipe: int = None):
-        sql_pessoas = get_pessoas(cnes=cnes,equipe=equipe)
+        with LocalDBConnectionHandler().get_engine().connect() as con:
+            where_clause = ""
+            if cnes is not None:
+                where_clause += f"""            where 
+                    p.codigo_unidade_saude = {cnes}
+                """
+                if equipe and equipe is not None:
+                    where_clause += f"  and p.codigo_equipe_vinculada = {equipe} "
+            sql = f"""
+with 
+    cidadaos as ( select distinct p.co_cidadao from 	pessoas p 
+    left join equipes e on e.cidadao_pec = p.cidadao_pec     
+    {where_clause}
+)
+select count(*) total  from 	cidadaos """
+            
+            statement = text(f"{sql};")
 
-        sql = f"""
-                with pessoas as ({sql_pessoas})
-                select count(*) total 
-                from pessoas    
-            """
-        db_response = duckdb.sql(sql).fetchone()
-        print(db_response[0])
+            result = con.execute(
+                statement,
+            )
+            db_response = next(result)
         return db_response[0] if len(db_response) > 0 else 0
 
     def get_ibge_total(self):
@@ -129,33 +140,46 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         return ibge_population
 
     def get_age_groups(self, cnes: int = None, equipe: int = None):
-        age_gender = filter_by_gender_age(cnes, equipe)
-        result_age_gender = duckdb.sql(age_gender).fetchall()
-        age_groups = self.__create_age_groups(result_age_gender)
+        with LocalDBConnectionHandler().get_engine().connect() as con:
+            age_gender = filter_by_gender_age(cnes, equipe)
+            statement = text(age_gender)
+            result_age_gender = con.execute(
+                statement,
+            )
+            age_groups = self.__create_age_groups(result_age_gender)
         return age_groups
 
     def get_by_place(self, cnes: int = None, equipe: int = None):
-        location_area_sql = filter_by_localidade(cnes, equipe)
-        result_location_area_sql = duckdb.sql(location_area_sql).fetchall()
+        with LocalDBConnectionHandler().get_engine().connect() as con:
 
-        location_body = {"rural": 0, "urbano": 0, "nao_definido": 0}
-        for resp in result_location_area_sql:
-            location_body[resp[0]] = int(resp[1])
-        return location_body
+            location_area_sql = filter_by_localidade(cnes, equipe)
+            statement = text(location_area_sql)
+            result_location_area_sql = con.execute(
+                statement,
+            )
+            location_body = {"rural": 0, "urbano": 0, "nao_definido": 0}
+            for resp in result_location_area_sql:
+                location_body[resp[0]] = int(resp[1])
+            return location_body
 
     def get_by_gender(self, cnes: int = None, equipe: int = None):
-        gender = {"feminino": 0, "masculino": 0}
-        gender_sql = filter_by_sexo(cnes, equipe)
-        result_gender = duckdb.sql(gender_sql).fetchall()
-        for resp in result_gender:
-            gender[resp[0]] = int(resp[1])
-        return gender
+        with LocalDBConnectionHandler().get_engine().connect() as con:
+            gender = {"feminino": 0, "masculino": 0}
+            gender_sql = filter_by_sexo(cnes, equipe)
+            statement = text(gender_sql)
+            result_gender = con.execute(
+                statement,
+            )
+            for resp in result_gender:
+                gender[resp[0]] = int(resp[1])
+            return gender
 
     def get_demographics_info(
         self,
         cnes: int = None,
         equipe: int = None,
     ) -> Dict:
+        print(f"EQUIPE: {equipe}")
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
 
@@ -175,24 +199,24 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
                 "nao_informado": location_body['nao_definido'],
             },
         }
-        # with LocalDBConnectionHandler().get_engine().connect() as local_con:
-        #     indicator_diabetes_sql = get_indicators_diabetes_plus_autorreferidos(
-        #         cnes, equipe
-        #     )
-        #     result_diabetes = local_con.execute(
-        #         text(indicator_diabetes_sql),
-        #     )
-        #     for resp in result_diabetes:
-        #         idicators_body["diabetes"][resp[0]] = int(resp[1])
+        with LocalDBConnectionHandler().get_engine().connect() as local_con:
+            indicator_diabetes_sql = get_indicators_diabetes_plus_autorreferidos(
+                cnes, equipe
+            )
+            result_diabetes = local_con.execute(
+                text(indicator_diabetes_sql),
+            )
+            for resp in result_diabetes:
+                idicators_body["diabetes"][resp[0]] = int(resp[1])
 
-        #     indicator_hipertensao_sql = get_indicators_hipertensao_plus_autorreferidos(
-        #         cnes, equipe
-        #     )
-        #     result_hipertensao = local_con.execute(
-        #         text(indicator_hipertensao_sql),
-        #     )
-        #     for resp in result_hipertensao:
-        #         idicators_body["hipertensao"][resp[0]] = int(resp[1])
+            indicator_hipertensao_sql = get_indicators_hipertensao_plus_autorreferidos(
+                cnes, equipe
+            )
+            result_hipertensao = local_con.execute(
+                text(indicator_hipertensao_sql),
+            )
+            for resp in result_hipertensao:
+                idicators_body["hipertensao"][resp[0]] = int(resp[1])
 
             # indicator_idoso_sql = get_indicators_idoso(
             #     cnes, equipe
@@ -220,11 +244,11 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             #     )
             #     idicators_body["crianca"][key] = int(resp[1])
 
-        return {
-            "total": total_people,
-            "ibgePopulation": ibge_population,
-            "ageGroups": age_groups,
-            "locationArea": location_body,
-            "gender": gender,
-            "indicators": idicators_body,
-        }
+            return {
+                "total": total_people,
+                "ibgePopulation": ibge_population,
+                "ageGroups": age_groups,
+                "locationArea": location_body,
+                "gender": gender,
+                "indicators": idicators_body,
+            }
