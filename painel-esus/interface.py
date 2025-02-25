@@ -290,7 +290,10 @@ def create_env(
             "SECRET_TOKEN=" + "111111111111111111111" + "\n",
             "GENERATE_BASE=True\n",
             "CHUNK_SIZE=50000\n",
-            "POLARS_SKIP_CPU_CHECK=True"
+            "POLARS_SKIP_CPU_CHECK=True\n",
+            "LOG_API=https://painel-logs.painelsaude.info\n",
+            "APPLICATION_VERSION=0.9.2"
+            
         ]
         f.writelines(lines)
         f.close()
@@ -579,56 +582,6 @@ def tabs():
         corner_radius=10,
     )
     input_bridge_login_url.pack(pady=10, padx=10)
-
-    # --------------------------------RESPONSÁVEL--------------------------------
-    # frame_painel = ctk.CTkFrame(tabview.tab(
-    #     "Responsável"), height=780, width=580)
-    # frame_painel.pack(fill="both", expand=True)
-
-    # image_path_painel = os.getcwd()
-    # image_path_painel = os.path.join(image_path_painel, "icon/user.png")
-    # painel_image = ctk.CTkImage(
-    #     light_image=Image.open(image_path_painel),
-    #     dark_image=Image.open(image_path_painel),
-    #     size=(100, 100),
-    # )
-
-    # label_config_painel = ctk.CTkLabel(
-    #     master=frame_painel, text="Dados do responsável:", font=("arial bold", 25)
-    # )
-    # label_config_painel.pack(pady=12, padx=10)
-
-    # label_info_painel = ctk.CTkLabel(
-    #     master=frame_painel,
-    #     text="Preencha os dados do responsável pela instalação do Painel E-sus.",
-    #     font=("arial bold", 15),
-    # )
-    # label_info_painel.pack(pady=12, padx=10)
-
-    # image_label_painel = ctk.CTkLabel(
-    #     master=frame_painel, text="", font=("arial bold", 20), image=painel_image
-    # )
-    # image_label_painel.pack(pady=10)
-
-    # input_owner_name = ctk.CTkEntry(
-    #     master=frame_painel,
-    #     placeholder_text="Nome do responsável:",
-    #     width=600,
-    #     height=25,
-    #     corner_radius=10,
-    # )
-    # input_owner_name.pack(pady=10)
-
-    # input_owner_email = ctk.CTkEntry(
-    #     master=frame_painel,
-    #     placeholder_text="Email do responsável:",
-    #     width=600,
-    #     height=25,
-    #     corner_radius=10,
-    # )
-    # input_owner_email.pack(pady=10, padx=10)
-
-    # ---------------------------------------------------------------
 
     fill_input_fields(
         [
