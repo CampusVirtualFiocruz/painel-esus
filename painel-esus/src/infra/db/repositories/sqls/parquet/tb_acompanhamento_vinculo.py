@@ -1,12 +1,5 @@
-def get_pessoas(cnes: int = None, equipe: int = None):
-    where_clause = ""
-    if cnes is not None:
-        where_clause += f"""            where 
-                co_dim_unidade_saude = {cnes} """
-        if equipe and equipe is not None:
-            where_clause += f" and codigo_equipe = {equipe} "
-    sql = f"""
-                select 
+def get_pessoas_sql():
+    return f"""select 
                     co_fat_cidadao_pec cidadao_pec,
                     co_cidadao ,
                     nu_cnes_vinc_equipe ,
@@ -39,10 +32,19 @@ def get_pessoas(cnes: int = None, equipe: int = None):
                     alerta,
                     co_dim_unidade_saude codigo_unidade_saude, 
                     codigo_equipe codigo_equipe_vinculada,
-                    dt_update_fci ultima_atualizacao_fci,
-                    dt_atualizacao_fcd ultima_atualizacao_fcd
-                from read_parquet('./dados/output/cadastro_db.parquet') 
-                {where_clause}    
-            """
+                    cast(dt_update_fci AS VARCHAR)  ultima_atualizacao_fci,
+                    cast(dt_atualizacao_fcd AS VARCHAR) ultima_atualizacao_fcd
+                from read_parquet('./dados/output/cadastro_db.parquet')"""
+
+def get_pessoas(cnes: int = None, equipe: int = None):
+    sql_pessoas = get_pessoas_sql()
+    where_clause = ""
+    if cnes is not None:
+        where_clause += f"""            where 
+                co_dim_unidade_saude = {cnes} """
+        if equipe and equipe is not None:
+            where_clause += f" and codigo_equipe = {equipe} "
+    sql = f""" {sql_pessoas}
+               {where_clause}  """
 
     return sql

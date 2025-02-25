@@ -478,44 +478,38 @@ class IdosoNominalListAdapter:
 
 class RecordNominalListAdapter:
 
-    def __init__(self, user: Pessoas):
-        self.nome = user.nome
+    def __init__(self, user):
+        self.nome = user['nome']
         self.nome_social = "-"
-        self.tipo_localidade = user.tipo_localidade
-        self.cpf = user.cpf
-        self.cns = user.cns
-        self.data_nascimento = user.data_nascimento.date()
-        self.idade = user.idade
-        self.sexo = user.sexo
-        self.equipe = user.nome_equipe
-        self.microarea = user.micro_area
-        self.endereco = f"{user.endereco} {user.numero}, {user.bairro}"
-        self.tipo_logradouro = user.tipo_endereco
-        self.complemento = user.complemento
-        self.cep = user.cep
-        self.telefone = user.telefone
-        self.alerta_status_cadastro = user.alerta_status_cadastro
-        self.status_cadastro = user.status_cadastro
-        self.alerta = user.alerta
+        self.tipo_localidade = user['tipo_localidade']
+        self.cpf = user['cpf']
+        self.cns = user['cns']
+        self.data_nascimento = user['data_nascimento'].date()
+        self.idade = user['idade']
+        self.sexo = user['sexo']
+        self.equipe = user['nome_equipe']
+        self.microarea = user['micro_area']
+        self.endereco = f"{user['endereco']} {user['numero']}, {user['bairro']}"
+        self.tipo_logradouro = user['tipo_endereco']
+        self.complemento = user['complemento']
+        self.cep = user['cep']
+        self.telefone = user['telefone']
+        self.alerta_status_cadastro = user['alerta_status_cadastro']
+        self.status_cadastro = user['status_cadastro']
+        self.alerta = user['alerta']
 
         ultima_atualizacao_cidadao, ultima_atualizacao_fcd = True, True
 
-        if (
-            user.diferenca_ultima_atualizacao_cidadao is not None
-            and user.diferenca_ultima_atualizacao_cidadao < 24
-        ):
+        if user["fci_att_2anos"] is not None and user["fci_att_2anos"] == 1:
             ultima_atualizacao_cidadao = False
 
-        if (
-            user.diferenca_ultima_atualizacao_fcd is not None
-            and user.diferenca_ultima_atualizacao_fcd < 24
-        ):
+        if user["fcdt_att_2anos"] is not None and user["fcdt_att_2anos"] ==1:
             ultima_atualizacao_fcd = False
 
         self.registros = []
         self.registros.append(
             AlertRecord(
-                data=user.ultima_atualizacao_cidadao,
+                data=user['ultima_atualizacao_fci'],
                 exibir_alerta=ultima_atualizacao_cidadao,
                 descricao="Data da última atualização da ficha de Cadastro Individual",
                 tipo_alerta="ultima_atualizacao_cidadao",
@@ -523,7 +517,7 @@ class RecordNominalListAdapter:
         )
         self.registros.append(
             AlertRecord(
-                data=user.ultima_atualizacao_fcd,
+                data=user['ultima_atualizacao_fcd'],
                 exibir_alerta=ultima_atualizacao_fcd,
                 descricao="Data da última atualização da ficha de Cadastro Domiciliar e Territorial",
                 tipo_alerta="ultima_atualizacao_fcd",
@@ -537,7 +531,7 @@ class RecordNominalListAdapter:
         }
         self.registros.append(
             AlertRecord(
-                data=label_map[user.status_cadastro],
+                data=label_map[user['status_cadastro']],
                 exibir_alerta=self.alerta_status_cadastro == 1,
                 descricao="Status de cadastro",
                 tipo_alerta="status_de_cadastro",

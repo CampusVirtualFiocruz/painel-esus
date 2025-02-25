@@ -1,4 +1,5 @@
 # pylint: disable=R0913,W0611
+import duckdb
 import pandas as pd
 from sqlalchemy import and_, or_
 from src.infra.db.entities.equipes import Equipes
@@ -11,6 +12,10 @@ from src.infra.db.repositories.cadastro.sqls import (
     group_records_by_origin,
     group_records_by_status,
     people_who_get_care,
+)
+from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import (
+    get_pessoas,
+    get_pessoas_sql,
 )
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
@@ -49,52 +54,52 @@ columns = [
 class RecordsRepository:
 
     def get_total_group(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = get_total_cadastros(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+        con = duckdb.connect()
+        sql = get_total_cadastros(cnes, equipe)
+        result = con.sql(sql).fetchall()
+        return result
 
     def get_cpf_cns_rate(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = get_cpf_cns_rate(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+        con = duckdb.connect()
+        sql = get_cpf_cns_rate(cnes, equipe)
+        result = con.sql(sql).fetchall()
+        return result
 
     def group_localidade(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_localidade(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+        sql = group_localidade(cnes, equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
 
     def group_raca_cor(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_raca_cor(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+        sql = group_raca_cor(cnes, equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
 
     def group_records_by_origin(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_records_by_origin(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+        sql = group_records_by_origin(cnes, equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
 
     def group_records_status(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_records_by_status(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+        sql = group_records_by_status(cnes, equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
 
     def people_who_get_care(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = people_who_get_care(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+        sql = people_who_get_care(cnes, equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
 
     def nominal_list(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_records_by_origin(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+        sql = group_records_by_origin(cnes, equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
 
     def find_filter_nominal(
         self,
@@ -108,108 +113,150 @@ class RecordsRepository:
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
-        with DBConnectionHandler() as db_con:
-            users = (
-                db_con.session.query(*columns)
-                .distinct(Pessoas.cidadao_pec)
-                .join(
-                    Equipes,
-                    and_(
-                        Equipes.cidadao_pec == Pessoas.cidadao_pec,
-                        Equipes.codigo_equipe == Pessoas.codigo_equipe_vinculada,
-                        Equipes.codigo_unidade_saude == Pessoas.codigo_unidade_saude
-                    ),
-                )
-            )
-            conditions = []
-            or_conditions = []
+        # with DBConnectionHandler() as db_con:
+        #     users = (
+        #         db_con.session.query(*columns)
+        #         .distinct(Pessoas.cidadao_pec)
+        #         .join(
+        #             Equipes,
+        #             and_(
+        #                 Equipes.cidadao_pec == Pessoas.cidadao_pec,
+        #                 Equipes.codigo_equipe == Pessoas.codigo_equipe_vinculada,
+        #                 Equipes.codigo_unidade_saude == Pessoas.codigo_unidade_saude
+        #             ),
+        #         )
+        #     )
+        #     conditions = []
+        #     or_conditions = []
 
-            if cnes is not None and cnes:
-                conditions+=[ Pessoas.codigo_unidade_saude == cnes]
+        #     if cnes is not None and cnes:
+        #         conditions+=[ Pessoas.codigo_unidade_saude == cnes]
 
-            if query is not None and query:
-                or_conditions += [
-                    Pessoas.cpf.ilike(f"%{query}%"),
-                    Pessoas.nome.ilike(f"%{query}%"),
-                    Pessoas.cns.ilike(f"%{query}%"),
-                ]
-            if equipe is not None and equipe:
-                # users = users.filter(Equipes.codigo_equipe == equipe)
-                conditions += [Pessoas.codigo_equipe_vinculada == equipe]
-            if len(conditions) > 0:
-                users = users.filter(*conditions)
+        #     if query is not None and query:
+        #         or_conditions += [
+        #             Pessoas.cpf.ilike(f"%{query}%"),
+        #             Pessoas.nome.ilike(f"%{query}%"),
+        #             Pessoas.cns.ilike(f"%{query}%"),
+        #         ]
+        #     if equipe is not None and equipe:
+        #         # users = users.filter(Equipes.codigo_equipe == equipe)
+        #         conditions += [Pessoas.codigo_equipe_vinculada == equipe]
+        #     if len(conditions) > 0:
+        #         users = users.filter(*conditions)
 
-            if len(or_conditions) > 0:
-                users = users.filter(or_(*or_conditions))
-            users = users.group_by(Pessoas.cidadao_pec)
-            total = users.count()
-            users = (
-                users.order_by(Pessoas.nome)
-                .offset(max(0, page - 1) * pagesize)
-                .limit(pagesize)
-            )
-            print(list(users))
-            return {
+        #     if len(or_conditions) > 0:
+        #         users = users.filter(or_(*or_conditions))
+        #     users = users.group_by(Pessoas.cidadao_pec)
+        #     total = users.count()
+        #     users = (
+        #         users.order_by(Pessoas.nome)
+        #         .offset(max(0, page - 1) * pagesize)
+        #         .limit(pagesize)
+        #     )
+        #     print(list(users))
+        #     return {
+        #         "itemsCount": total,
+        #         "itemsPerPage": pagesize,
+        #         "page": page,
+        #         "pagesCount": round(total / pagesize),
+        #         "items": list(users),
+        #     }
+
+        con = duckdb.connect()
+        pessoas_sql = get_pessoas_sql()
+
+        conditions = []
+        or_conditions = []
+
+        if cnes is not None and cnes:
+            conditions += [f"codigo_unidade_saude = {cnes}"]
+
+        if query is not None and query:
+            or_conditions += [
+                f"cpf ilike '%{query}%'",
+                f"nome ilike '%{query}%'",
+                f"cns ilike  '%{query}%'"
+            ]
+        if equipe is not None and equipe:
+            conditions += [ f'codigo_equipe_vinculada = {equipe}']
+
+        where_clause = []
+        sql_where, sql, sql_or = "", "", ""
+
+        if len(conditions) > 0:
+            sql += " AND ".join(conditions)
+            where_clause += [f"({sql})"]
+
+        if len(or_conditions) > 0:
+            sql_or += " OR ".join(or_conditions)
+            where_clause += [f"({sql_or})"]
+
+        if len(where_clause)>0:
+            offset = max(0, page - 1) * pagesize
+            limit = pagesize
+            sql_where = " AND ".join(where_clause)
+            sql_where = f" WHERE {sql_where}"
+
+        print(pessoas_sql + sql_where + f" LIMIT {limit} OFFSET {offset} ")
+
+        users = con.sql(
+            pessoas_sql + sql_where + f" LIMIT {limit} OFFSET {offset} "
+        ).df()
+
+        users = users.to_dict(orient="records")
+        total = len(con.sql(pessoas_sql + sql_where).fetchall())
+        return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,
                 "page": page,
                 "pagesCount": round(total / pagesize),
-                "items": list(users),
+                "items": users,
             }
 
     def find_all_download(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler() as db_con:
-            where_clause = ""
-            if cnes is not None and cnes:
-                where_clause += f" where pessoas.codigo_unidade_saude = {cnes} "
-                if equipe is not None and equipe:
-                    where_clause += f" and pessoas.codigo_unidade_saude = {equipe} "
-            sql = f"""select 
-                pessoas.cidadao_pec,
-                pessoas.co_cidadao,
-                pessoas.raca_cor,
-                pessoas.cpf,
-                pessoas.cns,
-                pessoas.nome,
-                pessoas.nome_social,
-                STRFTIME( '%d-%m-%Y',pessoas.data_nascimento) data_nascimento,
-                pessoas.idade,
-                pessoas.sexo,
-                pessoas.identidade_genero,
-                pessoas.telefone,
-                STRFTIME( '%d-%m-%Y',pessoas.ultima_atualizacao_cidadao) ultima_atualizacao_cidadao,
+        sql_pessoas = get_pessoas(cnes, equipe)
+        sql = f"""
+            with pessoas as ({sql_pessoas})
+            select 
+                cidadao_pec,
+                co_cidadao,
+                raca_cor,
+                cpf,
+                cns,
+                nome,
+                STRFTIME( '%d-%m-%Y',data_nascimento) data_nascimento,
+                idade,
+                sexo,
+                telefone,
+                STRFTIME( '%d-%m-%Y',  cast(ultima_atualizacao_fci as DATE) ) as ultima_atualizacao_fci,
                 case 
-                    when pessoas.diferenca_ultima_atualizacao_cidadao > 24 then 'NÃO'
-                    when pessoas.diferenca_ultima_atualizacao_cidadao is null then 'NÃO'
-                    when pessoas.diferenca_ultima_atualizacao_cidadao <= 24 then 'SIM'
-                end fci_atualizada,
-                STRFTIME( '%d-%m-%Y',pessoas.ultima_atualizacao_fcd) ultima_atualizacao_fcd,
+                    when fci_att_2anos = 0 then 'NÃO'
+                    when fci_att_2anos is null then 'NÃO'
+                    when fci_att_2anos =1 then 'SIM'
+                end as fci_atualizada,
+                STRFTIME( '%d-%m-%Y', cast( ultima_atualizacao_fcd as DATE)) as ultima_atualizacao_fcd,
                 case 
-                    when pessoas.diferenca_ultima_atualizacao_fcd > 24 then 'NÃO'
-                    when pessoas.diferenca_ultima_atualizacao_fcd is null then 'NÃO'
-                    when pessoas.diferenca_ultima_atualizacao_fcd <= 24 then 'SIM'
-                end fcd_atualizada,
-                pessoas.tipo_endereco,
-                pessoas.endereco,
-                pessoas.complemento,
-                pessoas.numero,
-                pessoas.bairro,
-                pessoas.cep,
-                pessoas.tipo_localidade,
-                equipes.nome_unidade_saude,
-                equipes.nome_equipe,
-                equipes.micro_area,
+                    when fci_att_2anos = 0 then 'NÃO'
+                    when fci_att_2anos is null then 'NÃO'
+                    when fci_att_2anos = 1 then 'SIM'
+                end as fcd_atualizada,
+                tipo_endereco,
+                endereco,
+                complemento,
+                numero,
+                bairro,
+                cep,
+                tipo_localidade,
+                nome_unidade_saude,
+                nome_equipe,
+                micro_area,
                 case 
-                    when pessoas.acompanhamento = 1 then "SIM"
-                    when pessoas.acompanhamento = 0 then "NÃO"
-                end acompanhamento,
-                pessoas.status_cadastro
-            from pessoas 
-                left join equipes on pessoas.cidadao_pec = equipes.cidadao_pec and pessoas.codigo_equipe_vinculada = equipes.codigo_equipe and pessoas.codigo_unidade_saude = equipes.codigo_unidade_saude
-            {where_clause}
-            order by equipes.micro_area desc """
-            response = pd.read_sql_query(
-                con=db_con.get_engine(),
-                sql=sql,
-            )
-            return response
+                    when acompanhamento = 1 then 'SIM'
+                    when acompanhamento = 0 then 'NÃO'
+                end as acompanhamento,
+                status_cadastro
+            from pessoas  """
+
+        con = duckdb.connect()
+        response = con.sql(sql).df()
+        return response

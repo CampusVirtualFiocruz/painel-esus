@@ -46,10 +46,21 @@ class CityInformationsRepository(CityInformationRepository):
         return res
 
     def get_teams(self, cnes: int = None):
-        with LocalDBConnectionHandler() as db_con:
-            users = (
-                db_con.session.query(Equipes)
-                .distinct(Equipes.cidadao_pec, Equipes.codigo_equipe)
-                .filter(Equipes.codigo_unidade_saude == cnes)
-            ).all()
-            return json.loads(json.dumps(list(users), cls=AlchemyEncoder))
+        sql = f""" select 
+                    distinct on (co_cidadao, codigo_equipe) 
+                    co_fat_cidadao_pec cidadao_pec,
+                    co_cidadao co_cidadao,
+                    co_dim_unidade_saude codigo_unidade_saude,
+                    nome_unidade_saude nome_unidade_saude,
+                    codigo_equipe,
+                    nome_equipe,
+                    nu_ine_vinc_equipe ine,
+                    nu_micro_area_domicilio micro_area
+                from 
+                read_parquet('./dados/output/cadastro_db.parquet')
+                where codigo_equipe={cnes}
+                """
+        result = duckdb.sql(sql).df()
+        result_json = result.to_json(orient="records")
+        return result_json
+    
