@@ -156,23 +156,23 @@ export function Diabetes() {
     }
   );
 
-  const {
-    data: dataExamsTable,
-    isLoading: isLoadingExamsTable,
-    error: errorExamsTable,
-  } = useQuery(
-    ["diabetes-exams", paramRoute],
-    async () => {
-      let path = id ? `diabetes/exams/${id}` : "diabetes/exams";
-      const response = await Api.get(path + search);
-      const data = response.data;
+  // const {
+  //   data: dataExamsTable,
+  //   isLoading: isLoadingExamsTable,
+  //   error: errorExamsTable,
+  // } = useQuery(
+  //   ["diabetes-exams", paramRoute],
+  //   async () => {
+  //     let path = id ? `diabetes/exams/${id}` : "diabetes/exams";
+  //     const response = await Api.get(path + search);
+  //     const data = response.data;
 
-      return data.data;
-    },
-    {
-      staleTime: 1000 * 60 * 10, //10 minutos
-    }
-  );
+  //     return data.data;
+  //   },
+  //   {
+  //     staleTime: 1000 * 60 * 10, //10 minutos
+  //   }
+  // );
 
   const {
     data: dataProfessionals,
@@ -270,7 +270,7 @@ export function Diabetes() {
                   <div className="tipo p-2 text-center">Avaliação pendente</div>
                 </div>
               </div>
-              {isLoadingExamsTable ? (
+              {/* {isLoadingExamsTable ? (
                 <div className="d-flex align-items-center justify-content-center">
                   <Spinner size="sm" type="grow" className="me-2" />
                   Carregando...
@@ -303,7 +303,7 @@ export function Diabetes() {
                       </div>
                     ))}
                 </>
-              )}
+              )} */}
             </div>
           </TwoColumnSection.Col>
           <TwoColumnSection.Col>

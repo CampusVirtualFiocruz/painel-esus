@@ -57,10 +57,11 @@ class CityInformationsRepository(CityInformationRepository):
                     nu_ine_vinc_equipe ine,
                     nu_micro_area_domicilio micro_area
                 from 
-                read_parquet('./dados/output/cadastro_db.parquet')
-                where codigo_equipe={cnes}
-                """
+                read_parquet('./dados/output/cadastro_db.parquet') """
+                
+        if cnes is not None:
+            sql += f""" where codigo_equipe={cnes} """
         result = duckdb.sql(sql).df()
-        result_json = result.to_json(orient="records")
+        result_json = result.to_dict(orient="records")
         return result_json
     

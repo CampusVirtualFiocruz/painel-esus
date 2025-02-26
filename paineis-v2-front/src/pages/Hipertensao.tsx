@@ -162,25 +162,25 @@ export function Hipertensao() {
     }
   );
 
-  const {
-    data: dataExamsTable,
-    isLoading: isLoadingExamsTable,
-    error: errorExamsTable,
-  } = useQuery(
-    ["arterial-hypertension-exams", paramRoute],
-    async () => {
-      let path = id
-        ? `arterial-hypertension/exams/${id}`
-        : "arterial-hypertension/exams";
-      const response = await Api.get(path + search);
-      const data = response.data;
+  // const {
+  //   data: dataExamsTable,
+  //   isLoading: isLoadingExamsTable,
+  //   error: errorExamsTable,
+  // } = useQuery(
+  //   ["arterial-hypertension-exams", paramRoute],
+  //   async () => {
+  //     let path = id
+  //       ? `arterial-hypertension/exams/${id}`
+  //       : "arterial-hypertension/exams";
+  //     const response = await Api.get(path + search);
+  //     const data = response.data;
 
-      return data.data;
-    },
-    {
-      staleTime: 1000 * 60 * 10, //10 minutos
-    }
-  );
+  //     return data.data;
+  //   },
+  //   {
+  //     staleTime: 1000 * 60 * 10, //10 minutos
+  //   }
+  // );
 
   const {
     data: dataProfessionals,
@@ -306,6 +306,7 @@ export function Hipertensao() {
                   <div className="tipo p-2 text-center">Avaliação pendente</div>
                 </div>
               </div>
+              {/*}
               {isLoadingExamsTable ? (
                 <div className="d-flex align-items-center justify-content-center">
                   <Spinner size="sm" type="grow" className="me-2" />
@@ -339,7 +340,7 @@ export function Hipertensao() {
                       </div>
                     ))}
                 </>
-              )}
+              )}*/}
             </div>
           </TwoColumnSection.Col>
           <TwoColumnSection.Col>

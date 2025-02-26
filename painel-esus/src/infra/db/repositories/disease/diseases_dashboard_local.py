@@ -2,6 +2,7 @@
 # pylint: disable=E0401,W0613
 from typing import Dict, List
 
+import duckdb
 import pandas as pd
 from sqlalchemy import text
 from src.data.interfaces.diseases_dashboard import DiseasesDashboardRepositoryInterface
@@ -19,6 +20,17 @@ from src.infra.db.repositories.sqls.nominal_list.autoreferido import (
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
 from ..sqls import LISTA_PESOS_ALTURAS
+from ..sqls.disease.auto_referidos import (
+    get_autoreferidos,
+    get_cares,
+    get_complications,
+    get_diabetes_exams_count,
+    get_hypertension_exams_count,
+    get_imc,
+    get_professionals,
+    get_total_cares,
+    get_total_patients,
+)
 from ..sqls.disease.by_gender import get_patients_by_gender, get_patients_by_location
 
 
@@ -26,31 +38,19 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
     def __init__(self, disease: Disease):
         self.disease = disease
+        self.disease_flag = disease.name == "hipertensao"
 
     def _find_auto_referido(
         self,
         cnes: int = None,
         equipe: int = None,
     ):
-        with DBConnectionHandler().get_engine().connect() as db_con:
-            where_clause = ""
-            if cnes is not None:
-                where_clause += f""" and co_dim_unidade_saude = {cnes} """
-                if equipe is not None:
-                    where_clause += f""" and co_dim_equipe = {equipe} """
-
-            sql = f"""with 
-            {self.disease.name}list as (
-                select distinct co_fat_cidadao_pec , co_dim_tipo_localizacao from {self.disease.name} where co_fat_cidadao_pec NOT NULL and co_dim_tempo_nascimento > 0 {where_clause}
-            ), lista as ("""
-            sql += (
-                autorreferidos_check(cnes, self.disease.name, self.disease.name, equipe)
-                + f" not EXISTS ( select 1 from {self.disease.name}list d where d.co_fat_cidadao_pec = p.cidadao_pec )) select * from lista"
-            )
-            sql = text(sql)
-            print(sql)
-            autorreferidos = db_con.execute(sql)
-            return list(autorreferidos)
+        hipertension_autoreferidos_sql = get_autoreferidos(
+            cnes, equipe, self.disease_flag
+        )
+        con = duckdb.connect()
+        autorreferidos = con.sql(hipertension_autoreferidos_sql).fetchone()
+        return autorreferidos
 
     def faixa_etaria_list(self):
         return [
@@ -63,28 +63,25 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         ]
 
     def _total_pacientes(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as db_con:
-            cnes_condition = "where co_fat_cidadao_pec NOTNULL and co_dim_tempo_nascimento > 0 "
-            if cnes is not None and cnes:
-                cnes_condition += f" and co_dim_unidade_saude = {cnes}"
-                if equipe is not None and equipe:
-                    cnes_condition += f"  and co_dim_equipe = {equipe} "
-
-            sql = f"select distinct co_fat_cidadao_pec , co_dim_tipo_localizacao from {self.disease.name}  {cnes_condition} ;"
-            sql = text(sql)
-
-            # print( sql )
-            pacientes = db_con.execute(sql)
-            return list(pacientes)
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument("CNES must be int")
+        cares_sql = get_total_patients(cnes, equipe, self.disease_flag)
+        con = duckdb.connect()
+        patients = con.sql(cares_sql).fetchone()
+        return patients
 
     def _retrieve_imc_info(self, cnes: int = None, equipe: int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
-        with DBConnectionHandler() as db_con:
-            engine = db_con.get_engine()
-            sql = LISTA_PESOS_ALTURAS(self.disease.name, cnes, equipe)
-            print(f'cares_sql: {sql}')
-            return pd.read_sql_query(sql, con=engine)
+        cares_sql = get_imc(cnes, equipe, self.disease_flag)
+        con = duckdb.connect()
+        patients = con.sql(cares_sql).fetchall()
+        return patients
+        # with DBConnectionHandler() as db_con:
+        #     engine = db_con.get_engine()
+        #     sql = LISTA_PESOS_ALTURAS(self.disease.name, cnes, equipe)
+        #     print(f'cares_sql: {sql}')
+        #     return pd.read_sql_query(sql, con=engine)
 
     def _retrieve_procedures(
         self,
@@ -111,73 +108,110 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
     def _retrieve_cares(self, cnes: int = None, equipe: int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
-        with DBConnectionHandler() as db_con:
-            engine = db_con.get_engine()
-            sql = f"select * from {self.disease.name} "
-            if cnes:
-                sql += f""" where co_dim_unidade_saude = {cnes} """
-                if equipe is not None and equipe:
-                    sql += f" and co_dim_equipe = {equipe} "
-            sql += ";"
+        cares_sql = get_cares(cnes, equipe, self.disease_flag)
+        con = duckdb.connect()
+        cares = con.sql(cares_sql).fetchone()
+        return cares
 
-            print(f"_retrieve_cares: {sql}")
-            return pd.read_sql_query(sql, con=engine)
+    def _get_complications(self, cnes: int = None, equipe: int = None):
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument("CNES must be int")
+        cares_sql = get_complications(cnes, equipe, self.disease_flag)
+        con = duckdb.connect()
+        cares = con.sql(cares_sql).fetchone()
+        return cares
+
+    def _get_professionals(self, cnes: int = None, equipe: int = None):
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument("CNES must be int")
+        cares_sql = get_professionals(cnes, equipe, self.disease_flag)
+        con = duckdb.connect()
+        cares = con.sql(cares_sql).fetchone()
+        return cares
+
+    def _get_exams_count(self, cnes: int = None, equipe: int = None):
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument("CNES must be int")
+        if self.disease_flag:
+            cares_sql = get_hypertension_exams_count(cnes, equipe)
+        else:
+            cares_sql = get_diabetes_exams_count(cnes, equipe)
+        con = duckdb.connect()
+        cares = con.sql(cares_sql).fetchall()
+        return cares
 
     def get_total(self, cnes: int = None, equipe: int = None) -> DiseaseDashboardTotal:
         cares = self._retrieve_cares(cnes, equipe)
         auto_referido = self._find_auto_referido(cnes, equipe)
         total_pacientes = self._total_pacientes(cnes, equipe)
         return {
-            "total_atendimentos": int(cares["co_seq_fat_atd_ind"].unique().shape[0]),
-            "total_pacientes": int(len(total_pacientes)),
-            "total_auto_referido": int(len(auto_referido)),
+            "total_atendimentos": int(cares[0]),
+            "total_pacientes": int(total_pacientes[0]),
+            "total_auto_referido": int(auto_referido[0]),
         }
 
     def get_age_groups_location(self, cnes: int = None, equipe: int = None) -> Dict:
-        with DBConnectionHandler().get_engine().connect() as db_con:
-            sql = get_patients_by_location(cnes, self.disease.name, equipe)
-            sql = text(sql)
-            pacientes = list(db_con.execute(sql))
-            result = dict()
+        sql = get_patients_by_location(cnes, self.disease.name, equipe)
+        con = duckdb.connect()
+        pacientes = con.sql(sql).fetchall()
+        result = dict()
 
-            def init():
-                return {"Rural": 0, "Urbano": 0, "Nao Informado": 0}
+        def init():
+            return {"Rural": 0, "Urbano": 0, "Nao Informado": 0}
 
-            for i in self.faixa_etaria_list():
-                result[i] = init()
+        for i in self.faixa_etaria_list():
+            result[i] = init()
             for paciente in pacientes:
-                if paciente[2] not in result:
-                    result[paciente[2]] = init()
-                result[paciente[2]][paciente[1]] = paciente[0]
-            return result
+                if paciente[2] is not None:
+                    if paciente[2] not in result:
+                        result[paciente[2]] = init()
+                    _key = paciente[1].replace("Urbana", "Urbano")
+
+                    result[paciente[2]][_key] = paciente[0]
+        return result
 
     def get_age_group_gender(self, cnes: int = None, equipe: int = None) -> Dict:
-        with DBConnectionHandler().get_engine().connect() as db_con:
-            sql = get_patients_by_gender(cnes, self.disease.name, equipe)
-            sql = text(sql)
-            pacientes = list(db_con.execute(sql))
-            result = dict()
+        sql = get_patients_by_gender(cnes, self.disease.name, equipe)
+        con = duckdb.connect()
+        pacientes = con.sql(sql).fetchall()
+        result = dict()
 
-            def init():
-                return {"Feminino": 0, "Masculino": 0}
+        def init():
+            return {"Feminino": 0, "Masculino": 0}
 
-            for i in self.faixa_etaria_list():
-                result[i] = init()
-            for paciente in pacientes:
+        for i in self.faixa_etaria_list():
+            result[i] = init()
+        for paciente in pacientes:
+            if paciente[2] is not None:
                 if paciente[2] not in result:
                     result[paciente[2]] = init()
                 result[paciente[2]][paciente[1]] = paciente[0]
-
-            return result
+        return result
 
     def get_complications(self, cnes: int = None, equipe: int = None) -> None:
-        cares = self._retrieve_cares(cnes, equipe)
-        hypertension_complications = HypertensionComplications(cares)
-        statistics = hypertension_complications.compute_statistics()
-        return statistics
+        cares = self._get_complications(cnes, equipe)
+
+        def init_complications(value, total):
+            return {
+                "com_consulta": round(value / total, 2),
+                "com_consulta_abs": value,
+                "sem_consulta": round((total - value) / total, 2),
+                "sem_consulta_abs": total - value,
+            }
+
+        return [
+            {"Infarto Agudo do Miocárdio": init_complications(cares[0], cares[5])},
+            {"Acidente Vascular Encefálico": init_complications(cares[1], cares[5])},
+            {"Doença renal": init_complications(cares[2], cares[5])},
+            {"Doença Coronariana": init_complications(cares[3], cares[5])},
+            {"Doença Cerebrovascular": init_complications(cares[4], cares[5])},
+        ]
+        # hypertension_complications = HypertensionComplications(cares)
+        # statistics = hypertension_complications.compute_statistics()
+        # return statistics
 
     def get_professionals_count(self, cnes: int = None, equipe: int = None) -> Dict:
-        cares = self._retrieve_cares(cnes, equipe)
+        cares = self._get_professionals(cnes, equipe)
         professionals = ProfessionalsGroup()
         return professionals.get_professionals_count(cares)
 
@@ -187,11 +221,44 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         equipe: int = None,
         exam_disease: DiseaseExams = None,
     ) -> Dict:
-        cares = self._retrieve_cares(cnes, equipe)
-        id_cares = cares["co_seq_fat_atd_ind"].unique().tolist()
-        procedures = self._retrieve_procedures(cnes, id_cares, equipe)
-        hypertension = exam_disease
-        return hypertension.check_presence(procedures)
+        cares = self._get_exams_count(cnes, equipe)
+
+        condition_map = {
+            "1": "sem-solicitacao",
+            "2": "aguardando-resultado",
+            "3": "resultado-registrado",
+            # "4": "nao-informado"
+        }
+
+        def init_obj():
+            result = dict()
+            for condition in condition_map.values():
+                result[condition] = 0
+            return result
+
+        labels = [
+            "Glicemia",
+            "Creatinina",
+            "EAS/EQU (urina rotina)",
+            "Sódio",
+            "Potássio",
+            "Colesterol total",
+            "Hemograma",
+            "Eletrocardiograma",
+        ]
+        result = dict()
+        for label in labels:
+            result[label] = init_obj()
+        if len(cares) == 0:
+            return result
+
+        for care in cares:
+            for idx, val in enumerate(care):
+                if val is None:
+                    val = 1
+                result[labels[idx]][condition_map[str(val)]] += 1
+
+        return result
 
     def get_imc(
         self,
@@ -199,39 +266,74 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         equipe: int = None,
     ) -> Dict:
         cares = self._retrieve_imc_info(cnes, equipe)
-        imc_model = ImcModel()
-        cares.apply(
-            lambda x: imc_model.check_presence(
-                weight=x["nu_peso"], height=x["nu_altura"]
-            ),
-            axis=1,
-        )
-        print(f'cares: {cares.shape}')
-        results = [
-            imc_item.statistics_response(cares.shape[0])
-            for imc_item in imc_model.get_list()
-        ]
-        current_total = 0
-        for i in results:
-            current_total += i[1]["com_consulta_abs"]
 
-        total = cares.shape[0] - current_total
-        consultas = 100 * round(float((total) / cares.shape[0]), 2) if cares.shape[0] > 0 else 0
+        imc_labels = {
+            "baixo_peso": {"value": "< 18.5", "label": "Baixo Peso"},
+            "peso_adequado": {"value": ">= 18.5  e <= 24.9", "label": "Peso Adequado"},
+            "excesso_peso": {"value": ">= 25 e <= 29.9", "label": "Excesso de Peso"},
+            "obesidade": {"value": " >= 30", "label": "Obesidade"},
+            "na_outros": {"value": "outros casos", "label": "Não Informado"},
+        }
 
-        results = results + [
-            [
-                "Não Informado",
-                {
-                    "com_consulta": consultas,
-                    "com_consulta_abs": int((total)),
-                    "limite": "Outros",
-                    "sem_consulta": round(100 - consultas, 2),
-                    "sem_consulta_abs": cares.shape[0] - (total),
-                },
-            ]
-        ]
+        def init_obj(label):
+            return {
+                "com_consulta": 0,
+                "com_consulta_abs": 0,
+                "limite": label,
+                "sem_consulta": 0,
+                "sem_consulta_abs": 0,
+            }
 
-        return results
+        result = dict()
+        for label in imc_labels.keys():
+            result[label] = init_obj(imc_labels[label]["value"])
+
+        for care in cares:
+            result[care[0]]["com_consulta"] = round(float(care[1]), 2) * 100
+            result[care[0]]["com_consulta_abs"] = int(care[2])
+            result[care[0]]["sem_consulta"] = round(float(1 - care[1]), 2) * 100
+            result[care[0]]["sem_consulta_abs"] = int(care[3] - care[2])
+
+        imc_result = dict()
+        for r in result.keys():
+            _key = imc_labels[r]["label"]
+            _value = result[r]
+            imc_result[_key] = [_key, _value]
+
+        return list(imc_result.values())
+        # imc_model = ImcModel()
+        # cares.apply(
+        #     lambda x: imc_model.check_presence(
+        #         weight=x["nu_peso"], height=x["nu_altura"]
+        #     ),
+        #     axis=1,
+        # )
+        # print(f'cares: {cares.shape}')
+        # results = [
+        #     imc_item.statistics_response(cares.shape[0])
+        #     for imc_item in imc_model.get_list()
+        # ]
+        # current_total = 0
+        # for i in results:
+        #     current_total += i[1]["com_consulta_abs"]
+
+        # total = cares.shape[0] - current_total
+        # consultas = 100 * round(float((total) / cares.shape[0]), 2) if cares.shape[0] > 0 else 0
+
+        # results = results + [
+        #     [
+        #         "Não Informado",
+        #         {
+        #             "com_consulta": consultas,
+        #             "com_consulta_abs": int((total)),
+        #             "limite": "Outros",
+        #             "sem_consulta": round(100 - consultas, 2),
+        #             "sem_consulta_abs": cares.shape[0] - (total),
+        #         },
+        #     ]
+        # ]
+
+        # return results
 
     def get_individual_exams_count(
         self,

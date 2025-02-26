@@ -17,8 +17,6 @@ def gerar_banco():
     input_path = os.path.join(working_directory, "dados", "input") 
     output_path = os.path.join(working_directory, "dados", "output")  
 
-
-
     coluns_acv = ['co_unico_ultima_ficha','dt_nascimento_cidadao','no_sexo_cidadao','nu_cpf_cidadao',
                 'nu_cns_cidadao','no_tipo_logradouro_tb_cidadao','ds_logradouro_tb_cidadao',
                 'nu_numero_tb_cidadao','no_bairro_tb_cidadao','ds_complemento_tb_cidadao',
@@ -31,11 +29,8 @@ def gerar_banco():
     selected_columns_atd_ind = ["co_fat_cidadao_pec", "co_seq_fat_atd_ind","nu_altura","nu_peso","co_dim_tempo","co_dim_cbo_1", "co_dim_cbo_2", "dt_nascimento"]
     selected_columns_fci = ["co_fat_cidadao_pec", "st_hipertensao_arterial","co_dim_tempo","nu_uuid_ficha",'co_dim_raca_cor']
 
-
-
     fci = pl.read_parquet(input_path + os.sep +"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
     fai = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet",columns=selected_columns_atd_ind)
-
 
     fao_vars = ['co_fat_cidadao_pec','co_dim_tempo','co_dim_cbo_1','co_dim_cbo_2','co_seq_fat_atd_odnt']
 
@@ -43,32 +38,25 @@ def gerar_banco():
 
     fai_cods = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
 
-
     vis_dom_vars = ['co_seq_fat_visita_domiciliar','co_fat_cidadao_pec','co_dim_tempo','co_dim_cbo']
 
     fat_vis_dom = pl.read_parquet(input_path + os.sep +"tb_fat_visita_domiciliar.parquet", columns=vis_dom_vars)
-
 
     columns_proced = ['co_seq_fat_proced_atend','co_fat_cidadao_pec','co_dim_tempo','ds_filtro_procedimento','co_dim_cbo']
 
     proced_atend = pl.read_parquet(input_path + os.sep +"tb_fat_proced_atend.parquet",columns=columns_proced)
 
-
     tb_dim_equipe = pl.read_parquet(input_path + os.sep +"tb_dim_equipe.parquet")
 
     tb_dim_und_saude = pl.read_parquet(input_path + os.sep +"tb_dim_unidade_saude.parquet")
 
-
     dim_raca_cor = pl.read_parquet(input_path + os.sep +"tb_dim_raca_cor.parquet")
     dim_raca_cor = dim_raca_cor.rename({"co_seq_dim_raca_cor" : "co_dim_raca_cor"}).select("co_dim_raca_cor","ds_raca_cor")
 
-
     fci = fci.join(dim_raca_cor,on="co_dim_raca_cor",how='left')
-
 
     dt_12meses = datetime.today() - relativedelta(months=12)
     dt_6meses = datetime.today() - relativedelta(months=6)
-
 
     # 1 -agrupa a tabela fci e captura se tem hipertensao de forma autoreferida , usando todo o periodo de fci,captura a data da ultima fci usando co_dim_tempo
 
@@ -99,7 +87,6 @@ def gerar_banco():
 
     fci_v2 = fci.select("co_fat_cidadao_pec","nu_uuid_ficha")
 
-
     tb_pessoa_v2 = tb_pessoa.join(
         fci_v2,
         left_on="co_unico_ultima_ficha",
@@ -112,9 +99,6 @@ def gerar_banco():
     ).with_columns([
         pl.col("st_hipertensao_arterial").fill_null(0),  
     ])
-
-
-
 
     # Define the code lists for each `tipo`
     cid_codes = ['I10', 'I11', 'I110', 'I119', 'I12', 'I120', 'I129', 'I13', 'I130', 'I131', 'I132', 'I139',
@@ -157,12 +141,10 @@ def gerar_banco():
         .alias("hipertensao_codigo")
     )
 
-
     # Filter rows where `isContained_HIPERTENSAO == 1`
     faip_cods_hiper = faip_cods_hiper.filter(pl.col("isContained_HIPERTENSAO") == 1)
 
     faip_cods_hiper.height
-
 
     grouped_faip = (
         faip_cods_hiper
@@ -202,14 +184,12 @@ def gerar_banco():
             pl.col("co_fat_cidadao_pec").is_not_null()
         ))
 
-  
-    #cruzamento entre atendimento e cid/ciaps de hipertensão já agrupados por atendimentos únicos
+    # cruzamento entre atendimento e cid/ciaps de hipertensão já agrupados por atendimentos únicos
     fai_hiper_atd_unico = fai_v2.join(
         grouped_faip,
         on="co_seq_fat_atd_ind",
         how="inner"
     )
-
 
     grouped_fai_hiper_atd_unico = (
         fai_hiper_atd_unico
@@ -235,7 +215,6 @@ def gerar_banco():
     (pl.col("st_hipertensao_arterial") == 1 ) | (pl.col("hipertensao") == 1 )   #preciso filtrar aqui mesmo? se precisar contar as pessoas totais , nao somente de hiper talvez manter
     )
 
-
     pessoas_hiper = (
         pessoas_hiper
         .with_columns(
@@ -249,7 +228,6 @@ def gerar_banco():
             
         )
     )
-
 
     # Dynamically add the new columns for each agravo
     for column_name, codes in agravos_dict.items():
@@ -298,17 +276,14 @@ def gerar_banco():
 
     print("grouped_complicacoes {}".format(grouped_complicacoes.height))
     print("fai_v2 {}".format(fai_v2.height))
-    #grouped_complicacoes.glimpse()
+    # grouped_complicacoes.glimpse()
 
-
-
-    ## add complicacoes aos atendimentos  
+    ## add complicacoes aos atendimentos
     fai_agravo  =  fai_v2.join(
         grouped_complicacoes,
         on="co_seq_fat_atd_ind",
         how="inner"
     )
-    
 
     ## agrupar os atendimentos dos agravos em pessoas
     fai_pessoas_agravo = (
@@ -322,7 +297,7 @@ def gerar_banco():
             pl.sum("n_renal").alias("n_renal")
         )
     )
-   
+
     pessoas_hiper_agravo  =  pessoas_hiper.join(
         fai_pessoas_agravo,
         on="co_fat_cidadao_pec",
@@ -342,7 +317,7 @@ def gerar_banco():
         )
         .select("co_fat_cidadao_pec","co_seq_fat_atd_ind","dt_atendimento","co_dim_cbo_1","co_dim_cbo_2")
     )
-    
+
     exames = (
         fai_cods
         .select("co_seq_fat_atd_ind","codigo","tipo")
@@ -350,8 +325,6 @@ def gerar_banco():
             (pl.col('tipo') == "Procedimentos Avaliados") |  (pl.col('tipo') == "Procedimentos Solicitados") 
         )
     )
-
-
 
     fai_exames = (
         fai_v3  #fai v3 ja tem filtro de 12 meses
@@ -494,7 +467,6 @@ def gerar_banco():
         )
         
     )
-
 
     fai_exames_grouped = (
         fai_exames
@@ -696,9 +668,7 @@ def gerar_banco():
         
     )
 
-
     # In[31]:
-
 
     #### boas praticas colesterol
     fai_exames_colesterol_grouped = (
@@ -724,13 +694,9 @@ def gerar_banco():
         
     )
 
-
-    # ### Dados estratificação profissional  
+    # ### Dados estratificação profissional
 
     # In[32]:
-
-
-
 
     fai_prof = fai_v2.select(
         [
@@ -810,14 +776,11 @@ def gerar_banco():
     )
 
     # Display the first few rows
-    #print(fai_v3.glimpse())
-
+    # print(fai_v3.glimpse())
 
     # In[33]:
 
-
     # dados plot estratificação por profissional agregados
-
 
     grouped_fai_estratif = fai_prof.group_by("co_fat_cidadao_pec").agg([
 
@@ -837,9 +800,7 @@ def gerar_banco():
         pl.len().alias("n_atendimentos_12_meses")
     ])
 
-
     # In[34]:
-
 
     # dados plot estratificação por profissional agregados
 
@@ -874,14 +835,11 @@ def gerar_banco():
         .alias("faixa_etaria")
     )
 
-
     pessoas_hiper_agravo_v2.height 
-
 
     # In[35]:
 
-
-    #Um registro simultâneo de peso e altura, nos últimos 12 meses que antecedem o período em análise
+    # Um registro simultâneo de peso e altura, nos últimos 12 meses que antecedem o período em análise
     fai_peso_altura = (
         fai_v2
         .filter(
@@ -915,19 +873,11 @@ def gerar_banco():
         ).select("imc_categoria","co_fat_cidadao_pec","data_ultimo_peso_altura")
     )
 
-
     # In[ ]:
-
-
-
-
 
     # In[36]:
 
-
-    #Uma consulta por profissional médica(o) ou por enfermeira(o) com a condição de saúde hipertensão arterial sistêmica avaliada e registrada, nos últimos 06 meses 
-
-
+    # Uma consulta por profissional médica(o) ou por enfermeira(o) com a condição de saúde hipertensão arterial sistêmica avaliada e registrada, nos últimos 06 meses
 
     fai_exames_consult_medico_prof = (
         fai_v2
@@ -989,11 +939,9 @@ def gerar_banco():
         )
     ).select("co_fat_cidadao_pec","tipo_ultima_consulta","data_ultima_consulta_med_enferm","total_consulta_med_enferm")
 
-
     # In[37]:
 
-
-    #Um atendimento odontológico individual por Cirurgião Dentista da APS, registrada nos últimos 12 meses 
+    # Um atendimento odontológico individual por Cirurgião Dentista da APS, registrada nos últimos 12 meses
 
     fao_atend_odonto = (
         fao_v2
@@ -1022,13 +970,10 @@ def gerar_banco():
         )
     )
 
-
     # In[38]:
 
-
-    #Duas visitas domiciliares realizadas por ACS e TACS com intervalo mínimo de 30 (trinta) dias entre as visitas, ocorridas nos últimos 12 meses 
-    #cbo:5151 Agente Comunitário de Saúde 3222 Técnico em Agente Comunitário de Saúde
-
+    # Duas visitas domiciliares realizadas por ACS e TACS com intervalo mínimo de 30 (trinta) dias entre as visitas, ocorridas nos últimos 12 meses
+    # cbo:5151 Agente Comunitário de Saúde 3222 Técnico em Agente Comunitário de Saúde
 
     visita_asc = (
         fat_vis_dom
@@ -1210,25 +1155,76 @@ def gerar_banco():
         .alias("ds_tipo_localizacao_domicilio")
     )
 
-
-    lista_vars_final = ['co_fat_cidadao_pec','nu_cns_cidadao','nu_cpf_cidadao','no_sexo_cidadao','dt_nascimento_cidadao','no_tipo_logradouro_tb_cidadao','ds_logradouro_tb_cidadao',
-                    'nu_numero_tb_cidadao','ds_cep_tb_cidadao','ds_complemento_tb_cidadao','hipertensao','autoreferido','idade','faixa_etaria','telefone',
-                    'no_cidadao','nu_micro_area_tb_cidadao',
-                    'n_infarto_agudo','n_acidente_vascular','n_coronariana','n_cerebrovascular','n_renal',
-                        'total_medicos','total_cirug_dentista','total_farmaceuticos','total_fisioterapeutas','total_nutricionistas','total_fonoaudiologos',
-                        'total_terapeutas_ocupacionais','total_educação_fisica','total_psicologos','total_assist_sociais','total_enfermeiros','total_outros',
-                    'imc_categoria','co_dim_unidade_saude','nome_unidade_saude','codigo_equipe','nome_equipe','ds_raca_cor','ds_tipo_localizacao_domicilio',
-                    'agg_afericao_pa','dt_ultima_afericao_pa','indicador_visitas_domiciliares_acs','data_ultima_visita_domiciliar_acs','data_ultimo_atend_odonto',
-                    'agg_creatinina_avaliada','data_ultimo_creatinina','data_ultimo_peso_altura','avaliacao_colesterol','tipo_ultima_consulta',
-                    'data_ultima_consulta_med_enferm','total_consulta_med_enferm','dt_primeiro_reg_condicao','hipertensao_codigos_1atend',
-                        'creatinina','colesterol','hemograma','eletro','eas_equ','glicemia','sodio','potassio']
+    lista_vars_final = [
+        "co_fat_cidadao_pec",
+        "nu_cns_cidadao",
+        "nu_cpf_cidadao",
+        "no_sexo_cidadao",
+        "dt_nascimento_cidadao",
+        "no_tipo_logradouro_tb_cidadao",
+        "ds_logradouro_tb_cidadao",
+        "nu_numero_tb_cidadao",
+        "ds_cep_tb_cidadao",
+        "ds_complemento_tb_cidadao",
+        "hipertensao",
+        "autoreferido",
+        "idade",
+        "faixa_etaria",
+        "telefone",
+        "no_cidadao",
+        "nu_micro_area_tb_cidadao",
+        "n_infarto_agudo",
+        "n_acidente_vascular",
+        "n_coronariana",
+        "n_cerebrovascular",
+        "n_renal",
+        "total_medicos",
+        "total_cirug_dentista",
+        "total_farmaceuticos",
+        "total_fisioterapeutas",
+        "total_nutricionistas",
+        "total_fonoaudiologos",
+        "total_terapeutas_ocupacionais",
+        "total_educação_fisica",
+        "total_psicologos",
+        "total_assist_sociais",
+        "total_enfermeiros",
+        "total_outros",
+        "imc_categoria",
+        "co_dim_unidade_saude",
+        "nome_unidade_saude",
+        "codigo_equipe",
+        "nome_equipe",
+        "ds_raca_cor",
+        "ds_tipo_localizacao_domicilio",
+        "agg_afericao_pa",
+        "dt_ultima_afericao_pa",
+        "indicador_visitas_domiciliares_acs",
+        "data_ultima_visita_domiciliar_acs",
+        "data_ultimo_atend_odonto",
+        "agg_creatinina_avaliada",
+        "data_ultimo_creatinina",
+        "data_ultimo_peso_altura",
+        "avaliacao_colesterol",
+        "tipo_ultima_consulta",
+        "data_ultima_consulta_med_enferm",
+        "total_consulta_med_enferm",
+        "dt_primeiro_reg_condicao",
+        "hipertensao_codigos_1atend",
+        "creatinina",
+        "colesterol",
+        "hemograma",
+        "eletro",
+        "eas_equ",
+        "glicemia",
+        "sodio",
+        "potassio",
+        "n_atendimentos_12_meses",
+    ]
 
     pessoas_hiper_agravo_v4 = pessoas_hiper_agravo_v3.select(lista_vars_final)
 
-
     pessoas_hiper_agravo_v4.write_parquet(output_path+os.sep+"hipertensao.parquet")
-
-
 
     end_time = time.time()
     execution_time = end_time - start_time
