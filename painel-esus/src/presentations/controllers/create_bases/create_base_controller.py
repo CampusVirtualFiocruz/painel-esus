@@ -30,14 +30,19 @@ from src.infra.create_base.polars import (
 class CreateBasesController:
 
     def create_bases(self):
-        if os.getenv("ENV") == "instalador":
-            path = "painel_esus.db"
-        else:
-            path = os.getcwd()
-            path = Path(path.split("/painel-esus")[0])
-            path = os.path.join(path, "painel_esus.db")
-            path = os.path.relpath(path)
-        # os.remove(path)
+        working_directory  = os.getcwd()
+        input_path = os.path.join(working_directory, "dados") 
+
+        try:
+            os.removedirs(input_path)
+        except:
+            ...
+        try:
+            os.makedirs(input_path,exist_ok=False)
+            os.makedirs(input_path + os.sep + 'input', exist_ok=False)
+            os.makedirs(input_path + os.sep + "output", exist_ok=False)
+        except:
+            ...
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
             logging.info("Starting base generation")
             _list = [
