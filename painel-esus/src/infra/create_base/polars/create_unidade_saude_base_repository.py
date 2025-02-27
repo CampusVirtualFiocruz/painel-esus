@@ -8,10 +8,8 @@ from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
 from src.env.conf import getenv
+from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
-from src.infra.db.settings.connection_local import (
-    DBConnectionHandler as LocalDBConnectionHandler,
-)
 
 EQUIPES = "select * from tb_dim_unidade_saude order by co_seq_dim_unidade_saude"
 
@@ -26,8 +24,6 @@ class CreateUnidadesSaudeBaseRepository(CreateBasesRepositoryInterface):
 
     def create_base(self):
         try:
-            local_db = LocalDBConnectionHandler()
-            local_engine = local_db.get_engine()
             _next = True
             offset = 0
             chunk_size = getenv("CHUNK_SIZE", 25000)
@@ -48,8 +44,6 @@ class CreateUnidadesSaudeBaseRepository(CreateBasesRepositoryInterface):
 
                     offset += chunk_size
 
-                    df.to_sql(name=self._base, con=local_engine,
-                              if_exists='append')
                     if not df.empty:
 
                         table = pa.Table.from_pandas(df)
@@ -64,5 +58,5 @@ class CreateUnidadesSaudeBaseRepository(CreateBasesRepositoryInterface):
 
             if writer:
                 writer.close()  
-        except:
-            print(f'Erro {self._base} already destroyed!')
+        except Exception as e:
+            logging.exception(e)

@@ -393,11 +393,6 @@ def gerar_banco():
         )
     )
 
-    print("grouped_complicacoes {}".format(grouped_complicacoes.height))
-    print("fai_v2 {}".format(fai_v2.height))
-    #grouped_complicacoes.glimpse()
-
-
 
     ## add complicacoes aos atendimentos  
     fai_agravo  =  fai_v2.join(
@@ -1688,8 +1683,3 @@ def gerar_banco():
 
     pessoas_diabetes_v3.write_parquet(output_path+os.sep+"diabetes.parquet")
 
-
-    end_time = time.time()
-    execution_time = end_time - start_time
-
-    print(f"Tempo total de execução: {execution_time:.2f} segundos diabetes")

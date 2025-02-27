@@ -70,7 +70,6 @@ class RecordsAdapter:
         return result
 
     def group_records_by_origin(self, response):
-        print(response)
         result = []
         response = response.pop()
         result = [

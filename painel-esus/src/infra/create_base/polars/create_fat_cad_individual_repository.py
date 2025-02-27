@@ -9,10 +9,8 @@ from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
 from src.env.conf import getenv
+from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
-from src.infra.db.settings.connection_local import (
-    DBConnectionHandler as LocalDBConnectionHandler,
-)
 
 fci_vars = [
     "co_seq_fat_cad_individual",
@@ -44,8 +42,6 @@ class CreateCadIndividualBaseRepository(CreateBasesRepositoryInterface):
             # current_dir = os.getcwd()
 
             schema_fixo = self.get_schema()
-            # local_db = LocalDBConnectionHandler()
-            # local_engine = local_db.get_engine()
             _next = True
             offset = 0
             chunk_size = getenv("CHUNK_SIZE", 2500000)
@@ -54,7 +50,6 @@ class CreateCadIndividualBaseRepository(CreateBasesRepositoryInterface):
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    #print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"),
                         con=engine,
@@ -68,8 +63,6 @@ class CreateCadIndividualBaseRepository(CreateBasesRepositoryInterface):
 
                     offset += chunk_size
 
-                    #    df.to_sql(name=self._base, con=local_engine,
-                    #              if_exists='append')
                     if not df.empty:
 
                         table = pa.Table.from_pandas(
@@ -89,13 +82,9 @@ class CreateCadIndividualBaseRepository(CreateBasesRepositoryInterface):
 
             if writer:
                 writer.close()
-            end_time = time.time()
-            execution_time = end_time - start_time
 
-            print(f"Tempo total de execução fci: {execution_time:.2f} segundos")
         except Exception as e:
-            print(e)
-            print(f"Erro {self._base} already destroyed!")
+            logging.exception(e)
 
     def get_schema(self):
         # Definindo o schema fixo

@@ -34,76 +34,76 @@ class AlertRecord:
 
 class BaseNominalAdapter:
     def __init__(self, user):
-        self.nome = user.nome
+        self.nome = user["nome"]
         self.nome_social = "-"
-        self.tipo_localidade = user.tipo_localidade
-        self.cpf = user.cpf
-        self.cns = user.cns
-        self.data_nascimento = user.data_nascimento
-        self.idade = user.idade
-        self.diagnostico = user.diagnostico
-        self.sexo = user.sexo
-        self.equipe = user.nome_equipe
-        self.microarea = user.micro_area
-        self.endereco = f"{user.endereco} {user.numero}, {user.bairro}"
-        self.tipo_logradouro = user.tipo_endereco
-        self.complemento = user.complemento
-        self.cep = user.cep
-        self.telefone = user.telefone
+        self.tipo_localidade = user["tipo_localidade"]
+        self.cpf = user["cpf"]
+        self.cns = user["cns"]
+        self.data_nascimento = user["data_nascimento"]
+        self.idade = user["idade"]
+        self.sexo = user["sexo"]
+        self.equipe = user["nome_equipe"]
+        self.microarea = user["micro_area"]
+        self.endereco = f"{user['endereco']} {user['numero']}, {user['bairro']}"
+        self.tipo_logradouro = user["tipo_endereco"]
+        self.complemento = user["complemento"]
+        self.cep = user["cep"]
+        self.telefone = user["telefone"]
         self.registros = []
-        self.primeiro_registro = user.min_date
+        self.primeiro_registro = user["dt_primeiro_reg_condicao"]
 
 
 class HypertensionNominalListAdapter(BaseNominalAdapter):
 
-    def __init__(self, user: HipertensaoNominal):
+    def __init__(self, user):
         super().__init__(user)
+        self.diagnostico = user["hipertensao_codigos_1atend"]
         self.possui_alertas = (
-            user.alerta_afericao_pa
-            or user.alerta_creatinina
-            or user.alerta_total_de_consultas_medico
-            or user.alerta_ultima_consulta_medico
-            or user.alerta_ultima_consulta_odontologica
-            or user.alerta_visita_acs
+            user["alerta_afericao_pa"]
+            or user["alerta_creatinina"]
+            or user["alerta_total_de_consultas_medico"]
+            or user["alerta_ultima_consulta_medico"]
+            or user["alerta_ultima_consulta_odontologica"]
+            or user["alerta_visita_acs"]
         )
         hipertensao = Hypertension()
-        self.cids = list(set(user.cids.split("|")) & set(hipertensao.target))
+        self.cids = list(set(user["cids"].split("|")) & set(hipertensao.target))
         self.registros.append(
             AlertRecord(
-                data=user.ultima_data_afericao_pa,
-                exibir_alerta=user.alerta_afericao_pa,
+                data=user["ultima_data_afericao_pa"],
+                exibir_alerta=user["alerta_afericao_pa"],
                 descricao="Data da última aferição de PA",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.ultima_data_creatinina,
-                exibir_alerta=user.alerta_creatinina,
+                data=user["ultima_data_creatinina"],
+                exibir_alerta=user["alerta_creatinina"],
                 descricao="Data do último exame de creatinina",
                 tipo_alerta="alerta-creatinina-maior-6-meses",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.total_consulta_individual_medico,
-                exibir_alerta=user.alerta_ultima_consulta_medico,
+                data=user["total_consulta_individual_medico"],
+                exibir_alerta=user["alerta_ultima_consulta_medico"],
                 descricao="Total de consultas Médicas ou de Enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.ultimo_atendimento_medico,
-                exibir_alerta=user.alerta_ultima_consulta_medico,
+                data=user["ultimo_atendimento_medico"],
+                exibir_alerta=user["alerta_ultima_consulta_medico"],
                 descricao="Data da última consulta médica ou de Enfermagem",
                 tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.ultimo_atendimento_odonto,
-                exibir_alerta=user.alerta_ultima_consulta_odontologica,
+                data=user["ultimo_atendimento_odonto"],
+                exibir_alerta=user["alerta_ultima_consulta_odontologica"],
                 descricao="Data da última consulta odontológica",
                 tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
             )
@@ -111,8 +111,8 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
 
         self.registros.append(
             AlertRecord(
-                data=user.data_ultima_visita_acs,
-                exibir_alerta=user.alerta_visita_acs,
+                data=user["data_ultima_visita_acs"],
+                exibir_alerta=user["alerta_visita_acs"],
                 descricao="Data da última visita ACS",
                 tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
             )
@@ -157,19 +157,19 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
     def __init__(self, user: DiabetesNominal):
         super().__init__(user)
         self.possui_alertas = (
-            user.alerta_afericao_pa
-            or user.alerta_total_de_consultas_medico
-            or user.alerta_ultima_consulta_medico
-            or user.alerta_ultima_consulta_odontologica
-            or user.alerta_visita_acs
-            or user.alerta_ultima_hemoglobina_glicada
+            user["alerta_afericao_pa"]
+            or user["alerta_total_de_consultas_medico"]
+            or user["alerta_ultima_consulta_medico"]
+            or user["alerta_ultima_consulta_odontologica"]
+            or user["alerta_visita_acs"]
+            or user["alerta_ultima_hemoglobina_glicada"]
         )
         diabetes = Diabetes()
-        self.cids = list(set(user.cids.split("|")) & set(diabetes.target))
+        self.cids = list(set(user["cids"].split("|")) & set(diabetes.target))
         self.registros.append(
             AlertRecord(
-                data=user.ultima_data_afericao_pa,
-                exibir_alerta=user.alerta_afericao_pa,
+                data=user["ultima_data_afericao_pa"],
+                exibir_alerta=user["alerta_afericao_pa"],
                 descricao="Data da última aferição de PA",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
@@ -177,16 +177,16 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
 
         self.registros.append(
             AlertRecord(
-                data=user.total_consulta_individual_medico,
-                exibir_alerta=user.alerta_total_de_consultas_medico,
+                data=user["total_consulta_individual_medico"],
+                exibir_alerta=user["alerta_total_de_consultas_medico"],
                 descricao="Total de consultas Médicas ou de Enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.ultimo_atendimento_medico,
-                exibir_alerta=user.alerta_ultima_consulta_medico,
+                data=user["ultimo_atendimento_medico"],
+                exibir_alerta=user["alerta_ultima_consulta_medico"],
                 descricao="Data da última consulta Médica ou de Enfermagem",
                 tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
             )
@@ -194,8 +194,8 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
 
         self.registros.append(
             AlertRecord(
-                data=user.ultimo_atendimento_odonto,
-                exibir_alerta=user.alerta_ultima_consulta_odontologica,
+                data=user["ultimo_atendimento_odonto"],
+                exibir_alerta=user["alerta_ultima_consulta_odontologica"],
                 descricao="Data da última consulta Odontológica",
                 tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
             )
@@ -203,16 +203,16 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
 
         self.registros.append(
             AlertRecord(
-                data=user.data_ultima_visita_acs,
-                exibir_alerta=user.alerta_visita_acs,
+                data=user["data_ultima_visita_acs"],
+                exibir_alerta=user["alerta_visita_acs"],
                 descricao="Data da última visita ACS",
                 tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.ultima_data_hemoglobina_glicada or "-",
-                exibir_alerta=user.alerta_ultima_hemoglobina_glicada,
+                data=user["ultima_data_hemoglobina_glicada"] or "-",
+                exibir_alerta=user["alerta_ultima_hemoglobina_glicada"],
                 descricao="Data da última Hemoglobina Glicada",
                 tipo_alerta="alerta-ultima-data-hemoglobina-glicada-maior-6-meses",
             )
@@ -255,43 +255,43 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
 class CriancaNominalListAdapter:
 
     def __init__(self, user: Crianca):
-        self.nome = user.nome
+        self.nome = user["nome"]
         self.nome_social = "-"
-        self.tipo_localidade = user.tipo_localidade
-        self.cpf = user.cpf
-        self.cns = user.cns
-        self.data_nascimento = user.data_nascimento
-        self.idade = user.idade
-        self.sexo = user.sexo
-        self.equipe = user.nome_equipe
-        self.microarea = user.micro_area
-        self.endereco = f"{user.endereco} {user.numero}, {user.bairro}"
-        self.tipo_logradouro = user.tipo_endereco
-        self.complemento = user.complemento
-        self.cep = user.cep
-        self.telefone = user.telefone
+        self.tipo_localidade = user["tipo_localidade"]
+        self.cpf = user["cpf"]
+        self.cns = user["cns"]
+        self.data_nascimento = user["data_nascimento"]
+        self.idade = user["idade"]
+        self.sexo = user["sexo"]
+        self.equipe = user["nome_equipe"]
+        self.microarea = user["micro_area"]
+        self.endereco = f"""{user["endereco"]} {user["numero"]}, {user["bairro"]}"""
+        self.tipo_logradouro = user["tipo_endereco"]
+        self.complemento = user["complemento"]
+        self.cep = user["cep"]
+        self.telefone = user["telefone"]
         self.possui_alertas = (
-            user.indicador_atendimentos_medicos_enfermeiros != 1
-            or user.indicador_atendimentos_medicos_enfermeiros_puericultura != 1
-            or user.indicador_medicoes_peso_altura_ate2anos != 1
-            or user.indicador_visitas_domiciliares_acs != 1
-            or user.indicador_teste_pezinho != 1
-            or user.indicador_atendimentos_odontologicos != 1
-            or user.indicador_vacinas_penta_polio_triplici != 1
+            user["indicador_atendimentos_medicos_enfermeiros"] != 1
+            or user["indicador_atendimentos_medicos_enfermeiros_puericultura"] != 1
+            or user["indicador_medicoes_peso_altura_ate2anos"] != 1
+            or user["indicador_visitas_domiciliares_acs"] != 1
+            or user["indicador_teste_pezinho"] != 1
+            or user["indicador_atendimentos_odontologicos"] != 1
+            or user["indicador_vacinas_penta_polio_triplici"] != 1
         )
         self.registros = []
         self.registros.append(
             AlertRecord(
-                data=user.data_ultimo_atendimento_medico_enfermeiro,
-                exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros != 1,
+                data=user["data_ultimo_atendimento_medico_enfermeiro"],
+                exibir_alerta=user["indicador_atendimentos_medicos_enfermeiros"] != 1,
                 descricao="Data do último atendimento Médico/Enfermeiro",
                 tipo_alerta="data_ultimo_atendimento_medico_enfermeiro",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultimo_atendimento_medicos_enfermeiros_puericultura,
-                exibir_alerta=user.indicador_atendimentos_medicos_enfermeiros_puericultura
+                data=user["data_ultimo_atendimento_medicos_enfermeiros_puericultura"],
+                exibir_alerta=user["indicador_atendimentos_medicos_enfermeiros_puericultura"]
                 != 1,
                 descricao="Data do último atendimento Médico/Enfermeiro de Puericultura",
                 tipo_alerta="indicador_atendimentos_medicos_enfermeiros_puericultura",
@@ -299,40 +299,40 @@ class CriancaNominalListAdapter:
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultima_medicao_peso_altura_ate2anos,
-                exibir_alerta=user.indicador_medicoes_peso_altura_ate2anos != 1,
+                data=user["data_ultima_medicao_peso_altura_ate2anos"],
+                exibir_alerta=user["indicador_medicoes_peso_altura_ate2anos"] != 1,
                 descricao="Data da última medição de peso/altura até dois anos",
                 tipo_alerta="data_ultima_medicao_peso_altura_ate2anos",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultima_visita_domiciliar_acs,
-                exibir_alerta=user.indicador_visitas_domiciliares_acs != 1,
+                data=user["data_ultima_visita_domiciliar_acs"],
+                exibir_alerta=user["indicador_visitas_domiciliares_acs"] != 1,
                 descricao="Data da última visita do ACS ",
                 tipo_alerta="data_ultima_visita_domiciliar_acs",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultimo_teste_pezinho,
-                exibir_alerta=user.indicador_teste_pezinho != 1,
+                data=user["data_ultimo_teste_pezinho"],
+                exibir_alerta=user["indicador_teste_pezinho"] != 1,
                 descricao="Data do último Teste do pezinho ",
                 tipo_alerta="data_ultimo_teste_pezinho",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultimo_atendimento_odontologico,
-                exibir_alerta=user.indicador_atendimentos_odontologicos != 1,
+                data=user["data_ultimo_atendimento_odontologico"],
+                exibir_alerta=user["indicador_atendimentos_odontologicos"] != 1,
                 descricao="Data do último atendimento Odontológico ",
                 tipo_alerta="data_ultimo_atendimento_odontologico",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultima_vacina_triplici,
-                exibir_alerta=user.indicador_vacinas_penta_polio_triplici != 1,
+                data=user["data_ultima_vacina_triplici"],
+                exibir_alerta=user["indicador_vacinas_penta_polio_triplici"] != 1,
                 descricao="Data do último registro de vacina Penta/Polio/Triplici ",
                 tipo_alerta="data_ultima_vacina_triplici",
             )
@@ -372,74 +372,74 @@ class CriancaNominalListAdapter:
 class IdosoNominalListAdapter:
 
     def __init__(self, user: Crianca):
-        self.nome = user.nome
+        self.nome = user["nome"]
         self.nome_social = "-"
-        self.tipo_localidade = user.tipo_localidade
-        self.cpf = user.cpf
-        self.cns = user.cns
-        self.data_nascimento = user.data_nascimento
-        self.idade = user.idade
-        self.sexo = user.sexo
-        self.equipe = user.nome_equipe
-        self.microarea = user.micro_area
-        self.endereco = f"{user.endereco} {user.numero}, {user.bairro}"
-        self.tipo_logradouro = user.tipo_endereco
-        self.complemento = user.complemento
-        self.cep = user.cep
-        self.telefone = user.telefone
+        self.tipo_localidade = user["tipo_localidade"]
+        self.cpf = user["cpf"]
+        self.cns = user["cns"]
+        self.data_nascimento = user["data_nascimento"]
+        self.idade = user["idade"]
+        self.sexo = user["sexo"]
+        self.equipe = user["nome_equipe"]
+        self.microarea = user["micro_area"]
+        self.endereco = f"""{user["endereco"]} {user["numero"]}, {user["bairro"]}"""
+        self.tipo_logradouro = user["tipo_endereco"]
+        self.complemento = user["complemento"]
+        self.cep = user["cep"]
+        self.telefone = user["telefone"]
         self.possui_alertas = (
-            user.indicador_atendimentos_medicos != 1
-            or user.indicador_medicoes_peso_altura != 1
-            or user.indicador_registros_creatinina != 1
-            or user.indicador_vacinas_influenza != 1
-            or user.indicador_atendimento_odontologico != 1
-            or user.indicador_visitas_domiciliares_acs != 1
+            user["indicador_atendimentos_medicos"] != 1
+            or user["indicador_medicoes_peso_altura"] != 1
+            or user["indicador_registros_creatinina"] != 1
+            or user["indicador_vacinas_influenza"] != 1
+            or user["indicador_atendimento_odontologico"] != 1
+            or user["indicador_visitas_domiciliares_acs"] != 1
         )
         self.registros = []
         self.registros.append(
             AlertRecord(
-                data=user.data_ultimo_atendimento_medicos,
-                exibir_alerta=user.indicador_atendimentos_medicos != 1,
+                data=user["data_ultimo_atendimento_medicos"],
+                exibir_alerta=user["indicador_atendimentos_medicos"] != 1,
                 descricao="Data do último atendimento Médico/Enfermeiro",
                 tipo_alerta="data_ultimo_atendimento_medicos",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultima_medicao_peso_altura,
-                exibir_alerta=user.indicador_medicoes_peso_altura != 1,
+                data=user["data_ultima_medicao_peso_altura"],
+                exibir_alerta=user["indicador_medicoes_peso_altura"] != 1,
                 descricao="Data da última medição de peso e altura",
                 tipo_alerta="data_ultima_medicao_peso_altura",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultimo_registro_creatinina,
-                exibir_alerta=user.indicador_registros_creatinina != 1,
+                data=user["data_ultimo_registro_creatinina"],
+                exibir_alerta=user["indicador_registros_creatinina"] != 1,
                 descricao="Data do último registro de Creatinina ",
                 tipo_alerta="data_ultimo_registro_creatinina",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultima_vacina_influenza,
-                exibir_alerta=user.indicador_vacinas_influenza != 1,
+                data=user["data_ultima_vacina_influenza"],
+                exibir_alerta=user["indicador_vacinas_influenza"] != 1,
                 descricao="Data do último registro de vacina da Influenza ",
                 tipo_alerta="data_ultima_vacina_influenza",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultimo_atendimento_odontologico,
-                exibir_alerta=user.indicador_atendimento_odontologico != 1,
+                data=user["data_ultimo_atendimento_odontologico"],
+                exibir_alerta=user["indicador_atendimento_odontologico"] != 1,
                 descricao="Data do último registro de atendimento Odontológico ",
                 tipo_alerta="data_ultimo_atendimento_odontologico",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user.data_ultima_visita_domiciliar_acs,
-                exibir_alerta=user.indicador_visitas_domiciliares_acs != 1,
+                data=user["data_ultima_visita_domiciliar_acs"],
+                exibir_alerta=user["indicador_visitas_domiciliares_acs"] != 1,
                 descricao="Data da última visita do ACS ",
                 tipo_alerta="data_ultima_visita_domiciliar_acs",
             )

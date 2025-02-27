@@ -48,7 +48,5 @@ class HypertensionDashboardGetNominalListDownload():
 
     def handle(self, request):
         cnes, equipe = parse_request(request)
-        print(cnes, equipe)
         response = self.__use_case.get_nominal_list_download(cnes, equipe)
-        print(response)
         return response

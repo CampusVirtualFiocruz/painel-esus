@@ -8,10 +8,8 @@ from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
 from src.env.conf import getenv
+from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
-from src.infra.db.settings.connection_local import (
-    DBConnectionHandler as LocalDBConnectionHandler,
-)
 
 lista_vars = ["co_seq_fat_marca_con_almnt", "co_fat_cidadao_pec", "co_dim_tempo"]
 lista_vars_str = ", ".join(lista_vars)
@@ -31,8 +29,6 @@ class CreateMarcaConsumoBaseRepository(
 
     def create_base(self):
         try:
-            local_db = LocalDBConnectionHandler()
-            local_engine = local_db.get_engine()
             schema_fixo = self.get_schema()
             _next = True
             offset = 0
@@ -42,7 +38,6 @@ class CreateMarcaConsumoBaseRepository(
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    #print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"),
                         con=engine,
@@ -56,8 +51,6 @@ class CreateMarcaConsumoBaseRepository(
 
                     offset += chunk_size
 
-                    # df.to_sql(name=self._base, con=local_engine,
-                    #          if_exists='append')
                     if not df.empty:
 
                         table = pa.Table.from_pandas(
@@ -78,8 +71,8 @@ class CreateMarcaConsumoBaseRepository(
 
             if writer:
                 writer.close()
-        except:
-            print(f"Erro {self._base} already destroyed!")
+        except Exception as e:
+            logging.exception(e)
 
     def get_schema(self):
         # Definindo o schema fixo

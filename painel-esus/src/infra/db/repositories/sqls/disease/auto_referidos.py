@@ -3,6 +3,75 @@ import duckdb
 from ..disease import DIABETES_PATH, HYPERTENSION_PATH
 
 
+def get_hypertension_base_sql():
+
+    return f"""select 
+                co_fat_cidadao_pec cidadao_pec,
+                ds_raca_cor raca_cor,
+                nu_cpf_cidadao cpf,
+                nu_cns_cidadao cns,
+                no_cidadao nome,
+                dt_nascimento_cidadao data_nascimento, 
+                idade,
+                no_sexo_cidadao sexo,
+                telefone,
+                no_tipo_logradouro_tb_cidadao tipo_endereco,
+                ds_logradouro_tb_cidadao endereco,
+                nu_numero_tb_cidadao numero,
+                ds_cep_tb_cidadao cep,
+                ds_complemento_tb_cidadao complemento,
+                '' as bairro,
+                ds_tipo_localizacao_domicilio tipo_localidade,
+                co_dim_unidade_saude codigo_unidade_saude, 
+                codigo_equipe,
+                hipertensao,
+                autoreferido,
+                faixa_etaria,
+                nu_micro_area_tb_cidadao micro_area,
+                n_infarto_agudo,
+                n_acidente_vascular,
+                n_coronariana,
+                n_cerebrovascular,
+                n_renal,
+                total_medicos,
+                total_cirug_dentista,
+                total_farmaceuticos,
+                total_fisioterapeutas,
+                total_nutricionistas,
+                total_fonoaudiologos,
+                total_terapeutas_ocupacionais,
+                total_educação_fisica,
+                total_psicologos,
+                total_assist_sociais,
+                total_enfermeiros,
+                total_outros,
+                imc_categoria,
+                nome_unidade_saude,
+                nome_equipe,
+                agg_afericao_pa alerta_afericao_pa,
+                dt_ultima_afericao_pa,
+                indicador_visitas_domiciliares_acs alerta_visita_acs,
+                data_ultima_visita_domiciliar_acs,
+                data_ultimo_atend_odonto,
+                agg_creatinina_avaliada alerta_creatinina,
+                data_ultimo_creatinina,
+                data_ultimo_peso_altura,
+                avaliacao_colesterol,
+                tipo_ultima_consulta,
+w                total_consulta_med_enferm,
+                dt_primeiro_reg_condicao,
+                hipertensao_codigos_1atend,
+                creatinina,
+                colesterol,
+                hemograma,
+                eletro,
+                eas_equ,
+                glicemia,
+                sodio,
+                potassio,
+                n_atendimentos_12_meses
+            from read_parquet('{HYPERTENSION_PATH}')
+            """
 def get_disease_base_sql(cnes: int = None, equipe: int = None, hypertension = True):
     where_clause = ""
     if cnes is not None:
@@ -93,7 +162,6 @@ def get_professionals(cnes: int = None, equipe: int = None, hypertension=True):
         sum(total_outros)) total from patients"""
     return sql
 
-   
 
 def get_imc(cnes: int = None, equipe: int = None, hypertension=True):
     sql = get_disease_base_sql(cnes, equipe, hypertension)

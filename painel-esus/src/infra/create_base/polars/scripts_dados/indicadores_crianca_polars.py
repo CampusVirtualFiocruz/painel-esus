@@ -769,16 +769,5 @@ def gerar_banco():
     )
 
     crianca_updated.write_parquet(output_path + os.sep + "crianca.parquet")
-    with DBConnectionHandler() as con:
-        engine = con.get_engine()
-        crianca_updated.write_database(
-            table_name="crianca",
-            connection=engine,
-            if_table_exists="append",
-            engine="sqlalchemy",
-        )
+    
 
-    end_time = time.time()
-    execution_time = end_time - start_time
-    time.sleep(2)
-    print(f"Tempo total de execução: {execution_time:.2f} segundos")

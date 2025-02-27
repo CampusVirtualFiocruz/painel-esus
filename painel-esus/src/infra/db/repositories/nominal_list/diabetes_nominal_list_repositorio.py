@@ -147,11 +147,6 @@ class DiabeteNominalListRepository(CreateBasesRepositoryInterface):
         )
         cbo = pl.read_parquet(input_path + os.sep + "tb_dim_cbo.parquet")
 
-        print("fai: ", fai.shape)
-        fai = fai.join(
-            cbo, left_on="co_dim_cbo_1", right_on="co_seq_dim_cbo", how="left"
-        )
-        print("fai - cbo: ", fai.shape)
 
         autoreferidos = self.get_autorreferidos()
         cidadaos_pec = autoreferidos["co_fat_cidadao_pec"].to_list()
@@ -250,14 +245,11 @@ class DiabeteNominalListRepository(CreateBasesRepositoryInterface):
 
         # print("nominal_lis head", nominal_list.head())
         visita_acs = self.visita_acs()
-        print("nominal_list: ", nominal_list.shape)
-        print("visita_acs: ", visita_acs.shape)
         nominal_list = nominal_list.join(
             min_date_atendimentos, on="cidadao_pec", how="left"
         )
         if visita_acs is not None and visita_acs.shape[0] > 0:
             nominal_list = nominal_list.join(visita_acs, on="cidadao_pec", how="left")
-            print("nominal_list - visita_acs: ", nominal_list.shape)
         else:
             nominal_list = nominal_list.with_columns(
                 pl.lit(None).alias("data_ultima_visita_acs"),
@@ -298,14 +290,12 @@ class DiabeteNominalListRepository(CreateBasesRepositoryInterface):
             right_on="cidadao_pec",
             how="left",
         )
-        print("nominal_list - total_atendimentos_medicos: ", nominal_list.shape)
         nominal_list = nominal_list.join(
             max_date_atendimentos_medicos,
             left_on="cidadao_pec",
             right_on="cidadao_pec",
             how="left",
         )
-        print("nominal_list - max_date_atendimentos_medicos: ", nominal_list.shape)
 
         atendimentos_enfermeiros = fai.filter(
             pl.col("nu_cbo").str.contains_any(

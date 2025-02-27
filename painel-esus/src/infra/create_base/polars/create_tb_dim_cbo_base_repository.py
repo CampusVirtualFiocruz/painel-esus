@@ -8,10 +8,8 @@ from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
 from src.env.conf import getenv
+from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
-from src.infra.db.settings.connection_local import (
-    DBConnectionHandler as LocalDBConnectionHandler,
-)
 
 CBOS = "select * from tb_dim_cbo order by co_seq_dim_cbo"
 
@@ -26,11 +24,6 @@ class CreateTbDimCboRepository(CreateBasesRepositoryInterface):
 
     def create_base(self):
         try:
-
-            # schema_fixo =  self.get_schema()
-
-            local_db = LocalDBConnectionHandler()
-            local_engine = local_db.get_engine()
             _next = True
             offset = 0
             chunk_size = getenv("CHUNK_SIZE", 25000)
@@ -40,7 +33,6 @@ class CreateTbDimCboRepository(CreateBasesRepositoryInterface):
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    ##print(text(f"{CBOS}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f"{CBOS}  LIMIT {chunk_size} OFFSET {offset};"),
                         con=engine,
@@ -54,15 +46,18 @@ class CreateTbDimCboRepository(CreateBasesRepositoryInterface):
 
                     offset += chunk_size
 
-                    df.to_sql(name=self._base, con=local_engine, if_exists="append")
                     if not df.empty:
 
                         table = pa.Table.from_pandas(df, preserve_index=False)
 
                         if writer is None:
 
+                            working_directory = os.getcwd()
+                            input_path = os.path.join(
+                                working_directory, "dados", "input"
+                            )
                             writer = pq.ParquetWriter(
-                                "dados/input/" + parquet_file, table.schema
+                                input_path + os.sep + parquet_file, table.schema
                             )  # , schema=schema_fixo
 
                         writer.write_table(table)
@@ -70,5 +65,4 @@ class CreateTbDimCboRepository(CreateBasesRepositoryInterface):
             if writer:
                 writer.close()
         except Exception as e:
-            print(e)
-            print(f"Erro {self._base} already destroyed!")
+            logging.exception(e)

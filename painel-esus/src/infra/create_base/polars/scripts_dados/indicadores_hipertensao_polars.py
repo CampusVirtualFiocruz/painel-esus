@@ -7,11 +7,8 @@ from dateutil.relativedelta import relativedelta
 
 from .codigos_cbo import *
 
-print(os.getcwd())
-
 
 def gerar_banco():
-    print(os.getcwd())
     start_time = time.time()
     working_directory  = os.getcwd()
     input_path = os.path.join(working_directory, "dados", "input") 
@@ -274,9 +271,6 @@ def gerar_banco():
         )
     )
 
-    print("grouped_complicacoes {}".format(grouped_complicacoes.height))
-    print("fai_v2 {}".format(fai_v2.height))
-    # grouped_complicacoes.glimpse()
 
     ## add complicacoes aos atendimentos
     fai_agravo  =  fai_v2.join(
@@ -1226,7 +1220,4 @@ def gerar_banco():
 
     pessoas_hiper_agravo_v4.write_parquet(output_path+os.sep+"hipertensao.parquet")
 
-    end_time = time.time()
-    execution_time = end_time - start_time
-
-    print(f"Tempo total de execução: {execution_time:.2f} segundos hiper")
+   

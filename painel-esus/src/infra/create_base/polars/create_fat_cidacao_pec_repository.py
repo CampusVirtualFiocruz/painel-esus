@@ -8,10 +8,8 @@ from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
 from src.env.conf import env, getenv
+from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
-from src.infra.db.settings.connection_local import (
-    DBConnectionHandler as LocalDBConnectionHandler,
-)
 
 EQUIPES = "select * from tb_fat_cidadao_pec order by co_seq_fat_cidadao_pec"
 
@@ -26,13 +24,6 @@ class CreateCidacaoPecBaseRepository(CreateBasesRepositoryInterface):
     def create_base(self):
         try:
 
-            # schema_fixo =  self.get_schema()
-            # chunk_size = env["chunck_lenght"]
-            # print(chunk_size)
-            # #print(text(f"{chunk_size}"))
-
-            local_db = LocalDBConnectionHandler()
-            local_engine = local_db.get_engine()
             _next = True
             offset = 0
             chunk_size = 2500000
@@ -42,7 +33,6 @@ class CreateCidacaoPecBaseRepository(CreateBasesRepositoryInterface):
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    #print(text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f"{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};"),
                         con=engine,
@@ -56,7 +46,6 @@ class CreateCidacaoPecBaseRepository(CreateBasesRepositoryInterface):
 
                     offset += chunk_size
 
-                    df.to_sql(name=self._base, con=local_engine, if_exists="append")
                     if not df.empty:
 
                         table = pa.Table.from_pandas(df, preserve_index=False)
@@ -72,5 +61,4 @@ class CreateCidacaoPecBaseRepository(CreateBasesRepositoryInterface):
             if writer:
                 writer.close()
         except Exception as e:
-            print(e)
-            print(f"Erro {self._base} already destroyed!")
+            logging.exception(e)

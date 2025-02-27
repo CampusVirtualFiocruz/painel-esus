@@ -2,23 +2,9 @@
 import os
 from pathlib import Path
 
-from parquet_db import gerar_banco
-from src.data.interfaces.create_bases.create_bases_repository import (
-    CreateBasesRepositoryInterface,
-)
 from src.data.use_cases.create_bases.create_bases_usecase import CreateBasesUseCase
 from src.env import env
 from src.errors.logging import logging
-from src.infra.create_base.create_autorreferido_base_repository import (
-    CreateAutorreferidoBaseRepository,
-)
-from src.infra.create_base.create_diabetes_bases_repository import (
-    CreateDiabetesBasesRepository,
-)
-from src.infra.create_base.create_hypertension_bases_repository import (
-    CreateHypertensionBasesRepository,
-)
-from src.infra.create_base.create_units_base_repository import CreateUnitsBaseRepository
 from src.infra.create_base.polars import (
     CreateAcompCidadaosVinculadosBaseRepository,
     CreateAtendIndivBaseRepository,
@@ -38,12 +24,6 @@ from src.infra.create_base.polars import (
     CreateUnidadesSaudeBaseRepository,
     CreateVacinacaoBaseRepository,
     CreateVisistaDomiciliarBaseRepository,
-)
-from src.infra.db.repositories.nominal_list.diabetes_nominal_list_repositorio import (
-    DiabeteNominalListRepository,
-)
-from src.infra.db.repositories.nominal_list.hypertension_nominal_list_repository import (
-    HypertensionNominalListRepository,
 )
 
 

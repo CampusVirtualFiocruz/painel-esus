@@ -9,10 +9,8 @@ from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
 from src.env.conf import getenv
+from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
-from src.infra.db.settings.connection_local import (
-    DBConnectionHandler as LocalDBConnectionHandler,
-)
 
 lista_vars = [
     "co_seq_fat_proced_atend",
@@ -42,8 +40,6 @@ class CreateProcedAtendBaseRepository(CreateBasesRepositoryInterface):
 
             schema_fixo = self.get_schema()
 
-            local_db = LocalDBConnectionHandler()
-            local_engine = local_db.get_engine()
             _next = True
             offset = 0
             chunk_size = getenv("CHUNK_SIZE", 2500000)
@@ -52,7 +48,6 @@ class CreateProcedAtendBaseRepository(CreateBasesRepositoryInterface):
             while _next:
                 with DBConnectionHandler() as db:
                     engine = db.get_engine()
-                    #print(text(f"{SQL}  LIMIT {chunk_size} OFFSET {offset};"))
                     df = pd.read_sql_query(
                         text(f"{SQL}  LIMIT {chunk_size} OFFSET {offset};"),
                         con=engine,
@@ -66,8 +61,6 @@ class CreateProcedAtendBaseRepository(CreateBasesRepositoryInterface):
 
                     offset += chunk_size
 
-                    #   df.to_sql(name=self._base, con=local_engine,
-                    #               if_exists='append')
                     if not df.empty:
 
                         table = pa.Table.from_pandas(
@@ -89,8 +82,7 @@ class CreateProcedAtendBaseRepository(CreateBasesRepositoryInterface):
             if writer:
                 writer.close()
         except Exception as e:
-            print(e)
-            print(f"Erro {self._base} already destroyed!")
+            logging.exception(e)
 
     def get_schema(self):
         # Definindo o schema fixo
