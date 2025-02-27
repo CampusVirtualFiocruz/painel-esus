@@ -162,25 +162,25 @@ export function Hipertensao() {
     }
   );
 
-  // const {
-  //   data: dataExamsTable,
-  //   isLoading: isLoadingExamsTable,
-  //   error: errorExamsTable,
-  // } = useQuery(
-  //   ["arterial-hypertension-exams", paramRoute],
-  //   async () => {
-  //     let path = id
-  //       ? `arterial-hypertension/exams/${id}`
-  //       : "arterial-hypertension/exams";
-  //     const response = await Api.get(path + search);
-  //     const data = response.data;
+  const {
+    data: dataExamsTable,
+    isLoading: isLoadingExamsTable,
+    error: errorExamsTable,
+  } = useQuery(
+    ["arterial-hypertension-exams", paramRoute],
+    async () => {
+      let path = id
+        ? `arterial-hypertension/exams/${id}`
+        : "arterial-hypertension/exams";
+      const response = await Api.get(path + search);
+      const data = response.data;
 
-  //     return data.data;
-  //   },
-  //   {
-  //     staleTime: 1000 * 60 * 10, //10 minutos
-  //   }
-  // );
+      return data.data;
+    },
+    {
+      staleTime: 1000 * 60 * 10, //10 minutos
+    }
+  );
 
   const {
     data: dataProfessionals,
@@ -295,18 +295,24 @@ export function Hipertensao() {
               <Typography.Subtitle>
                 Situação dos exames nos últimos 12 meses
               </Typography.Subtitle>
-              <div className="row gx-4 my-3">
-                <div className="col-5 col-lg-6"></div>
-                <div className="col col-lg-3">
-                  <div className="tipo p-2 text-center">
-                    Solicitação pendente
+              <div style={{ display: "flex", paddingTop: "30px" }}>
+                <div style={{ flex: "150px" }}>
+                  <div className="tipo p-2 "></div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div className="coluna p-2 text-center ">Sem Solicitação</div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div className="coluna p-2 text-center ">
+                    Aguardando Resultado
                   </div>
                 </div>
-                <div className="col col-lg-3">
-                  <div className="tipo p-2 text-center">Avaliação pendente</div>
+                <div style={{ flex: 1 }}>
+                  <div className="coluna p-2 text-center ">
+                    Resultado Registrado
+                  </div>
                 </div>
               </div>
-              {/*}
               {isLoadingExamsTable ? (
                 <div className="d-flex align-items-center justify-content-center">
                   <Spinner size="sm" type="grow" className="me-2" />
@@ -318,29 +324,39 @@ export function Hipertensao() {
                 </div>
               ) : (
                 <>
-                  {dataExamsTable
-                    ?.filter(
-                      (situacao: any) => situacao?.tipo !== "Aferição de PA"
-                    )
-                    ?.map((situacao: any, i: number) => (
-                      <div key={i} className="row gx-4 my-3">
-                        <div className="col-5 col-lg-6">
-                          <div className="tipo p-2 bordas">{situacao.tipo}</div>
+                  {Object.keys(dataExamsTable ?? {})?.map((label) => (
+                    <>
+                      <div
+                        key={label}
+                        style={{
+                          display: "flex",
+                          gap: "14px",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <div style={{ flex: "150px" }}>
+                          <div className="tipo p-2 bordas">{label}</div>
                         </div>
-                        <div className="col col-lg-3">
-                          <div className="tipo p-2 text-center bordas">
-                            {situacao.solicitados}
+                        <div style={{ flex: 1 }}>
+                          <div className="coluna p-2 text-center bordas">
+                            {dataExamsTable?.[label]?.["sem-solicitacao"]}
                           </div>
                         </div>
-                        <div className="col col-lg-3">
-                          <div className="tipo p-2 text-center bordas">
-                            {situacao.avaliados}
+                        <div style={{ flex: 1 }}>
+                          <div className="coluna p-2 text-center bordas">
+                            {dataExamsTable?.[label]?.["aguardando-resultado"]}
+                          </div>
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div className="coluna p-2 text-center bordas">
+                            {dataExamsTable?.[label]?.["resultado-registrado"]}
                           </div>
                         </div>
                       </div>
-                    ))}
+                    </>
+                  ))}
                 </>
-              )}*/}
+              )}
             </div>
           </TwoColumnSection.Col>
           <TwoColumnSection.Col>

@@ -1,6 +1,7 @@
 //
 // Tipos de suporte
 //
+
 export type groupedValuesInput = Array<{
   value: {
     [tag: string]: number;
@@ -13,6 +14,12 @@ type valueInput = Array<{
   tag: string;
   percent?: Number;
 }>;
+
+type MultipleGroupedValuesInput = {
+  [tag: string]: {
+    [section: string]: number;
+  };
+};
 
 type generalConfigs = {
   isDisabledResponse?: boolean;
@@ -36,10 +43,9 @@ type LinearChart = {
 type PercentualChart = {
   data: valueInput;
   config?: generalConfigs & {
-    radiusStart?: number
+    radiusStart?: number;
   };
 };
-
 
 type Value = {
   data: number;
@@ -63,3 +69,4 @@ export type DonutChart = PercentualChart;
 export type TreemapShallowChart = PercentualChart;
 
 export type ValueChart = Value;
+export type TableGroup = MultipleGroupedValuesInput;
