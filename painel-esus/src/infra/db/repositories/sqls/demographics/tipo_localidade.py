@@ -16,3 +16,5 @@ def filter_by_localidade(cnes: int = None, equipe: int = None):
             from
                 pessoas p )
             select tipo, count(*) total  from cidadaos group by 1 """
+
+

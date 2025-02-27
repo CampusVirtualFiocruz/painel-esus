@@ -35,9 +35,15 @@ def test_get_by_place():
 def test_get_by_gender():
     repo = DemographicsInfoV2Repository()
     result = repo.get_by_gender(26, 19)
+    print(result)
     assert result['feminino'] > 0
     assert result["masculino"] > 0
 
     result = repo.get_by_gender()
     assert result["feminino"] > 0
     assert result["masculino"] > 0
+
+def test_get_diabetes_location():
+    repo = DemographicsInfoV2Repository()
+    result = repo.get_diabetes_location()
+    print(result)

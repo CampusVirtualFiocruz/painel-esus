@@ -24,6 +24,10 @@ from src.infra.db.repositories.sqls.demographics import (
     get_indicators_hipertensao_plus_autorreferidos,
     get_indicators_idoso,
 )
+from src.infra.db.repositories.sqls.disease.auto_referidos import (
+    filter_diabetes_by_localidade,
+    filter_hypertension_by_localidade,
+)
 from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import get_pessoas
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
@@ -148,8 +152,32 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         gender_sql = filter_by_sexo(cnes, equipe)
         result_gender = duckdb.sql(gender_sql).fetchall()
         for resp in result_gender:
-            gender[resp[0]] = int(resp[1])
+            gender[str(resp[0]).lower()] = int(resp[1])
         return gender
+
+    def get_diabetes_location(self, cnes: int = None, equipe: int = None):
+        location_area_sql = filter_diabetes_by_localidade(cnes, equipe)
+        result_location_area_sql = duckdb.sql(location_area_sql).fetchall()
+
+        location_body = {"rural": 0, "urbano": 0, "nao_definido": 0}
+        for resp in result_location_area_sql:
+            if resp[0] is None:
+                location_body["nao_definido"] = int(resp[1])
+            else:
+                location_body[resp[0]] = int(resp[1])
+        return location_body
+
+    def get_hypertension_location(self, cnes: int = None, equipe: int = None):
+        location_area_sql = filter_hypertension_by_localidade(cnes, equipe)
+        result_location_area_sql = duckdb.sql(location_area_sql).fetchall()
+
+        location_body = {"rural": 0, "urbano": 0, "nao_definido": 0}
+        for resp in result_location_area_sql:
+            if resp[0] is None:
+                location_body["nao_definido"] = int(resp[1])
+            else:
+                location_body[resp[0]] = int(resp[1])
+        return location_body
 
     def get_demographics_info(
         self,
@@ -164,9 +192,11 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         age_groups = self.get_age_groups(cnes, equipe)
         location_body = self.get_by_place(cnes, equipe)
         gender = self.get_by_gender(cnes, equipe)
+        diabetes = self.get_diabetes_location(cnes,equipe)
+        hypertension = self.get_hypertension_location(cnes, equipe)
         idicators_body = {
-            "diabetes": {"rural": 0, "urbano": 0, "nao_informado": 0},
-            "hipertensao": {"rural": 0, "urbano": 0, "nao_informado": 0},
+            "diabetes": diabetes,
+            "hipertensao": hypertension,
             "crianca": {"rural": 0, "urbano": 0, "nao_informado": 0},
             "idosa": {"rural": 0, "urbano": 0, "nao_informado": 0},
             "qualidade": {
@@ -194,31 +224,31 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         #     for resp in result_hipertensao:
         #         idicators_body["hipertensao"][resp[0]] = int(resp[1])
 
-            # indicator_idoso_sql = get_indicators_idoso(
-            #     cnes, equipe
-            # )
-            # result_idoso = local_con.execute(
-            #     text(indicator_idoso_sql),
-            # )
-            # for resp in result_idoso:
-            #     key = (
-            #         resp[0]
-            #         .lower()
-            #         .replace("zona ", "")
-            #         .replace("n/i", "nao_informado")
-            #         .replace("urbana", "urbano")
-            #     )
-            #     idicators_body["idosa"][key] = int(resp[1])
+        # indicator_idoso_sql = get_indicators_idoso(
+        #     cnes, equipe
+        # )
+        # result_idoso = local_con.execute(
+        #     text(indicator_idoso_sql),
+        # )
+        # for resp in result_idoso:
+        #     key = (
+        #         resp[0]
+        #         .lower()
+        #         .replace("zona ", "")
+        #         .replace("n/i", "nao_informado")
+        #         .replace("urbana", "urbano")
+        #     )
+        #     idicators_body["idosa"][key] = int(resp[1])
 
-            # indicator_crianca_sql = get_indicators_crianca(cnes, equipe)
-            # result_crianca = local_con.execute(
-            #     text(indicator_crianca_sql),
-            # )
-            # for resp in result_crianca:
-            #     key = (
-            #         resp[0].lower().replace("zona ", "").replace("n/i", "nao_informado").replace("urbana", "urbano")
-            #     )
-            #     idicators_body["crianca"][key] = int(resp[1])
+        # indicator_crianca_sql = get_indicators_crianca(cnes, equipe)
+        # result_crianca = local_con.execute(
+        #     text(indicator_crianca_sql),
+        # )
+        # for resp in result_crianca:
+        #     key = (
+        #         resp[0].lower().replace("zona ", "").replace("n/i", "nao_informado").replace("urbana", "urbano")
+        #     )
+        #     idicators_body["crianca"][key] = int(resp[1])
 
         return {
             "total": total_people,

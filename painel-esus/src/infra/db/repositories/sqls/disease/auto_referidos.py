@@ -72,6 +72,7 @@ w                total_consulta_med_enferm,
                 n_atendimentos_12_meses
             from read_parquet('{HYPERTENSION_PATH}')
             """
+
 def get_disease_base_sql(cnes: int = None, equipe: int = None, hypertension = True):
     where_clause = ""
     if cnes is not None:
@@ -214,3 +215,38 @@ def get_diabetes_exams_count(cnes: int = None, equipe: int = None):
     from patients
     """
     return sql
+
+def filter_diabetes_by_localidade(cnes: int = None, equipe: int = None):
+    sql = get_disease_base_sql(cnes, equipe,False)
+    return f"""
+    with condition as ({sql}),
+    cidadaos as (
+            select
+                distinct p.*,
+                case 
+                    when LOWER(ds_tipo_localizacao_domicilio) is null  then 'nao_definido'
+                    when LOWER(ds_tipo_localizacao_domicilio) = 'rural' then 'rural'
+                    when LOWER(ds_tipo_localizacao_domicilio) = 'urbana' then 'urbano'
+                end tipo    
+            from
+                condition p )
+            select tipo, count(*) total  from cidadaos group by 1
+    """
+
+
+def filter_hypertension_by_localidade(cnes: int = None, equipe: int = None):
+    sql = get_disease_base_sql(cnes, equipe,True)
+    return f"""
+    with condition as ({sql}),
+    cidadaos as (
+            select
+                distinct p.*,
+                case 
+                    when LOWER(ds_tipo_localizacao_domicilio) is null  then 'nao_definido'
+                    when LOWER(ds_tipo_localizacao_domicilio) = 'rural' then 'rural'
+                    when LOWER(ds_tipo_localizacao_domicilio) = 'urbana' then 'urbano'
+                end tipo    
+            from
+                condition p )
+            select tipo, count(*) total  from cidadaos group by 1
+    """

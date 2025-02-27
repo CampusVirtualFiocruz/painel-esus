@@ -185,7 +185,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
             if paciente[2] is not None:
                 if paciente[2] not in result:
                     result[paciente[2]] = init()
-                result[paciente[2]][paciente[1]] = paciente[0]
+                result[paciente[2]][str(paciente[1]).capitalize()] = paciente[0]
         return result
 
     def get_complications(self, cnes: int = None, equipe: int = None) -> None:
@@ -193,9 +193,9 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
         def init_complications(value, total):
             return {
-                "com_consulta": round(value / total, 2),
+                "com_consulta": round(value / total, 2)*100,
                 "com_consulta_abs": value,
-                "sem_consulta": round((total - value) / total, 2),
+                "sem_consulta": round((total - value) / total, 2)*100,
                 "sem_consulta_abs": total - value,
             }
 
