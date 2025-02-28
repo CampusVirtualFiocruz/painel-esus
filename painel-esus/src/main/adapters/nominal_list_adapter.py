@@ -93,7 +93,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
                 exibir_alerta=(
                     user["alerta_creatinina"]
                 ),
-                descricao="Data do último exame de creatinina",
+                descricao="Data da última avaliação da Dosagem de Creatinina",
                 tipo_alerta="alerta-creatinina-maior-6-meses",
             )
         )
@@ -261,7 +261,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
                 exibir_alerta=(
                     user["alerta_ultima_hemoglobina_glicada"]
                 ),
-                descricao="Data da última Hemoglobina Glicada",
+                descricao="Data da última avaliação da Dosagem de Hemoglobina Glicada",
                 tipo_alerta="alerta-ultima-data-hemoglobina-glicada-maior-6-meses",
             )
         )
