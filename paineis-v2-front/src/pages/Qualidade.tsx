@@ -78,7 +78,7 @@ const reportSections = [
   },
 ];
 
-const footer = `O número de pessoas cuja Qualidade do Cadastro foi avaliada equivale ao total de indivíduos registrados a partir do ano de 2019 por meio das Fichas de Cadastro Individual (FCI), Módulo Cidadão PEC (Prontuário Eletrônico do Cidadão) e da Recusa de Cadastro.`;
+const footer = `O número de pessoas cuja Qualidade do Cadastro foi avaliada equivale ao total de indivíduos registrados por meio das Fichas de Cadastro Individual (FCI), Módulo Cidadão PEC (Prontuário Eletrônico do Cidadão) e da Recusa de Cadastro.`;
 
 const Qualidade = () => {
   const { id } = useParams<PainelParams>();
@@ -102,7 +102,7 @@ const Qualidade = () => {
   return (
     <ReportWrapper
       title="Qualidade de Cadastro"
-      subtitle={"(Pessoas registradas a partir de 2019)"}
+      //subtitle={"(Pessoas registradas a partir de 2019)"}
       footerNote={footer}
       header={
         <div

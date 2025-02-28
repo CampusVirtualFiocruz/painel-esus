@@ -32,12 +32,7 @@ export type PainelParams = {
   id: string;
 };
 
-const footerNote = `
-¹ O número de pessoas com Hipertensão Arterial equivale ao total de indivíduos que tiveram
-atendimentos individuais realizados nos últimos 12 meses com registro do código CID e/ou CIAP
-correspondente à condição de saúde em Ficha de Atendimento Individual, somado ao conjunto de
-pessoas com registro autorreferido da condição de saúde em Ficha de Cadastro Individual.
-`;
+const footerNote = `¹ O número de pessoas com Hipertensão equivale ao total de indivíduos que tiveram atendimentos individuais com registro do código CID e/ou CIAP correspondente à condição de saúde na Ficha de Atendimento Individual, somado ao conjunto de pessoas com registro autorreferido da condição de saúde na Ficha de Cadastro Individual.`;
 
 export function Hipertensao() {
   const { id } = useParams<PainelParams>();
@@ -243,7 +238,7 @@ export function Hipertensao() {
       {showModal && <Modal data={data} setShowModal={setShowModal} />}
       <ReportWrapper
         title={"Hipertensão"}
-        subtitle={"(Pessoas atendidas nos últimos 12 meses)"}
+        //subtitle={"(Pessoas atendidas nos últimos 12 meses)"}
         footerNote={footerNote}
         footer={
           <ReportFooter chaveListaNominal="Hipertensão" equipe={equipe} />

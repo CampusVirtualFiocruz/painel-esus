@@ -3,25 +3,8 @@ import { Icon } from "bold-ui";
 import { capitalizeName } from "../../utils/stringUtils";
 
 export const footerNotes = {
-  Diabetes: `
-O número total de pessoas com Diabetes atendidas nos últimos 12 meses incluídas na Lista Nominal
-equivale ao conjunto de indivíduos que tiveram atendimentos individuais realizados nos últimos
-12 meses com registro do código CID e/ou CIAP correspondente ao Diabetes em Ficha de
-Atendimento Individual, somado ao conjunto de pessoas com registro autorreferido de Diabetes em
-Ficha de Cadastro Individual que também tiveram atendimentos individuais realizados nos últimos 12 meses.
-Todas essas pessoas serão contabilizadas em todas as Listas nominais de cada uma das UBS e Equipes em que
-tiver ocorrido contato assistencial registrado em Ficha de Atendimento Individual, Ficha de Atendimento
-Odontológico ou Ficha de Procedimentos.
-  `,
-  Hipertensão: `
-O número total de pessoas com Hipertensão atendidas nos últimos 12 meses incluídas na Lista Nominal
-equivale ao conjunto de indivíduos que tiveram atendimentos individuais realizados nos últimos 12 meses
-com registro do código CID e/ou CIAP correspondente à Hipertensão em Ficha de Atendimento Individual,
-somado ao conjunto de pessoas com registro autorreferido de Hipertensão em Ficha de Cadastro Individual
-que também tiveram atendimentos individuais realizados nos últimos 12 meses. Todas essas pessoas serão
-contabilizadas em todas as Listas nominais de cada uma das UBS e Equipes em que tiver ocorrido contato
-assistencial registrado em Ficha de Atendimento Individual, Ficha de Atendimento Odontológico ou Ficha de Procedimentos.
-`,
+  Diabetes: `O número total de pessoas com Diabetes incluídas na Lista Nominal equivale ao conjunto de indivíduos que tiveram atendimentos individuais com registro do código CID e/ou CIAP correspondente ao Diabetes na Ficha de Atendimento Individual, somado ao conjunto de pessoas com registro autorreferido de Diabetes na Ficha de Cadastro Individual.`,
+  Hipertensão: `O número total de pessoas com Hipertensão incluídas na Lista Nominal equivale ao conjunto de indivíduos que tiveram atendimentos individuais com registro do código CID e/ou CIAP correspondente à Hipertensão na Ficha de Atendimento Individual, somado ao conjunto de pessoas com registro autorreferido de Hipertensão na Ficha de Cadastro Individual.`,
 } as any;
 
 export const columns = ({ handleClick, condicao }: any) => {

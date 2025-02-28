@@ -213,7 +213,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user["ultima_data_hemoglobina_glicada"] or "-",
                 exibir_alerta=user["alerta_ultima_hemoglobina_glicada"],
-                descricao="Data da última Hemoglobina Glicada",
+                descricao="Data da última avaliação da Dosagem de Hemoglobina Glicada",
                 tipo_alerta="alerta-ultima-data-hemoglobina-glicada-maior-6-meses",
             )
         )
