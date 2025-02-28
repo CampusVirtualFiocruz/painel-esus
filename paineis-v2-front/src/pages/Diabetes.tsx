@@ -417,7 +417,7 @@ export function Diabetes() {
                     }}
                   >
                     {dataDiabetesFactors?.map((diabete: any, i: number) => (
-                      <Pie key={i} data={diabete} />
+                      <Pie key={i} data={diabete} pallete={["#0069d0", "#e4e4e4"]} />
                     ))}
                   </div>
                 )}
