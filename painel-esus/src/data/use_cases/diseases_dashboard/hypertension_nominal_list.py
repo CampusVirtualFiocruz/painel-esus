@@ -1,4 +1,6 @@
 # pylint: disable=R0913
+import json
+
 from src.errors import InvalidArgument
 from src.main.adapters.nominal_list_adapter import HypertensionNominalListAdapter
 

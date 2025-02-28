@@ -10,7 +10,6 @@ from src.infra.db.settings.connection_local import DBConnectionHandler
 start_time = time.time()
 
 
-# In[2]:
 
 
 
@@ -24,7 +23,6 @@ def gerar_banco():
     dt_12meses = datetime.today() - relativedelta(months=12)
 
 
-    # In[190]:
 
 
     coluns_acv = ['co_unico_ultima_ficha','st_usar_cadastro_individual',
@@ -96,7 +94,6 @@ def gerar_banco():
     )
 
 
-    # In[40]:
 
 
     today = date.today()
@@ -189,7 +186,6 @@ def gerar_banco():
 
     # #### procedimento
 
-    # In[41]:
 
 
 
@@ -241,7 +237,6 @@ def gerar_banco():
 
     # #### atendimento
 
-    # In[42]:
 
 
     fai_v2 = (
@@ -335,9 +330,7 @@ def gerar_banco():
     )
 
 
-    # #### indicador acompnhamento
 
-    # In[43]:
 
 
     tb_pessoa_v4  = (
@@ -355,7 +348,6 @@ def gerar_banco():
     )
 
 
-    # In[44]:
 
 
     tb_dim_und_saude_v2 = (
@@ -419,7 +411,6 @@ def gerar_banco():
     )
 
 
-    # In[45]:
 
 
     tb_pessoa_v6 = tb_pessoa_v5.join(
@@ -435,7 +426,6 @@ def gerar_banco():
     )
 
 
-    # In[46]:
 
 
     tb_pessoa_v7 = (

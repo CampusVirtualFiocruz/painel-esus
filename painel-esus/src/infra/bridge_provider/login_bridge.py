@@ -2,7 +2,7 @@
 # pylint: disable=line-too-long
 # pylint: disable=W0012,R1710, W0611, C0103,W0622
 import urllib.parse
-from pprint import pprint
+# from pprint import pprint
 
 import requests
 from sqlalchemy import text
@@ -157,9 +157,9 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             "Content-Type": "application/json",
             "Cookie": "JSESSIONID=87J4pWjfQUVaO3b_lndd1DQE-8hJ3RZzcHes0uFb; XSRF-TOKEN=25038984-1945-43e2-a990-f62709f4eddd",
         }
-        print('iniciando....')
+        # print('iniciando....')
         response = self.get_reponse_body(session, url, headers, payload)
-        print(response)
+        # print(response)
         if response.text is None:
             return None
         cookie = session.cookies.get_dict()

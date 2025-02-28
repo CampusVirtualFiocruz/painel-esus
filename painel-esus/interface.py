@@ -84,7 +84,7 @@ def connect_db_with_params(
     ) as db_con:
         engine = db_con.get_engine()
         res = pd.read_sql_query("select * from information_schema.tables", con=engine)
-        print("CONECTOU", res.shape)
+        # print("CONECTOU", res.shape)
 
         image_path = os.getcwd()
         image_path = os.path.join(image_path, "icon/success.png")
@@ -108,7 +108,7 @@ def connect_db_with_params(
 
 
 def connection_error_db(new_window):
-    print("ERRO DE CONEXÃO")
+    # print("ERRO DE CONEXÃO")
     image_path = os.getcwd()
     image_path = os.path.join(image_path, "icon/error.png")
 
@@ -158,7 +158,7 @@ def topLevelViewConeectionFunction(
 
     try:
         if db_user and db_password and db_host and db_port and db_database:
-            print(
+            # print(
                 db_user, " ", db_password, " ", db_host, " ", db_port, " ", db_database
             )
             new_window.after(

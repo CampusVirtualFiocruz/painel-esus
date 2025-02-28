@@ -21,14 +21,17 @@ if __name__ == "__main__":
     port = 5001
     host = "0.0.0.0"
     ip = socket.gethostbyname(socket.gethostname())
-    ip2=getIP()
+    try:
+        ip2=getIP()
+    except:
+        ip2="localhost"
     logging.info("Geração Terminada.")
     logging.info(f"""Servidor do painel iniciado:
         PORTA: {port}
         HOST:
-            http://{host}{port}
-            http://{ip}{port}
-            http://{ip2}{port}
+            http://{host}:{port}
+            http://{ip}:{port}
+            http://{ip2}:{port}
             http://localhost:{port}
     """)
     app.run(host=host, port=port, debug=False)

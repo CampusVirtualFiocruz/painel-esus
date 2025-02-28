@@ -35,7 +35,6 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
           equipe,
         },
       });
-
       return response?.data;
     },
     {

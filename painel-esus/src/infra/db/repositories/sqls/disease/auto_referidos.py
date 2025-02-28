@@ -20,7 +20,7 @@ def get_hypertension_base_sql():
                 nu_numero_tb_cidadao numero,
                 ds_cep_tb_cidadao cep,
                 ds_complemento_tb_cidadao complemento,
-                '' as bairro,
+                no_bairro_tb_cidadao as bairro,
                 ds_tipo_localizacao_domicilio tipo_localidade,
                 co_dim_unidade_saude codigo_unidade_saude, 
                 codigo_equipe,
@@ -48,19 +48,34 @@ def get_hypertension_base_sql():
                 imc_categoria,
                 nome_unidade_saude,
                 nome_equipe,
+                ---
+                coalesce( cast(dt_ultima_afericao_pa as varchar), '')  ultima_data_afericao_pa,
                 agg_afericao_pa alerta_afericao_pa,
-                dt_ultima_afericao_pa,
                 indicador_visitas_domiciliares_acs alerta_visita_acs,
-                data_ultima_visita_domiciliar_acs,
-                data_ultimo_atend_odonto,
-                agg_creatinina_avaliada alerta_creatinina,
-                data_ultimo_creatinina,
-                data_ultimo_peso_altura,
-                avaliacao_colesterol,
+                coalesce( cast(data_ultima_visita_domiciliar_acs as varchar), '') data_ultima_visita_acs,
+                coalesce( cast(data_ultimo_atend_odonto as varchar), '') ultimo_atendimento_odonto,
+                coalesce(agg_cirurgiao_dentista, 1) alerta_ultima_consulta_odontologica,
+                coalesce( cast(data_ultimo_creatinina as varchar), '') ultima_data_creatinina,
+                agg_creatinina alerta_creatinina,
+                coalesce(total_consulta_med_enferm, 0)  total_consulta_med_enferm,
+                case 
+                    when total_consulta_med_enferm < 2 then 1
+                    when total_consulta_med_enferm > 2 then 0
+                    when total_consulta_med_enferm is null then 1
+                end as alerta_total_de_consultas_medico,
+                agg_medicos_enfermeiros alerta_ultima_consulta_medico,
+                coalesce( cast(dt_ultima_peso_altura as varchar), '') data_ultimo_peso_altura,
+                dt_ultima_colesterol_total,
+                agg_colesterol_total,
+                dt_ultima_colesterol_total,
+                agg_colesterol_hdl,
+                dt_ultima_colesterol_ldl
+                agg_colesterol_ldl,
+                agg_colesterol,
                 tipo_ultima_consulta,
-w                total_consulta_med_enferm,
-                dt_primeiro_reg_condicao,
-                hipertensao_codigos_1atend,
+                coalesce( cast(data_ultima_consulta_med_enferm as varchar), '') ultimo_atendimento_medico,
+                coalesce( cast(dt_primeiro_reg_condicao as varchar), '') dt_primeiro_reg_condicao,
+                hipertensao_codigos_1atend codigos_1atend,
                 creatinina,
                 colesterol,
                 hemograma,
@@ -72,6 +87,111 @@ w                total_consulta_med_enferm,
                 n_atendimentos_12_meses
             from read_parquet('{HYPERTENSION_PATH}')
             """
+
+def get_hypertension_base_sql_filter(cnes: int = None, equipe: int = None):
+    where_clause = ""
+    if cnes is not None:
+        where_clause += f"""            where 
+                codigo_unidade_saude = {cnes} """
+        if equipe and equipe is not None:
+            where_clause += f" and codigo_equipe = {equipe} "
+    sql = get_hypertension_base_sql()
+    return f""" with lista as ({sql}) 
+        select * from lista {where_clause} """
+
+
+def get_diabetes_base_sql():
+
+    return f"""select 
+                co_fat_cidadao_pec cidadao_pec,
+                ds_raca_cor raca_cor,
+                nu_cpf_cidadao cpf,
+                nu_cns_cidadao cns,
+                no_cidadao nome,
+                dt_nasc_cidadao data_nascimento, 
+                idade,
+                no_sexo_cidadao sexo,
+                telefone,
+                no_tipo_logradouro_tb_cidadao tipo_endereco,
+                ds_logradouro_tb_cidadao endereco,
+                nu_numero_tb_cidadao numero,
+                ds_cep_tb_cidadao cep,
+                ds_complemento_tb_cidadao complemento,
+                no_bairro_tb_cidadao as bairro,
+                ds_tipo_localizacao_domicilio tipo_localidade,
+                co_dim_unidade_saude codigo_unidade_saude, 
+                codigo_equipe,
+                diabetes,
+                autoreferido,
+                faixa_etaria,
+                nu_micro_area_tb_cidadao micro_area,
+                n_infarto_agudo,
+                n_acidente_vascular,
+                n_coronariana,
+                n_cerebrovascular,
+                n_renal,
+                total_medicos,
+                total_cirug_dentista,
+                total_farmaceuticos,
+                total_fisioterapeutas,
+                total_nutricionistas,
+                total_fonoaudiologos,
+                total_terapeutas_ocupacionais,
+                total_educação_fisica,
+                total_psicologos,
+                total_assist_sociais,
+                total_enfermeiros,
+                total_outros,
+                imc_categoria,
+                nome_unidade_saude,
+                nome_equipe,
+                ---
+                coalesce( cast(dt_ultima_afericao_pa as varchar), '')  ultima_data_afericao_pa,
+                agg_afericao_pa alerta_afericao_pa,
+                indicador_visitas_domiciliares_acs alerta_visita_acs,
+                coalesce( cast(data_ultima_visita_domiciliar_acs as varchar), '') data_ultima_visita_acs,
+                coalesce( cast(data_ultimo_atend_odonto as varchar), '') ultimo_atendimento_odonto,
+                coalesce(agg_cirurgiao_dentista, 1) alerta_ultima_consulta_odontologica,
+                coalesce( cast(data_ultimo_creatinina as varchar), '') ultima_data_creatinina,
+                agg_creatinina alerta_creatinina,
+                coalesce(total_consulta_med_enferm, 0)  total_consulta_med_enferm,
+                case 
+                    when total_consulta_med_enferm < 2 then 1
+                    when total_consulta_med_enferm > 2 then 0
+                    when total_consulta_med_enferm is null then 1
+                end as alerta_total_de_consultas_medico,
+                agg_medicos_enfermeiros alerta_ultima_consulta_medico,
+                coalesce( cast(dt_ultima_peso_altura as varchar), '') data_ultimo_peso_altura,
+                tipo_ultima_consulta,
+                coalesce( cast(data_ultima_consulta_med_enferm as varchar), '') ultimo_atendimento_medico,
+                coalesce( cast(dt_primeiro_reg_condicao as varchar), '') dt_primeiro_reg_condicao,
+                diabetes_codigos_1atend codigos_1atend,
+                coalesce( cast(dt_ultima_hemoglobina_avaliado as varchar), '') ultima_data_hemoglobina_glicada,
+                agg_hemoglobina alerta_ultima_hemoglobina_glicada,
+                creatinina,
+                colesterol,
+                hemograma,
+                eas_equ,
+                glicemia,
+                retino,
+                hemob_glica,
+                n_atendimentos_12_meses
+            from read_parquet('{DIABETES_PATH}')
+            """
+
+
+def get_diabetes_base_sql_filter(cnes: int = None, equipe: int = None):
+    where_clause = ""
+    if cnes is not None:
+        where_clause += f"""            where 
+                codigo_unidade_saude = {cnes} """
+        if equipe and equipe is not None:
+            where_clause += f" and codigo_equipe = {equipe} "
+    sql = get_diabetes_base_sql()
+    return f""" with lista as ({sql}) 
+        select * from lista {where_clause} """
+
+
 def get_disease_base_sql(cnes: int = None, equipe: int = None, hypertension = True):
     where_clause = ""
     if cnes is not None:
@@ -98,6 +218,13 @@ def get_total_cares(cnes: int = None, equipe: int = None, hypertension=True):
     sql = get_disease_base_sql(cnes, equipe, hypertension)
     sql = f""" with cares as ({sql}) select count(*) total from cares"""
     return sql
+
+
+def get_total_cares_12(cnes: int = None, equipe: int = None, hypertension=True):
+    sql = get_disease_base_sql(cnes, equipe, hypertension)
+    sql = f""" with cares as ({sql}) select sum(n_atendimentos_12_meses) total from cares"""
+    return sql
+
 
 def get_cares(cnes: int = None, equipe: int = None, hypertension=True):
     sql = get_disease_base_sql(cnes, equipe, hypertension)
@@ -129,37 +256,39 @@ def get_complications(cnes: int = None, equipe: int = None, hypertension=True):
 
 def get_total_patients(cnes: int = None, equipe: int = None, hypertension=True):
     sql = get_disease_base_sql(cnes, equipe, hypertension)
-    sql = f""" with patients as ({sql}) select count(*) total from patients"""
+    sql = f""" with patients as ({sql}) select count(*) total from patients where autoreferido = 0"""
     return sql
 
 def get_professionals(cnes: int = None, equipe: int = None, hypertension=True):
     sql = get_disease_base_sql(cnes, equipe, hypertension)
     sql = f""" with patients as ({sql}) 
-    select 
-        sum(total_medicos) total_medicos,
-        sum(total_cirug_dentista) total_cirug_dentista,
-        sum(total_farmaceuticos) total_farmaceuticos,
-        sum(total_fisioterapeutas) total_fisioterapeutas,
-        sum(total_nutricionistas) total_nutricionistas,
-        sum(total_fonoaudiologos) total_fonoaudiologos,
-        sum(total_terapeutas_ocupacionais) total_terapeutas_ocupacionais,
-        sum(total_educação_fisica) total_educação_fisica,
-        sum(total_psicologos) total_psicologos,
-        sum(total_assist_sociais) total_assist_sociais,
-        sum(total_enfermeiros) total_enfermeiros,
-        sum(total_outros) total_outros,
-        (sum(total_medicos) + 
-        sum(total_cirug_dentista) + 
-        sum(total_farmaceuticos) + 
-        sum(total_fisioterapeutas) + 
-        sum(total_nutricionistas) + 
-        sum(total_fonoaudiologos) + 
-        sum(total_terapeutas_ocupacionais) + 
-        sum(total_educação_fisica) + 
-        sum(total_psicologos) + 
-        sum(total_assist_sociais) + 
-        sum(total_enfermeiros) + 
-        sum(total_outros)) total from patients"""
+        select 
+        sum(coalesce(total_medicos,0)) total_medicos,
+        sum(coalesce(total_cirug_dentista,0)) total_cirug_dentista,
+        sum(coalesce(total_farmaceuticos,0)) total_farmaceuticos,
+        sum(coalesce(total_fisioterapeutas,0)) total_fisioterapeutas,
+        sum(coalesce(total_nutricionistas,0)) total_nutricionistas,
+        sum(coalesce(total_fonoaudiologos,0)) total_fonoaudiologos,
+        sum(coalesce(total_terapeutas_ocupacionais,0)) total_terapeutas_ocupacionais,
+        sum(coalesce(total_educação_fisica,0)) total_educação_fisica,
+        sum(coalesce(total_psicologos,0)) total_psicologos,
+        sum(coalesce(total_assist_sociais,0)) total_assist_sociais,
+        sum(coalesce(total_enfermeiros,0)) total_enfermeiros,
+        sum(coalesce(total_outros,0)) total_outros,
+        (
+            sum(coalesce(total_medicos,0)) +
+            sum(coalesce(total_cirug_dentista,0)) +
+            sum(coalesce(total_farmaceuticos,0)) +
+            sum(coalesce(total_fisioterapeutas,0)) +
+            sum(coalesce(total_nutricionistas,0)) +
+            sum(coalesce(total_fonoaudiologos,0)) +
+            sum(coalesce(total_terapeutas_ocupacionais,0)) +
+            sum(coalesce(total_educação_fisica,0)) +
+            sum(coalesce(total_psicologos,0)) +
+            sum(coalesce(total_assist_sociais,0)) +
+            sum(coalesce(total_enfermeiros,0)) +
+            sum(coalesce(total_outros,0)) 
+        ) total from patients"""
     return sql
 
 
@@ -214,3 +343,38 @@ def get_diabetes_exams_count(cnes: int = None, equipe: int = None):
     from patients
     """
     return sql
+
+def filter_diabetes_by_localidade(cnes: int = None, equipe: int = None):
+    sql = get_disease_base_sql(cnes, equipe,False)
+    return f"""
+    with condition as ({sql}),
+    cidadaos as (
+            select
+                p.*,
+                case 
+                    when LOWER(ds_tipo_localizacao_domicilio) is null  then 'nao_definido'
+                    when LOWER(ds_tipo_localizacao_domicilio) = 'rural' then 'rural'
+                    when LOWER(ds_tipo_localizacao_domicilio) = 'urbana' then 'urbano'
+                end tipo    
+            from
+                condition p )
+            select tipo, count(*) total  from cidadaos group by 1
+    """
+
+
+def filter_hypertension_by_localidade(cnes: int = None, equipe: int = None):
+    sql = get_disease_base_sql(cnes, equipe,True)
+    return f"""
+    with condition as ({sql}),
+    cidadaos as (
+            select
+                p.*,
+                case 
+                    when LOWER(ds_tipo_localizacao_domicilio) is null  then 'nao_definido'
+                    when LOWER(ds_tipo_localizacao_domicilio) = 'rural' then 'rural'
+                    when LOWER(ds_tipo_localizacao_domicilio) = 'urbana' then 'urbano'
+                end tipo    
+            from
+                condition p )
+            select tipo, count(*) total  from cidadaos group by 1
+    """

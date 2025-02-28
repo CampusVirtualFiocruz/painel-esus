@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# coding: utf-8
+
 import os
 import time
 from datetime import date, datetime
@@ -14,46 +17,68 @@ def gerar_banco():
     input_path = os.path.join(working_directory, "dados", "input") 
     output_path = os.path.join(working_directory, "dados", "output")  
 
+
+
+    # ACV
     columns_acv = ['co_unico_ultima_ficha','dt_nascimento_cidadao','no_sexo_cidadao','nu_cpf_cidadao',
                 'nu_cns_cidadao','no_tipo_logradouro_tb_cidadao','ds_logradouro_tb_cidadao',
                 'nu_numero_tb_cidadao','no_bairro_tb_cidadao','ds_complemento_tb_cidadao',
                 'ds_cep_tb_cidadao','nu_telefone_celular','nu_telefone_contato','no_cidadao',
                 'nu_micro_area_tb_cidadao','nu_ine_vinc_equipe',
-                'nu_cnes_vinc_equipe','ds_tipo_localizacao_domicilio']
+                'nu_cnes_vinc_equipe','ds_tipo_localizacao_domicilio','dt_ultima_atualizacao_cidadao','co_seq_acomp_cidadaos_vinc']
 
-    tb_pessoa = pl.read_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet",columns = columns_acv)
+
 
     # FCI
     selected_columns_fci = ["co_fat_cidadao_pec","st_diabete","co_dim_tempo","nu_uuid_ficha",'co_dim_raca_cor']
 
-    fci = pl.read_parquet(input_path + os.sep +"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
 
     # FAI
     selected_columns_atd_ind = ["co_fat_cidadao_pec", "co_seq_fat_atd_ind","nu_altura","nu_peso","co_dim_tempo","co_dim_cbo_1", "co_dim_cbo_2", "dt_nascimento"]
 
-    fai = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet",columns=selected_columns_atd_ind)
-
-    # codigos FAI
-
-    fai_cods = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
 
     # PROCED / ATEND
     columns_proced = ['co_seq_fat_proced_atend','co_fat_cidadao_pec',"nu_altura","nu_peso",'co_dim_tempo','ds_filtro_procedimento','co_dim_cbo']
 
-    proced_atend = pl.read_parquet(input_path + os.sep +"tb_fat_proced_atend.parquet",columns = columns_proced)
+
+
 
     # FAOI
     columns_fao = ['co_fat_cidadao_pec','co_dim_tempo',"nu_altura","nu_peso",'co_dim_cbo_1','co_dim_cbo_2','co_seq_fat_atd_odnt','ds_filtro_procedimentos']
 
-    fao = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet")#,columns = columns_fao)
 
     # FAC (atividade coletiva)
     columns_atvdd_coletiva = ['co_fat_cidadao_pec','co_dim_tempo',"nu_participante_altura","nu_participante_peso",'co_seq_fat_atvdd_cltv_part']
 
-    fac = pl.read_parquet(input_path + os.sep +"tb_fat_atvdd_coletiva_part.parquet")
 
     # VIS_DOM (visita domiciliar)
     columns_vis_dom = ['co_seq_fat_visita_domiciliar','co_fat_cidadao_pec','co_dim_tempo','co_dim_cbo']
+
+
+
+
+
+    tb_pessoa = pl.read_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet",columns = columns_acv)
+
+
+    fci = pl.read_parquet(input_path + os.sep +"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
+
+
+    fai = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet",columns=selected_columns_atd_ind)
+
+
+
+    fai_cods = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
+
+
+    proced_atend = pl.read_parquet(input_path + os.sep +"tb_fat_proced_atend.parquet",columns = columns_proced)
+
+
+    fao = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet")#,columns = columns_fao)
+
+
+    fac = pl.read_parquet(input_path + os.sep +"tb_fat_atvdd_coletiva_part.parquet")
+
 
     fat_vis_dom = pl.read_parquet(input_path + os.sep + "tb_fat_visita_domiciliar.parquet", columns=columns_vis_dom)
 
@@ -73,9 +98,7 @@ def gerar_banco():
 
     # Passo 5. Criar variáveis de tempo de acordo com Indicador, quando aplicável
 
-    # In[3]:
-
-
+    
     dt_12meses = datetime.today() - relativedelta(months=12)
     dt_6meses = datetime.today() - relativedelta(months=6)
 
@@ -88,9 +111,7 @@ def gerar_banco():
 
     # Passo 7. Manipular dados conforme necessidades dos Indicadores
 
-    # Inicialmente, manipulando dados comuns a todos os indicadores:
 
-    # In[4]:
 
 
     # agrupa a tabela fci e captura se tem diabetes de forma autoreferida , 
@@ -118,12 +139,17 @@ def gerar_banco():
     #print(cad_grouped.glimpse() )
 
 
-    # In[5]:
-
-
     # selecionando variáveis de interesse e juntando ACV e FCI agrupada por cidadão
 
     fci_v2 = fci.select("co_fat_cidadao_pec","nu_uuid_ficha")
+
+
+    tb_pessoa = (
+        tb_pessoa
+        .with_columns(
+            pl.col("dt_ultima_atualizacao_cidadao").cast(pl.Utf8).str.strptime(pl.Date, "%Y-%m-%d").alias("dt_ultima_atualizacao_cidadao")
+        )
+    )
 
 
     tb_pessoa_v2 = tb_pessoa.join(
@@ -139,12 +165,23 @@ def gerar_banco():
         pl.col("st_diabete").fill_null(0),
     ])
 
-    tb_pessoa_v2.height
+    #tb_pessoa_v2.height
+
+
+
+
+
+    tb_pessoa_v2 = tb_pessoa_v2.sort(
+        by=["co_fat_cidadao_pec", "dt_ultima_atualizacao_cidadao", "co_seq_acomp_cidadaos_vinc"],  # Prioriza chave, depois data, depois variável inteira
+        descending=[False, True, True]             # Ordena data e variável inteira em ordem decrescente
+    ).unique(
+        subset="co_fat_cidadao_pec",                            # Remove duplicatas pela chave
+        keep="first"                               # Mantém a primeira ocorrência após a ordenação
+    )
 
 
     # ###  criando coluna para indicar se contém diabetes
 
-    # In[6]:
 
 
     # criando coluna para indicar se contém diabetes
@@ -182,26 +219,7 @@ def gerar_banco():
     )
 
 
-    # In[7]:
-
-
-    faip_cods_diabetes.height
-
-
-    # In[8]:
-
-
     faip_cods_diabetes = faip_cods_diabetes.filter(pl.col("isContained_DIABETES") == 1)
-
-
-    # In[9]:
-
-
-    faip_cods_diabetes.height
-
-
-    # In[10]:
-
 
     # agrupando dados de diabetes, seus códigos e número de diagnósticos de diabetes por cidadão
 
@@ -219,19 +237,6 @@ def gerar_banco():
         )   
     )
 
-    grouped_faip.height
-
-
-    # In[11]:
-
-
-    #grouped_faip  # co se fat ate ind com 2 cids 308989 - verificar lista nominal final
-
-
-    # In[12]:
-
-
-    # formatando variável de tempo e filtrando cidadãos não nulos
 
     fai_v2 = (
         fai
@@ -252,23 +257,6 @@ def gerar_banco():
         )
         .select("co_fat_cidadao_pec","co_seq_fat_atd_ind","dt_atendimento","co_dim_cbo_1","co_dim_cbo_2")
     )
-    fai_v3.height
-
-
-    # In[ ]:
-
-
-
-
-
-    # Passo 7.1
-    # Total de pessoas com diabetes
-
-    # In[13]:
-
-
-    # cruzamento entre atendimento e cid/ciaps de diabetes já agrupados por atendimentos únicos
-
     fai_diabetes_atd_unico = fai_v2.join(
         grouped_faip,
         on="co_seq_fat_atd_ind",
@@ -290,13 +278,6 @@ def gerar_banco():
         )
         
     )
-    grouped_fai_diabetes_atd_unico.height
-
-
-    # In[14]:
-
-
-    # filtrando pessoas da ACV com diabetes
 
     pessoas_diabetes = tb_pessoa_v2.join(
         grouped_fai_diabetes_atd_unico,
@@ -324,13 +305,6 @@ def gerar_banco():
         )
     )
 
-    pessoas_diabetes.height
-
-
-    # ### Calculo Agravos
-
-    # In[15]:
-
 
 
 
@@ -349,20 +323,6 @@ def gerar_banco():
         .otherwise(0)
         .alias("isContained_Doença_renal")
     )
-
-
-    #print(fai_cods.glimpse())
-
-
-    #for column_name in agravos_dict.keys():
-        #value_counts = fai_cods.group_by(column_name).len()
-        #print(f"Value counts for {column_name}:")
-        #print(value_counts)
-        
-    #value_counts = fai_cods.group_by("isContained_Doença_renal").len()
-
-
-    # In[16]:
 
 
     grouped_complicacoes = (
@@ -393,19 +353,12 @@ def gerar_banco():
         )
     )
 
-
     ## add complicacoes aos atendimentos  
     fai_agravo  =  fai_v2.join(
         grouped_complicacoes,
         on="co_seq_fat_atd_ind",
         how="inner"
     )
-    fai_agravo.height  # o resultado não deveria ser 100%? ja que fai e grouped_complicacoes partem da mesma fonte? verificar com novos dados
-
-
-    # In[17]:
-
-
     ## agrupar os atendimentos dos agravos em pessoas
     fai_pessoas_agravo = (
         fai_agravo
@@ -418,12 +371,6 @@ def gerar_banco():
             pl.sum("n_renal").alias("n_renal")
         )
     )
-    fai_pessoas_agravo.height
-
-
-    # In[18]:
-
-
 
     pessoas_diabetes_agravo  =  pessoas_diabetes.join(
         fai_pessoas_agravo,
@@ -438,16 +385,6 @@ def gerar_banco():
     )
 
 
-    pessoas_diabetes_agravo.height
-
-
-    # ### separando informações de interesse exames - sem ciaps e cids, apenas procedimentos avaliados ou solicitados
-
-    # In[19]:
-
-
-
-
     exames = (
         fai_cods
         .select("co_seq_fat_atd_ind","codigo","tipo")
@@ -457,86 +394,53 @@ def gerar_banco():
     )
 
 
-    # ### Passo 7.2
-    # 
-    # Indicador 1. Pessoas com diabetes que realizaram consulta com médico(a) ou enfermeiro(a) nos últimos 06 meses (com registro de CID/CIAP na FAI)
-    # 
-    # obs.: Capturar a data do último atendimento identificado para compor a lista nominal
-
-    # In[20]:
-
-
-
     fai_diabetes_6meses = (
         fai_v2
         .join(
-            grouped_faip, # cid/ciap e abp de diabetes ja filtrados e agrupados antes
+            grouped_faip, # cid/ciap e abp de hipertensao ja filtrados e agrupados antes
             on="co_seq_fat_atd_ind",
             how="inner"
         )
-        .filter(
-            pl.col("dt_atendimento") >= dt_6meses
-        )
         .select("co_fat_cidadao_pec","co_seq_fat_atd_ind","dt_atendimento","co_dim_cbo_1","co_dim_cbo_2")
-        .with_columns(
-            pl.when(
-                (pl.col("co_dim_cbo_1").is_in(medicos_codigos)) |
-                (pl.col("co_dim_cbo_2").is_in(medicos_codigos))
-            )
-            .then(1)
-            .otherwise(0)
-            .alias("medicos"),
-            
-            pl.when(
-                (pl.col("co_dim_cbo_1").is_in(enfermeiros_codigos)) |
-                (pl.col("co_dim_cbo_2").is_in(enfermeiros_codigos))
-            )
-            .then(1)
-            .otherwise(0)
-            .alias("enfermeiros")
-        )
         .filter(
-            (pl.col("medicos") == 1) |
-            (pl.col("enfermeiros") == 1)
+            (pl.col("co_dim_cbo_1").is_in(medicos_codigos) | pl.col("co_dim_cbo_2").is_in(medicos_codigos))  | (pl.col("co_dim_cbo_1").is_in(enfermeiros_codigos)) | (pl.col("co_dim_cbo_2").is_in(enfermeiros_codigos))
+        )
+        .with_columns(
+
+        (pl.col("co_dim_cbo_1").is_in(medicos_codigos) | pl.col("co_dim_cbo_2").is_in(medicos_codigos)).alias("is_medico"),
+            
+        (pl.col("co_dim_cbo_1").is_in(enfermeiros_codigos) | pl.col("co_dim_cbo_2").is_in(enfermeiros_codigos)).alias("is_enfermeiro")
+
         )
         .group_by("co_fat_cidadao_pec")
         .agg(
-            pl.col("dt_atendimento")
-            .filter(pl.col("enfermeiros") == 1)
-            .max()
-            .alias("data_ultimo_enfermeiro"),
 
-            pl.col("dt_atendimento")
-            .filter(pl.col("medicos") == 1)
-            .max()
-            .alias("data_ultimo_medicos"),
-            pl.len().alias("total_consulta_med_enferm")
+            pl.col("dt_atendimento").filter(pl.col("is_medico")).max().alias("data_ultimo_medico"),
+            pl.col("dt_atendimento").filter(pl.col("is_enfermeiro")).max().alias("data_ultimo_enfermeiro"),
+            
+            ((pl.col("is_medico") & (pl.col("dt_atendimento") >= dt_6meses)).any()).alias("tem_medico_6m"),
+            ((pl.col("is_enfermeiro") & (pl.col("dt_atendimento") >= dt_6meses)).any()).alias("tem_enfermeiro_6m"),
+            
+            pl.col("dt_atendimento").filter(
+                (pl.col("is_medico") & (pl.col("dt_atendimento") >= dt_6meses)) |
+                (pl.col("is_enfermeiro") & (pl.col("dt_atendimento") >= dt_6meses))
+            ).count().alias("total_consulta_med_enferm")
         )
         .with_columns(
             
-            pl.max_horizontal(["data_ultimo_medicos", "data_ultimo_enfermeiro"])
-            .alias("data_ultima_consulta_med_enferm"),
+            (pl.col("tem_medico_6m") | pl.col("tem_enfermeiro_6m")).cast(pl.Int8).alias("agg_medicos_enfermeiros"),
+            
+            pl.max_horizontal("data_ultimo_medico", "data_ultimo_enfermeiro").alias("data_ultima_consulta_med_enferm"),
         )
         .with_columns(    
-            pl.when(pl.col("data_ultima_consulta_med_enferm") == pl.col("data_ultimo_medicos"))
+            pl.when(pl.col("data_ultima_consulta_med_enferm") == pl.col("data_ultimo_medico"))
             .then(pl.lit("medico"))
             .when(pl.col("data_ultima_consulta_med_enferm") == pl.col("data_ultimo_enfermeiro"))
             .then(pl.lit("enfermeiro"))
             .otherwise(None)
-            .alias("tipo_ultima_consulta")
-        )
-    ).select("co_fat_cidadao_pec","tipo_ultima_consulta","data_ultima_consulta_med_enferm","total_consulta_med_enferm")
-
-    fai_diabetes_6meses.height
-
-
-    # ### Passo 7.3
-    # 
-    # Indicador 2.  Registro de medição de pressão arterial nos últimos 06 meses
-    # 
-    # obs.: Capturar a data do último procedimento identificado para compor a lista nominal
-
-    # In[21]:
+            .alias("tipo_ultima_consulta"),
+    )
+    ).select("co_fat_cidadao_pec","agg_medicos_enfermeiros","data_ultima_consulta_med_enferm","tipo_ultima_consulta",'total_consulta_med_enferm')
 
 
     fao_filtrado = fao.filter(pl.col('ds_filtro_procedimentos').str.contains(r"\|0301100039\|"))
@@ -553,7 +457,6 @@ def gerar_banco():
             pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento")
         )
         .filter(
-            (pl.col("dt_atendimento") >= calcular_data(6)) &
             (pl.col("co_fat_cidadao_pec").is_not_null())
         )
         .filter(
@@ -569,27 +472,23 @@ def gerar_banco():
         )
         .group_by("co_fat_cidadao_pec")
         .agg(
-            pl.max("afericao_pa").alias("agg_afericao_pa"),
+            pl.max("afericao_pa").alias("agg_afericao_pa_semdata"),
             pl.col("dt_atendimento")
-            .filter(pl.col("afericao_pa") == 1)
-            .max()
-            .alias("dt_ultima_afericao_pa")
+                .filter(pl.col("afericao_pa") == 1)
+                .max()
+                .alias("dt_ultima_afericao_pa")
         )
-    )
+        .with_columns(
 
-    #afericao_pa.head()
-
-
-    # ### Passo 7.4.
-    # 
-    # Indicador 3. Duas visitas domiciliares por ACS/TACS nos últimos 12 meses com intervalo mínimo de 30 dias entre as visitas
-    # 
-    # obs.: Capturar a quantidade de visitas para compor a lista nominal
-
-    # In[22]:
-
-
-    # tabela VISITA DOMICILIAR
+            pl.when(
+                (pl.col("dt_ultima_afericao_pa") >= calcular_data(6) ) &
+                (pl.col("agg_afericao_pa_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_afericao_pa"),
+        )
+    ).select("co_fat_cidadao_pec","agg_afericao_pa","dt_ultima_afericao_pa")
 
     visita_asc = (
         fat_vis_dom
@@ -601,66 +500,41 @@ def gerar_banco():
             pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento")
         )
         .filter(
-            (pl.col("dt_atendimento") >= calcular_data(12)) &
             (pl.col("co_fat_cidadao_pec").is_not_null()) &
             (pl.col("co_dim_cbo").is_in(acs_tacs))
         )
         .group_by("co_fat_cidadao_pec")
         .agg([
-            pl.col("dt_atendimento").len().alias("n_atendimentos"),
+            pl.col("dt_atendimento").len().alias("n_visitas_domiciliares_acs"),
             pl.min("dt_atendimento").alias("min_date"),
             pl.max("dt_atendimento").alias("max_date"),
-
-            pl.col("dt_atendimento")
-            .max()
-            .alias("data_ultima_visita_domiciliar_acs")
-
+            pl.col("dt_atendimento").max().alias("data_ultima_visita_domiciliar_acs"),
         ])
         .with_columns(
             (pl.col("max_date") - pl.col("min_date")).dt.total_days().alias("diff_dias")
         )
         .with_columns(
-            pl.when(
-                (pl.col("n_atendimentos") >= 2) &
-                (pl.col("diff_dias") >= 30)
+                pl.when(
+                (pl.col("n_visitas_domiciliares_acs") >= 2) &
+                (pl.col("diff_dias") >= 30) &
+                (pl.col("max_date") >= calcular_data(12))
             )
             .then(1)
             .otherwise(0)
             .alias("indicador_visitas_domiciliares_acs"),
         )
-        .with_columns(
-            pl.when(
-                (pl.col("indicador_visitas_domiciliares_acs") == 1)
-            )
-            .then("n_atendimentos")
-            .otherwise(None)
-            .alias("n_visitas_domiciliares_acs")
-        )
-
-    ).select("co_fat_cidadao_pec","indicador_visitas_domiciliares_acs","data_ultima_visita_domiciliar_acs") #n_visitas_domiciliares_acs
-
-
-    # In[23]:
-
-
-    visita_asc.filter(pl.col("data_ultima_visita_domiciliar_acs").is_not_null()).height
-
-
-    # ### Passo 7.5
-    # 
-    # Indicador 4. Avaliação de colesterol total, HDL e LDL nos últimos 12 meses
-    # 
-    # obs.: Capturar a data do último registro identificado de cada tipo de colesterol (Total, HDL e LDL) para compor a lista nominal
-
-    # In[24]:
+    ).select("co_fat_cidadao_pec", "indicador_visitas_domiciliares_acs", "data_ultima_visita_domiciliar_acs", "n_visitas_domiciliares_acs")
 
 
     fai_exames_colesterol = (
-        fai_v3
+        fai_v2
+        .filter(
+            (pl.col("co_fat_cidadao_pec").is_not_null())
+        )
         .join(
             exames,
             on="co_seq_fat_atd_ind",
-            how="left"
+            how="left"  
         )
         .filter(
                 (pl.col("co_dim_cbo_1").is_in(ex_cbo_colesterol) ) |
@@ -668,87 +542,102 @@ def gerar_banco():
         )
         .with_columns(
             pl.when(
-                ((pl.col("tipo") == "Procedimentos Avaliados") &
-                (pl.col("codigo").is_in(colesterol_total))
-                )
+                (  (pl.col("tipo") == "Procedimentos Avaliados") & ( pl.col("codigo").is_in(colesterol_total) ) )
             )
             .then(1)
             .otherwise(0)
             .alias("colesterol_total"),
 
             pl.when(
-                ((pl.col("tipo") == "Procedimentos Avaliados") &
-                (pl.col("codigo").is_in(colesterol_hdl))
-                )
+                (  (pl.col("tipo") == "Procedimentos Avaliados") & ( pl.col("codigo").is_in(colesterol_hdl) ) )
             )
             .then(1)
             .otherwise(0)
             .alias("colesterol_hdl"),
 
             pl.when(
-                ((pl.col("tipo") == "Procedimentos Avaliados") &
-                (pl.col("codigo").is_in(colesterol_ldl))
-                )
+                (  (pl.col("tipo") == "Procedimentos Avaliados") & ( pl.col("codigo").is_in(colesterol_ldl) ) )
             )
             .then(1)
             .otherwise(0)
             .alias("colesterol_ldl"),
+            
+        
+
+            
         )
+        
     )
-
-    fai_exames_colesterol.height
-
-
-    # In[25]:
-
 
     fai_exames_colesterol_grouped = (
         fai_exames_colesterol
         .group_by("co_fat_cidadao_pec")
         .agg(
-            pl.max("colesterol_total").alias("agg_colesterol_total"),
-            pl.max("colesterol_hdl").alias("agg_colesterol_hdl"),
-            pl.max("colesterol_ldl").alias("agg_colesterol_ldl"),
-            
+            pl.max("colesterol_total").alias("agg_colesterol_total_semdata"),
+            pl.max("colesterol_hdl").alias("agg_colesterol_hdl_semdata"),
+            pl.max("colesterol_ldl").alias("agg_colesterol_ldl_semdata"),
+
             pl.col("dt_atendimento")
-            .filter(pl.col("colesterol_total") == 1)
-            .max()
-            .alias("data_colesterol_total"),
-            
+                .filter(pl.col("colesterol_total") == 1)
+                .max()
+                .alias("dt_ultima_colesterol_total"),
+
             pl.col("dt_atendimento")
-            .filter(pl.col("colesterol_hdl") == 1)
-            .max()
-            .alias("data_colesterol_hdl"),
-            
+                .filter(pl.col("colesterol_hdl") == 1)
+                .max()
+                .alias("dt_ultima_colesterol_hdl"),
+
             pl.col("dt_atendimento")
-            .filter(pl.col("colesterol_ldl") == 1)
-            .max()
-            .alias("data_colesterol_ldl")
+                .filter(pl.col("colesterol_ldl") == 1)
+                .max()
+                .alias("dt_ultima_colesterol_ldl")
+                
+        
         )
         .with_columns(
+
             pl.when(
-                (pl.col("agg_colesterol_total") == 1 ) &
-                (pl.col("agg_colesterol_hdl") == 1 ) &
-                (pl.col("agg_colesterol_ldl") == 1 )
+                (pl.col("dt_ultima_colesterol_ldl") >= calcular_data(12) ) &
+                (pl.col("agg_colesterol_ldl_semdata") == 1)
             )
             .then(1)
             .otherwise(0)
-            .alias("avaliacao_colesterol")
+            .alias("agg_colesterol_ldl"),
+
+            pl.when(
+                (pl.col("dt_ultima_colesterol_hdl") >= calcular_data(12) ) &
+                (pl.col("agg_colesterol_hdl_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_colesterol_hdl"),
+
+            pl.when(
+                (pl.col("dt_ultima_colesterol_total") >= calcular_data(12) ) &
+                (pl.col("agg_colesterol_total_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_colesterol_total"),
+        ).with_columns(
+            
+            pl.when(
+                (pl.col("agg_colesterol_total") == 1 ) &
+                (pl.col("agg_colesterol_hdl") == 1 ) &
+                (pl.col("agg_colesterol_ldl") == 1 ) 
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_colesterol")
+            
         )
+        
     )
 
 
-    # ### Passo. 7.6
-    # 
-    # Indicador 5.  Avaliação de creatinina nos últimos 12 meses
-    # 
-    # obs.: Capturar a data do último registro identificado para compor a lista nominal
-
-    # In[26]:
-
 
     fai_exames_creatinina_grouped = (
-        fai_v3
+        fai_v2
         .join(
             exames,
             on="co_seq_fat_atd_ind",
@@ -770,42 +659,38 @@ def gerar_banco():
             .then(1)
             .otherwise(0)
             .alias("creatinina"),
-
         )
-        .sort("dt_atendimento",descending = True)
         .group_by("co_fat_cidadao_pec")
         .agg(
-            pl.max("creatinina").alias("agg_creatinina"),
+            pl.max("creatinina").alias("agg_creatinina_semdata"),
             pl.col("dt_atendimento")
             .filter(pl.col("creatinina") == 1)
             .max()
             .alias("data_ultimo_creatinina"),
         )
-    )
+        .with_columns(
 
-    fai_exames_creatinina_grouped.height
-
-
-    # ### Passo 7.7
-    # 
-    # Indicador 6. Avaliação de hemoglobina glicada nos últimos 12 meses
-    # 
-    # obs.: Capturar a data do último registro identificado para compor a lista nominal
-
-    # In[27]:
-
+            pl.when(
+                (pl.col("data_ultimo_creatinina") >= calcular_data(12) ) &
+                (pl.col("agg_creatinina_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_creatinina"),
+        )
+    ).select("co_fat_cidadao_pec","agg_creatinina","data_ultimo_creatinina")
 
 
-    fai_hemo = fai_v3.join(fai_cods, on='co_seq_fat_atd_ind', how="left")
+
+    fai_hemo = fai_v2.join(fai_cods, on='co_seq_fat_atd_ind', how="left")
     hemoglobina_filtrada = (
     fai_hemo
         .filter(
-            (pl.col("dt_atendimento") >= calcular_data(12)) &
             (pl.col("co_fat_cidadao_pec").is_not_null())
         )
         .filter(
-            (pl.col("co_dim_cbo_1").is_in(glicemia_cbo)) |
-            (pl.col("co_dim_cbo_2").is_in(glicemia_cbo))
+            (pl.col("co_dim_cbo_1").is_in(hemoglo_cbo)) |
+            (pl.col("co_dim_cbo_2").is_in(hemoglo_cbo))
         )
     )
     reg_hemoglobina = (
@@ -821,39 +706,39 @@ def gerar_banco():
         )
         .group_by("co_fat_cidadao_pec")
         .agg(
-            pl.max("hemoglobina_avaliado").alias("agg_hemoglobina_avaliado"),
+            pl.max("hemoglobina_avaliado").alias("agg_hemoglobina_avaliado_semdata"),
             pl.col("dt_atendimento")
             .filter(pl.col("hemoglobina_avaliado") == 1)
             .max()
             .alias("dt_ultima_hemoglobina_avaliado")
-        )    
-    )
+        )
+        .with_columns(
+            pl.when(
+                (pl.col("dt_ultima_hemoglobina_avaliado") >= calcular_data(12) ) &
+                (pl.col("agg_hemoglobina_avaliado_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_hemoglobina"),
+        )
+    ).select("co_fat_cidadao_pec","agg_hemoglobina","dt_ultima_hemoglobina_avaliado")
 
 
-    # ### Passo 7.8
-    # 
-    # Indicador 7 - Avaliação dos pés nos últimos 12 meses
-    # 
-    # obs.: Capturar a data do último registro identificado para compor a lista nominal
-    # 
-
-    # In[28]:
 
 
     fai_cods_filtrado = fai_cods.filter((pl.col('tipo')=='Procedimentos Avaliado') & (pl.col('codigo').is_in(pe_diabetico_codigos) ) ).select("co_seq_fat_atd_ind","tipo","codigo")
 
     proced_atend_filtrado = proced_atend.filter(pl.col('ds_filtro_procedimento').str.contains(r"\|0301040095\|")).rename({"ds_filtro_procedimento": "codigo","co_dim_cbo": "co_dim_cbo_1"})
 
-    fai_filtrado = fai_v3.join(fai_cods_filtrado, on='co_seq_fat_atd_ind', how="left")
+    fai_filtrado = fai_v2.join(fai_cods_filtrado, on='co_seq_fat_atd_ind', how="left")
 
     pa_pe = pl.concat([fai_filtrado, proced_atend_filtrado], how="diagonal")
 
-    # fai v3 ja tem filtro de 12 meses
 
     grouped_pe = (
         pa_pe
         .filter(
-            pl.col("dt_atendimento") >= calcular_data(12)
+            (pl.col("co_fat_cidadao_pec").is_not_null())
         )
         .filter(
             (pl.col("co_dim_cbo_1").is_in(pe_cbo)) |
@@ -861,33 +746,39 @@ def gerar_banco():
         )
         .with_columns(
             pl.when(
+                ((pl.col("tipo") == "Procedimentos Avaliados") &
                 (pl.col("codigo").is_in(pe_diabetico_codigos))
+                )
             )
             .then(1)
             .otherwise(0)
             .alias("exame_pe")
         )
-        .sort("dt_atendimento",descending = True)
         .group_by("co_fat_cidadao_pec")
         .agg(
             pl.max("exame_pe").alias("agg_exame_pe"),
             pl.col("dt_atendimento")
-            .filter(  pl.col("exame_pe") == 1 )
+            .filter(pl.col("exame_pe") == 1)
             .max()
             .alias("data_ultimo_pe"),
         )
-    )
-
-    grouped_pe.height
+        .with_columns(
+            pl.when(
+                (pl.col("data_ultimo_pe") >= calcular_data(12)) &
+                (pl.col("agg_exame_pe") == 1)
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_creatinina"),
+        )
+    ).select("co_fat_cidadao_pec","agg_exame_pe","data_ultimo_pe")
 
 
     # ### Passo 7.9
     # 
-    # Indicador 8. Consulta com cirurgião-dentista na APS nos últimos 12 meses 
     # 
     # obs.: Capturar a data do último atendimento odontológico identificado para compor a lista nominal
 
-    # In[29]:
 
 
     fao_v2 = (
@@ -899,18 +790,10 @@ def gerar_banco():
             pl.col("co_fat_cidadao_pec").is_not_null()
         ))
 
-    #fao_v2.height
-        
-
-
-    # In[30]:
 
 
     fao_atend_odonto = (
         fao_v2
-        .filter(
-            pl.col("dt_atendimento") >= calcular_data(12)
-        )
         .with_columns(
             pl.when(
                 (pl.col("co_dim_cbo_1").is_in(cirurgioes_dentistas_codigos)) |
@@ -920,34 +803,32 @@ def gerar_banco():
             .otherwise(0)
             .alias("cirurgiao_dentista"),
         )
-        .sort("dt_atendimento",descending = True)
+        .sort("dt_atendimento", descending=True)
         .group_by("co_fat_cidadao_pec")
         .agg(
-            pl.max("cirurgiao_dentista").alias("agg_cirurgiao_dentista"),
+            pl.col("cirurgiao_dentista")
+            .filter(pl.col("dt_atendimento") >= calcular_data(12))
+            .max()
+            .alias("agg_cirurgiao_dentista"),
+
+            # Ultima data de atendimento sem restrigir o tempo
             pl.col("dt_atendimento")
             .max()
             .alias("data_ultimo_atend_odonto"),
+
             pl.len().alias("n_atend_odonto")
         )
     )
 
 
-    # ### Passo 7.10
-    # 
-    # Indicador 9 - Registro de peso e altura nos últimos 12 meses
-    # 
-    # 
-    # obs.: Capturar a data do último registro identificado para compor a lista nominal
-    # 
+    
+    fao_filtrado = fao.filter(pl.col('ds_filtro_procedimentos').str.contains(r"\|0101040024\|")).with_columns(pl.lit("fao").alias("tb"))
+    fai_cods_filtrado = fai_cods.filter((pl.col('tipo')=='Procedimentos Avaliado') & (pl.col('codigo')=='0101040024')).rename({"codigo": "ds_filtro_procedimentos"}).with_columns(pl.lit("fai").alias("tb"))
+    proced_atend_filtrado = proced_atend.filter(pl.col('ds_filtro_procedimento').str.contains(r"\|0101040024\|")).rename({"ds_filtro_procedimento": "ds_filtro_procedimentos"}).with_columns(pl.lit("proced").alias("tb"))
 
-    # In[31]:
+    fai_filtrado = fai.join(fai_cods_filtrado, on='co_seq_fat_atd_ind', how="inner") #left
 
-
-
-
-    fac = fac.rename({'nu_participante_peso': 'nu_peso', 'nu_participante_altura': 'nu_altura'})
-    peso_altura = pl.concat([pa_concatenado, fac], how='diagonal')
-
+    peso_altura = pl.concat([fao_filtrado, fai_filtrado, proced_atend_filtrado], how="diagonal")
 
     reg_peso_altura = (
         peso_altura
@@ -955,7 +836,6 @@ def gerar_banco():
             pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento")
         )
         .filter(
-            (pl.col("dt_atendimento") >= calcular_data(12)) &
             (pl.col("co_fat_cidadao_pec").is_not_null())
         )
         .filter(
@@ -975,17 +855,23 @@ def gerar_banco():
         )
         .group_by("co_fat_cidadao_pec")
         .agg(
-            pl.max("peso_altura").alias("agg_peso_altura"),
+            pl.max("peso_altura").alias("agg_peso_altura_semdata"),
+            
             pl.col("dt_atendimento")
             .filter(pl.col("peso_altura") == 1)
             .max()
             .alias("dt_ultima_peso_altura")
         )
-    )
-
-
-
-
+        .with_columns(
+            pl.when(
+                (pl.col("dt_ultima_peso_altura") >= calcular_data(12) ) &
+                (pl.col("agg_peso_altura_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_peso_altura"),
+        )
+    ).select("co_fat_cidadao_pec","dt_ultima_peso_altura","agg_peso_altura")
 
     imc_grouped = (
         peso_altura
@@ -1019,15 +905,6 @@ def gerar_banco():
             .alias("imc_categoria") 
         ).select("imc_categoria","co_fat_cidadao_pec")
     )
-
-
-    # ### dados plot exames
-
-    # In[32]:
-
-
-    #opcao 1
-    #para o grafico de exames a creatinina deve ser feita dessa forma? igual ao indicador da lista nominal?
 
     fai_exames = (
         fai_v3  #fai v3 ja tem filtro de 12 meses
@@ -1156,10 +1033,6 @@ def gerar_banco():
         
     )
 
-
-    # In[33]:
-
-
     ### plot situação dos exames 12 meses
 
     fai_plot_exames_grouped = (
@@ -1168,10 +1041,6 @@ def gerar_banco():
         .agg(
             pl.max("creatinina_solicitada").alias("agg_creatinina_solicitada"),
             pl.max("creatinina_avaliada").alias("agg_creatinina_avaliada"),
-            pl.col("dt_atendimento")
-            .filter(pl.col("creatinina_avaliada")  == 1)
-            .max()
-            .alias("data_ultimo_creatinina"),
             
             pl.max("colesterol_solicitada").alias("agg_colesterol_solicitada"),
             pl.max("colesterol_avaliada").alias("agg_colesterol_avaliada"),
@@ -1305,14 +1174,6 @@ def gerar_banco():
     )
 
 
-    # ### dados plot profissional 
-
-    # In[34]:
-
-
-
-
-
     fai_prof = fai_v2.select(
         [
             "co_fat_cidadao_pec", "co_dim_tempo",
@@ -1391,12 +1252,6 @@ def gerar_banco():
     )
 
 
-    # In[35]:
-
-
-    # dados plot estratificação por profissional agregados
-
-
     grouped_fai_estratif = fai_prof.group_by("co_fat_cidadao_pec").agg([
 
         pl.sum("medicos").alias("total_medicos"),
@@ -1416,12 +1271,6 @@ def gerar_banco():
     ])
 
 
-    # ### criando idade e faixa etaria - joins e select final
-
-    # In[36]:
-
-
-    # criar idade e faixa etaria
 
     today = date.today()
 
@@ -1454,16 +1303,6 @@ def gerar_banco():
         .alias("faixa_etaria")
     )
 
-
-    pessoas_diabetes_agravo_v2.height 
-
-
-    # Passo 8. Criar tabela pessoa final com todas as variáveis necessárias para próximas etapas de desenvolvimento do Painel
-
-    # In[37]:
-
-
-    # Juntando informações Unidade de Saúde e Equipe
 
     tb_dim_und_saude_v2 = (
         tb_dim_und_saude
@@ -1522,9 +1361,6 @@ def gerar_banco():
     )
 
 
-    # In[38]:
-
-
     pessoas_diabetes_agravo_v3 = pessoas_diabetes_agravo_v2.join(
         fao_atend_odonto,
         on="co_fat_cidadao_pec",
@@ -1577,6 +1413,7 @@ def gerar_banco():
     #  pl.col("n_visitas_domiciliares_acs").fill_null(0), 
         pl.col("n_atend_odonto").fill_null(0), 
         pl.col("agg_afericao_pa").fill_null(0), 
+        pl.col("n_atendimentos_12_meses").fill_null(0), 
         pl.coalesce(['nu_telefone_celular','nu_telefone_contato']).alias("telefone")
         
     ]).drop(['nu_telefone_celular','nu_telefone_contato']).join(
@@ -1599,28 +1436,20 @@ def gerar_banco():
         .alias("ds_tipo_localizacao_domicilio")
     )
 
-
-    # In[39]:
-
-
-    #pessoas_diabetes_agravo_v3.columns
-
-
-    # In[40]:
-
-
     lista_vars_final = ['co_fat_cidadao_pec',
                         'nu_cns_cidadao',
                         'nu_cpf_cidadao',
                         'no_sexo_cidadao',
-                        'dt_nascimento_cidadao',
+                        'dt_nasc_cidadao',
                         'no_tipo_logradouro_tb_cidadao',
-                    'ds_logradouro_tb_cidadao',
+                        'ds_logradouro_tb_cidadao',
                         'nu_numero_tb_cidadao',
                         'ds_cep_tb_cidadao',
                         'ds_complemento_tb_cidadao',
-                        'diabetes','autoreferido',
-                        'telefone','no_cidadao',
+                        'diabetes',
+                        'autoreferido',
+                        'telefone',
+                        'no_cidadao',
                         'nu_micro_area_tb_cidadao',
                         'co_dim_unidade_saude',
                         'nome_unidade_saude',
@@ -1634,13 +1463,21 @@ def gerar_banco():
                         'data_ultima_visita_domiciliar_acs',
                         'data_ultimo_atend_odonto',
                         'agg_cirurgiao_dentista',
-                        'avaliacao_colesterol',
+                        'agg_colesterol_total',
+                        'dt_ultima_colesterol_total',
+                        'agg_colesterol_hdl',
+                        'dt_ultima_colesterol_hdl',
+                        'agg_colesterol_ldl',
+                        'dt_ultima_colesterol_ldl',
+                        'agg_colesterol',
+                        'agg_medicos_enfermeiros',
                         'tipo_ultima_consulta',
                         'data_ultima_consulta_med_enferm',
                         'total_consulta_med_enferm',
                         'dt_primeiro_reg_condicao',
                         'diabetes_codigos_1atend',
-                        'idade','faixa_etaria',
+                        'idade',
+                        'faixa_etaria',
                         'imc_categoria',
                         'n_infarto_agudo',
                         'n_acidente_vascular',
@@ -1668,18 +1505,17 @@ def gerar_banco():
                         'hemob_glica',
                         'dt_ultima_peso_altura',
                         'agg_peso_altura',
-                        'agg_hemoglobina_avaliado',
+                        'agg_hemoglobina',
                         'dt_ultima_hemoglobina_avaliado',
-                        'data_colesterol_ldl',
-                        'data_colesterol_hdl',
-                        'data_colesterol_total',
+                        'agg_creatinina',
                         'data_ultimo_creatinina',
                         'data_ultimo_pe',
-                        'agg_exame_pe'
+                        'agg_exame_pe',
+                        'n_atendimentos_12_meses',
+                        'no_bairro_tb_cidadao'
                         ]
 
     pessoas_diabetes_v3 = pessoas_diabetes_agravo_v3.select(lista_vars_final)
 
 
     pessoas_diabetes_v3.write_parquet(output_path+os.sep+"diabetes.parquet")
-

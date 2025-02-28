@@ -80,7 +80,6 @@ class ProfessionalsGroup():
             },
             
         }
-        professionals_dict = dict(sorted(professionals_dict.items()))
         professionals_dict['OUTROS'] = {
             'profissao': 'OUTROS',
             'totalCount': 0,
@@ -94,4 +93,6 @@ class ProfessionalsGroup():
             if i < len(keys):
                 self.professionals_dict[keys[i]]["totalCount"] = cares[i]
                 self.professionals_dict[keys[i]]["total"] = round(float(cares[i]/cares[-1])*100, 2)
+                
+        self.professionals_dict = dict(sorted(self.professionals_dict.items()))
         return list(self.professionals_dict.values())

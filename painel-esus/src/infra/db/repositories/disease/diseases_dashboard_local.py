@@ -29,6 +29,7 @@ from ..sqls.disease.auto_referidos import (
     get_imc,
     get_professionals,
     get_total_cares,
+    get_total_cares_12,
     get_total_patients,
 )
 from ..sqls.disease.by_gender import get_patients_by_gender, get_patients_by_location
@@ -113,6 +114,22 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         cares = con.sql(cares_sql).fetchone()
         return cares
 
+    def _retrieve_total_cares(self, cnes: int = None, equipe: int = None):
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument("CNES must be int")
+        cares_sql = get_total_cares(cnes, equipe, self.disease_flag)
+        con = duckdb.connect()
+        cares = con.sql(cares_sql).fetchone()
+        return cares
+
+    def _retrieve_total_cares_12(self, cnes: int = None, equipe: int = None):
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument("CNES must be int")
+        cares_sql = get_total_cares_12(cnes, equipe, self.disease_flag)
+        con = duckdb.connect()
+        cares = con.sql(cares_sql).fetchone()
+        return cares
+
     def _get_complications(self, cnes: int = None, equipe: int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
@@ -141,7 +158,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         return cares
 
     def get_total(self, cnes: int = None, equipe: int = None) -> DiseaseDashboardTotal:
-        cares = self._retrieve_cares(cnes, equipe)
+        cares = self._retrieve_total_cares_12(cnes, equipe)
         auto_referido = self._find_auto_referido(cnes, equipe)
         total_pacientes = self._total_pacientes(cnes, equipe)
         return {
@@ -185,7 +202,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
             if paciente[2] is not None:
                 if paciente[2] not in result:
                     result[paciente[2]] = init()
-                result[paciente[2]][paciente[1]] = paciente[0]
+                result[paciente[2]][str(paciente[1]).capitalize()] = paciente[0]
         return result
 
     def get_complications(self, cnes: int = None, equipe: int = None) -> None:
@@ -193,9 +210,9 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
 
         def init_complications(value, total):
             return {
-                "com_consulta": round(value / total, 2),
+                "com_consulta": round(value / total, 2)*100,
                 "com_consulta_abs": value,
-                "sem_consulta": round((total - value) / total, 2),
+                "sem_consulta": round((total - value) / total, 2)*100,
                 "sem_consulta_abs": total - value,
             }
 

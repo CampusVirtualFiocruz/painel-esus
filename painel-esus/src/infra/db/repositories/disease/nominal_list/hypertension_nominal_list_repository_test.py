@@ -57,5 +57,6 @@ def test_equipe():
 
 def test_list_nominal():
     repo = HypertensionNominalListRepository()
-    lista = repo.find_all_download(26)
-    print(lista)
+    lista = repo.find_filter(25, page=4, pagesize=10)
+    [pprint(HypertensionNominalListAdapter(val).to_dict()) for val in lista["items"] ]
+    # print(adapter.to_dict())

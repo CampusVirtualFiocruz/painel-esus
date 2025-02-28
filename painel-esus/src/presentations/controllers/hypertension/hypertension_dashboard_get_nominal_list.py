@@ -35,7 +35,6 @@ class HypertensionDashboardGetNominalList(ControllerInterface):
         response = self.__use_case.get_nominal_list(
             cnes, page, page_size, nome, cpf, equipe, q
         )
-
         return HttpResponse(
             status_code=200,
             body=response

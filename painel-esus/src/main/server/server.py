@@ -39,7 +39,6 @@ else:
     static_folder = os.path.join(os.getcwd(), "..", "paineis-v2-front", "static-files")
     static_folder = os.path.abspath(static_folder)
 
-print(static_folder)
 app = Flask(__name__, static_folder=f"{static_folder}")
 CORS(app)
 
