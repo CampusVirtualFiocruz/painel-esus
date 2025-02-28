@@ -54,7 +54,7 @@ def get_hypertension_base_sql():
                 indicador_visitas_domiciliares_acs alerta_visita_acs,
                 coalesce( cast(data_ultima_visita_domiciliar_acs as varchar), '') data_ultima_visita_acs,
                 coalesce( cast(data_ultimo_atend_odonto as varchar), '') ultimo_atendimento_odonto,
-                coalesce(agg_cirurgiao_dentista, 1) alerta_ultima_consulta_odontologica,
+                coalesce(agg_cirurgiao_dentista, 0) alerta_ultima_consulta_odontologica,
                 coalesce( cast(data_ultimo_creatinina as varchar), '') ultima_data_creatinina,
                 agg_creatinina alerta_creatinina,
                 coalesce(total_consulta_med_enferm, 0)  total_consulta_med_enferm,
@@ -63,7 +63,7 @@ def get_hypertension_base_sql():
                     when total_consulta_med_enferm > 2 then 0
                     when total_consulta_med_enferm is null then 1
                 end as alerta_total_de_consultas_medico,
-                agg_medicos_enfermeiros alerta_ultima_consulta_medico,
+                coalesce(agg_medicos_enfermeiros, 0) alerta_ultima_consulta_medico,
                 coalesce( cast(dt_ultima_peso_altura as varchar), '') data_ultimo_peso_altura,
                 dt_ultima_colesterol_total,
                 agg_colesterol_total,
