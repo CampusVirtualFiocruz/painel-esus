@@ -159,8 +159,8 @@ def topLevelViewConeectionFunction(
     try:
         if db_user and db_password and db_host and db_port and db_database:
             # print(
-                db_user, " ", db_password, " ", db_host, " ", db_port, " ", db_database
-            )
+                # db_user, " ", db_password, " ", db_host, " ", db_port, " ", db_database
+            # )
             new_window.after(
                 1,
                 connect_db_with_params(

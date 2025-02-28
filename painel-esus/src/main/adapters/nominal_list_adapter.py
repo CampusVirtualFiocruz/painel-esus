@@ -1,6 +1,6 @@
 # pylint: disable=R0902, W4901, W0611, C0103
 
-from numpy.distutils.misc_util import is_sequence
+import numpy as np
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
 from src.infra.db.entities.crianca import Crianca
@@ -8,6 +8,9 @@ from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.hipertensao_nominal import HipertensaoNominal
 from src.infra.db.entities.pessoas import Pessoas
 
+
+def is_sequence(obj):
+    return isinstance(obj, (np.ndarray, np.generic))
 
 class AlertRecord:
     def __init__(
