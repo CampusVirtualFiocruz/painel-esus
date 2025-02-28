@@ -35,6 +35,10 @@ class AlertRecord:
 
 class BaseNominalAdapter:
     def __init__(self, user):
+        endereco = user['endereco'] if user['endereco'] is not None else ""
+        endereco += " " + user['numero'] if user['numero'] is not None else ""
+        endereco += " " + user['bairro'] if user['bairro'] is not None else ""
+
         self.nome = user["nome"]
         self.nome_social = "-"
         self.tipo_localidade = user["tipo_localidade"]
@@ -45,7 +49,7 @@ class BaseNominalAdapter:
         self.sexo = user["sexo"]
         self.equipe = user["nome_equipe"]
         self.microarea = user["micro_area"]
-        self.endereco = f"{user['endereco']} {user['numero']}, {user['bairro']}"
+        self.endereco = endereco
         self.tipo_logradouro = user["tipo_endereco"]
         self.complemento = user["complemento"]
         self.cep = user["cep"]
@@ -527,6 +531,11 @@ class IdosoNominalListAdapter:
 class RecordNominalListAdapter:
 
     def __init__(self, user):
+
+        endereco = user['endereco'] if user['endereco'] is not None else ""
+        endereco += " " + user["numero"] if user["numero"] is not None else ""
+        endereco += " " + user["bairro"] if user["bairro"] is not None else ""
+
         self.nome = user['nome']
         self.nome_social = "-"
         self.tipo_localidade = user['tipo_localidade']
@@ -537,7 +546,7 @@ class RecordNominalListAdapter:
         self.sexo = user['sexo']
         self.equipe = user['nome_equipe']
         self.microarea = user['micro_area']
-        self.endereco = f"{user['endereco']} {user['numero']}, {user['bairro']}"
+        self.endereco = endereco
         self.tipo_logradouro = user['tipo_endereco']
         self.complemento = user['complemento']
         self.cep = user['cep']

@@ -297,15 +297,15 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
                 "com_consulta": 0,
                 "com_consulta_abs": 0,
                 "limite": label,
-                "sem_consulta": 0,
+                "sem_consulta": 1,
                 "sem_consulta_abs": 0,
             }
 
         result = dict()
         for label in imc_labels.keys():
             result[label] = init_obj(imc_labels[label]["value"])
-
         for care in cares:
+            print((1 - round(care[1], 2)) * 100)
             result[care[0]]["com_consulta"] = round(float(care[1]), 2) * 100
             result[care[0]]["com_consulta_abs"] = int(care[2])
             result[care[0]]["sem_consulta"] = (1 - round(care[1], 2)) * 100
