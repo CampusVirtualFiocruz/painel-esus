@@ -176,7 +176,6 @@ export function bodyDetalhesCadastro(item: any) {
   return (
     <div className="d-flex flex-column mb-4">
       <div className="user-details">
-        {/* {JSON.stringify(item)} */}
         <h1>
           {capitalizeName(
             item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
@@ -255,7 +254,7 @@ export function bodyDetalhesCadastro(item: any) {
                                 ? "-"
                                 : parseText(registro?.data)}
                             </p>
-                            {registro?.exibirAlerta && (
+                            {Boolean(registro?.exibirAlerta) && (
                               <span
                                 className="iconCircle iconAlerta ms-2"
                                 title="Alertas"
