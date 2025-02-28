@@ -159,10 +159,10 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         location_area_sql = filter_diabetes_by_localidade(cnes, equipe)
         result_location_area_sql = duckdb.sql(location_area_sql).fetchall()
 
-        location_body = {"rural": 0, "urbano": 0, "nao_definido": 0}
+        location_body = {"rural": 0, "urbano": 0, "nao_informado": 0}
         for resp in result_location_area_sql:
             if resp[0] is None:
-                location_body["nao_definido"] = int(resp[1])
+                location_body["nao_informado"] = int(resp[1])
             else:
                 location_body[resp[0]] = int(resp[1])
         return location_body

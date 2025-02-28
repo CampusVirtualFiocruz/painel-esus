@@ -308,7 +308,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         for care in cares:
             result[care[0]]["com_consulta"] = round(float(care[1]), 2) * 100
             result[care[0]]["com_consulta_abs"] = int(care[2])
-            result[care[0]]["sem_consulta"] = round(float(1 - care[1]), 2) * 100
+            result[care[0]]["sem_consulta"] = (1 - round(care[1], 2)) * 100
             result[care[0]]["sem_consulta_abs"] = int(care[3] - care[2])
 
         imc_result = dict()
