@@ -7,7 +7,7 @@ from src.infra.db.settings.connection_local import DBConnectionHandler
 
 def gerar_banco():
     current_dir = os.getcwd()
-    print(os.path.join(current_dir, "dados", "output", "crianca.parquet"))
+    # print(os.path.join(current_dir, "dados", "output", "crianca.parquet"))
     bases = [
         ("crianca", os.path.join(current_dir, "dados", "output", "crianca.parquet")),
         ("idoso", os.path.join(current_dir, "dados", "output", "idoso.parquet")),

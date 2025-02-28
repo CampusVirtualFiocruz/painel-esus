@@ -31,7 +31,7 @@ function parseText(text: string): number | string {
   const parsedDate = new Date(new Date(text));
   if (!isNaN(parsedDate.getTime())) {
     // Retorna a data formatada para o padrão localizado
-    return parsedDate.toLocaleDateString("pt-BR");
+    return parsedDate.toLocaleDateString("pt-BR", { timeZone: "UTC" });
   }
   return text;
   // if (text == "-") return text;

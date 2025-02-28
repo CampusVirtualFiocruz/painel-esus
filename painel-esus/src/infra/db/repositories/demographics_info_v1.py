@@ -89,10 +89,10 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             "Masculino": self.__create_age_groups_items(),
         }
         for resp in response:
-            print(resp)
+            #print(resp)
             if resp[0] is not None and resp[1] is not None:
                 body[resp[0]][resp[1]][resp[2]] = int(resp[3])
-        print(body)
+        #print(body)
         return body
 
     def get_total_people(self, cnes: int = None, equipe: int = None):
@@ -179,7 +179,7 @@ select count(*) total  from 	cidadaos """
         cnes: int = None,
         equipe: int = None,
     ) -> Dict:
-        print(f"EQUIPE: {equipe}")
+        #print(f"EQUIPE: {equipe}")
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
 

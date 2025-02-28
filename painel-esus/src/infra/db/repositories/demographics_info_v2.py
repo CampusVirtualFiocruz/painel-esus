@@ -95,10 +95,10 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             "Masculino": self.__create_age_groups_items(),
         }
         for resp in response:
-            print(resp)
+            # print(resp)
             if resp[0] is not None and resp[1] is not None:
                 body[resp[0]][resp[1]][resp[2]] = int(resp[3])
-        print(body)
+        # print(body)
         return body
 
     def get_total_people(self, cnes: int = None, equipe: int = None):
@@ -110,7 +110,7 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
                 from pessoas    
             """
         db_response = duckdb.sql(sql).fetchone()
-        print(db_response[0])
+        # print(db_response[0])
         return db_response[0] if len(db_response) > 0 else 0
 
     def get_ibge_total(self):
@@ -171,10 +171,10 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         location_area_sql = filter_hypertension_by_localidade(cnes, equipe)
         result_location_area_sql = duckdb.sql(location_area_sql).fetchall()
 
-        location_body = {"rural": 0, "urbano": 0, "nao_definido": 0}
+        location_body = {"rural": 0, "urbano": 0, "nao_informado": 0}
         for resp in result_location_area_sql:
             if resp[0] is None:
-                location_body["nao_definido"] = int(resp[1])
+                location_body["nao_informado"] = int(resp[1])
             else:
                 location_body[resp[0]] = int(resp[1])
         return location_body

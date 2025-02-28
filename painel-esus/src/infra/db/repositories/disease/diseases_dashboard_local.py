@@ -29,6 +29,7 @@ from ..sqls.disease.auto_referidos import (
     get_imc,
     get_professionals,
     get_total_cares,
+    get_total_cares_12,
     get_total_patients,
 )
 from ..sqls.disease.by_gender import get_patients_by_gender, get_patients_by_location
@@ -113,6 +114,22 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         cares = con.sql(cares_sql).fetchone()
         return cares
 
+    def _retrieve_total_cares(self, cnes: int = None, equipe: int = None):
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument("CNES must be int")
+        cares_sql = get_total_cares(cnes, equipe, self.disease_flag)
+        con = duckdb.connect()
+        cares = con.sql(cares_sql).fetchone()
+        return cares
+
+    def _retrieve_total_cares_12(self, cnes: int = None, equipe: int = None):
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument("CNES must be int")
+        cares_sql = get_total_cares_12(cnes, equipe, self.disease_flag)
+        con = duckdb.connect()
+        cares = con.sql(cares_sql).fetchone()
+        return cares
+
     def _get_complications(self, cnes: int = None, equipe: int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
@@ -141,7 +158,7 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         return cares
 
     def get_total(self, cnes: int = None, equipe: int = None) -> DiseaseDashboardTotal:
-        cares = self._retrieve_cares(cnes, equipe)
+        cares = self._retrieve_total_cares_12(cnes, equipe)
         auto_referido = self._find_auto_referido(cnes, equipe)
         total_pacientes = self._total_pacientes(cnes, equipe)
         return {

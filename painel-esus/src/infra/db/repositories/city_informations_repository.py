@@ -42,7 +42,8 @@ class CityInformationsRepository(CityInformationRepository):
             return res
 
     def get_units(self) -> Dict:
-        res = duckdb.sql(UNITS_LIST).df()
+        con = duckdb.connect()
+        res = con.sql(UNITS_LIST).df()
         return res
 
     def get_teams(self, cnes: int = None):
@@ -58,10 +59,10 @@ class CityInformationsRepository(CityInformationRepository):
                     nu_micro_area_domicilio micro_area
                 from 
                 read_parquet('./dados/output/cadastro_db.parquet') """
-                
+
         if cnes is not None:
             sql += f""" where codigo_equipe={cnes} """
-        result = duckdb.sql(sql).df()
+        con = duckdb.connect()
+        result = con.sql(sql).df()
         result_json = result.to_dict(orient="records")
         return result_json
-    

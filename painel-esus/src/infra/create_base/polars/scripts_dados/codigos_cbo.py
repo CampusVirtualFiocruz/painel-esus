@@ -97,6 +97,16 @@ glicemia_cbo = (
     + nutricionistas_codigos
 )
 
+# CBOs glicemia
+
+hemoglo_cbo = (
+    enfermeiros_codigos
+    + medicos_codigos
+    + farmaceuticos_codigos
+    + cirurgioes_dentistas_codigos
+    + nutricionistas_codigos
+)
+
 # CBOs exame dos pés
 
 
@@ -119,6 +129,7 @@ peso_altura_cbo = (
     + nutricionistas_codigos
     + fonoaudiologos_codigos
     + tsbucal_cod
+    + tec_aux_enfermagem_codigos
 )
 
 

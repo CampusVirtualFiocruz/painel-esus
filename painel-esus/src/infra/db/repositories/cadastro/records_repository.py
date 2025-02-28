@@ -197,7 +197,7 @@ class RecordsRepository:
             sql_where = " AND ".join(where_clause)
             sql_where = f" WHERE {sql_where}"
 
-        print(pessoas_sql + sql_where + f" LIMIT {limit} OFFSET {offset} ")
+        # print(pessoas_sql + sql_where + f" LIMIT {limit} OFFSET {offset} ")
 
         users = con.sql(
             pessoas_sql + sql_where + f" LIMIT {limit} OFFSET {offset} "

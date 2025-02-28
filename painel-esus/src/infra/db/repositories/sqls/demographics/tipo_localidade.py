@@ -7,7 +7,7 @@ def filter_by_localidade(cnes: int = None, equipe: int = None):
     return f"""WITH pessoas as ({sql_pessoas}),
                 cidadaos as (
             select
-                distinct p.*,
+                p.*,
                 case 
                     when LOWER(tipo_localidade) is null  then 'nao_definido'
                     when LOWER(tipo_localidade) = 'rural' then 'rural'

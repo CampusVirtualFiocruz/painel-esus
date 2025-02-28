@@ -67,7 +67,6 @@ class CreateCidCiapExplodeAtendimentosRepository(CreateBasesRepositoryInterface)
                 input_path + "tb_fat_atendimento_individual.parquet"
             )
 
-            # In[22]:
 
             fai_lazy = fai_lazy.select(
                 "co_seq_fat_atd_ind",
