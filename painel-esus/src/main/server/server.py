@@ -1,6 +1,9 @@
 # pylint: disable=C0301, W0611
 import os
 
+# from src.main.server.decorators.check_access import check_access
+import sys
+
 import blueprint_decr
 from dotenv import dotenv_values
 from flask import Flask, send_from_directory
@@ -24,10 +27,18 @@ from src.main.routes.units_route import TeamsPath, UnitsPath, teams_bp, units_bp
 from src.main.server.cache import cache
 from src.main.server.decorators.token_required import token_required
 
-# from src.main.server.decorators.check_access import check_access
-
 app = Flask(__name__)
 app.config["JSON_SORT_KEYS"] = False
+
+import logging as logger
+
+import click
+from src.presentations import banner_message
+
+log = logger.getLogger("werkzeug")
+log.disabled = True
+cli = sys.modules["flask.cli"]
+cli.show_server_banner = lambda *x: logging.info(banner_message())
 # tell Flask to use the above defined config
 
 if config["ENV"] == "instalador":
