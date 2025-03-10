@@ -46,3 +46,6 @@ dados/output/**
 
 run.spec
 docker-compose.yaml
+
+**.log
+**.spec
