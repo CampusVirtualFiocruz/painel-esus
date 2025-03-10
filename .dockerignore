@@ -1,3 +1,7 @@
 .env
 src/bases/*
 dados/*
+dados/**
+dist/*
+icon/*
+**/.env

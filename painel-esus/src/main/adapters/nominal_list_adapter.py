@@ -244,7 +244,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user["ultimo_atendimento_odonto"],
                 exibir_alerta=(
-                    user["alerta_ultima_consulta_odontologica"]
+                    not user["alerta_ultima_consulta_odontologica"]
                 ),
                 descricao="Data da última consulta Odontológica",
                 tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",

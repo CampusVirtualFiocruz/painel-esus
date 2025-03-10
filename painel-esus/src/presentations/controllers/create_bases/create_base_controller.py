@@ -43,27 +43,32 @@ class CreateBasesController:
             os.makedirs(input_path + os.sep + "output", exist_ok=False)
         except:
             ...
+        
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
             logging.info("Starting base generation")
             _list = [
-                CreateCadIndividualBaseRepository(),
-                CreateProcedAtendBaseRepository(),
-                CreateDimEquipesBaseRepository(),
-                CreateEquipeBaseRepository(),
-                CreateVacinacaoBaseRepository(),
-                CreateVisistaDomiciliarBaseRepository(),
-                CreateMarcaConsumoBaseRepository(),
-                CreateAtvddColetivaBaseRepository(),
-                CreateUnidadesSaudeBaseRepository(),
-                CreateDimRacaCorBaseRepository(),
-                CreateAtendIndivBaseRepository(),
-                CreateAcompCidadaosVinculadosBaseRepository(),
-                CreateAtendOdontoBaseRepository(),
-                CreateIndicadoresCadastroRepository(),
-                CreateTbDimCboRepository(),
-                CreateCidCiapExplodeAtendimentosRepository(),
-                CreateIndicadoresHipertensaoRepository(),
-                CreateIndicadoresDiabetesRepository()
+                [
+                    CreateCadIndividualBaseRepository(),
+                    CreateProcedAtendBaseRepository(),
+                    CreateDimEquipesBaseRepository(),
+                    CreateEquipeBaseRepository(),
+                    CreateVacinacaoBaseRepository(),
+                    CreateVisistaDomiciliarBaseRepository(),
+                    CreateMarcaConsumoBaseRepository(),
+                    CreateAtvddColetivaBaseRepository(),
+                    CreateUnidadesSaudeBaseRepository(),
+                    CreateDimRacaCorBaseRepository(),
+                    CreateAtendIndivBaseRepository(),
+                    CreateAcompCidadaosVinculadosBaseRepository(),
+                    CreateAtendOdontoBaseRepository(),
+                    CreateTbDimCboRepository(),
+                    CreateCidCiapExplodeAtendimentosRepository(),
+                ],
+                [
+                    CreateIndicadoresCadastroRepository(),
+                    CreateIndicadoresHipertensaoRepository(),
+                    CreateIndicadoresDiabetesRepository()
+                ]
             ]
 
             usecase = CreateBasesUseCase(bases_generators=_list)

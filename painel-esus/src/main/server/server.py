@@ -33,12 +33,13 @@ app.config["JSON_SORT_KEYS"] = False
 import logging as logger
 
 import click
-from src.presentations import banner_message
+from src.presentations import banner_message, rich_banner
 
 log = logger.getLogger("werkzeug")
 log.disabled = True
 cli = sys.modules["flask.cli"]
-cli.show_server_banner = lambda *x: logging.info(banner_message())
+# cli.show_server_banner = lambda *x: logging.info(banner_message())
+cli.show_server_banner = lambda *x: rich_banner()
 # tell Flask to use the above defined config
 
 if config["ENV"] == "instalador":

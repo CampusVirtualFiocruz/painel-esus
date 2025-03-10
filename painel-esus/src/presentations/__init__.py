@@ -1,6 +1,11 @@
 import re as r
 import socket
 
+from rich import print
+from rich.panel import Panel
+from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
+from rich.table import Table
+from rich.text import Text
 from src.env.conf import getenv
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
@@ -30,7 +35,7 @@ def banner_message():
         ip2 = ""
 
     message = f"""
-    {green}O Painel foi iniciado com sucesso e já pode ser acessado pelos endereços abaixo:{reset}
+    \033[38;2;0;0;95mO Painel foi iniciado com sucesso e já pode ser acessado pelos endereços abaixo:\033[0m
     {blod_white}HOST:
             http://localhost:{port}{reset}
             http://{host}:{port}
@@ -39,3 +44,22 @@ def banner_message():
     {bold_red} MANTENHA ESTA APLICAÇÃO EM EXECUÇÃO. {reset}
     """
     return message
+
+
+def rich_banner():
+    table = Table(
+        expand=True,
+    )
+    progress_table = table.grid(
+        expand=True,
+    )
+
+    progress_table.add_row(
+        Panel.fit(
+            Text.from_ansi(banner_message()),
+            title="Painel em execução",
+            border_style="white",
+            # style="on dark_green",
+        ),
+    )
+    print(progress_table)

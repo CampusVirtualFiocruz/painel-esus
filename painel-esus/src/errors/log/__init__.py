@@ -1,3 +1,5 @@
+from rich.logging import RichHandler
+
 from .config import formatter, logger
 from .console_handler import console_handler
 
