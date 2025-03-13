@@ -27,6 +27,7 @@ class CreateBasesUseCase(CreateBasesUsecasesInterface):
             creation=self.__bases_generators[0], 
             key_factors=self.__bases_generators[1],
         )
+        
         generation = StartGeneration(jobs)
         generation.run()
 

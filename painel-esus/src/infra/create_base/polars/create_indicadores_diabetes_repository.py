@@ -9,7 +9,7 @@ from src.infra.create_base.polars.scripts_dados.indicadores_diabetes_polars impo
 
 
 class CreateIndicadoresDiabetesRepository(CreateBasesRepositoryInterface):
-
+    _base = "indicadores_diabetes"
     def __init__(self): ...
 
     def get_base(self):

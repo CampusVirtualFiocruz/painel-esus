@@ -11,7 +11,7 @@ from src.infra.create_base.polars.scripts_dados.indicadores_hipertensao_polars i
 
 
 class CreateIndicadoresHipertensaoRepository(CreateBasesRepositoryInterface):
-
+    _base = "indicadores_hipertensao"
     def __init__(self): ...
 
     def get_base(self):

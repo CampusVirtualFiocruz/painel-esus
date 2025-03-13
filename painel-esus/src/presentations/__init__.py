@@ -1,7 +1,8 @@
 import re as r
 import socket
 
-from rich import print
+from rich.layout import Layout
+from rich.live import Live
 from rich.panel import Panel
 from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 from rich.table import Table
@@ -47,19 +48,24 @@ def banner_message():
 
 
 def rich_banner():
+    layout = Layout(
+        
+    )
     table = Table(
         expand=True,
     )
     progress_table = table.grid(
         expand=True,
     )
-
+    text = Text()
+    layout.update(progress_table)
     progress_table.add_row(
-        Panel.fit(
+        Panel(
             Text.from_ansi(banner_message()),
             title="Painel em execução",
             border_style="white",
             # style="on dark_green",
-        ),
+        )
     )
-    print(progress_table)
+    with Live(progress_table, refresh_per_second=4) as live:
+        live.update(progress_table)

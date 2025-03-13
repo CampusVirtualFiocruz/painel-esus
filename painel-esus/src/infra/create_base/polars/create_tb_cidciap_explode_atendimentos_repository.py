@@ -46,6 +46,7 @@ from src.data.interfaces.create_bases.create_bases_repository import (
 
 class CreateCidCiapExplodeAtendimentosRepository(CreateBasesRepositoryInterface):
 
+    _base= "tb_cidciap_exploce_atendimentos"
     def __init__(self): ...
 
     def get_base(self):

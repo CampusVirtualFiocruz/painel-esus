@@ -1,7 +1,11 @@
 .env
-src/bases/*
-dados/*
+src/bases/**
 dados/**
-dist/*
-icon/*
+dados/**
+dist/**
+icon/**
+build/**
 **/.env
+**/*.log
+**/*.log.*
+**/*.spec
