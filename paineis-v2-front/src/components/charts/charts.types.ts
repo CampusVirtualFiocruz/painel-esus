@@ -47,6 +47,14 @@ type PercentualChart = {
   };
 };
 
+type PercentualGroupChart = {
+  data: Array<{ tag?: string; value?: number; data?: valueInput }>;
+  config?: generalConfigs & {
+    radiusStart?: number;
+    highlightTag?: string;
+  };
+};
+
 type Value = {
   data: number;
   config?: {
