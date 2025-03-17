@@ -1,5 +1,4 @@
 # painel-esus
-
 ## Sobre o projeto Painel e-SUS Municipal
 
 O Painel e-SUS Municipal - Atenção Primária foi desenvolvido pela Fundação Oswaldo Cruz ao longo dos últimos 4 anos, com participação de diversas unidades e apoio do Programa Inova Fiocruz e da Secretaria de Atenção Primária à Saúde do Ministério da Saúde.
