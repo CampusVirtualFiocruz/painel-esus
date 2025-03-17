@@ -47,6 +47,14 @@ type PercentualChart = {
   };
 };
 
+type PercentualGroupChart = {
+  data: Array<{ tag?: string; value?: number; data?: valueInput }>;
+  config?: generalConfigs & {
+    radiusStart?: number;
+    highlightTag?: string;
+  };
+};
+
 type Value = {
   data: number;
   config?: {
@@ -57,6 +65,14 @@ type Value = {
   } & generalConfigs;
 };
 
+type Pyramid = {
+  data: {
+    left: groupedValuesInput;
+    right: groupedValuesInput;
+  };
+  config?: generalConfigs;
+};
+
 //
 // Tipos finais de gráficos
 //
@@ -65,8 +81,12 @@ export type BarChart = LinearChart;
 export type LineChart = LinearChart;
 
 export type PieChart = PercentualChart;
+export type ProgressListChart = PercentualChart;
 export type DonutChart = PercentualChart;
+export type DonutGroupChart = PercentualGroupChart;
 export type TreemapShallowChart = PercentualChart;
 
 export type ValueChart = Value;
 export type TableGroup = MultipleGroupedValuesInput;
+
+export type PyramidChart = Pyramid;
