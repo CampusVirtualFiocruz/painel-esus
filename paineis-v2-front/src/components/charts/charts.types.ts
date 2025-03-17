@@ -36,10 +36,9 @@ type LinearChart = {
 type PercentualChart = {
   data: valueInput;
   config?: generalConfigs & {
-    radiusStart?: number
+    radiusStart?: number | string;
   };
 };
-
 
 type Value = {
   data: number;
