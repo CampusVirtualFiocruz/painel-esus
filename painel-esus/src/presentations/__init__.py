@@ -29,19 +29,36 @@ def getIP():
 def banner_message():
     port = getenv("PORT", 5001)
     host = "0.0.0.0"
+    certificate_path = getenv("CERT_PATH", None, numeric=False)
+    app_url = getenv("APPLICATION_URL", None, numeric=False)
+
     ip = socket.gethostbyname(socket.gethostname())
     try:
-        ip2 = f"""http://{getIP()}:{port}"""
+        ip2 = f"""{protocol}://{getIP()}:{port}"""
     except:
         ip2 = ""
 
+    protocol = "http"
+    app_url_str = ""
+    if certificate_path is not None:
+        protocol = 'https'
+        app_url_str = "" if app_url is None else app_url
+
+    urls = [
+        f'{protocol}://localhost:{port}{reset}',
+        f'{protocol}://{host}:{port}',
+        f'{protocol}://{ip}:{port}',
+    ]
+    if ip2:
+        urls.append(ip2)
+    if app_url_str:
+        urls.append(app_url_str)
+
+    url_list = "\n\t".join(urls)
     message = f"""
     \033[38;2;0;0;95mO Painel foi iniciado com sucesso e já pode ser acessado pelos endereços abaixo:\033[0m
     {blod_white}HOST:
-            http://localhost:{port}{reset}
-            http://{host}:{port}
-            http://{ip}:{port}
-            {ip2}
+        {url_list}
     {bold_red} MANTENHA ESTA APLICAÇÃO EM EXECUÇÃO. {reset}
     """
     return message

@@ -10,6 +10,23 @@ if __name__ == "__main__":
         scheduler = BackgroundScheduler()
         scheduler.start()
         generate_base_scheduled(scheduler)
-    port = getenv("PORT", 5001)
+    port = getenv("PORT", 5001, False)
     host = "0.0.0.0"
-    app.run(host=host, port=port, debug=False)
+
+    certificate_path =  getenv("CERT_PATH", None, numeric=False)
+    if certificate_path is not None:
+        app.run(
+            host=host,
+            port=port,
+            debug=False,
+            ssl_context=(
+                "local_ssl/tests/pcert.pem",
+                "local_ssl/tests/private-key.pem",
+            ),
+        )
+    else:
+        app.run(
+            host=host,
+            port=port,
+            debug=False
+        )
