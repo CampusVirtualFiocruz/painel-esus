@@ -36,7 +36,7 @@ jobs:
           ls -la
 
       # Salva a pasta 'paineis-v2-front/static-files' como um artifact
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Build
           path: ./paineis-v2-front/static-files
