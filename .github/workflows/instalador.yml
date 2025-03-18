@@ -27,7 +27,7 @@ jobs:
           cat <<EOF > .env
           ${{ vars.ENV_FRONT }}
           EOF
-          CI=false npm run build --prod
+          yarn build
 
       - name: Print directory
         run: |
