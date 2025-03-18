@@ -70,7 +70,7 @@ jobs:
       - name: Build EXE run
         working-directory: ./painel-esus
         run: |
-          pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
+          pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile --collect-all pyarrow run.py
           cd dist
           ls -la
 
