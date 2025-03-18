@@ -81,7 +81,7 @@ jobs:
           ls -la
 
       - name: Download files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: Build
           path: ./paineis-v2-front/static-files
@@ -129,7 +129,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download files
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: Build
           path: ./paineis-v2-front/static-files
