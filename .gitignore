@@ -42,7 +42,7 @@ dados/output/**
 # **/**/static-files
 
 **/package-lock.json
-**/yarn.lock
+# **/yarn.lock
 
 run.spec
 docker-compose.yaml
