@@ -56,7 +56,7 @@ class CityInformationsRepository(CityInformationRepository):
                     codigo_equipe,
                     nome_equipe,
                     nu_ine_vinc_equipe ine,
-                    nu_micro_area_domicilio micro_area
+                    nu_micro_area micro_area
                 from 
                 read_parquet('./dados/output/cadastro_db.parquet') """
 

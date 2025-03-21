@@ -23,12 +23,14 @@ fao_vars = [
     "nu_peso",
     "nu_altura",
 ]
+
 fao_vars_str = ", ".join(fao_vars)
 
 
 SQL = (
     f"SELECT {fao_vars_str} FROM tb_fat_atendimento_odonto order by co_seq_fat_atd_odnt"
 )
+
 
 class CreateAtendOdontoBaseRepository(CreateBasesRepositoryInterface):
     _base = 'tb_fat_atendimento_odonto'

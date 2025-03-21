@@ -28,6 +28,7 @@ class StartGeneration:
         self.logs = Text()
         self.text_logs = []
         self.total = 0
+        self.total_proccess_time = datetime.now()
 
     def add_log(self, _text):
         self.logs.set_length(0)
@@ -121,7 +122,7 @@ class StartGeneration:
                     ),
                 ]
             )
-            sleep(0.3)
+            # sleep(0.3)
             completed = sum(task.completed for task in job_progress.tasks)
             overall_progress.update(overall_task, completed=completed)
 
@@ -140,6 +141,15 @@ class StartGeneration:
                     (f"Geração da Base concluída.", "bold blue"),
                     (
                         "\tDuração total {}.\n".format(self.total),
+                        "bold red",
+                    ),
+                ]
+            )
+            self.add_log(
+                [
+                    (f"Tempo de processamento.", "bold blue"),
+                    (
+                        "\tDuração total {}.\n".format((datetime.now() - self.total_proccess_time)),
                         "bold red",
                     ),
                 ]

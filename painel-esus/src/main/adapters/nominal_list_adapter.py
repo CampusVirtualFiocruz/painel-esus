@@ -135,7 +135,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=(
-                    user["data_ultima_visita_acs"]
+                    user["dt_ultima_visita_acs"]
                 ),
                 exibir_alerta=not user["alerta_visita_acs"],
                 descricao="Data da última visita ACS",
@@ -253,7 +253,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
 
         self.registros.append(
             AlertRecord(
-                data=user["data_ultima_visita_acs"],
+                data=user["dt_ultima_visita_acs"],
                 exibir_alerta=(
                     not user["alerta_visita_acs"]
                 ),

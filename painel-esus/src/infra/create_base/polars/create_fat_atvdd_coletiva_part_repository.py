@@ -11,12 +11,14 @@ from src.env.conf import getenv
 from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
 
+
 lista_vars = [
     "co_seq_fat_atvdd_cltv_part",
     "co_fat_cidadao_pec",
     "co_dim_tempo",
     "nu_participante_peso",
     "nu_participante_altura",
+    "co_dim_cbo",
 ]
 lista_vars_str = ", ".join(lista_vars)
 
@@ -90,6 +92,7 @@ class CreateAtvddColetivaBaseRepository(
                 pa.field("co_dim_tempo", pa.int64()),
                 pa.field("nu_participante_peso", pa.float64(), nullable=True),
                 pa.field("nu_participante_altura", pa.float64(), nullable=True),
+                pa.field("co_dim_cbo", pa.int64(), nullable=True),
             ]
         )
 

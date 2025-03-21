@@ -25,64 +25,67 @@ def gerar_banco():
 
 
 
-    coluns_acv = ['co_unico_ultima_ficha','st_usar_cadastro_individual',
-                'st_possui_fci','st_possui_fcdt','dt_ultima_atualizacao_cidadao','co_cidadao',
-                'nu_cnes_vinc_equipe','dt_atualizacao_fcd','nu_ine_vinc_equipe','dt_nascimento_cidadao','nu_cpf_cidadao',
-                'nu_cns_cidadao','no_tipo_logradouro_tb_cidadao','ds_logradouro_tb_cidadao',
+    coluns_acv_geral = ['co_seq_acomp_cidadaos_vinc','st_usar_cadastro_individual','co_unico_ultima_ficha','dt_nascimento_cidadao','no_sexo_cidadao','nu_cpf_cidadao','st_possui_fci','st_possui_fcdt','co_cidadao',''
+                'nu_cns_cidadao','nu_telefone_celular','nu_telefone_contato','no_cidadao'
+                ,'nu_micro_area_domicilio','nu_micro_area_tb_cidadao','nu_ine_vinc_equipe','nu_cnes_vinc_equipe',
+                'ds_tipo_localizacao_domicilio','dt_ultima_atualizacao_cidadao','dt_atualizacao_fcd']
+
+
+    coluns_acv_end = ['no_tipo_logradouro_tb_cidadao','ds_logradouro_tb_cidadao',
                 'nu_numero_tb_cidadao','no_bairro_tb_cidadao','ds_complemento_tb_cidadao',
-                'ds_cep_tb_cidadao','nu_telefone_celular','nu_telefone_contato',"no_cidadao",
-                'no_sexo_cidadao','nu_micro_area_domicilio','ds_tipo_localizacao_domicilio']
+                'ds_cep_tb_cidadao','no_municipio_tb_cidadao','no_tipo_logradouro_domicilio',
+                'ds_logradouro_domicilio','nu_numero_domicilio',
+                'ds_complemento_domicilio','no_bairro_domicilio','no_municipio_domicilio','ds_cep_domicilio']
 
 
-    tb_pessoa = pl.read_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet",columns=coluns_acv)
+    tb_pessoa = pl.scan_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet")
 
 
-    #tabelas para indicador de acompnhamento
+    
 
-    coluns_vac = ['co_seq_fat_vacinacao','co_fat_cidadao_pec','co_dim_tempo'] 
-
-    vac = pl.read_parquet(input_path + os.sep +"tb_fat_vacinacao.parquet",columns=coluns_vac)
+    vac = pl.scan_parquet(input_path + os.sep +"tb_fat_vacinacao.parquet")
 
     columns_proced = ['co_seq_fat_proced_atend','co_fat_cidadao_pec','co_dim_tempo']
 
-    proced_atend = pl.read_parquet(input_path + os.sep +"tb_fat_proced_atend.parquet",columns=columns_proced)
+    proced_atend = pl.scan_parquet(input_path + os.sep +"tb_fat_proced_atend.parquet")
 
     fai_vars = ['co_fat_cidadao_pec','co_dim_tempo']
 
-    fai = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet",columns =fai_vars)
+    fai = pl.scan_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet")
 
     fao_vars = ['co_fat_cidadao_pec','co_dim_tempo']
 
-    fao = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet",columns =fao_vars)
+    fao = pl.scan_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet")
 
     marc_cons_alim_vars = ['co_seq_fat_marca_con_almnt','co_fat_cidadao_pec','co_dim_tempo']
 
-    marc_cons_alim = pl.read_parquet(input_path + os.sep +"tb_fat_marca_consumo_alimnt.parquet",columns =marc_cons_alim_vars)
+    marc_cons_alim = pl.scan_parquet(input_path + os.sep +"tb_fat_marca_consumo_alimnt.parquet")
 
     atv_colet_vars= ['co_seq_fat_atvdd_cltv_part','co_fat_cidadao_pec','co_dim_tempo']
 
-    atv_colet = pl.read_parquet(input_path + os.sep +"tb_fat_atvdd_coletiva_part.parquet",columns =atv_colet_vars)
+    atv_colet = pl.scan_parquet(input_path + os.sep +"tb_fat_atvdd_coletiva_part.parquet")
 
     selected_columns_cad = ["co_fat_cidadao_pec","co_dim_tempo","nu_uuid_ficha","co_dim_raca_cor"]
-    fci = pl.read_parquet(input_path + os.sep +"tb_fat_cad_individual.parquet", columns=selected_columns_cad)
+    fci = pl.scan_parquet(input_path + os.sep +"tb_fat_cad_individual.parquet")
     fci = fci.rename({"co_dim_tempo" : "co_dim_tempo_fci"})
+    fci = fci.rename({"nu_micro_area" : "nu_micro_area_fci"})
 
 
-    tb_dim_equipe = pl.read_parquet(input_path + os.sep +"tb_dim_equipe.parquet")
+    tb_dim_equipe = pl.scan_parquet(input_path + os.sep +"tb_dim_equipe.parquet")
 
-    tb_dim_und_saude = pl.read_parquet(input_path + os.sep +"tb_dim_unidade_saude.parquet")
-
-
+    tb_dim_und_saude = pl.scan_parquet(input_path + os.sep +"tb_dim_unidade_saude.parquet")
 
 
-    dim_raca_cor = pl.read_parquet(input_path + os.sep +"tb_dim_raca_cor.parquet")
+
+
+    dim_raca_cor = pl.scan_parquet(input_path + os.sep +"tb_dim_raca_cor.parquet")
     dim_raca_cor = dim_raca_cor.rename({"co_seq_dim_raca_cor" : "co_dim_raca_cor"}).select("co_dim_raca_cor","ds_raca_cor")
 
     fci = fci.join(dim_raca_cor,on="co_dim_raca_cor",how='left')
 
     vis_dom_vars = ['co_seq_fat_visita_domiciliar','co_fat_cidadao_pec','co_dim_tempo']
 
-    fat_vis_dom = pl.read_parquet(input_path + os.sep +"tb_fat_visita_domiciliar.parquet", columns=vis_dom_vars)
+    fat_vis_dom = pl.scan_parquet(input_path + os.sep +"tb_fat_visita_domiciliar.parquet")
 
 
 
@@ -91,6 +94,14 @@ def gerar_banco():
         left_on="co_unico_ultima_ficha",
         right_on="nu_uuid_ficha",
         how="left"
+    ).with_columns(
+        pl.col("dt_ultima_atualizacao_cidadao").cast(pl.Utf8).str.strptime(pl.Date, "%Y-%m-%d").alias("dt_ultima_atualizacao_cidadao")
+    ).sort(
+        by=["co_fat_cidadao_pec", "dt_ultima_atualizacao_cidadao", "co_seq_acomp_cidadaos_vinc"],  # Prioriza chave, depois data, depois variável inteira
+        descending=[False, True, True]             # Ordena data e variável inteira em ordem decrescente
+    ).unique(
+        subset="co_fat_cidadao_pec",                            # Remove duplicatas pela chave
+        keep="first"                               # Mantém a primeira ocorrência após a ordenação
     )
 
 
@@ -305,7 +316,7 @@ def gerar_banco():
             (pl.col("co_fat_cidadao_pec").is_not_null() ) 
         ) 
         .select("co_fat_cidadao_pec","tabela")
-)
+    )
 
 
 
@@ -428,6 +439,41 @@ def gerar_banco():
 
 
 
+    #endereço prioridade: domilicio -> cidadao
+    colunas_cidadao = [
+        'no_tipo_logradouro_tb_cidadao', 
+        'ds_logradouro_tb_cidadao',
+        'nu_numero_tb_cidadao', 
+        'no_bairro_tb_cidadao', 
+        'ds_complemento_tb_cidadao',
+        'ds_cep_tb_cidadao', 
+        'no_municipio_tb_cidadao'
+    ]
+
+    # Gerar automaticamente os nomes das colunas de domicílio correspondentes
+    colunas_domicilio = [col.replace("_tb_cidadao", "_domicilio") for col in colunas_cidadao]
+    colunas_nomes = [col.replace("_tb_cidadao", "") for col in colunas_cidadao]
+
+
+    condicao = (
+        pl.col("ds_logradouro_domicilio").is_not_null() & 
+        (pl.col("ds_logradouro_domicilio") != "")
+    )
+
+
+    expressoes = [
+        pl.when(condicao)
+        .then(pl.col(domicilio))
+        .otherwise(pl.col(cidadao))
+        .alias(nomes)  # Mantém o nome original da coluna do cidadão
+        for cidadao, domicilio, nomes in zip(colunas_cidadao, colunas_domicilio,colunas_nomes)
+    ]
+    tb_pessoa_v6 = tb_pessoa_v6.with_columns(expressoes)
+
+
+
+
+
     tb_pessoa_v7 = (
         tb_pessoa_v6
         .with_columns(
@@ -449,13 +495,52 @@ def gerar_banco():
             )
             .then(1)
             .otherwise(0)
-            .alias("alerta")
+            .alias("alerta"),
+
+        pl.coalesce([
+            pl.col("nu_micro_area_domicilio"), 
+            pl.col("nu_micro_area_fci"),
+            pl.col("nu_micro_area_tb_cidadao"),
+        ]).alias("nu_micro_area")
+
+        ).select("co_fat_cidadao_pec",
+            "co_cidadao",
+            "nu_cnes_vinc_equipe",
+            "nu_ine_vinc_equipe",
+            "dt_nasc_cidadao",
+            "nu_cpf_cidadao",
+            "nu_cns_cidadao",
+            "acompanhamento",
+            "status_cadastro",
+            "idade",
+            "tipo_ident_cpf_cns",
+            "faixa_etaria",
+            "ds_raca_cor",
+            "no_tipo_logradouro",
+            "ds_logradouro",
+            "nu_numero",
+            "no_bairro",
+            "ds_complemento",
+            "ds_cep",
+            "ds_tipo_localizacao_domicilio",
+            "telefone",
+            "no_cidadao",
+            "no_sexo_cidadao",
+            "nu_micro_area",
+            "nome_equipe",
+            "nome_unidade_saude",
+            "fci_att_2anos",
+            "fcdt_att_2anos",
+            "alerta_status_cadastro",
+            "alerta",
+            "co_dim_unidade_saude",
+            "codigo_equipe",
+            "dt_update_fci",
+            "dt_atualizacao_fcd",
+            "st_usar_cadastro_individual"
         )
-    ).select("co_fat_cidadao_pec","co_cidadao","nu_cnes_vinc_equipe","nu_ine_vinc_equipe","dt_nasc_cidadao","nu_cpf_cidadao","nu_cns_cidadao","acompanhamento",'status_cadastro',
-        'idade','tipo_ident_cpf_cns',"faixa_etaria","ds_raca_cor",'no_tipo_logradouro_tb_cidadao','ds_logradouro_tb_cidadao',
-         'nu_numero_tb_cidadao','no_bairro_tb_cidadao','ds_complemento_tb_cidadao','ds_cep_tb_cidadao','ds_tipo_localizacao_domicilio','telefone',
-         "no_cidadao","no_sexo_cidadao","nu_micro_area_domicilio","nome_equipe","nome_unidade_saude","fci_att_2anos","fcdt_att_2anos","alerta_status_cadastro","alerta",
-        "co_dim_unidade_saude","codigo_equipe","dt_update_fci","dt_atualizacao_fcd")
+    )
 
 
-    tb_pessoa_v7.write_parquet(output_path+os.sep+"cadastro_db.parquet")
+    tb_pessoa_v7.sink_parquet(output_path+os.sep+"cadastro_db.parquet", row_group_size=8192 )
+

@@ -1,42 +1,188 @@
-medicos_codigos = [476, 484, *range(636, 698 + 1), *range(785, 788 + 1)]
+acs_cod = ["515105"]
 
-enfermeiros_codigos = [475, 479, 487, *range(627, 635 + 1), *range(782, 784 + 1)]
-
-acs_cod = [488]
-
-tacs_cod = [780]
-
-acs_tacs = [488, 780]
-
+assistentes_sociais_codigos = ["251605"]
 
 cirurgioes_dentistas_codigos = [
-    485,
-    599,
-    *range(699, 720),
-]  # Códigos de cirurgioes dentistas cbo inicio "2232"
+    "223293",
+    "223208",
+    "223204",
+    "223280",
+    "223284",
+    "223212",
+    "223216",
+    "223220",
+    "223224",
+    "223228",
+    "223276",
+    "223288",
+    "223232",
+    "223236",
+    "223240",
+    "223244",
+    "223248",
+    "223252",
+    "223256",
+    "223260",
+    "223264",
+    "223268",
+    "223272",
+]
 
-tec_aux_enfermagem_codigos = [483, *range(522, 524 + 1), 620, 621, *range(623, 625 + 1)]
+enfermeiros_codigos = [
+    "223565",
+    "223560",
+    "223505",
+    "223520",
+    "223525",
+    "223530",
+    "223535",
+    "223540",
+    "223545",
+    "223550",
+    "223555",
+    "223510",
+    "223515",
+    "223580",
+    "2235C3",
+]
 
-farmaceuticos_codigos = [*range(721, 726 + 1)]
+farmaceuticos_codigos = ["223405", "223415", "223425", "223410", "223445", "223430"]
 
-fisioterapeutas_codigos = [482, *range(727, 731 + 1), *range(796, 798 + 1)]
+fisioterapeutas_codigos = [
+    "223605",
+    "223650",
+    "223660",
+    "223655",
+    "223635",
+    "223630",
+    "223640",
+    "223645",
+    "223625",
+]
 
-educacao_fisica_codigos = [738, 776]
+fonoaudiologos_codigos = [
+    "223810",
+    "223840",
+    "223815",
+    "223830",
+    "223820",
+    "223825",
+    "223835",
+    "223845",
+]
 
-nutricionistas_codigos = [481]
+medicos_codigos = [
+    "225142",
+    "225285",
+    "225105",
+    "225110",
+    "225148",
+    "225151",
+    "225115",
+    "225290",
+    "225122",
+    "225120",
+    "225210",
+    "225295",
+    "225215",
+    "225220",
+    "225225",
+    "225230",
+    "225235",
+    "225240",
+    "225305",
+    "225125",
+    "225280",
+    "225130",
+    "225135",
+    "225140",
+    "225203",
+    "225310",
+    "225145",
+    "225150",
+    "225315",
+    "225320",
+    "225155",
+    "225160",
+    "225165",
+    "225170",
+    "225175",
+    "225180",
+    "225250",
+    "225185",
+    "225340",
+    "225345",
+    "225195",
+    "225103",
+    "225106",
+    "225255",
+    "225109",
+    "225260",
+    "225350",
+    "225112",
+    "225118",
+    "225265",
+    "225121",
+    "225270",
+    "225275",
+    "225325",
+    "225335",
+    "225124",
+    "225127",
+    "225133",
+    "225330",
+    "2231F9",
+    "2231A2",
+    "2231F8",
+    "225136",
+    "225139",
+    "225154",
+    "2231A1",
+    "2231G1",
+    "223150",
+    "225355",
+]
 
-fonoaudiologos_codigos = [480, *range(732, 734 + 1), *range(799, 802 + 1)]
+medicos_veterinarios = ["223305"]
 
-terapeutas_codigos = [749, 804]
+nutricionistas_codigos = ["223710"]
 
-assistentes_sociais_codigos = [477]
+educacao_fisica_codigos = ["2241E1", "224140"]
 
-psicologos_codigos = [478, 499, 545, 736, *range(740, 746 + 1)]
+psicologos_codigos = [
+    "251510",
+    "251530",
+    "251505",
+    "251545",
+    "251550",
+    "251555",
+    "251515",
+    "251540",
+    "251535",
+    "251520",
+    "251525",
+]
 
-tsbucal_cod = [564, 610, 614, 615, 616]  # Código Técnico em saúde bucal "3224"
+tacs_cod = ["322255"]
 
 
-tec_aux_enfermagem_codigos = [483, *range(522, 524 + 1), 620, 621, *range(623, 625 + 1)]
+tec_aux_enfermagem_codigos = [
+    "322245",
+    "322205",
+    "322230",
+    "322250",
+    "322235",
+    "322240",
+    "322210",
+    "322215",
+    "322220",
+]
+
+tsbucal_cod = ["322415", "322425", "322405", "322430"]
+
+terapeutas_codigos = ["223905"]
+
+acs_tacs = acs_cod + tacs_cod
 
 
 # exame colesterol
@@ -144,9 +290,9 @@ creatinina_codigos = ["0202010317", "ABEX003"]
 
 colesterol_codigos = ["0202010295"]
 
-hemograma_codigos = ["0202020380"]
+hemograma_codigos = ["0202020380", "ABEX028"]
 
-eletrocardiograma_codigos = ["0211020036"]
+eletrocardiograma_codigos = ["0211020036", "ABEX004"]
 
 eas_equ_codigos = ["0202050017", "ABEX027"]
 
@@ -160,19 +306,19 @@ potassio_codigos = ["0202010600"]
 
 # diabetes?
 
-colesterol_total = ["0202010295"]
+colesterol_total = ["0202010295", "ABEX002"]
 
-colesterol_hdl = ["0202010279"]
+colesterol_hdl = ["0202010279", "ABEX007"]
 
-colesterol_ldl = ["0202010287"]
-
-
-hemoglobina_codigos = ["0202010503", " ABEX008"]
+colesterol_ldl = ["0202010287", "ABEX009"]
 
 
-pe_diabetico_codigos = ["0301040095"]
+hemoglobina_codigos = ["0202010503", "ABEX008"]
 
-retinografia_codigos = ["0211060178", "ABEX03"]
+
+pe_diabetico_codigos = ["0301040095", "ABEPG011"]
+
+retinografia_codigos = ["0211060178", "ABEX013"]
 
 
 peso_altura_codigos = "0101040024"
