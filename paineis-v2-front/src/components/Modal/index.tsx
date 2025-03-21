@@ -221,7 +221,10 @@ export function bodyDetalhesCadastro(item: any) {
                   {condicao?.cidCondicaoSaude && (
                     <>
                       <p>
-                        Condição de saúde: CID{" "}
+                        Condição de saúde:{" "}
+                        {item.diagnostico == "autoreferido"
+                          ? "AUTORREFERIDO "
+                          : "CID "}
                         {condicao?.cidCondicaoSaude.join(", ")}
                       </p>
                     </>
@@ -250,6 +253,7 @@ export function bodyDetalhesCadastro(item: any) {
                             <p>
                               {registro?.data === null ||
                               registro?.data === 0 ||
+                              registro?.data === "" ||
                               registro?.data === "0"
                                 ? "-"
                                 : parseText(registro?.data)}
