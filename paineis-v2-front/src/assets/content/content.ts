@@ -82,7 +82,7 @@ export const content: any = {
     "Total de cadastros de cidadãos por tipo de identificação",
   "total-cidadaos-conforme-situação-cadastral":
     "Total de cadastros de cidadãos conforme situação cadastral",
-  "localizacao-imoveis-cadastrados": "Localização dos imóveis cadastrados",
+  "localizacao-imoveis-cadastrados": "Cidadãos cadastrados por tipo de localização do imóvel",
   "total-cidadaos-acompanhados":
     "Total de cadastros de cidadãos conforme situação de acompanhamento",
   "total-cadastros-pessoas-raca-cor":

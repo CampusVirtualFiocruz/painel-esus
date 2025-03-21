@@ -417,7 +417,11 @@ export function Diabetes() {
                     }}
                   >
                     {dataDiabetesFactors?.map((diabete: any, i: number) => (
-                      <Pie key={i} data={diabete} pallete={["#0069d0", "#e4e4e4"]} />
+                      <Pie
+                        key={i}
+                        data={diabete}
+                        pallete={["#0069d0", "#e4e4e4"]}
+                      />
                     ))}
                   </div>
                 )}
@@ -425,7 +429,7 @@ export function Diabetes() {
             </div>
             <div className="painel-secundario">
               <Typography.Subtitle>
-                Estratificação de atendimentos por profissional
+                Atendimentos dos últimos 12 meses por categoria profissional
               </Typography.Subtitle>
               <div className="w-100">
                 {isLoadingProfessionals ? (

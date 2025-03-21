@@ -102,7 +102,6 @@ const Qualidade = () => {
   return (
     <ReportWrapper
       title="Qualidade de Cadastro"
-      //subtitle={"(Pessoas registradas a partir de 2019)"}
       footerNote={footer}
       header={
         <div

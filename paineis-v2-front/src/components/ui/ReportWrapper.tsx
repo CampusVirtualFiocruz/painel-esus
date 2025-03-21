@@ -1,4 +1,4 @@
-import { HTMLProps, ReactNode, useState } from "react";
+import { HTMLProps, ReactNode } from "react";
 import { Header } from "../Header";
 import { Footer } from "../Footer";
 import { getNomeUbs } from "../../utils";
@@ -7,7 +7,22 @@ import { useQuery } from "react-query";
 import { Api } from "../../services/api";
 import { useParams, useSearchParams } from "react-router-dom";
 import { PainelParams } from "./ReportFooter";
-import { useAuth } from "../../context/AuthProvider/useAuth";
+
+type Lista = {
+  nome_equipe: string;
+  codigo_equipe: number;
+};
+
+type ResponseData = {
+  data: Lista[];
+};
+
+type TypeUbs = {
+  label: string;
+  value: number | string;
+  nome_equipe: string;
+  codigo_equipe: number;
+};
 
 const ReportWrapper = ({
   title,
@@ -53,22 +68,6 @@ const ReportWrapper = ({
     }
   );
 
-  type Lista = {
-    nome_equipe: string;
-    codigo_equipe: number;
-  };
-
-  type ResponseData = {
-    data: Lista[];
-  };
-
-  type TypeUbs = {
-    label: string;
-    value: number | string;
-    nome_equipe: string;
-    codigo_equipe: number;
-  };
-
   const { data: teamsData, isLoading: isLoadingTeam } = useQuery(
     "get-teams/" + id,
     async () => {
@@ -94,13 +93,15 @@ const ReportWrapper = ({
     if (equipe) {
       return equipe
         ? !isLoadingTeam && teamsData
-          ? teamsData.find((t) => String(t?.codigo_equipe) === String(equipe))?.nome_equipe
+          ? teamsData.find((t) => String(t?.codigo_equipe) === String(equipe))
+              ?.nome_equipe
           : "Carregando nome equipe..."
         : equipe;
     }
 
     return id ? (!isLoadingUbs ? nomeUbs : "Carregando nome UBS...") : nomeUbs;
   })();
+
   const titleWithDetails = `${prefix ? prefix + "/" : ""} ${title}`;
 
   return (
