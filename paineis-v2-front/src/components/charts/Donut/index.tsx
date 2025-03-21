@@ -35,7 +35,7 @@ export function Donut(props: DonutChart) {
         name: "",
         type: "pie",
         radius: [props?.config?.radiusStart || "40%", "70%"],
-        avoidLabelOverlap: false,
+        avoidLabelOverlap: true,
         labelLine: {
           show: false,
         },
