@@ -21,5 +21,10 @@ class CityInformationsUseCase(CityInformations):
         response = self._repository.get_units()
         return response
 
+    def get_units_with_patients(self):
+        response = self._repository.get_units_with_patients()
+        return response
+    
+
     def get_teams(self, cnes: int = None):
         return self._repository.get_teams(cnes)

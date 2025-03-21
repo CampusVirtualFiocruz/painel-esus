@@ -8,7 +8,11 @@ import pandas as pd
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from src.data.interfaces.city_information_repository import CityInformationRepository
 from src.infra.db.entities.equipes import Equipes
-from src.infra.db.repositories.sqls import CITY_INFORMATION, UNITS_LIST
+from src.infra.db.repositories.sqls import (
+    CITY_INFORMATION,
+    UNITS_LIST,
+    UNIT_LIST_WITH_PATIENTS,
+)
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -44,6 +48,11 @@ class CityInformationsRepository(CityInformationRepository):
     def get_units(self) -> Dict:
         con = duckdb.connect()
         res = con.sql(UNITS_LIST).df()
+        return res
+
+    def get_units_with_patients(self) -> Dict:
+        con = duckdb.connect()
+        res = con.sql(UNIT_LIST_WITH_PATIENTS).df()
         return res
 
     def get_teams(self, cnes: int = None):

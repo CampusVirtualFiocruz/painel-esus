@@ -253,16 +253,27 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
                 result[condition] = 0
             return result
 
-        labels = [
-            "Glicemia",
-            "Creatinina",
-            "EAS/EQU (urina rotina)",
-            "Sódio",
-            "Potássio",
-            "Colesterol total",
-            "Hemograma",
-            "Eletrocardiograma",
-        ]
+        if self.disease_flag:
+            labels = [
+                "Glicemia",
+                "Creatinina",
+                "EAS/EQU (urina rotina)",
+                "Sódio",
+                "Potássio",
+                "Colesterol total",
+                "Hemograma",
+                "Eletrocardiograma",
+            ]
+        else:
+            labels = [
+                "Glicemia",
+                "Hemoglobina Glicada",
+                "Retinografia",
+                "Creatinina",
+                "EAS/EQU (urina rotina)",
+                "Hemograma",
+                "Colesterol total",
+            ]
         result = dict()
         for label in labels:
             result[label] = init_obj()

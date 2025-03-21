@@ -11,6 +11,7 @@ from src.infra.db.entities.pessoas import Pessoas
 from src.infra.db.repositories.sqls.disease.auto_referidos import (
     get_diabetes_base_sql,
     get_diabetes_base_sql_filter,
+    get_diabetes_base_export,
 )
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
@@ -76,8 +77,10 @@ class DiabetesNominalListRepository:
 
     def find_all_download(self, cnes: int = None, equipe:int=None) -> Dict:
         con = duckdb.connect()
-        pessoas_sql = get_diabetes_base_sql_filter(cnes, equipe)
+        pessoas_sql = get_diabetes_base_export(cnes, equipe)
+    
         return con.sql(pessoas_sql).df()
+    
     #         where_clause = " "
     #         if cnes is not None and cnes:
     #             where_clause += f" where e.codigo_unidade_saude  = {cnes} "

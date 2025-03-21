@@ -76,15 +76,15 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             "alerta_visita_acs",
         ]
         for i in alertas:
-            user[i] = user[i] if isinstance(user[i], int) else 1
+            user[i] = user[i] if isinstance(user[i], int) else 0
             
-        self.possui_alertas = (
-            user["alerta_afericao_pa"]
-            or user["alerta_creatinina"]
+        self.possui_alertas =  (
+            not user["alerta_afericao_pa"]
+            or not user["alerta_creatinina"]
             or user["alerta_total_de_consultas_medico"]
-            or user["alerta_ultima_consulta_medico"]
-            or user["alerta_ultima_consulta_odontologica"]
-            or user["alerta_visita_acs"]
+            or not user["alerta_ultima_consulta_medico"]
+            or not user["alerta_ultima_consulta_odontologica"]
+            or not user["alerta_visita_acs"]
         )
         self.cids = user["codigos_1atend"].tolist() if is_sequence(user["codigos_1atend"]) else []
         self.registros.append(
@@ -194,12 +194,12 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             user[i] = user[i] if isinstance(user[i], int) else 0
 
         self.possui_alertas = (
-            user["alerta_afericao_pa"]
+            not user["alerta_afericao_pa"]
             or user["alerta_total_de_consultas_medico"]
-            or user["alerta_ultima_consulta_medico"]
-            or user["alerta_ultima_consulta_odontologica"]
-            or user["alerta_visita_acs"]
-            or user["alerta_ultima_hemoglobina_glicada"]
+            or not user["alerta_ultima_consulta_medico"]
+            or not user["alerta_ultima_consulta_odontologica"]
+            or not user["alerta_visita_acs"]
+            or not user["alerta_ultima_hemoglobina_glicada"]
         )
         self.diagnostico = (
             "cid/ciaps"
@@ -218,6 +218,14 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
                 exibir_alerta=not user["alerta_afericao_pa"],
                 descricao="Data da última aferição de PA",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=user["ultima_data_creatinina"],
+                exibir_alerta=(not user["alerta_creatinina"]),
+                descricao="Data da última avaliação da Dosagem de Creatinina",
+                tipo_alerta="alerta-creatinina-maior-6-meses",
             )
         )
 

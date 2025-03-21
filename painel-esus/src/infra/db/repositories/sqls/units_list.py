@@ -25,3 +25,17 @@ select
   	nu_cnes, 
    	1 qtd   
     from read_parquet('./dados/input/tb_dim_unidade_saude.parquet') """
+
+
+UNIT_LIST_WITH_PATIENTS = """
+with unidades as ( 
+	SELECT distinct (co_dim_unidade_saude) co_dim_unidade_saude 
+ 	FROM read_parquet('./dados/output/cadastro_db.parquet') 
+  )
+	select 
+	co_seq_dim_unidade_saude, 
+ 	no_unidade_saude, 
+  	nu_cnes, 
+   	1 qtd   
+    from read_parquet('./dados/input/tb_dim_unidade_saude.parquet')
+    WHERE co_seq_dim_unidade_saude in (select co_dim_unidade_saude from unidades) """
