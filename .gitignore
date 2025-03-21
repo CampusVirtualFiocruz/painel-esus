@@ -45,7 +45,7 @@ dados/output/**
 paineis-v2-front/static-files/
 
 **/package-lock.json
-**/yarn.lock
+# **/yarn.lock
 
 run.spec
 docker-compose.yaml

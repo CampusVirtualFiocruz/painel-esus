@@ -8,6 +8,7 @@ export const content: any = {
   fem: "Feminino",
   masculino: "Masculino",
   feminino: "Feminino",
+  indefinido: "Indefinido",
   "nao-informado": "Não informado",
   total: "Total",
 
