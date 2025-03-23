@@ -77,7 +77,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         ]
         for i in alertas:
             user[i] = user[i] if isinstance(user[i], int) else 0
-            
+
         self.possui_alertas =  (
             not user["alerta_afericao_pa"]
             or not user["alerta_creatinina"]
@@ -90,7 +90,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data= user["ultima_data_afericao_pa"],
-                exibir_alerta=not user["alerta_afericao_pa"],
+                exibir_alerta=user["alerta_afericao_pa"],
                 descricao="Data da última aferição de PA",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
@@ -99,7 +99,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user["ultima_data_creatinina"],
                 exibir_alerta=(
-                    not user["alerta_creatinina"]
+                    user["alerta_creatinina"]
                 ),
                 descricao="Data da última avaliação da Dosagem de Creatinina",
                 tipo_alerta="alerta-creatinina-maior-6-meses",
@@ -108,7 +108,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["total_consulta_med_enferm"],
-                exibir_alerta=(not user["alerta_ultima_consulta_medico"]),
+                exibir_alerta=(user["alerta_ultima_consulta_medico"]),
                 descricao="Total de consultas Médicas ou de Enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
@@ -116,7 +116,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultimo_atendimento_medico"],
-                exibir_alerta=0,
+                exibir_alerta=user["alerta_total_de_consultas_medico"],
                 descricao="Data da última consulta médica ou de Enfermagem",
                 tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
             )
@@ -126,7 +126,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
                 data=(
                     user["ultimo_atendimento_odonto"]
                 ),
-                exibir_alerta=not user["alerta_ultima_consulta_odontologica"],
+                exibir_alerta=user["alerta_ultima_consulta_odontologica"],
                 descricao="Data da última consulta odontológica",
                 tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
             )
@@ -137,7 +137,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
                 data=(
                     user["dt_ultima_visita_acs"]
                 ),
-                exibir_alerta=not user["alerta_visita_acs"],
+                exibir_alerta=user["alerta_visita_acs"],
                 descricao="Data da última visita ACS",
                 tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
             )
@@ -215,7 +215,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultima_data_afericao_pa"],
-                exibir_alerta=not user["alerta_afericao_pa"],
+                exibir_alerta=user["alerta_afericao_pa"],
                 descricao="Data da última aferição de PA",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
@@ -223,7 +223,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultima_data_creatinina"],
-                exibir_alerta=(not user["alerta_creatinina"]),
+                exibir_alerta=(user["alerta_creatinina"]),
                 descricao="Data da última avaliação da Dosagem de Creatinina",
                 tipo_alerta="alerta-creatinina-maior-6-meses",
             )
@@ -232,7 +232,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["total_consulta_med_enferm"],
-                exibir_alerta=not user["alerta_ultima_consulta_medico"],
+                exibir_alerta=user["alerta_ultima_consulta_medico"],
                 descricao="Total de consultas Médicas ou de Enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )

@@ -78,9 +78,9 @@ class DiabetesNominalListRepository:
     def find_all_download(self, cnes: int = None, equipe:int=None) -> Dict:
         con = duckdb.connect()
         pessoas_sql = get_diabetes_base_export(cnes, equipe)
-    
+
         return con.sql(pessoas_sql).df()
-    
+
     #         where_clause = " "
     #         if cnes is not None and cnes:
     #             where_clause += f" where e.codigo_unidade_saude  = {cnes} "
@@ -213,7 +213,9 @@ class DiabetesNominalListRepository:
             sql_where = f" WHERE {sql_where}"
 
         users = con.sql(
-            pessoas_sql + sql_where + f" LIMIT {limit} OFFSET {offset} "
+            pessoas_sql
+            + sql_where
+            + f"  order by no_cidadao asc LIMIT {limit} OFFSET {offset} "
         ).df()
 
         users = users.to_dict(orient="records")

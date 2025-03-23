@@ -146,7 +146,7 @@ class HypertensionNominalListRepository:
             sql_where = f" WHERE {sql_where}"
 
         users = con.sql(
-            pessoas_sql + sql_where + f" LIMIT {limit} OFFSET {offset} "
+            pessoas_sql + sql_where + f" order by no_cidadao asc LIMIT {limit} OFFSET {offset} "
         ).df()
 
         users = users.to_dict(orient="records")
