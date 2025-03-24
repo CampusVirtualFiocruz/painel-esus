@@ -18,7 +18,6 @@ def gerar_banco():
     output_path = os.path.join(working_directory, "dados", "output")  
 
 
-
     coluns_acv_geral = ['co_seq_acomp_cidadaos_vinc','co_unico_ultima_ficha','dt_nascimento_cidadao','no_sexo_cidadao','nu_cpf_cidadao',
                 'nu_cns_cidadao','nu_telefone_celular','nu_telefone_contato','no_cidadao'
                 ,'nu_micro_area_domicilio','nu_micro_area_tb_cidadao','nu_ine_vinc_equipe','nu_cnes_vinc_equipe',
@@ -112,9 +111,6 @@ def gerar_banco():
 
 
     dim_cbo = dim_cbo.with_columns(pl.col("co_seq_dim_cbo").cast(pl.Int64))
-
-
-    
 
 
 
@@ -490,33 +486,20 @@ def gerar_banco():
         fai_cods
         .group_by("co_seq_fat_atd_ind")
         .agg(
-            pl.sum("isContained_Infarto_Agudo").alias("n_infarto_agudo"),
-            pl.sum("isContained_Acidente_Vascular").alias("n_acidente_vascular"),
-            pl.sum("isContained_Doença_Coronariana").alias("n_coronariana"),
-            pl.sum("isContained_Doença_Cerebrovascular").alias("n_cerebrovascular"),
-            pl.sum("isContained_Doença_renal").alias("n_renal")
+            pl.sum("isContained_Infarto_Agudo").alias("n_infarto_agudo_aux"),
+            pl.sum("isContained_Acidente_Vascular").alias("n_acidente_vascular_aux"),
+            pl.sum("isContained_Doença_Coronariana").alias("n_coronariana_aux"),
+            pl.sum("isContained_Doença_Cerebrovascular").alias("n_cerebrovascular_aux"),
+            pl.sum("isContained_Doença_renal").alias("n_renal_aux")
         )
         .with_columns(
-            pl.when
-            (
-                (pl.col("n_infarto_agudo") >= 1) |
-                (pl.col("n_acidente_vascular") >= 1) |
-                (pl.col("n_coronariana") >= 1) |
-                (pl.col("n_cerebrovascular") >= 1) |
-                (pl.col("n_renal") >= 1)
-            )
-            .then(1)
-            .otherwise(0)
-            .alias("agravo")
-        )
-        .filter(
-            pl.col("agravo") >= 1
+            pl.when(pl.col("n_infarto_agudo_aux") >= 1).then(1).otherwise(0).alias("n_infarto_agudo"),
+            pl.when(pl.col("n_acidente_vascular_aux") >= 1).then(1).otherwise(0).alias("n_acidente_vascular"),
+            pl.when(pl.col("n_coronariana_aux") >= 1).then(1).otherwise(0).alias("n_coronariana"),
+            pl.when(pl.col("n_cerebrovascular_aux") >= 1).then(1).otherwise(0).alias("n_cerebrovascular"),
+            pl.when(pl.col("n_renal_aux") >= 1).then(1).otherwise(0).alias("n_renal")
         )
     )
-
-    #print("grouped_complicacoes {}".format(grouped_complicacoes.height))
-    #print("fai_v2 {}".format(fai_v2.height))
-    #grouped_complicacoes.glimpse()
 
 
 
@@ -536,14 +519,13 @@ def gerar_banco():
         fai_agravo
         .group_by("co_fat_cidadao_pec")
         .agg(
-            pl.sum("n_infarto_agudo").alias("n_infarto_agudo"),
-            pl.sum("n_acidente_vascular").alias("n_acidente_vascular"),
-            pl.sum("n_coronariana").alias("n_coronariana"),
-            pl.sum("n_cerebrovascular").alias("n_cerebrovascular"),
-            pl.sum("n_renal").alias("n_renal")
+            (pl.sum("n_infarto_agudo") >= 1).cast(pl.Int8).alias("n_infarto_agudo"),
+            (pl.sum("n_acidente_vascular") >= 1).cast(pl.Int8).alias("n_acidente_vascular"),
+            (pl.sum("n_coronariana") >= 1).cast(pl.Int8).alias("n_coronariana"),
+            (pl.sum("n_cerebrovascular") >= 1).cast(pl.Int8).alias("n_cerebrovascular"),
+            (pl.sum("n_renal") >= 1).cast(pl.Int8).alias("n_renal")
         )
     )
-    #fai_pessoas_agravo.height
 
 
 
@@ -1081,110 +1063,6 @@ def gerar_banco():
     )
 
 
-    # ### Passo 7.10
-    # 
-    # 
-    # 
-    # obs.: Capturar a data do último registro identificado para compor a lista nominal
-    # 
-
-
-
-
-    fao_filtrado = fao.filter(pl.col('ds_filtro_procedimentos').str.contains(r"\|0101040024\|")).with_columns(pl.lit("fao").alias("tb"))
-    fai_cods_filtrado = fai_cods.filter((pl.col('tipo')=='Procedimentos Avaliado') & (pl.col('codigo')=='0101040024')).rename({"codigo": "ds_filtro_procedimentos"}).with_columns(pl.lit("fai").alias("tb"))
-    proced_atend_filtrado = proced_atend.filter(pl.col('ds_filtro_procedimento').str.contains(r"\|0101040024\|")).rename({"ds_filtro_procedimento": "ds_filtro_procedimentos"}).with_columns(pl.lit("proced").alias("tb"))
-
-    fai_filtrado = fai.join(fai_cods_filtrado, on='co_seq_fat_atd_ind', how="inner") #left
-
-    peso_altura = pl.concat([fao_filtrado, fai_filtrado, proced_atend_filtrado], how="diagonal")
-
-
-    #fac = fac.rename({'nu_participante_peso': 'nu_peso', 'nu_participante_altura': 'nu_altura'})
-    #peso_altura = pl.concat([pa_concatenado, fac], how='diagonal')
-
-
-    reg_peso_altura = (
-        peso_altura
-        .with_columns(
-            pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento")
-        )
-        .filter(
-            (pl.col("co_fat_cidadao_pec").is_not_null())
-        )
-        .filter(
-            (pl.col('nu_peso').is_not_null()) &
-            (pl.col('nu_altura').is_not_null())
-        )
-        .filter(
-            pl.col("co_dim_cbo").is_in(peso_altura_cbo)
-        )
-        .with_columns(
-            pl.when(
-                pl.col("ds_filtro_procedimentos").str.contains(peso_altura_codigos)
-            )
-            .then(1)
-            .otherwise(0)
-            .alias("peso_altura")
-        )
-        .group_by("co_fat_cidadao_pec")
-        .agg(
-            pl.max("peso_altura").alias("agg_peso_altura_semdata"),
-            
-            pl.col("dt_atendimento")
-            .filter(pl.col("peso_altura") == 1)
-            .max()
-            .alias("dt_ultima_peso_altura")
-        )
-        .with_columns(
-            pl.when(
-                (pl.col("dt_ultima_peso_altura") >= calcular_data(12) ) &
-                (pl.col("agg_peso_altura_semdata") == 1)
-            )
-            .then(1)
-            .otherwise(0)
-            .alias("agg_peso_altura"),
-        )
-    ).select("co_fat_cidadao_pec","dt_ultima_peso_altura","agg_peso_altura")
-
-
-
-
-
-    imc_grouped = (
-        peso_altura
-        .with_columns(
-            pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento")
-        )
-        .filter(
-            pl.col("dt_atendimento") >= dt_12meses
-        )
-        .filter(
-            (pl.col("nu_peso").is_not_null() ) & ( pl.col("nu_altura").is_not_null() )
-        )
-        .sort("dt_atendimento",descending = True)
-        .group_by("co_fat_cidadao_pec")
-        .agg(
-            pl.col("nu_peso").first().alias("nu_peso_mais_recente_quilos"),
-            pl.col("nu_altura").first().alias("nu_altura_mais_recente"),
-        )
-        .with_columns(
-            (pl.col("nu_altura_mais_recente") / 100).alias("nu_altura_mais_recente_metros")
-        )
-        .with_columns(
-            (pl.col("nu_peso_mais_recente_quilos") / (pl.col("nu_altura_mais_recente_metros") ) ** 2).round(1).alias("imc")
-        )
-        .with_columns(
-            pl.when(pl.col("imc") < 18.5).then(pl.lit("baixo_peso"))
-            .when((pl.col("imc") >= 18.5) & (pl.col("imc") <= 24.9)).then(pl.lit("peso_adequado"))
-            .when((pl.col("imc") >= 25) & (pl.col("imc") <= 29.9)).then(pl.lit("excesso_peso"))
-            .when((pl.col("imc") >= 30) ).then(pl.lit("obesidade"))
-            .otherwise(pl.lit("na_outros"))
-            .alias("imc_categoria") 
-        ).select("imc_categoria","co_fat_cidadao_pec")
-    )
-
-
     # ### dados plot exames
 
 
@@ -1613,6 +1491,146 @@ def gerar_banco():
     pessoas_diabetes_agravo_v2.height 
 
 
+    # ### Passo 7.10
+    # 
+    # 
+    # 
+    # obs.: Capturar a data do último registro identificado para compor a lista nominal
+    # 
+
+
+
+    fao_select = fao.select("co_fat_cidadao_pec","co_dim_tempo","co_dim_cbo_1","co_dim_cbo_2","nu_peso","nu_altura").with_columns(pl.lit("fao").alias("tb"))
+
+    fai_select = fai_v2.select("co_fat_cidadao_pec","co_dim_tempo","co_dim_cbo_1","co_dim_cbo_2","nu_peso","nu_altura").with_columns(pl.lit("fai").alias("tb"))
+
+    proced_atend_select = (proced_atend
+                        .select("co_fat_cidadao_pec","co_dim_tempo","co_dim_cbo","nu_peso","nu_altura")
+                        .rename({"co_dim_cbo": "co_dim_cbo_1"})
+                        .with_columns(pl.lit("proced").alias("tb"))
+                        )
+                        
+
+    fac_select = (
+        tb_atv_coletv_part
+        .rename({"co_dim_cbo": "co_dim_cbo_1",'nu_participante_peso': 'nu_peso', 'nu_participante_altura': 'nu_altura'})
+        .select("co_fat_cidadao_pec","co_dim_tempo","nu_peso","nu_altura","co_dim_cbo_1")
+        .with_columns(pl.lit("fac").alias("tb"),
+                    pl.col("co_dim_cbo_1").cast(pl.Utf8).alias("co_dim_cbo_1"))
+    )
+
+
+
+
+
+    peso_altura = pl.concat([proced_atend_select,fao_select,fai_select,fac_select  ], how="diagonal") 
+
+    idade_pessoas = pessoas_diabetes_agravo_v2.select("dt_nascimento_cidadao","co_fat_cidadao_pec")
+
+
+    peso_altura_imc = peso_altura.join(
+        idade_pessoas,
+        on="co_fat_cidadao_pec",
+        how="inner" 
+    )
+
+    reg_peso_altura = (
+        peso_altura
+        .with_columns(
+            pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento")
+        )
+        .filter(
+            (pl.col("co_fat_cidadao_pec").is_not_null())
+        )
+        .filter(
+            (pl.col('nu_peso').is_not_null()) &
+            (pl.col('nu_altura').is_not_null())
+        )
+        .filter(
+            (pl.col("co_dim_cbo_1").is_in(peso_altura_cbo)) |
+            (pl.col("co_dim_cbo_2").is_in(peso_altura_cbo))
+        )
+        .with_columns(
+            pl.lit(1).alias("peso_altura"),
+        )
+        .group_by("co_fat_cidadao_pec")
+        .agg(
+            pl.max("peso_altura").alias("agg_peso_altura_semdata"),
+            
+            pl.col("dt_atendimento")
+            .filter(pl.col("peso_altura") == 1)
+            .max()
+            .alias("dt_ultima_peso_altura")
+        )
+        .with_columns(
+            pl.when(
+                (pl.col("dt_ultima_peso_altura") >= calcular_data(12) ) &
+                (pl.col("agg_peso_altura_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_peso_altura"),
+        )
+    ).select("co_fat_cidadao_pec","dt_ultima_peso_altura","agg_peso_altura")
+
+
+
+
+
+
+    imc_grouped = (
+        peso_altura_imc
+        .with_columns(
+            pl.col("dt_nascimento_cidadao").str.strptime(pl.Date, "%Y-%m-%d").alias("dt_nasc_cidadao"),
+            pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento"),
+        )
+        .with_columns(
+            
+            pl.when(
+                        pl.col("dt_atendimento") >= pl.date(
+                            pl.col("dt_atendimento").dt.year(),
+                            pl.col("dt_nasc_cidadao").dt.month(),
+                            pl.col("dt_nasc_cidadao").dt.day()
+                        )
+                    )
+                    .then(pl.col("dt_atendimento").dt.year() - pl.col("dt_nasc_cidadao").dt.year())
+                    .otherwise(pl.col("dt_atendimento").dt.year() - pl.col("dt_nasc_cidadao").dt.year() - 1)
+                    .cast(pl.Float32)
+                    .alias("idade")
+        )
+        .filter(
+            pl.col("dt_atendimento") >= dt_12meses
+        )
+        .filter(
+            (pl.col("nu_peso").is_not_null() ) & ( pl.col("nu_altura").is_not_null() )
+        )
+
+        .filter(
+            (pl.col("idade") >= 20 ) & ( pl.col("idade") <= 60 )
+        )
+        .sort("dt_atendimento",descending = True)
+        .group_by("co_fat_cidadao_pec")
+        .agg(
+            pl.col("nu_peso").first().alias("nu_peso_mais_recente_quilos"),
+            pl.col("nu_altura").first().alias("nu_altura_mais_recente"),
+        )
+        .with_columns(
+            (pl.col("nu_altura_mais_recente") / 100).alias("nu_altura_mais_recente_metros")
+        )
+        .with_columns(
+            (pl.col("nu_peso_mais_recente_quilos") / (pl.col("nu_altura_mais_recente_metros") ) ** 2).round(1).alias("imc")
+        )
+        .with_columns(
+            pl.when(pl.col("imc") < 18.5).then(pl.lit("baixo_peso"))
+            .when((pl.col("imc") >= 18.5) & (pl.col("imc") <= 24.9)).then(pl.lit("peso_adequado"))
+            .when((pl.col("imc") >= 25) & (pl.col("imc") <= 29.9)).then(pl.lit("excesso_peso"))
+            .when((pl.col("imc") >= 30) ).then(pl.lit("obesidade"))
+            .otherwise(pl.lit("na_outros"))
+            .alias("imc_categoria") 
+        ).select("imc_categoria","co_fat_cidadao_pec")
+    )
+
+
     # Passo 8. Criar tabela pessoa final com todas as variáveis necessárias para próximas etapas de desenvolvimento do Painel
 
 
@@ -1740,6 +1758,16 @@ def gerar_banco():
         pl.col("agg_hemoglobina").fill_null(0),
         pl.col("agg_creatinina").fill_null(0),
         pl.col("agg_exame_pe").fill_null(0),
+
+
+        pl.col("creatinina").fill_null(1),
+        pl.col("colesterol").fill_null(1),
+        pl.col("hemograma").fill_null(1),
+        pl.col("hemob_glica").fill_null(1),
+        pl.col("eas_equ").fill_null(1),
+        pl.col("glicemia").fill_null(1),
+        pl.col("retino").fill_null(1),
+    
 
         
         pl.col("n_atendimentos_12_meses").fill_null(0), 
@@ -1888,9 +1916,4 @@ def gerar_banco():
                         ]
 
     pessoas_diabetes_v3 = pessoas_diabetes_agravo_v3.select(lista_vars_final)
-
-
-
-
     pessoas_diabetes_v3.write_parquet(output_path+os.sep+"diabetes.parquet")
-

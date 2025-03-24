@@ -54,11 +54,11 @@ class StartGeneration:
             TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
         )
         job_progress.add_task(
-            "[green]Generate Base",
+            "[green]Gerando Base",
             total=len(self.jobs.creation),
         )
         job_progress.add_task(
-            "[magenta]Calculating key factors",
+            "[magenta]Calculando indicadores",
             total=len(self.jobs.key_factors),
         )
 
@@ -74,7 +74,7 @@ class StartGeneration:
         progress_table.add_row(
             Panel.fit(
                 overall_progress,
-                title="Overall Progress",
+                title="Progresso da instalação",
                 border_style="green",
                 padding=(2, 2),
             ),

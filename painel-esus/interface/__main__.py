@@ -10,8 +10,6 @@ from PIL import Image
 from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
 
-from .env import ENV
-
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
 
@@ -26,12 +24,6 @@ def center_window_to_display(
     y = int(((screen_height / 2) - (height / 1.5)) * scale_factor)
     return f"{width}x{height}+{x}+{y}"
 
-def extract_tabs(env):
-    tabs = []
-    for section in env:
-        if section["visible"]:
-            tabs.append(section["section"])
-    return tabs
 
 root = ctk.CTk()
 if os.name != "posix":
@@ -429,67 +421,16 @@ def success_frame():
     create_new_env_button.pack(pady=12, padx=10)
 
 
-def render_input(text, frame, password=False):
-    input_host = None
-    if password:
-        input_host = ctk.CTkEntry(
-            master=frame,
-            placeholder_text=text,
-            width=600,
-            height=25,
-            corner_radius=10,
-            show="*",
-        )
-    else:
-        input_host = ctk.CTkEntry(
-            master=frame,
-            placeholder_text=text,
-            width=600,
-            height=25,
-            corner_radius=10,
-        )
-    input_host.pack(pady=10, padx=10)
-    return input_host
-
-
-def configuracao_avancada_frame(tabview):
-    frame = ctk.CTkFrame(tabview.tab("Configurações avançadas"), height=780, width=580)
-    frame.pack(fill="both", expand=True)
-
-    label_config_painel = ctk.CTkLabel(
-        master=frame, text="Configurações avançadas:", font=("arial bold", 25)
-    )
-    label_config_painel.pack(pady=12, padx=10)
-
-    configuracoes_avancadas_inputs = []
-    cert_input = render_input("CERT_PATH", frame, True)
-    
-    from customtkinter import filedialog
-
-    def add_file():
-        file_name = filedialog.askopenfile()
-        print(file_name)
-        
-    file_cert_path = ctk.CTkButton(
-        master=frame,
-        text="Localizar certificado",
-        command=lambda: add_file() ,
-    )
-    file_cert_path.pack(pady=12, padx=10)
-    configuracoes_avancadas_inputs.append(cert_input)
-    return frame, configuracoes_avancadas_inputs
-
 def tabs():
     tabview = ctk.CTkTabview(root, width=780, height=580)
     tabview.pack()
-
     tabview.add("Banco de dados")
     tabview.add("Painel E-sus")
-    tabview.add("Configurações avançadas")
+    # tabview.add("Responsável")
 
     tabview.tab("Banco de dados").grid_columnconfigure(0, weight=1)
     tabview.tab("Painel E-sus").grid_columnconfigure(0, weight=1)
-    tabview.tab("Configurações avançadas").grid_columnconfigure(0, weight=1)
+    # tabview.tab("Responsável").grid_columnconfigure(0, weight=1)
 
     # --------------------------------CONFIGURAÇÃO BANCO DE DADOS--------------------------------
     frame = ctk.CTkFrame(tabview.tab("Banco de dados"), height=780, width=580)
@@ -519,19 +460,59 @@ def tabs():
     )
     image_label.pack(pady=10)
 
-    inputs_bd = []
-    for variable in ENV[0]["values"]:
-        if "_PASSWORD" in variable["name"]:
-            inputs_bd.append(render_input(variable["label"], frame, True))
-        else:
-            inputs_bd.append(render_input(variable["label"], frame))
+    input_host = ctk.CTkEntry(
+        master=frame, placeholder_text="Host:", width=600, height=25, corner_radius=10
+    )
+    input_host.pack(pady=10, padx=10)
 
-    inputs_bd_values = [value.get().strip() for value in inputs_bd]
+    input_database = ctk.CTkEntry(
+        master=frame,
+        placeholder_text="Base de dados:",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_database.pack(pady=10, padx=10)
+
+    input_user = ctk.CTkEntry(
+        master=frame,
+        placeholder_text="Usuário do banco de dados:",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_user.pack(pady=10, padx=10)
+
+    input_password = ctk.CTkEntry(
+        master=frame,
+        placeholder_text="Senha do banco de dados:",
+        show="*",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_password.pack(pady=10, padx=10)
+
+    input_port = ctk.CTkEntry(
+        master=frame,
+        placeholder_text="Porta do banco de dados:",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_port.pack(pady=10, padx=10)
 
     test_connection_button = ctk.CTkButton(
         master=frame,
         text="Testar conexão",
-        command=lambda: startTopLevelViewConnection(frame, *inputs_bd),
+        command=lambda: startTopLevelViewConnection(
+            frame,
+            input_user.get().strip(),
+            input_password.get().strip(),
+            input_host.get().strip(),
+            input_port.get().strip(),
+            input_database.get().strip(),
+        ),
     )
     test_connection_button.pack(pady=12, padx=10)
 
@@ -564,23 +545,68 @@ def tabs():
     )
     image_label_painel.pack(pady=10)
 
-    inputs_conf = []
-    for variable in ENV[1]["values"]:
-        if "label" in variable:
-            if "_PASSWORD" in variable["name"]:
-                inputs_conf.append(render_input(variable["label"], frame_painel, True))
-            else:
-                inputs_conf.append(render_input(variable["label"], frame_painel))
+    input_cidade = ctk.CTkEntry(
+        master=frame_painel,
+        placeholder_text="Código IBGE da Cidade:",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_cidade.pack(pady=10)
 
-    
-    configuracoes_avancadas_frame, configuracoes_avancadas_inputs = configuracao_avancada_frame(tabview)
-    
-    fill_input_fields([*inputs_bd, *inputs_conf, *configuracoes_avancadas_inputs])
+    input_user_admin = ctk.CTkEntry(
+        master=frame_painel,
+        placeholder_text="Usuário de acesso ao painel-esus:",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_user_admin.pack(pady=10, padx=10)
+
+    input_password_admin = ctk.CTkEntry(
+        master=frame_painel,
+        placeholder_text="Senha de acesso ao painel-esus:",
+        show="*",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_password_admin.pack(pady=10, padx=10)
+
+    input_bridge_login_url = ctk.CTkEntry(
+        master=frame_painel,
+        placeholder_text="Url de login:",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    input_bridge_login_url.pack(pady=10, padx=10)
+
+    fill_input_fields(
+        [
+            input_host,
+            input_database,
+            input_user,
+            input_password,
+            input_port,
+            input_cidade,
+            input_user_admin,
+            input_password_admin,
+            input_bridge_login_url,
+        ]
+    )
 
     def close():
         create_env(
-            *inputs_bd,
-            *inputs_conf,
+            input_host,
+            input_database,
+            input_user,
+            input_password,
+            input_port,
+            input_cidade,
+            input_user_admin,
+            input_password_admin,
+            input_bridge_login_url,
         )
         tabview.destroy()
         tabview.update()
@@ -603,5 +629,3 @@ def start_interface():
     root.mainloop()
 
 
-if __name__ == "__main__":
-    start_interface()

@@ -59,9 +59,9 @@ def get_hypertension_base_sql():
                 agg_creatinina alerta_creatinina,
                 coalesce(total_consulta_med_enferm, 0)  total_consulta_med_enferm,
                 case 
-                    when total_consulta_med_enferm < 2 then 1
-                    when total_consulta_med_enferm > 2 then 0
-                    when total_consulta_med_enferm is null then 1
+                    when total_consulta_med_enferm < 2 then 0
+                    when total_consulta_med_enferm > 2 then 1
+                    when total_consulta_med_enferm is null then 0
                 end as alerta_total_de_consultas_medico,
                 coalesce(agg_medicos_enfermeiros, 0) alerta_ultima_consulta_medico,
                 coalesce( cast(dt_ultima_peso_altura as varchar), '-') data_ultimo_peso_altura,
@@ -210,9 +210,9 @@ def get_diabetes_base_sql():
                 agg_creatinina alerta_creatinina,
                 coalesce(total_consulta_med_enferm, 0)  total_consulta_med_enferm,
                 case 
-                    when total_consulta_med_enferm < 2 then 1
-                    when total_consulta_med_enferm > 2 then 0
-                    when total_consulta_med_enferm is null then 1
+                    when total_consulta_med_enferm < 2 then 0
+                    when total_consulta_med_enferm > 2 then 1
+                    when total_consulta_med_enferm is null then 0
                 end as alerta_total_de_consultas_medico,
                 agg_medicos_enfermeiros alerta_ultima_consulta_medico,
                 coalesce( cast(dt_ultima_peso_altura as varchar), '-') data_ultimo_peso_altura,

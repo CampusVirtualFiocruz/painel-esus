@@ -94,9 +94,16 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             "Feminino": self.__create_age_groups_items(),
             "Masculino": self.__create_age_groups_items(),
         }
+        
         for resp in response:
-            if all(item is not None for item in resp):
-                body[resp[0]][resp[1]][resp[2]] = int(resp[3])
+            if resp[0] in body:
+                if all(item is not None for item in resp):
+                    logging.info(
+                        "body[resp[0]][resp[1]][resp[2]] = int(resp[3]) => {}, {}, {}, {}".format(
+                            resp[0],resp[1],resp[2],resp[3]
+                        )
+                        )
+                    body[resp[0]][resp[1]][resp[2]] = resp[3]
         # print(body)
         return body
 
