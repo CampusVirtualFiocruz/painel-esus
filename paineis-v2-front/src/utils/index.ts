@@ -94,7 +94,8 @@ export function getPorcentagemIndicador(
 }
 
 export function formatAsPercent(value: string) {
-  return `${parseFloat(value).toFixed(1)}%`;
+  const conversion = `${Number.parseFloat(parseFloat(value).toFixed(2))}%`;
+  return conversion;
 }
 
 type Ubs = {
