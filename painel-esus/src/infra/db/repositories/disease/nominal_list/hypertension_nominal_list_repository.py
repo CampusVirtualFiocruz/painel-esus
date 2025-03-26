@@ -14,48 +14,11 @@ from src.infra.db.repositories.sqls.disease.auto_referidos import (
     get_hypertension_base_export,
 )
 from src.infra.db.settings.connection_local import DBConnectionHandler
-
-columns = [
-    HipertensaoNominal.co_fat_cidadao_pec,
-    HipertensaoNominal.diagnostico,
-    HipertensaoNominal.cids,
-    HipertensaoNominal.min_date,
-    HipertensaoNominal.data_ultima_visita_acs,
-    HipertensaoNominal.alerta_visita_acs,
-    HipertensaoNominal.total_consulta_individual_medico,
-    HipertensaoNominal.alerta_total_de_consultas_medico,
-    HipertensaoNominal.ultimo_atendimento_medico,
-    HipertensaoNominal.alerta_ultima_consulta_medico,
-    HipertensaoNominal.ultimo_atendimento_odonto,
-    HipertensaoNominal.alerta_ultima_consulta_odontologica,
-    HipertensaoNominal.ultima_data_afericao_pa,
-    HipertensaoNominal.alerta_afericao_pa,
-    HipertensaoNominal.ultima_data_creatinina,
-    HipertensaoNominal.alerta_creatinina,
-    Pessoas.co_cidadao,
-    Pessoas.raca_cor,
-    Pessoas.cpf,
-    Pessoas.cns,
-    Pessoas.nome,
-    Pessoas.nome_social,
-    Pessoas.data_nascimento,
-    Pessoas.idade,
-    Pessoas.sexo,
-    Pessoas.identidade_genero,
-    Pessoas.telefone,
-    Pessoas.ultima_atualizacao_cidadao,
-    Pessoas.ultima_atualizacao_fcd,
-    Pessoas.tipo_endereco,
-    Pessoas.endereco,
-    Pessoas.complemento,
-    Pessoas.numero,
-    Pessoas.bairro,
-    Pessoas.cep,
-    Pessoas.tipo_localidade,
-    Equipes.nome_unidade_saude, Equipes.nome_equipe, Equipes.micro_area
-]
+from src.env.conf import getenv
+from src.main.adapters.nominal_list_adapter import mock_word
 class HypertensionNominalListRepository:
-
+    def __init__(self):
+         self.mock_data = getenv("MOCK", False, False) == 'True'
     def find_all(self, cnes: int = None) -> Dict:
         with DBConnectionHandler() as db_con:
             users = (
@@ -82,7 +45,24 @@ class HypertensionNominalListRepository:
     def find_all_download(self, cnes: int = None, equipe:int = None) -> Dict:
         con = duckdb.connect()
         pessoas_sql = get_hypertension_base_export(cnes, equipe)
-        return con.sql(pessoas_sql).df()
+        result = con.sql(pessoas_sql).df()
+        if self.mock_data:
+            def parse(x):
+                x['cpf'] = mock_word(x['cpf'], 2)
+                x['cns'] = mock_word(x['cns'], 2)
+                x['nome'] = mock_word(x['nome'], 3, True)
+                x['telefone'] = mock_word(x['telefone'], 2)
+                x['endereco'] = mock_word(x['endereco'], 2)
+                x['numero'] = mock_word(x['numero'], 2)
+                x['cep'] = mock_word(x['cep'], 2)
+                x['complemento'] = mock_word(x['complemento'], 2)
+                x['bairro'] = mock_word(x['bairro'], 2)
+                x['nome_unidade_saude'] = mock_word(x['nome_unidade_saude'], 2)
+                x['nome_equipe'] = mock_word(x['nome_equipe'], 2)
+                return x            
+            result=result.apply(parse, axis=1)
+            
+        return result
 
 
     def find_by_nome(self, nome: str):

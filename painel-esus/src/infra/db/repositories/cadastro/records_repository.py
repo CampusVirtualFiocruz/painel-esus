@@ -18,6 +18,8 @@ from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import (
     get_pessoas_sql,
 )
 from src.infra.db.settings.connection_local import DBConnectionHandler
+from src.env.conf import getenv
+from src.main.adapters.nominal_list_adapter import mock_word
 
 columns = [
     Pessoas.co_cidadao,
@@ -52,6 +54,8 @@ columns = [
 ]
 
 class RecordsRepository:
+    def __init__(self):
+         self.mock_data = getenv("MOCK", False, False) == 'True'
 
     def get_total_group(self, cnes: int = None, equipe: int = None):
         con = duckdb.connect()
@@ -259,4 +263,19 @@ class RecordsRepository:
 
         con = duckdb.connect()
         response = con.sql(sql).df()
+        if self.mock_data:
+            def parse(x):
+                x['cpf'] = mock_word(x['cpf'], 2)
+                x['cns'] = mock_word(x['cns'], 2)
+                x['nome'] = mock_word(x['nome'], 3, True)
+                x['telefone'] = mock_word(x['telefone'], 2)
+                x['endereco'] = mock_word(x['endereco'], 2)
+                x['numero'] = mock_word(x['numero'], 2)
+                x['cep'] = mock_word(x['cep'], 2)
+                x['complemento'] = mock_word(x['complemento'], 2)
+                x['bairro'] = mock_word(x['bairro'], 2)
+                x['nome_unidade_saude'] = mock_word(x['nome_unidade_saude'], 2)
+                x['nome_equipe'] = mock_word(x['nome_equipe'], 2)
+                return x            
+            response=response.apply(parse, axis=1)
         return response

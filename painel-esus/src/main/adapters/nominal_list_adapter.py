@@ -7,7 +7,18 @@ from src.infra.db.entities.crianca import Crianca
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.hipertensao_nominal import HipertensaoNominal
 from src.infra.db.entities.pessoas import Pessoas
+import re
+from src.env.conf import getenv
 
+def mock_word(phrase, gap=2, skip_first=False):
+        mock = getenv("MOCK", False, False) == 'True'
+        if not mock or phrase=="" or phrase is None:
+            return phrase
+        words = phrase.split()
+        if skip_first:
+            return " ".join([words[0],*[word[:gap]+"".join(["*" for n in word[gap:]]) for word in words[1:]]])
+        else:
+            return " ".join([word[:gap]+"".join(["*" for n in word[gap:]]) for word in words])
 
 def is_sequence(obj):
     return isinstance(obj, (np.ndarray, np.generic))
@@ -145,21 +156,21 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
     def to_dict(self):
         return dict(
             {
-                "nome": self.nome,
-                "nomeSocialSelecionado": self.nome_social,
+                "nome":  mock_word(self.nome, 3, True),
+                "nomeSocialSelecionado": mock_word(self.nome_social, 3, True),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": self.cpf,
-                "cns": self.cns,
+                "cpf": mock_word(self.cpf,4),
+                "cns": mock_word(self.cns,4),
                 "dataNascimento": self.data_nascimento,
                 "idade": self.idade,
                 "diagnostico": self.diagnostico,
                 "sexo": self.sexo,
-                "equipe": self.equipe,
+                "equipe": mock_word(self.equipe, 3),
                 "microarea": self.microarea,
-                "endereco": self.endereco,
-                "complemento": self.complemento,
+                "endereco": mock_word(self.endereco, 5),
+                "complemento": mock_word(self.complemento, 5),
                 "tipoLogradouro": self.tipo_logradouro,
                 "cep": self.cep,
                 "telefone": self.telefone,
@@ -282,24 +293,24 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
     def to_dict(self):
         return dict(
             {
-                "nome": self.nome,
-                "nomeSocialSelecionado": self.nome_social,
+                "nome": mock_word(self.nome, 3, True),
+                "nomeSocialSelecionado": mock_word(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": self.cpf,
-                "cns": self.cns,
+                "cpf": mock_word(self.cpf,4),
+                "cns": mock_word(self.cns,4),
                 "dataNascimento": self.data_nascimento,
                 "idade": self.idade,
                 "diagnostico": self.diagnostico,
                 "sexo": self.sexo,
-                "equipe": self.equipe,
+                "equipe": mock_word(self.equipe,3),
                 "microarea": self.microarea,
-                "endereco": self.endereco,
-                "complemento": self.complemento,
+                "endereco": mock_word(self.endereco, 5),
+                "complemento": mock_word(self.complemento, 5),
                 "tipoLogradouro": self.tipo_logradouro,
-                "cep": self.cep,
-                "telefone": self.telefone,
+                "cep": mock_word(self.cep),
+                "telefone": mock_word(self.telefone),
                 "detalhesCondicaoSaude": [
                     {
                         "cidCondicaoSaude": self.cids,
@@ -607,23 +618,23 @@ class RecordNominalListAdapter:
     def to_dict(self):
         return dict(
             {
-                "nome": self.nome,
-                "nomeSocialSelecionado": self.nome_social,
+                "nome": mock_word(self.nome, 3, True),
+                "nomeSocialSelecionado": mock_word(self.nome_social),
                 "zonaUrbana": False,
                 "zonaRural": False,
                 "possuiAlertas": self.alerta,
-                "cpf": self.cpf,
-                "cns": self.cns,
+                "cpf": mock_word(self.cpf,4),
+                "cns": mock_word(self.cns,4),
                 "dataNascimento": self.data_nascimento,
                 "idade": self.idade,
                 "sexo": self.sexo,
-                "equipe": self.equipe,
+                "equipe": mock_word(self.equipe,3),
                 "microarea": self.microarea,
-                "endereco": self.endereco,
-                "complemento": self.complemento,
+                "endereco": mock_word(self.endereco, 5),
+                "complemento": mock_word(self.complemento, 5),
                 "tipoLogradouro": self.tipo_logradouro,
-                "cep": self.cep,
-                "telefone": self.telefone,
+                "cep": mock_word(self.cep),
+                "telefone": mock_word(self.telefone),
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [
