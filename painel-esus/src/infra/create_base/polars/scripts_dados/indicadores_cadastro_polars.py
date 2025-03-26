@@ -542,5 +542,7 @@ def gerar_banco():
     )
 
 
-    tb_pessoa_v7.sink_parquet(output_path+os.sep+"cadastro_db.parquet", row_group_size=8192 )
+    tb_pessoa_v7.sink_parquet(output_path+os.sep+"cadastro_db.parquet" )
+    
+
 

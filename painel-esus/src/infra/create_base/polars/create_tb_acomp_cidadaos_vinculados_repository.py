@@ -1,63 +1,66 @@
-import os
 
-import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
-from sqlalchemy import text
-from src.data.interfaces.create_bases.create_bases_repository import (
-    CreateBasesRepositoryInterface,
-)
-from src.env.conf import getenv
-from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
+from src.infra.create_base.polars.abstract_generate_base import AbstractGenerateBase
+import pandas as pd
 
-SQL = "select * from tb_acomp_cidadaos_vinculados order by co_seq_acomp_cidadaos_vinc"
-
-class CreateAcompCidadaosVinculadosBaseRepository(CreateBasesRepositoryInterface):
+class CreateAcompCidadaosVinculadosBaseRepository(AbstractGenerateBase):
     _base = "tb_acomp_cidadaos_vinculados"
+    _sql = "select * from tb_acomp_cidadaos_vinculados order by co_seq_acomp_cidadaos_vinc"
 
-    def __init__(self): ...
+    def __init__(self):
+        dtype = {
+            'co_cds_domicilio': pd.Int64Dtype(),
+            'co_cidadao': pd.Int64Dtype(),
+            'co_seq_acomp_cidadaos_vinc': pd.Int64Dtype(),
+            'co_unico_ultima_ficha': pd.StringDtype(),
+            'ds_cep_domicilio': pd.StringDtype(),
+            'ds_cep_tb_cidadao': pd.StringDtype(),
+            'ds_complemento_domicilio': pd.StringDtype(),
+            'ds_complemento_tb_cidadao': pd.StringDtype(),
+            'ds_logradouro_domicilio': pd.StringDtype(),
+            'ds_logradouro_domicilio_filtro': pd.StringDtype(),
+            'ds_logradouro_tb_cidadao': pd.StringDtype(),
+            'ds_logradouro_tb_cidadao_filtr': pd.StringDtype(),
+            'ds_tipo_localizacao_domicilio': pd.StringDtype(),
+            'no_bairro_domicilio': pd.StringDtype(),
+            'no_bairro_domicilio_filtro': pd.StringDtype(),
+            'no_bairro_tb_cidadao': pd.StringDtype(),
+            'no_bairro_tb_cidadao_filtro': pd.StringDtype(),
+            'no_cidadao': pd.StringDtype(),
+            'no_equipe_vinc_equipe': pd.StringDtype(),
+            'no_municipio_domicilio': pd.StringDtype(),
+            'no_municipio_tb_cidadao': pd.StringDtype(),
+            'no_raca_cor': pd.StringDtype(),
+            'no_responsavel': pd.StringDtype(),
+            'no_sexo_cidadao': pd.StringDtype(),
+            'no_social_cidadao': pd.StringDtype(),
+            'no_tipo_logradouro_domicilio': pd.StringDtype(),
+            'no_tipo_logradouro_tb_cidadao': pd.StringDtype(),
+            'nu_cnes_vinc_equipe': pd.StringDtype(),
+            'nu_cns_cidadao': pd.StringDtype(),
+            'nu_cpf_cidadao': pd.StringDtype(),
+            'nu_fone_residencial': pd.StringDtype(),
+            'nu_ine_vinc_equipe': pd.StringDtype(),
+            'nu_micro_area_domicilio': pd.StringDtype(),
+            'nu_micro_area_tb_cidadao': pd.StringDtype(),
+            'nu_numero_domicilio': pd.StringDtype(),
+            'nu_numero_tb_cidadao': pd.StringDtype(),
+            'nu_telefone_celular': pd.StringDtype(),
+            'nu_telefone_contato': pd.StringDtype(),
+            'sg_uf_domicilio': pd.StringDtype(),
+            'sg_uf_tb_cidadao': pd.StringDtype(),
+            'st_possui_fcdt': pd.Int64Dtype(),
+            'st_possui_fci': pd.Int64Dtype(),
+            'st_sem_numero_domicilio': pd.Int64Dtype(),
+            'st_sem_numero_tb_cidadao': pd.Int64Dtype(),
+            'st_usar_cadastro_individual': pd.Int64Dtype(),
+            'tp_identidade_genero_cidadao': pd.StringDtype(),
+            'dt_nascimento_cidadao': pd.StringDtype(),
+            'dt_ultima_atualizacao_cidadao': pd.StringDtype(),
+            'dt_atualizacao_fcd': pd.StringDtype()
+        }
+        super().__init__( DBConnectionHandler(), self._sql, dtype)
 
     def get_base(self):
         return self._base
 
-    def create_base(self):
-        try:
-
-            # schema_fixo =  self.get_schema()
-
-            _next = True
-            offset = 0
-            chunk_size = getenv("CHUNK_SIZE", 2500000)
-            parquet_file = f"{self._base}.parquet"
-            writer = None
-            while _next:
-                with DBConnectionHandler() as db:
-                    engine = db.get_engine()
-                    df = pd.read_sql_query(
-                        text(f"{SQL}  LIMIT {chunk_size} OFFSET {offset};"),
-                        con=engine,
-                        dtype_backend="pyarrow",
-                    )
-
-                    if df.shape[0] is not None and df.shape[0] > 0:
-                        _next = True
-                    else:
-                        _next = False
-
-                    offset += chunk_size
-                    if not df.empty:
-
-                        table = pa.Table.from_pandas(df, preserve_index=False)
-
-                        if writer is None:
-
-                            working_directory  = os.getcwd()
-                            input_path = os.path.join(working_directory, "dados", "input") 
-                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file, table.schema)
-                        writer.write_table(table)
-
-            if writer:
-                writer.close()
-        except Exception as e:
-            logging.exception(e)

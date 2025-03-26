@@ -52,7 +52,6 @@ pluggy==1.3.0
 polars-lts-cpu==1.15.0
 pre-commit==3.4.0
 psycopg2-binary==2.9.7
-pyarrow==17.0.0
 pycparser==2.21
 pyinstaller==6.10.0
 pyinstaller-hooks-contrib==2024.8
@@ -81,3 +80,4 @@ XlsxWriter==3.2.0
 yarl==1.9.4
 zipp==3.17.0
 rich
+fastparquet

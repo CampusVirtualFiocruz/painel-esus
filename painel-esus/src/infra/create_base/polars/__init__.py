@@ -24,8 +24,8 @@ from .create_tb_cidacao_repository import CreateCidadaoBaseRepository
 from .create_tb_cidciap_explode_atendimentos_repository import (
     CreateCidCiapExplodeAtendimentosRepository,
 )
-from .create_tb_dim_cbo_base_repository import CreateTbDimCboRepository
 from .create_tb_equipe_repository import CreateEquipeBaseRepository
 from .create_tb_tipo_equipe_repository import CreateTipoEquipeBaseRepository
 from .create_unidade_saude_base_repository import CreateUnidadesSaudeBaseRepository
 from .create_indicadores_diabetes_repository import CreateIndicadoresDiabetesRepository
+from .create_tb_dim_cbo_base_repository import CreateTbDimCboRepository

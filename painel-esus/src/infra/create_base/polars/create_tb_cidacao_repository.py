@@ -1,62 +1,95 @@
-import os
-
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
-from sqlalchemy import text
-from src.data.interfaces.create_bases.create_bases_repository import (
-    CreateBasesRepositoryInterface,
-)
-from src.env.conf import getenv
-from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
+from src.infra.create_base.polars.abstract_generate_base import AbstractGenerateBase
 
-EQUIPES = "select * from tb_cidadao order by co_seq_cidadao"
-
-class CreateCidadaoBaseRepository(CreateBasesRepositoryInterface):
+class CreateCidadaoBaseRepository(AbstractGenerateBase):
     _base = 'tb_cidadao'
+    _sql = "select * from tb_cidadao order by co_seq_cidadao"
 
     def __init__(self):
-        ...
+        dtype={
+            'co_seq_cidadao': pd.Int64Dtype(),
+            'st_desconhece_nome_mae': pd.Int64Dtype(),
+            'co_localidade': pd.Int64Dtype(),
+            'nu_area': pd.StringDtype(),
+            'nu_micro_area': pd.StringDtype(),
+            'nu_nis_pis_pasep': pd.StringDtype(),
+            'dt_atualizado': pd.StringDtype(),
+            'nu_cns_responsavel': pd.StringDtype(),
+            'no_responsavel': pd.StringDtype(),
+            'dt_nascimento_responsavel': pd.StringDtype(),
+            'nu_cns_cuidador': pd.StringDtype(),
+            'no_cuidador': pd.StringDtype(),
+            'dt_nascimento_cuidador': pd.StringDtype(),
+            'tp_cds_cuidador': pd.Int64Dtype(),
+            'co_unico_cidadao': pd.StringDtype(),
+            'co_nacionalidade': pd.Int64Dtype(),
+            'co_pais_nascimento': pd.Int64Dtype(),
+            'co_unico_ultima_ficha': pd.StringDtype(),
+            'dt_ultima_ficha': pd.StringDtype(),
+            'st_registro_cadsus': pd.Int64Dtype(),
+            'dt_atualizado_cadsus': pd.StringDtype(),
+            'st_desconhece_nome_pai': pd.Int64Dtype(),
+            'dt_naturalizacao': pd.StringDtype(),
+            'dt_entrada_brasil': pd.StringDtype(),
+            'nu_portaria_naturalizacao': pd.StringDtype(),
+            'st_fora_area': pd.Int64Dtype(),
+            'st_infrm_orientacao_sexual': pd.Int64Dtype(),
+            'tp_orientacao_sexual': pd.StringDtype(),
+            'st_infrm_identidade_genero': pd.Int64Dtype(),
+            'tp_identidade_genero': pd.StringDtype(),
+            'st_compartilhamento_prontuario': pd.Int64Dtype(),
+            'st_ativo': pd.Int64Dtype(),
+            'st_nao_possui_cuidador': pd.Int64Dtype(),
+            'nu_cpf': pd.StringDtype(),
+            'nu_cns': pd.StringDtype(),
+            'no_cidadao': pd.StringDtype(),
+            'no_cidadao_filtro': pd.StringDtype(),
+            'co_escolaridade': pd.Int64Dtype(),
+            'co_raca_cor': pd.Int64Dtype(),
+            'co_etnia': pd.Int64Dtype(),
+            'co_estado_civil': pd.Int64Dtype(),
+            'co_cbo': pd.Int64Dtype(),
+            'dt_nascimento': pd.StringDtype(),
+            'dt_obito': pd.StringDtype(),
+            'no_mae': pd.StringDtype(),
+            'no_mae_filtro': pd.StringDtype(),
+            'no_pai': pd.StringDtype(),
+            'no_social': pd.StringDtype(),
+            'st_faleceu': pd.Int64Dtype(),
+            'nu_documento_obito': pd.StringDtype(),
+            'st_dados_obito_cadsus': pd.Int64Dtype(),
+            'no_localidade_exterior': pd.StringDtype(),
+            'co_pais_exterior': pd.Int64Dtype(),
+            'ds_cep': pd.StringDtype(),
+            'ds_complemento': pd.StringDtype(),
+            'ds_ponto_referencia': pd.StringDtype(),
+            'ds_logradouro': pd.StringDtype(),
+            'co_uf': pd.Int64Dtype(),
+            'co_localidade_endereco': pd.Int64Dtype(),
+            'nu_numero': pd.StringDtype(),
+            'st_sem_numero': pd.Int64Dtype(),
+            'no_bairro': pd.StringDtype(),
+            'no_bairro_filtro': pd.StringDtype(),
+            'tp_logradouro': pd.Int64Dtype(),
+            'nu_telefone_residencial': pd.StringDtype(),
+            'nu_telefone_celular': pd.StringDtype(),
+            'nu_telefone_contato': pd.StringDtype(),
+            'ds_email': pd.StringDtype(),
+            'st_ativo_para_exibicao': pd.Int64Dtype(),
+            'st_unificado': pd.Int64Dtype(),
+            'st_territorio_utiliza_cpf': pd.Int64Dtype(),
+            'nu_cpf_cuidador': pd.StringDtype(),
+            'nu_cpf_responsavel': pd.StringDtype(),
+            'no_tipo_sanguineo': pd.StringDtype(),
+            'no_sexo': pd.StringDtype(),
+            'co_aldeia_residencia': pd.Int64Dtype(),
+            'co_tipo_endereco': pd.Int64Dtype(),
+            'co_polo_base_residencia': pd.Int64Dtype(),
+            'co_dsei_residencia': pd.Int64Dtype(),
+            'nu_familia': pd.StringDtype(),
+        }
+        super().__init__( DBConnectionHandler(), self._sql, dtype)
 
     def get_base(self):
         return self._base
-
-    def create_base(self):
-        try:
-
-            _next = True
-            offset = 0
-            chunk_size = getenv("CHUNK_SIZE", 25000)
-            parquet_file = f"{self._base}.parquet"
-            # os.remove("dados/input/" + parquet_file)
-            writer = None 
-            while _next:
-                with DBConnectionHandler() as db:
-                    engine = db.get_engine()
-                    df = pd.read_sql_query(
-                        text(f'{EQUIPES}  LIMIT {chunk_size} OFFSET {offset};'), con=engine,dtype_backend='pyarrow')
-
-                    if df.shape[0] is not None and df.shape[0] > 0:
-                        _next = True
-                    else:
-                        _next = False
-
-                    offset += chunk_size
-
-                    if not df.empty:
-
-                        table = pa.Table.from_pandas(df,preserve_index = False)
-
-                        if writer is None:
-
-                            working_directory  = os.getcwd()
-                            input_path = os.path.join(working_directory, "dados", "input") 
-                            writer = pq.ParquetWriter(input_path+os.sep+parquet_file,table.schema) #, schema=schema_fixo
-
-                        writer.write_table(table)
-
-            if writer:
-                writer.close()  
-        except Exception as e:
-            logging.exception(e)
