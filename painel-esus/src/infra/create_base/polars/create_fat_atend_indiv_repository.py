@@ -40,7 +40,7 @@ class CreateAtendIndivBaseRepository(AbstractGenerateBase):
         }
         
         self._sql = "SELECT {} FROM tb_fat_atendimento_individual order by co_seq_fat_atd_ind".format(", ".join(fai_vars))
-        # ['dt_nascimento', 'co_dim_tempo']
+
         super().__init__( DBConnectionHandler(), self._sql, dtype )
 
     def get_base(self):

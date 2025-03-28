@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
 start_time = time.time()
-
+from src.env.conf import getenv
 
 
 
@@ -503,7 +503,8 @@ def gerar_banco():
             pl.col("nu_micro_area_tb_cidadao"),
         ]).alias("nu_micro_area")
 
-        ).select("co_fat_cidadao_pec",
+        ).select(
+            "co_fat_cidadao_pec",
             "co_cidadao",
             "nu_cnes_vinc_equipe",
             "nu_ine_vinc_equipe",

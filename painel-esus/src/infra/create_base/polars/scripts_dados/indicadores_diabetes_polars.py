@@ -281,8 +281,6 @@ def gerar_banco():
     )
 
 
-    # ###  criando coluna para indicar se contém diabetes
-
 
 
     # criando coluna para indicar se contém diabetes
