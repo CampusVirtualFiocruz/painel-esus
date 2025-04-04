@@ -144,7 +144,6 @@ export function Painel() {
     getDados();
 
     return () => {
-      console.log("...");
     };
   }, [id]);
 
@@ -171,8 +170,6 @@ export function Painel() {
       staleTime: 1000 * 60 * 10, //10 minutos
     }
   );
-
-  console.log({ dataUbs });
 
   const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : "-";
 
@@ -230,9 +227,9 @@ export function Painel() {
 
   function handleToIdosa() {
     if (id !== undefined) {
-      navigate(`/idosa/${id}${equipe ? `?equipe=${equipe}` : ""}`);
+      navigate(`/idosaV2/${id}${equipe ? `?equipe=${equipe}` : ""}`);
     } else {
-      navigate(`/idosa${equipe ? `?equipe=${equipe}` : ""}`);
+      navigate(`/idosaV2${equipe ? `?equipe=${equipe}` : ""}`);
     }
   }
 
@@ -464,16 +461,6 @@ export function Painel() {
                   <Condicao data={dadosPainel?.indicators?.hipertensao} />
                 </div>
               </div>
-              {Boolean(dadosPainel?.indicators?.qualidade) && (
-                <div className="card-condicao p-2" onClick={handleToQualidade}>
-                  <span className="nome-condicao">Qualidade de Cadastros</span>
-                  <h4>{somaIndicador(dadosPainel?.indicators?.qualidade)}</h4>
-                  <div className="d-flex align-items-center">
-                    <img src={quality} alt="Qualidade" className="mx-2" />
-                    <Condicao data={dadosPainel?.indicators?.qualidade} />
-                  </div>
-                </div>
-              )}
               {/* {Boolean(dadosPainel?.indicators?.crianca) && (
                 <div className="card-condicao p-2" onClick={handleToInfantil}>
                   <span className="nome-condicao">
@@ -488,6 +475,21 @@ export function Painel() {
                       className="mx-2"
                     />
                     <Condicao data={dadosPainel?.indicators?.crianca} />
+                  </div>
+                </div>
+              )} */}
+            </div>
+            <div
+              className="row container-cards-condicoes"
+              style={{ marginTop: "20px" }}
+            >
+              {Boolean(dadosPainel?.indicators?.qualidade) && (
+                <div className="card-condicao p-2" onClick={handleToQualidade}>
+                  <span className="nome-condicao">Qualidade de Cadastros</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.qualidade)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img src={quality} alt="Qualidade" className="mx-2" />
+                    <Condicao data={dadosPainel?.indicators?.qualidade} />
                   </div>
                 </div>
               )}
@@ -505,15 +507,13 @@ export function Painel() {
                     <Condicao data={dadosPainel?.indicators?.idosa} />
                   </div>
                 </div>
-              )} */}
+              )}
             </div>
-
             <div className="d-flex my-5 justify-content-center">
               <div className="container-areas d-flex align-items-center me-4">
                 <div className="box-container-light me-2"></div>
                 <h4>Zona Urbana</h4>
               </div>
-
               <div className="container-areas d-flex align-items-center ms-4">
                 <div className="box-container-dark me-2"></div>
                 <h4>Zona Rural</h4>
@@ -524,7 +524,6 @@ export function Painel() {
               </div>
             </div>
           </div>
-
           <div className="my-5">
             {id ? (
               <Button onClick={handleToPainelMunicipio}>

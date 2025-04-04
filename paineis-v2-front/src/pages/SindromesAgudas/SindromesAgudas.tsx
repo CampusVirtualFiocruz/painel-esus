@@ -91,7 +91,6 @@ export function SindromesAgudas() {
     const totalSindromeAgura: number[] = [];
 
     for (const resp of response) {
-      // console.log(resp)
       labels.add(resp.co_dim_tempo);
       if (!(resp.co_dim_tempo in dataSet)) {
         dataSet[resp.co_dim_tempo] = [resp];

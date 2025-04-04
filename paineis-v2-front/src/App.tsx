@@ -24,6 +24,7 @@ import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
 import Qualidade from "./pages/Qualidade";
 import Infantil from "./pages/Infantil";
 import Idosa from "./pages/Idosa";
+import IdosaV2 from "./pages/IdosaV2";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -83,8 +84,6 @@ export function userCanSelectUBS() {
   }
 
   const decodedPayload = atob(payload);
-
-  console.log({ decodedPayload })
 
   return (
     String(JSON.parse(decodedPayload)?.profiles[0]).toUpperCase() === "ADMIN"
@@ -240,10 +239,26 @@ function App() {
                 }
               />
               <Route
+                path="/idosaV2"
+                element={
+                  <ProtectedLayout>
+                    <IdosaV2 />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
                 path="/idosa/:id"
                 element={
                   <ProtectedLayout>
                     <Idosa />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/idosaV2/:id"
+                element={
+                  <ProtectedLayout>
+                    <IdosaV2 />
                   </ProtectedLayout>
                 }
               />

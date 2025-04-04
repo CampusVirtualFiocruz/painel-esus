@@ -8,7 +8,7 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
     size: 10,
     totalElements: 0,
     totalPages: 0,
-    sort: ["name", "alert", "zone"],
+   // sort: ["nome"],
   });
 
   const pathToReport = {
@@ -27,10 +27,12 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
     async () => {
       let path = `${pathToReport?.[condicao]}/get-nominal-list/${id}`;
       
+
       const response = await Api.get(path, {
         params: {
           itemsPerPage: params.size,
           page: params.page,
+       //   sort: params?.sort,
           q: searchTerm,
           equipe,
         },

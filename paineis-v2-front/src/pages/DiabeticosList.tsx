@@ -60,8 +60,6 @@ export function DiabeticosList() {
   );
 
   function handleIcons(row: number[]) {
-    console.log(row);
-
     const icons = [
       <>
         <small>Solicitado</small>
