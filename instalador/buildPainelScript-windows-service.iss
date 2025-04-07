@@ -46,7 +46,7 @@ Source: "{#rootPath}\painel-esus\icon\*"; DestDir: "{app}\icon"; Flags: ignoreve
 Source: "{#rootPath}\painel-esus\dist\config.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\dist\painel-esus.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\ibge.csv"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#rootPath}\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion ; Ajustar para enviar NSSM
+Source: "{#rootPath}\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
