@@ -1,6 +1,7 @@
 # pylint: disable=R0913
 from typing import Dict
-
+from venv import logger
+import json
 import duckdb
 import pandas as pd
 from sqlalchemy import or_
@@ -16,6 +17,9 @@ from src.infra.db.repositories.sqls.disease.auto_referidos import (
 from src.infra.db.settings.connection_local import DBConnectionHandler
 from src.env.conf import getenv
 from src.main.adapters.nominal_list_adapter import mock_word
+from src.errors.log import logger
+
+
 class HypertensionNominalListRepository:
     def __init__(self):
          self.mock_data = getenv("MOCK", False, False) == 'True'
@@ -88,6 +92,7 @@ class HypertensionNominalListRepository:
         cpf: str = None,
         equipe: int = None,
         query: str = None,
+        sort=[]
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
@@ -108,6 +113,9 @@ class HypertensionNominalListRepository:
         if equipe is not None and equipe:
             conditions += [ f'codigo_equipe = {equipe}']
 
+        
+            
+            
         where_clause = []
         sql_where, sql, sql_or = "", "", ""
 
@@ -125,8 +133,32 @@ class HypertensionNominalListRepository:
             sql_where = " AND ".join(where_clause)
             sql_where = f" WHERE {sql_where}"
 
+        order = 'order by '
+        order_list = []
+        mapped_columns = {
+            'name': 'no_cidadao',
+            'cpf':'cpf',
+            'cns': 'cns',
+            'idade': 'idade',
+            'grupo_condicao': 'autoreferido',
+            'sexo': 'sexo',
+            'equipe': 'nome_equipe',
+            'micro_area': 'micro_area'
+        }
+        if len(sort) > 0:
+            for s in sort:
+                filter = json.loads(s)
+                if filter["field"] not in mapped_columns: continue
+                
+                direction = filter['direction'] if 'direction' in filter else'asc'
+                columns = mapped_columns[filter["field"]]
+                order_list.append( f'{columns} {direction}')
+        else:
+            order_list = 'no_cidadao asc'
+            
+        order += ", ".join(order_list)
         users = con.sql(
-            pessoas_sql + sql_where + f" order by no_cidadao asc LIMIT {limit} OFFSET {offset} "
+            pessoas_sql + sql_where + f" {order} LIMIT {limit} OFFSET {offset} "
         ).df()
 
         users = users.to_dict(orient="records")

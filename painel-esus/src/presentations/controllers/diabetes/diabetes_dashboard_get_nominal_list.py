@@ -33,6 +33,9 @@ class DiabetesDashboardGetNominalList(ControllerInterface):
         
         if request.query_params and "q" in request.query_params:
             q = request.query_params["q"]
+        if request.query_params and "sort[]" in request.query_params:
+            sort = request.query_params.getlist('sort[]')
+         
         response = self.__use_case.get_nominal_list(
             cnes,
             page,
@@ -40,7 +43,8 @@ class DiabetesDashboardGetNominalList(ControllerInterface):
             nome,
             cpf,
             equipe,
-            q
+            q,
+            sort
         )
 
         return HttpResponse(status_code=200, body=response)

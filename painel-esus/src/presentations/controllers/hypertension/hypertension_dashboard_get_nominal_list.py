@@ -4,14 +4,14 @@ from src.data.use_cases.diseases_dashboard.hypertension_nominal_list import (
 from src.presentations.controllers.utils.requests_utils import parse_request
 from src.presentations.http_types import HttpRequest, HttpResponse
 from src.presentations.interfaces.controller_interface import ControllerInterface
-
+from src.errors.log import logger
 
 class HypertensionDashboardGetNominalList(ControllerInterface):
     def __init__(self, use_case: HypertensionNominalListUseCase):
         self.__use_case = use_case
 
     def handle(self, request: HttpRequest) -> HttpResponse:
-        cnes, equipe, nome, cpf, page, page_size = None, None, None, None, 0, 10
+        cnes, equipe, nome, cpf, page, page_size, q, sort = None, None, None, None, 0, 10, None, []
 
         if request.path_params and 'cnes' in request.path_params:
             cnes = int(request.path_params['cnes'])
@@ -30,10 +30,15 @@ class HypertensionDashboardGetNominalList(ControllerInterface):
 
         if request.query_params and "equipe" in request.query_params:
             equipe = request.query_params["equipe"]
+            
         if request.query_params and "q" in request.query_params:
             q = request.query_params["q"]
+            
+        if request.query_params and "sort[]" in request.query_params:
+            sort = request.query_params.getlist('sort[]')
+            
         response = self.__use_case.get_nominal_list(
-            cnes, page, page_size, nome, cpf, equipe, q
+            cnes, page, page_size, nome, cpf, equipe, q, sort
         )
         return HttpResponse(
             status_code=200,

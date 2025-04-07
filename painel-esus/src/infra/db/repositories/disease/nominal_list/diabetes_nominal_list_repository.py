@@ -1,6 +1,6 @@
 # pylint: disable=R0913
 from typing import Dict
-
+import json
 import duckdb
 import pandas as pd
 from sqlalchemy import or_
@@ -84,6 +84,7 @@ class DiabetesNominalListRepository:
         cpf: str = None,
         equipe: int = None,
         query: str = None,
+        sort=[]
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
@@ -120,11 +121,41 @@ class DiabetesNominalListRepository:
             limit = pagesize
             sql_where = " AND ".join(where_clause)
             sql_where = f" WHERE {sql_where}"
+        if len(where_clause)>0:
+            offset = max(0, page - 1) * pagesize
+            limit = pagesize
+            sql_where = " AND ".join(where_clause)
+            sql_where = f" WHERE {sql_where}"
 
+        order = 'order by '
+        order_list = []
+        mapped_columns = {
+            'name': 'no_cidadao',
+            'cpf':'cpf',
+            'cns': 'cns',
+            'idade': 'idade',
+            'grupo_condicao': 'autoreferido',
+            'sexo': 'sexo',
+            'equipe': 'nome_equipe',
+            'micro_area': 'micro_area'
+        }
+        if len(sort) > 0:
+            for s in sort:
+                filter = json.loads(s)
+                if filter["field"] not in mapped_columns: continue
+                
+                direction = filter['direction'] if 'direction' in filter else'asc'
+                columns = mapped_columns[filter["field"]]
+                order_list.append( f'{columns} {direction}')
+        else:
+            order_list = 'no_cidadao asc'
+            
+        order += ", ".join(order_list)
+        
         users = con.sql(
             pessoas_sql
             + sql_where
-            + f"  order by no_cidadao asc LIMIT {limit} OFFSET {offset} "
+            + f"  {order} LIMIT {limit} OFFSET {offset} "
         ).df()
 
         users = users.to_dict(orient="records")
