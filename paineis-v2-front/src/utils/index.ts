@@ -105,12 +105,11 @@ type Ubs = {
 
 export function getNomeUbs(data: any, id: string) {
   if (data == undefined) {
-    return '-'
+    return "-";
   }
   let ubs = Object.values(data).find(
     (item: any) => parseInt(item.value) === parseInt(id)
   ) as Ubs;
-  console.log(ubs);
   return ubs ? ubs.label : "-";
 }
 
