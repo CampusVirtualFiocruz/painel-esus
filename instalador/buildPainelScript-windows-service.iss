@@ -37,7 +37,7 @@ Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortugue
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "installservice"; Description: "Instalar como serviço Windows"; GroupDescription: "Opções de serviço:"; Flags: unchecked
+Name: "installservice"; Description: "Executar como serviço"; GroupDescription: "Opções de serviço:"; Flags: unchecked
 
 [Files]
 Source: "{#rootPath}\painel-esus\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
