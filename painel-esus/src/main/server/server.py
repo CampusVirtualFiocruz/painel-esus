@@ -116,25 +116,25 @@ register_blueprint(
 )
 
 
-oral_path = OralHealthPath()
-register_blueprint(app, (oral_health_bp, oral_path.root_path), [token_required])
+# oral_path = OralHealthPath()
+# register_blueprint(app, (oral_health_bp, oral_path.root_path), [token_required])
 
-smoking = SmokingPath()
-register_blueprint(
-    app,
-    (smoking_bp, smoking.root_path),
-    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
-)
+# smoking = SmokingPath()
+# register_blueprint(
+#     app,
+#     (smoking_bp, smoking.root_path),
+#     [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
+# )
 
-children = ChildrenPath()
-register_blueprint(
-    app,
-    (children_bp, children.root_path),
-    [
-        token_required,
-        cache.cached(timeout=24 * 60 * 60, query_string=True)
-    ],
-)
+# children = ChildrenPath()
+# register_blueprint(
+#     app,
+#     (children_bp, children.root_path),
+#     [
+#         token_required,
+#         cache.cached(timeout=24 * 60 * 60, query_string=True)
+#     ],
+# )
 
 elderly = ElderlyPath()
 register_blueprint(

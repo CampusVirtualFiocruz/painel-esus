@@ -64,54 +64,40 @@ columns = [
 
 class ElderlyRepository:
 
-    def find_total(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = get_elderly_total_on_ubs_and_team(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+    def total_ubs(self, cnes: int = None, equipe: int = None):
+        ...
 
-    def find_group_by_age_location(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_by_age_location(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_race(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_by_race(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_age_gender(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_by_age_gender(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_influenza_rate(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = get_elderly_total_influenza(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_odonto_rate(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = get_elderly_total_odonto(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_total_hipertension_diabetes(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = total_hipertension_diabetes(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_imc(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_by_imc(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
+    def total_medical_cares(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    def by_gender(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    def by_race(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    def medical_appointment(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    def height_records(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    def acs_visits(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    def creatinine(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    def dentist_appointment(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    def ivcf_20(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    def influenza_vaccines(self, cnes: int = None, equipe: int = None):
+        ...
+    
+    
     def find_filter_nominal(
         self,
         cnes: int,
