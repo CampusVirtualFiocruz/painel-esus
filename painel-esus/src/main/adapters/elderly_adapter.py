@@ -4,18 +4,18 @@ from src.main.adapters.nominal_list_adapter import IdosoNominalListAdapter
 
 class ElderlyAdapter:
 
-    def total_ubs(response):
+    def total_ubs(self, response):
         
         return {
                 'data': 724,
             }
         
-    def total_medical_cares(response):
+    def total_medical_cares(self, response):
         return {
                 'data': 643,
             }
     
-    def by_gender(response):
+    def by_gender(self, response):
         return {
                 'data': [
             {
@@ -37,7 +37,7 @@ class ElderlyAdapter:
             ],
         }
         
-    def by_race(response):
+    def by_race(self, response):
         return {
             'data': [
             {
@@ -67,7 +67,7 @@ class ElderlyAdapter:
             ],
         }
         
-    def two_medical_appointment(response):
+    def two_medical_appointment(self, response):
         return {
             'data': [
             {
@@ -81,7 +81,7 @@ class ElderlyAdapter:
             ],
         }
         
-    def two_height_records(response):
+    def two_height_records(self, response):
         return {
             'data': [
             {
@@ -95,7 +95,7 @@ class ElderlyAdapter:
             ],
         }
         
-    def two_acs_visits(response):
+    def two_acs_visits(self, response):
         return {
             'data': [
             {
@@ -109,7 +109,7 @@ class ElderlyAdapter:
             ],
         }
         
-    def creatinine(response):
+    def creatinine(self, response):
         return {
             'data': [
             {
@@ -123,7 +123,7 @@ class ElderlyAdapter:
             ],
         }
         
-    def influenza_vaccine(response):
+    def influenza_vaccines(self, response):
     
         return {
             'data': [
@@ -138,7 +138,7 @@ class ElderlyAdapter:
             ],
         }
         
-    def dentist_appointment(response):
+    def dentist_appointment(self, response):
         return {
             'data': [
             {
@@ -152,7 +152,7 @@ class ElderlyAdapter:
             ],
         }
     
-    def ivcf_20(response):
+    def ivcf_20(self, response):
         return {
             'data': [
             {

@@ -28,7 +28,7 @@ def elderly_medical_appointment_composer():
 def elderly_by_race_composer():
     return controller.by_race
 
-def elderly_by_gender():
+def elderly_by_gender_composer():
     return controller.by_gender
 
 def elderly_total_medical_cares_composer():

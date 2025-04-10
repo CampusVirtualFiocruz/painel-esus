@@ -46,19 +46,19 @@ class ElderlyController:
     def medical_appointment(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
         response = self.__repository.medical_appointment(cnes, equipe)
-        result = self._adapter.medical_appointment(response)
+        result = self._adapter.two_medical_appointment(response)
         return HttpResponse(status_code=200, body=result)
     
     def height_records(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
         response = self.__repository.height_records(cnes, equipe)
-        result = self._adapter.height_records(response)
+        result = self._adapter.two_height_records(response)
         return HttpResponse(status_code=200, body=result)
     
     def acs_visits(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
         response = self.__repository.acs_visits(cnes, equipe)
-        result = self._adapter.acs_visits(response)
+        result = self._adapter.two_acs_visits(response)
         return HttpResponse(status_code=200, body=result)
     
     def creatinine(self, request: HttpRequest) -> HttpResponse:

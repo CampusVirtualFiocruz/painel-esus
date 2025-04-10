@@ -12,7 +12,7 @@ from src.main.composers.elderly_composer import (
     elderly_height_records_composer,
     elderly_medical_appointment_composer,
     elderly_by_race_composer,
-    elderly_by_gender,
+    elderly_by_gender_composer,
     elderly_total_medical_cares_composer,
     elderly_total_ubs_composer
 )
@@ -82,7 +82,7 @@ def elderly_by_gender(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, elderly_by_gender())
+        http_response = request_adapter(request, elderly_by_gender_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)
