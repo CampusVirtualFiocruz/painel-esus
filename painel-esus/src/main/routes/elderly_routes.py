@@ -14,7 +14,8 @@ from src.main.composers.elderly_composer import (
     elderly_by_race_composer,
     elderly_by_gender_composer,
     elderly_total_medical_cares_composer,
-    elderly_total_ubs_composer
+    elderly_total_ubs_composer,
+    elderly_get_nominal_list_composer
 )
 
 elderly_bp = Blueprint('elderly', __name__)
@@ -35,6 +36,8 @@ class ElderlyPath:
         'influenza_vaccines': '/influenza-vaccines',
         'dentist_appointment': '/dentist-appointment',
         'ivcf_20': '/ivcf-20',
+        'get_nominal_list': '/get-nominal-list' ,      
+        'get_nominal_list_download': '/get-nominal-list-download' ,   
     }
 
 
@@ -218,5 +221,19 @@ def elderly_ivcf_20(cnes=None):
 
     return response, http_response.status_code
 
+@elderly_bp.route(urls['get_nominal_list'], methods=['GET'], endpoint='elderly_get_nominal_list')
+@elderly_bp.route(
+    urls['get_nominal_list'] + '/<cnes>', methods=['GET'], endpoint='elderly_get_nominal_list_id'
+)
+def elderly_get_nominal_list(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, elderly_get_nominal_list_composer())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
 
+    return response, http_response.status_code
 

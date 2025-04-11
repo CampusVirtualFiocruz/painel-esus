@@ -55,7 +55,7 @@ columns = [
 
 class RecordsRepository:
     def __init__(self):
-         self.mock_data = getenv("MOCK", False, False) == 'True'
+        self.mock_data = getenv("MOCK", False, False) == 'True'
 
     def get_total_group(self, cnes: int = None, equipe: int = None):
         con = duckdb.connect()

@@ -86,7 +86,7 @@ class ElderlyController:
         return HttpResponse(status_code=200, body=result)
 
     def get_nominal_list(self, request: HttpRequest) -> HttpResponse:
-        cnes, equipe, nome, cpf, page, page_size, q = (
+        cnes, equipe, nome, cpf, page, page_size, q, sort = (
             None,
             None,
             None,
@@ -94,6 +94,7 @@ class ElderlyController:
             0,
             10,
             None,
+            []
         )
 
         if request.path_params and "cnes" in request.path_params:
@@ -115,6 +116,9 @@ class ElderlyController:
             equipe = request.query_params["equipe"]
         if request.query_params and "q" in request.query_params:
             q = request.query_params["q"]
+            
+        if request.query_params and "sort[]" in request.query_params:
+            sort = request.query_params.getlist('sort[]')
         response = self.__repository.find_filter_nominal(
             cnes=cnes,
             equipe=equipe,
@@ -123,10 +127,14 @@ class ElderlyController:
             nome=nome,
             cpf=cpf,
             query=q,
+            sort=sort
         )
 
-        result = self._adapter.nominal_list(response)
-        return HttpResponse(status_code=200, body=result)
+        response["items"] = [
+            self._adapter.nominal_list(r).to_dict() for r in response["items"]
+        ]
+        
+        return HttpResponse(status_code=200, body=response)
 
     def get_nominal_list_download(self, request: HttpRequest):
         cnes, equipe = self.parse_request(request)

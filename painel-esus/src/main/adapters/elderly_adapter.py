@@ -1,167 +1,167 @@
 # pylint: disable=C0103
 from src.main.adapters.nominal_list_adapter import IdosoNominalListAdapter
-
+from pprint import pprint
 
 class ElderlyAdapter:
 
     def total_ubs(self, response):
+        total= 0 
+        if response is not None and len(response) > 0:
+            total = response[0][0]
         
         return {
-                'data': 724,
+                'data': total,
             }
         
     def total_medical_cares(self, response):
+        total= 0 
+        if response is not None and len(response) > 0:
+            total = response[0][0]
+        
         return {
-                'data': 643,
+                'data': total,
             }
     
     def by_gender(self, response):
-        return {
-                'data': [
-            {
-                'tag': "60-64-anos",
-                'value': {
-                'feminino': 20,
-                'masculino': 20,
-                'indeterminado': 2,
-                },
-            },
-            {
-                'tag': "65-69-anos",
-                'value': {
-                'feminino': 20,
-                'masculino': 20,
-                'indeterminado': 4,
-                },
-            },
-            ],
-        }
+        result = { "data": [] }
+        map_ = {}
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None and resp[2] is not None:
+                if resp[0] not in map_:
+                    map_[resp[0]] = {
+                        'feminino': 0,
+                        'masculino': 0,
+                        'indeterminado': 0
+                    }
+                
+                map_[resp[0]][str(resp[1]).lower()] = resp[2]
+        
+        for key in map_.keys():
+            _key = key.replace("a","-")
+            _key += '-anos'
+            value ={
+                "tag": _key,
+                "value": map_[key]
+            }
+            result["data"].append(value)
+        
+       
+        return result
         
     def by_race(self, response):
-        return {
-            'data': [
-            {
-                'tag': "branca",
-                'value': 43.4,
-            },
-            {
-                'tag': "preta",
-                'value': 10.2,
-            },
-            {
-                'tag': "amarela",
-                'value': 0.4,
-            },
-            {
-                'tag': "parda",
-                'value': 45.3,
-            },
-            {
-                'tag': "indigena",
-                'value': 0.6,
-            },
-            {
-                'tag': "nao-informado",
-                'value': 0.5,
-            },
-            ],
-        }
+        result = { "data": [] }
+        map_ = {}
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None:
+                result["data"].append({
+                    "tag": str(resp[0]).lower(),
+                    "value": resp[1]
+                })
+       
+        return result
+    
+        
         
     def two_medical_appointment(self, response):
-        return {
-            'data': [
-            {
-                'tag': "duas-mais-consultas",
-                'value': 87,
-            },
-            {
-                'tag': "uma-nenhuma-consulta",
-                'value': 13,
-            },
-            ],
-        }
+        result = {"data": [
+            { "tag": "um-nenhum-registro", "value": 0},
+            { "tag": "dois-mais-registros", "value": 0},
+        ]}
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None:
+                if resp[0] == 0:
+                    result['data'][0]['value'] = resp[1]
+                else:
+                    result['data'][1]['value'] = resp[1]
+        
+        return result
         
     def two_height_records(self, response):
-        return {
-            'data': [
-            {
-                'tag': "dois-mais-registros",
-                'value': 82,
-            },
-            {
-                'tag': "um-nenhum-registro",
-                'value': 18,
-            },
-            ],
-        }
+        result = {"data": [
+            { "tag": "um-nenhum-registro", "value": 0},
+            { "tag": "dois-mais-registros", "value": 0},
+        ]}
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None:
+                if resp[0] == 0:
+                    result['data'][0]['value'] = resp[1]
+                else:
+                    result['data'][1]['value'] = resp[1]
+        
+        return result
         
     def two_acs_visits(self, response):
-        return {
-            'data': [
-            {
-                'tag': "duas-mais-visitas",
-                'value': 87,
-            },
-            {
-                'tag': "uma-nenhuma-visita",
-                'value': 13,
-            },
-            ],
-        }
+        result = {"data": [
+            { "tag": "uma-nenhuma-visita", "value": 0},
+            { "tag": "duas-mais-visitas", "value": 0},
+        ]}
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None:
+                if resp[0] == 0:
+                    result['data'][0]['value'] = resp[1]
+                else:
+                    result['data'][1]['value'] = resp[1]
         
+        return result
+                
     def creatinine(self, response):
-        return {
-            'data': [
-            {
-                'tag': "avaliadas",
-                'value': 87,
-            },
-            {
-                'tag': "sem-avaliacao",
-                'value': 13,
-            },
-            ],
-        }
+        result = {"data": [
+            { "tag": "sem-avaliacao", "value": 0},
+            { "tag": "avaliadas", "value": 0},
+        ]}
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None:
+                if resp[0] == 0:
+                    result['data'][0]['value'] = resp[1]
+                else:
+                    result['data'][1]['value'] = resp[1]
+        
+        return result
+        
         
     def influenza_vaccines(self, response):
-    
-        return {
-            'data': [
-            {
-                'tag': "vacinadas",
-                'value': 87,
-            },
-            {
-                'tag': "nao-vacinadas",
-                'value': 13,
-            },
-            ],
-        }
+        result = {"data": [
+            { "tag": "nao-vacinadas", "value": 0},
+            { "tag": "vacinadas", "value": 0},
+        ]}
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None:
+                if resp[0] == 0:
+                    result['data'][0]['value'] = resp[1]
+                else:
+                    result['data'][1]['value'] = resp[1]
+        
+        return result
+        
         
     def dentist_appointment(self, response):
-        return {
-            'data': [
-            {
-                'tag': "consultadas",
-                'value': 87,
-            },
-            {
-                'tag': "sem-consulta",
-                'value': 13,
-            },
-            ],
-        }
+        result = {"data": [
+            { "tag": "sem-consulta", "value": 0},
+            { "tag": "consultadas", "value": 0},
+        ]}
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None:
+                if resp[0] == 0:
+                    result['data'][0]['value'] = resp[1]
+                else:
+                    result['data'][1]['value'] = resp[1]
+        
+        return result
+        
     
     def ivcf_20(self, response):
-        return {
-            'data': [
-            {
-                'tag': "avaliadas",
-                'value': 87,
-            },
-            {
-                'tag': "sem-avaliacao",
-                'value': 13,
-            },
-            ],
-        }
+        result = {"data": [
+            { "tag": "sem-avaliacao", "value": 0},
+            { "tag": "avaliadas", "value": 0},
+        ]}
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None:
+                if resp[0] == 0:
+                    result['data'][0]['value'] = resp[1]
+                else:
+                    result['data'][1]['value'] = resp[1]
+        
+        return result
+        
+    def nominal_list(self, response):
+        return IdosoNominalListAdapter(response)
