@@ -17,7 +17,8 @@
 **/coverage
 
 # production
-**/build
+painel-esus/**/build
+painel-v2-front/**/build
 **/dist
 
 # misc
