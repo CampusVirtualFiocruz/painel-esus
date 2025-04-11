@@ -57,7 +57,7 @@ Authorization: Bearer {{token}}
 
 ###
 
-GET http://localhost:5001/v1/elderly/get-nominal-list/9
+GET http://localhost:5001/v1/elderly/get-nominal-list/9?sort[]={"field":"name", "direction":"desc"}
 Authorization: Bearer {{token}}
 
 ###
