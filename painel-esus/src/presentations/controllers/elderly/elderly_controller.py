@@ -24,6 +24,12 @@ class ElderlyController:
         result = self._adapter.total_ubs(response)
         return HttpResponse(status_code=200, body=result)
 
+    def total_card(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = self.parse_request(request)
+        response = self.__repository.total_card(cnes, equipe)
+        result = self._adapter.total_card(response)
+        return HttpResponse(status_code=200, body=result)
+
     
     def total_medical_cares(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)

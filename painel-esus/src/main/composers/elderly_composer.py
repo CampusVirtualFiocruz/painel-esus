@@ -37,6 +37,9 @@ def elderly_total_medical_cares_composer():
 def elderly_total_ubs_composer():
     return controller.total_ubs
 
+def elderly_total_card_composer():
+    return controller.total_card
+
 def elderly_get_nominal_list_composer():
     return controller.get_nominal_list
 

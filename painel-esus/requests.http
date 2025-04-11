@@ -59,3 +59,8 @@ Authorization: Bearer {{token}}
 
 GET http://localhost:5001/v1/elderly/get-nominal-list/9
 Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost:5001/v1/elderly/total-card
+Authorization: Bearer {{token}}

@@ -13,6 +13,31 @@ class ElderlyAdapter:
                 'data': total,
             }
         
+    def total_card(self, response):
+        result = {"data": [
+            { "tag": "urbana", "value": 0},
+            { "tag": "rural", "value": 0},
+            # { "tag": "periurbana", "value": 0},
+            { "tag": "nao_informado", "value": 0},
+        ]}
+        idx = { 
+            'urbana': 0,
+            'rural': 1,
+        #    'periurbana': 2
+            }
+        
+        for resp in response:
+            if resp[0] is not None and resp[1] is not None:
+                if str(resp[0]).lower() in idx:
+                    key = idx[str(resp[0]).lower()]
+                    result['data'][key]['value'] = resp[1]
+                else:
+                    key = len(result['data'])-1
+                    result['data'][key]['value'] = resp[1]
+        
+        return result
+        
+    
     def total_medical_cares(self, response):
         total= 0 
         if response is not None and len(response) > 0:

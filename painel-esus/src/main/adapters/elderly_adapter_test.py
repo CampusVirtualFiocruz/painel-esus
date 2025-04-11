@@ -49,3 +49,9 @@ def test_ivcf_20():
     resp = repo.ivcf_20()
     result = adapter.ivcf_20(resp)
     print(result)     
+    
+    
+def test_card():
+    resp = repo.total_card()
+    result = adapter.total_card(resp)
+    print(result)         

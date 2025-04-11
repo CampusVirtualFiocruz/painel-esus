@@ -15,6 +15,7 @@ from src.main.composers.elderly_composer import (
     elderly_by_gender_composer,
     elderly_total_medical_cares_composer,
     elderly_total_ubs_composer,
+    elderly_total_card_composer,
     elderly_get_nominal_list_composer
 )
 
@@ -25,6 +26,7 @@ class ElderlyPath:
     root_path = '/v1/elderly'
     urls = {
         'root': '',
+        'total_card': '/total-card',
         'total_ubs': '/total-ubs',
         'total_medical_cares': '/total-medical-cares',
         'by_gender': '/by-gender',
@@ -53,6 +55,22 @@ def elderly_total_ubs(cnes=None):
     response = None
     try:
         http_response = request_adapter(request, elderly_total_ubs_composer())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+@elderly_bp.route(urls['total_card'], methods=['GET'], endpoint='elderly_total_card')
+@elderly_bp.route(
+    urls['total_card'] + '/<cnes>', methods=['GET'], endpoint='elderly_total_card_id'
+)
+def elderly_total_card(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, elderly_total_card_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)

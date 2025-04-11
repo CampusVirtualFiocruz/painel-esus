@@ -2,7 +2,7 @@ import pandas as pd
 import duckdb
 import json
 from src.infra.db.repositories.elderly.sqls import (
-    get_total_ubs,get_medical_cares, by_gender, by_race, medical_appointments, height_records, acs_visits,
+    get_total_ubs,get_medical_cares, get_total_card, by_gender, by_race, medical_appointments, height_records, acs_visits,
     ivcf_20,creatinine,dentist_appointment,influenza_vaccines, get_elderly_base
 )
 from src.infra.db.settings.connection_local import DBConnectionHandler
@@ -18,6 +18,12 @@ class ElderlyRepository:
         result = con.sql(sql).fetchall()
         return result
         
+    def total_card(self, cnes: int = None, equipe: int = None):
+            sql = get_total_card(cnes,equipe)
+            con = duckdb.connect()
+            result = con.sql(sql).fetchall()
+            return result
+            
 
     def total_medical_cares(self, cnes: int = None, equipe: int = None):
         sql = get_medical_cares(cnes,equipe)

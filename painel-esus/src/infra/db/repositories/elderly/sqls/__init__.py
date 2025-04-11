@@ -1,4 +1,4 @@
-from .total import get_medical_cares,get_total_ubs
+from .total import get_medical_cares,get_total_ubs, get_total_card
 from .by_gender import by_gender
 from .by_race import by_race
 from .medical_appointments import medical_appointments
