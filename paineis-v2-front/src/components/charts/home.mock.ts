@@ -10,6 +10,7 @@ type MockRelatorioHome = {
   "tematico-diabetes": DonutChart;
   "tematico-hipertensao": DonutChart;
   "tematico-qualidade": DonutChart;
+  "tematico-idoso": DonutChart;
 };
 
 export const charts: MockRelatorioHome = {
@@ -130,6 +131,22 @@ export const charts: MockRelatorioHome = {
     ],
   },
   "tematico-qualidade": {
+    data: [
+      {
+        tag: "urbano",
+        value: 1874,
+      },
+      {
+        tag: "nao-informado",
+        value: 104,
+      },
+      {
+        tag: "rural",
+        value: 614,
+      },
+    ],
+  },
+  "tematico-idoso": {
     data: [
       {
         tag: "urbano",
