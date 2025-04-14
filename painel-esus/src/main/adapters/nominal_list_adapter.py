@@ -1,5 +1,6 @@
 # pylint: disable=R0902, W4901, W0611, C0103
-
+import pandas as pd
+import math
 import numpy as np
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
@@ -30,20 +31,25 @@ class AlertRecord:
         data,
         exibir_alerta,
         tipo_alerta: str,
+        classificacao: str = None
     ):
         self.descricao = descricao
         self.data = data
         self.exibir_alerta = exibir_alerta
         self.tipo_alerta = tipo_alerta
+        self.classificacao = classificacao
 
     def to_dict(self):
-        return dict(
-            {
+        response = {
                 "descricao": self.descricao,
                 "data": self.data,
                 "exibirAlerta": self.exibir_alerta,
                 "tipoAlerta": self.tipo_alerta,
             }
+        if self.classificacao is not None:
+            response["classificacao"] = self.classificacao
+        return dict(
+            response
         )
 
 
@@ -446,7 +452,7 @@ class IdosoNominalListAdapter:
     def __init__(self, user: Crianca):
         self.nome = user["nome"]
         self.nome_social = "-"
-        self.tipo_localidade = user["tipo_localidade"]
+        self.tipo_localidade = user["tipo_localizacao_domicilio"]
         self.cpf = user["cpf"]
         self.cns = user["cns"]
         self.data_nascimento = user["data_nascimento"]
@@ -454,69 +460,115 @@ class IdosoNominalListAdapter:
         self.sexo = user["sexo"]
         self.equipe = user["nome_equipe"]
         self.microarea = user["micro_area"]
-        self.endereco = f"""{user["endereco"]} {user["numero"]}, {user["bairro"]}"""
-        self.tipo_logradouro = user["tipo_endereco"]
+        self.endereco = f"""{user["logradouro"]} {user["numero"]}, {user["bairro"]}"""
+        self.tipo_logradouro = user["tipo_logradouro"]
         self.complemento = user["complemento"]
         self.cep = user["cep"]
         self.telefone = user["telefone"]
         self.possui_alertas = (
-            user["indicador_atendimentos_medicos"] != 1
-            or user["indicador_medicoes_peso_altura"] != 1
-            or user["indicador_registros_creatinina"] != 1
-            or user["indicador_vacinas_influenza"] != 1
-            or user["indicador_atendimento_odontologico"] != 1
-            or user["indicador_visitas_domiciliares_acs"] != 1
+            user["agg_alerta_medicos_enfermeiros"] == 1
+            or user["agg_alerta_creatinina"] == 1
+            or user["agg_alerta_cirurgiao_dentista"] == 1
+            or user["agg_alerta_ivcf_aplicado"] == 1
+            or user["agg_alerta_peso_altura"] == 1
+            or user["agg_alerta_vacinas_influenza"] == 1
+            or user["agg_alerta_visitas_domiciliares_acs"] == 1
         )
         self.registros = []
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_atendimento_medicos"],
-                exibir_alerta=user["indicador_atendimentos_medicos"] != 1,
-                descricao="Data do último atendimento Médico/Enfermeiro",
+                data=self.convert_nan(user["total_consulta_medico_enfermeiro"]),
+                exibir_alerta=user["agg_alerta_medicos_enfermeiros"] == 1,
+                descricao="Total de consultas médicas e/ou de enfermagem",
+                tipo_alerta="total_consulta_medico_enfermeiro",
+                classificacao='12-meses'
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=[
+                    self.convert_date(user["data_ultima_consulta_medico_enfermeiro"]),
+                    self.convert_date(user["data_penultima_consulta_medico_enfermeiro"]),
+                ],
+                exibir_alerta=user["agg_alerta_medicos_enfermeiros"] == 1,
+                descricao="Data das últimas duas consultas médicas e/ou de enfermagem",
                 tipo_alerta="data_ultimo_atendimento_medicos",
+                classificacao='12-meses'
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultima_medicao_peso_altura"],
-                exibir_alerta=user["indicador_medicoes_peso_altura"] != 1,
-                descricao="Data da última medição de peso e altura",
-                tipo_alerta="data_ultima_medicao_peso_altura",
+                data=(
+                    "Sim" if user['agg_alerta_peso_altura'] == 1 else "Não"
+                ),
+                exibir_alerta=user["agg_alerta_peso_altura"] == 1,
+                descricao="Registro de peso e altura na mesma data de duas consultas médicas e/ou de enfermagem",
+                tipo_alerta="alerta_peso_altura",
+                classificacao='24-meses'
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_registro_creatinina"],
-                exibir_alerta=user["indicador_registros_creatinina"] != 1,
+                data=self.convert_date(user["data_ultimo_creatinina"]),
+                exibir_alerta=user["agg_alerta_creatinina"] == 1,
                 descricao="Data do último registro de Creatinina ",
                 tipo_alerta="data_ultimo_registro_creatinina",
+                classificacao='24-meses'
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultima_vacina_influenza"],
-                exibir_alerta=user["indicador_vacinas_influenza"] != 1,
-                descricao="Data do último registro de vacina da Influenza ",
+                data=(
+                    self.convert_nan(user['total_visitas_domiciliares_acs'])
+                ),
+                exibir_alerta=user["agg_visitas_domiciliares_acs"] != 1,
+                descricao="Número de visitas domiciliares por ACS/TACS ",
+                tipo_alerta="data_ultimo_registro_creatinina",
+                classificacao='24-meses'
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=self.convert_date(user["data_ultima_vacina"]),
+                exibir_alerta=user["agg_alerta_vacinas_influenza"] == 1,
+                descricao="Data de registro de vacina influenza",
                 tipo_alerta="data_ultima_vacina_influenza",
+                classificacao='24-meses'
+            )
+        )
+        
+        
+        self.registros.append(
+            AlertRecord(
+                data=self.convert_date(user["data_ultimo_atendendimento_odonto"]),
+                exibir_alerta=user["agg_alerta_cirurgiao_dentista"] == 1,
+                descricao="Data da consulta odontológica na APS ",
+                tipo_alerta="alerta_cirurgiao_dentista",
+                classificacao='24-meses'
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_atendimento_odontologico"],
-                exibir_alerta=user["indicador_atendimento_odontologico"] != 1,
-                descricao="Data do último registro de atendimento Odontológico ",
-                tipo_alerta="data_ultimo_atendimento_odontologico",
-            )
-        )
-        self.registros.append(
-            AlertRecord(
-                data=user["data_ultima_visita_domiciliar_acs"],
-                exibir_alerta=user["indicador_visitas_domiciliares_acs"] != 1,
-                descricao="Data da última visita do ACS ",
-                tipo_alerta="data_ultima_visita_domiciliar_acs",
+                data=(
+                    "Sim" if user["agg_alerta_ivcf_aplicado"] == 1 else "Não"
+                ),
+                exibir_alerta=user["agg_alerta_ivcf_aplicado"] == 1,
+                descricao="Avaliação do IVCF-20:",
+                tipo_alerta="alerta_ivcf_aplicado",
+                classificacao='24-meses'
             )
         )
 
+    def convert_date(self, dt):
+        if issubclass(type(dt), type(pd.NaT)):
+            return None
+        return dt
+    
+    def convert_nan(self, dt):
+        if math.isnan(dt):
+            return 0
+        return dt    
+    
     def to_dict(self):
         return dict(
             {

@@ -10,13 +10,15 @@ import polars
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
-from src.infra.create_base.polars.scripts_dados.Indicadores_Idoso_Polars import (
+from src.infra.create_base.polars.scripts_dados.indicadores_idoso_polars import (
     gerar_banco,
 )
 
 
 class CreateIndicadoresIdososRepository(CreateBasesRepositoryInterface):
 
+    _base = 'indicadores_idoso'
+    
     def __init__(self):
         ...
 
@@ -37,3 +39,5 @@ class CreateIndicadoresIdososRepository(CreateBasesRepositoryInterface):
         except Exception as e:
             # Trata quaisquer outras exceções
             logging.error(f"Ocorreu um erro inesperado: {str(e)}")
+
+

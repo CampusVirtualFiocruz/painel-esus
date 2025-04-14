@@ -46,6 +46,10 @@ class DiabetesDashboardGetNominalList(ControllerInterface):
             q,
             sort
         )
+        response["items"] = [
+            DiabetesNominalListAdapter(r).to_dict() for r in response["items"]
+        ]
+        return response
 
         return HttpResponse(status_code=200, body=response)
 

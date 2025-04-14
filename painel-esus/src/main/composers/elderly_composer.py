@@ -4,35 +4,43 @@ from src.presentations.controllers.elderly.elderly_controller import ElderlyCont
 repository = ElderlyRepository()
 controller = ElderlyController(repository)
 
-def elderly_total_composer():
-    return controller.total
+def elderly_ivcf_20_composer():
+    return controller.ivcf_20
 
-def elderly_group_by_age_location_composer():
-    return controller.grouping_by_ages_location
+def elderly_dentist_appointment_composer():
+    return controller.dentist_appointment
 
-def elderly_group_by_race_composer():
-    return controller.grouping_by_race
+def elderly_influenza_vaccines_composer():
+    return controller.influenza_vaccines
 
-def elderly_group_by_gender_composer():
-    return controller.grouping_by_gender
+def elderly_creatinine_composer():
+    return controller.creatinine
 
-def elderly_imc_rate_composer():
-    return controller.grouping_imc_rate
+def elderly_acs_visits_composer():
+    return controller.acs_visits
 
-def elderly_influenza_rate_composer():
-    return controller.grouping_influenza_rate
+def elderly_height_records_composer():
+    return controller.height_records
 
-def elderly_odonto_rate_composer():
-    return controller.grouping_odonto_rate
+def elderly_medical_appointment_composer():
+    return controller.medical_appointment
 
-def elderly_hipertesnion_diabetes_rate_composer():
-    return controller.grouping_total_disease_related
+def elderly_by_race_composer():
+    return controller.by_race
 
-def elderly_group_by_imc():
-    return controller.grouping_imc_rate
+def elderly_by_gender_composer():
+    return controller.by_gender
 
+def elderly_total_medical_cares_composer():
+    return controller.total_medical_cares
 
-def elderly_get_nominal_list():
+def elderly_total_ubs_composer():
+    return controller.total_ubs
+
+def elderly_total_card_composer():
+    return controller.total_card
+
+def elderly_get_nominal_list_composer():
     return controller.get_nominal_list
 
 def elderly_get_nominal_list_download():

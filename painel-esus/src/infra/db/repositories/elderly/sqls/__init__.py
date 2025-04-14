@@ -1,7 +1,11 @@
-from .group_by_age import group_by_age_gender, group_by_age_location
-from .group_by_imc import group_by_imc
-from .group_by_race import group_by_race
-from .total_elderly import get_elderly_total_on_ubs_and_team
-from .total_elderly_influenza import get_elderly_total_influenza
-from .total_elderly_odonto import get_elderly_total_odonto
-from .total_hipertensao_diabetes import total_hipertension_diabetes
+from .total import get_medical_cares,get_total_ubs, get_total_card
+from .by_gender import by_gender
+from .by_race import by_race
+from .medical_appointments import medical_appointments
+from .height_records import height_records
+from .acs_visits import acs_visits
+from .creatinine import creatinine
+from .dentist_appointments import dentist_appointment
+from .influenza_vaccines import influenza_vaccines
+from .ivcf_20 import ivcf_20
+from .get_elderly_base import get_elderly_base

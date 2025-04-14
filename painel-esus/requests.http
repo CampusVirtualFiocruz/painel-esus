@@ -1,0 +1,66 @@
+POST http://localhost:5001/v1/auth
+Content-Type: application/json
+
+{"username": "admin", "password": "FCadmin23"}
+
+###
+@token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkbWluIiwiY25zIjoiMDAwMDAwMDAwMCIsInVmIjoiIiwibXVuaWNpcGlvIjoiIiwicHJvZmlsZXMiOlsiYWRtaW4iXSwiZXF1aXBlIjpudWxsLCJ1YnMiOm51bGwsImV4cCI6MTc0NDQwNzQ1Nn0.k0Y3jeDQitIFR1ExaOlJprCLoTBqD2gut9Kt0kB5qHo
+
+####
+GET http://localhost:5001/v1/elderly/total-ubs
+Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost:5001/v1/elderly/total-medical-cares
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/total-ubs
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/total-medical-cares
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/by-gender
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/by-race
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/two-height-records
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/two-acs-visits
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/creatinine
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/influenza-vaccines
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/dentist-appointment
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/elderly/ivcf-20
+Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost:5001/v1/elderly/get-nominal-list/9?sort[]={"field":"name", "direction":"desc"}
+Authorization: Bearer {{token}}
+
+###
+
+GET http://localhost:5001/v1/elderly/total-card
+Authorization: Bearer {{token}}
