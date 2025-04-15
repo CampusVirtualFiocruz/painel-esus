@@ -7,5 +7,5 @@ class GetIBGEPopulationUseCase(DemographicIBGEPopulationUseCaseInterface):
     def __init__(self, _repository):
         self._repository = _repository
 
-    def execute(self) -> str:
+    def get_ibge_population(self) -> str:
         return self._repository.get_ibge_population()
