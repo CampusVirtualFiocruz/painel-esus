@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Dict
 
 
-class DemographicAgeGroupsInterface(ABC):
+class DemographicAgeGroupsUseCaseInterface(ABC):
     @abstractmethod
     def get_age_groups(
         self,
@@ -12,7 +12,7 @@ class DemographicAgeGroupsInterface(ABC):
         pass
 
 
-class DemographicGenderInterface(ABC):
+class DemographicGenderUseCaseInterface(ABC):
     @abstractmethod
     def get_gender(
         self,
@@ -22,7 +22,13 @@ class DemographicGenderInterface(ABC):
         pass
 
 
-class DemographicLocationAreaInterface(ABC):
+class DemographicIBGEPopulationUseCaseInterface(ABC):
+    @abstractmethod
+    def execute(self) -> str:
+        pass
+
+
+class DemographicLocationAreaUseCaseInterface(ABC):
     @abstractmethod
     def get_location_area(
         self,
@@ -48,7 +54,7 @@ class DemographicLocationAreaInterface(ABC):
         pass
 
 
-class DemographicTotalPeopleInterface(ABC):
+class DemographicTotalPeopleUseCaseInterface(ABC):
     @abstractmethod
     def get_total_people(
         self,
@@ -58,7 +64,7 @@ class DemographicTotalPeopleInterface(ABC):
         pass
 
 
-class DemographicIndicatorsInterface(ABC):
+class DemographicIndicatorsUseCaseInterface(ABC):
     @abstractmethod
     def get_indicators(
         self,

@@ -8,7 +8,7 @@ class GenderRepository(DemographicGenderInterface):
     def __init__(self, db_connection=duckdb):
         self.db = db_connection
 
-    def get_by_gender(self, cnes: int = None, equipe: int = None):
+    def get_gender(self, cnes: int = None, equipe: int = None):
         gender = {"feminino": 0, "masculino": 0}
         gender_sql = filter_by_sexo(cnes, equipe)
         result_gender = self.db.sql(gender_sql).fetchall()
