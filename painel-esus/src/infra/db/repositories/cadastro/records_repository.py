@@ -1,5 +1,6 @@
 # pylint: disable=R0913,W0611
 import duckdb
+import json
 import pandas as pd
 from sqlalchemy import and_, or_
 from src.infra.db.entities.equipes import Equipes
@@ -113,64 +114,29 @@ class RecordsRepository:
         nome: str = None,
         cpf: str = None,
         equipe: int = None,
-        query:str=None
+        query:str=None,
+        sort=[]
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
-        # with DBConnectionHandler() as db_con:
-        #     users = (
-        #         db_con.session.query(*columns)
-        #         .distinct(Pessoas.cidadao_pec)
-        #         .join(
-        #             Equipes,
-        #             and_(
-        #                 Equipes.cidadao_pec == Pessoas.cidadao_pec,
-        #                 Equipes.codigo_equipe == Pessoas.codigo_equipe_vinculada,
-        #                 Equipes.codigo_unidade_saude == Pessoas.codigo_unidade_saude
-        #             ),
-        #         )
-        #     )
-        #     conditions = []
-        #     or_conditions = []
-
-        #     if cnes is not None and cnes:
-        #         conditions+=[ Pessoas.codigo_unidade_saude == cnes]
-
-        #     if query is not None and query:
-        #         or_conditions += [
-        #             Pessoas.cpf.ilike(f"%{query}%"),
-        #             Pessoas.nome.ilike(f"%{query}%"),
-        #             Pessoas.cns.ilike(f"%{query}%"),
-        #         ]
-        #     if equipe is not None and equipe:
-        #         # users = users.filter(Equipes.codigo_equipe == equipe)
-        #         conditions += [Pessoas.codigo_equipe_vinculada == equipe]
-        #     if len(conditions) > 0:
-        #         users = users.filter(*conditions)
-
-        #     if len(or_conditions) > 0:
-        #         users = users.filter(or_(*or_conditions))
-        #     users = users.group_by(Pessoas.cidadao_pec)
-        #     total = users.count()
-        #     users = (
-        #         users.order_by(Pessoas.nome)
-        #         .offset(max(0, page - 1) * pagesize)
-        #         .limit(pagesize)
-        #     )
-        #     print(list(users))
-        #     return {
-        #         "itemsCount": total,
-        #         "itemsPerPage": pagesize,
-        #         "page": page,
-        #         "pagesCount": round(total / pagesize),
-        #         "items": list(users),
-        #     }
-
+        
         con = duckdb.connect()
         pessoas_sql = get_pessoas_sql()
 
         conditions = []
         or_conditions = []
+        
+        order = ''
+        order_list = []
+        mapped_columns = {
+            'name': 'nome',
+            'cpf':'cpf',
+            'cns': 'cns',
+            'idade': 'idade',
+            'sexo': 'sexo',
+            'equipe': 'nome_equipe',
+            'micro_area': 'micro_area'
+        }
 
         if cnes is not None and cnes:
             conditions += [f"codigo_unidade_saude = {cnes}"]
@@ -201,10 +167,22 @@ class RecordsRepository:
             sql_where = " AND ".join(where_clause)
             sql_where = f" WHERE {sql_where}"
 
-        # print(pessoas_sql + sql_where + f" LIMIT {limit} OFFSET {offset} ")
-
+        if len(sort) > 0:
+            for s in sort:
+                filter = json.loads(s)
+                if filter["field"] not in mapped_columns: continue
+                
+                direction = filter['direction'] if 'direction' in filter else'asc'
+                columns = mapped_columns[filter["field"]]
+                order_list.append( f'{columns} {direction}')
+        else:
+            order_list = ['nome asc']
+        if len(order_list)>0:
+            order = 'order by '
+            order += ", ".join(order_list)
+            
         users = con.sql(
-            pessoas_sql + sql_where + f" LIMIT {limit} OFFSET {offset} "
+            pessoas_sql + sql_where + f"  {order} LIMIT {limit} OFFSET {offset} "
         ).df()
 
         users = users.to_dict(orient="records")

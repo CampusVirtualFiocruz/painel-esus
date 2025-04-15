@@ -16,7 +16,8 @@ from src.main.composers.elderly_composer import (
     elderly_total_medical_cares_composer,
     elderly_total_ubs_composer,
     elderly_total_card_composer,
-    elderly_get_nominal_list_composer
+    elderly_get_nominal_list_composer,
+    elderly_get_nominal_list_download_composer
 )
 
 elderly_bp = Blueprint('elderly', __name__)
@@ -39,7 +40,7 @@ class ElderlyPath:
         'dentist_appointment': '/dentist-appointment',
         'ivcf_20': '/ivcf-20',
         'get_nominal_list': '/get-nominal-list' ,      
-        'get_nominal_list_download': '/get-nominal-list-download' ,   
+        'get_nominal_list_download': '/get-nominal-list/download' ,   
     }
 
 
@@ -255,3 +256,34 @@ def elderly_get_nominal_list(cnes=None):
 
     return response, http_response.status_code
 
+@elderly_bp.route(urls['get_nominal_list_download'], methods=['GET'], endpoint='elderly_get_nominal_list_download')
+@elderly_bp.route(
+    urls['get_nominal_list_download'] + '/<cnes>', methods=['GET'], endpoint='elderly_get_nominal_list_download_id'
+)
+def elderly_get_nominal_list_download(cnes=None):
+    if cnes:
+        request.view_args["cnes"] = int(request.view_args["cnes"])
+
+    http_response = None
+    response = None
+
+    try:
+        response = request_adapter(request, elderly_get_nominal_list_download_composer())
+        buffer = io.BytesIO()
+        response.to_excel(buffer)
+
+        headers = {
+            "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
+            "Content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        }
+        return Response(
+            buffer.getvalue(),
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers=headers,
+        )
+
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, 200

@@ -43,5 +43,5 @@ def elderly_total_card_composer():
 def elderly_get_nominal_list_composer():
     return controller.get_nominal_list
 
-def elderly_get_nominal_list_download():
+def elderly_get_nominal_list_download_composer():
     return controller.get_nominal_list_download

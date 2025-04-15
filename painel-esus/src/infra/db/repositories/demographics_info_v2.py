@@ -18,12 +18,9 @@ from src.errors.logging import logging
 from src.infra.db.repositories.sqls.demographics import (
     filter_by_gender_age,
     filter_by_localidade,
-    filter_by_sexo,
-    get_indicators_crianca,
-    get_indicators_diabetes_plus_autorreferidos,
-    get_indicators_hipertensao_plus_autorreferidos,
-    get_indicators_idoso,
+    filter_by_sexo
 )
+from src.infra.db.repositories.elderly.elderly_repository import ElderlyRepository
 from src.infra.db.repositories.sqls.disease.auto_referidos import (
     filter_diabetes_by_localidade,
     filter_hypertension_by_localidade,
@@ -184,6 +181,27 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
             else:
                 location_body[resp[0]] = int(resp[1])
         return location_body
+    
+    def get_elderly_total(self, cnes: int = None, equipe: int = None):
+        repo = ElderlyRepository()
+        result_location_area_sql = repo.total_card(cnes, equipe)
+
+        location_body = {"rural": 0, "urbano": 0, "nao_informado": 0}
+        location_map = {
+            'rural':'rural',
+            'urbana':'urbano'
+        }
+        for resp in result_location_area_sql:
+            if resp[0] is None:
+                location_body["nao_informado"] = int(resp[1])
+            else:
+                key = str(resp[0]).lower()
+                if key in location_map:
+                    key = location_map[key]
+                else:
+                    key = 'nao_informado'
+                location_body[key] = int(resp[1])
+        return location_body
 
     def get_demographics_info(
         self,
@@ -200,11 +218,12 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         gender = self.get_by_gender(cnes, equipe)
         diabetes = self.get_diabetes_location(cnes,equipe)
         hypertension = self.get_hypertension_location(cnes, equipe)
+        elderly = self.get_elderly_total(cnes, equipe)
         idicators_body = {
             "diabetes": diabetes,
             "hipertensao": hypertension,
             "crianca": {"rural": 0, "urbano": 0, "nao_informado": 0},
-            "idosa": {"rural": 0, "urbano": 0, "nao_informado": 0},
+            "idosa": elderly,
             "qualidade": {
                 "rural": location_body["rural"],
                 "urbano": location_body["urbano"],

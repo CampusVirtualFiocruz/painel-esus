@@ -9,3 +9,4 @@ from .dentist_appointments import dentist_appointment
 from .influenza_vaccines import influenza_vaccines
 from .ivcf_20 import ivcf_20
 from .get_elderly_base import get_elderly_base
+from .nominal_download import nominal_download
