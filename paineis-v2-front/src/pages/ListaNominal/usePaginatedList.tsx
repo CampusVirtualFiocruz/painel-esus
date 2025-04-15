@@ -31,6 +31,7 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
         params: {
           itemsPerPage: params.size,
           page: params.page,
+       //   sort: params?.sort,
           q: searchTerm,
           sort: (params?.sort || []).map((item: string) => ({
             field: item.split("-").join(""),

@@ -59,9 +59,9 @@ const ListaNominal = () => {
     searchTerm,
   });
 
-  const handleSortChange = (sort: string[], ...args: any) => {
+  const handleSortChange = (sort: string[]) =>{
     setParams((state: any) => ({ ...state, sort }));
-  };
+  }
 
   const handlePageChange = (page: number) =>
     setParams((state: any) => ({ ...state, page: page + 1 }));

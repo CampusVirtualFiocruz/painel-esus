@@ -34,7 +34,8 @@ export function Donut(props: DonutChart) {
       {
         name: "",
         type: "pie",
-        radius: [props?.config?.radiusStart || "40%", "70%"],
+        radius: props?.config?.radius || [props?.config?.radiusStart || "40%", "70%"],
+        roseType: props?.config?.roseType,
         avoidLabelOverlap: true,
         labelLine: {
           show: false,
@@ -78,6 +79,14 @@ export function Donut(props: DonutChart) {
       },
     ],
   };
+
+  if(props?.config?.halfDonut){
+    options.series[0] = { 
+      ...options?.series?.[0],
+      startAngle: 180,
+      endAngle: 360,
+    } as any;
+  }
 
   return (
     <ReactECharts

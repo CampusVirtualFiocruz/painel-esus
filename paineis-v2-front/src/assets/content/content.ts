@@ -30,6 +30,15 @@ export const content: any = {
   "95-a-99-anos": "95 a 99 anos",
   "100-ou-mais": "100+ anos",
 
+  "60-64-anos": "60 a 64 anos",
+  "65-69-anos": "65 a 69 anos",
+  "70-74-anos": "70 a 74 anos",
+  "75-79-anos": "75 a 79 anos",
+  "80-84-anos": "80 a 84 anos",
+  "85-89-anos": "85 a 89 anos",
+  "90-94-anos": "90 a 94 anos",
+  "95-99-anos": "95 a 99 anos",
+
   amarela: "Amarela",
   parda: "Parda",
   branca: "Branca",
@@ -115,13 +124,25 @@ export const content: any = {
 
   //idosas
   "total-idosas-ubs": "Total de pessoas idosas na UBS",
-  "total-raca-cor": "Total de cadastros de pessoas idosas por raça e cor",
-  "total-imc": "Total de pessoas idosas de acordo com o IMC",
-  "total-proporcao-vacina-influenza":
-    "Proporção de pessoas idosas com registro de vacina Influenza",
-  "total-proporcao-atendimento-odonto":
-    "Proporção de pessoas idosas com atendimento odontológico",
-  "pessoas-por-faixa-etaria": "Pessoas idosas por faixa etária",
-  "pessoas-por-sexo": "Pessoas idosas por sexo",
-  "pessoas-por-diagnostico": "Proporção de pessoas idosas com diagnóstico de:",
+  "pessoas-por-sexo": "Pessoas idosas por faixa etária/sexo",
+  "distribuicao-pessoas-raca-cor": "Distribuição de pessoas idosas cadastradas por raça/cor",
+  "total-idosas-atendidas": "Total de pessoas idosas atendidas",
+  "duas-consultas-medicas-enfermagem": "Duas consultas médicas e/ou de enfermagem",
+  "uma-nenhuma-consulta": "Com duas ou\nmais consultas",
+  "duas-mais-consultas": "Com uma ou\nnenhuma consulta",
+  "dois-mais-registros": "Com dois ou\nmais registros",
+  "um-nenhum-registro": "Com um ou\nnenhum registro",
+  "duas-mais-visitas": "Com duas ou\nmais visitas",
+  "uma-nenhuma-visita": "Com uma ou\nnenhuma visita",
+  "avaliadas": "Avaliadas",
+  "sem-avaliacao": "Sem avaliação",
+  "consultadas": "Consultadas",
+  "sem-consulta": "Sem consulta",
+  "dois-registros-peso-altura": "Dois registros de peso e altura",
+  "duas-visitas-domiciliares-acs-tacs": "Duas visitas domiciliares por ACS/TACS",
+  "avalicao-creatina": "Avaliação de creatinina",
+  "registro-vacina-influenza": "Registro de vacina influenza",
+  "consulta-com-dentista-aps": "Consulta com dentista na APS",
+  "ivcf-20": "Aplicação do Índice de Vulnerabilidade Clínico-Funcional (IVCF-20)",
+
 };
