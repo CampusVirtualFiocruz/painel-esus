@@ -53,20 +53,18 @@ class DemographicLocationAreaUseCaseInterface(ABC):
     ) -> Dict:
         pass
 
+    @abstractmethod
+    def get_child_location_area(self) -> Dict:
+        pass
+
+    @abstractmethod
+    def get_elderly_location_area(self) -> Dict:
+        pass
+
 
 class DemographicTotalPeopleUseCaseInterface(ABC):
     @abstractmethod
     def get_total_people(
-        self,
-        cnes: int = None,
-        equipe: int = None,
-    ) -> Dict:
-        pass
-
-
-class DemographicIndicatorsUseCaseInterface(ABC):
-    @abstractmethod
-    def get_indicators(
         self,
         cnes: int = None,
         equipe: int = None,

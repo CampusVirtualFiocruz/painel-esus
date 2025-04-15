@@ -16,7 +16,9 @@ class GetLocationAreaReport(DemographicLocationAreaUseCaseInterface):
         return {
             "location_area": self._repository.get_location_area(cnes, equipe),
             "diabetes": self._repository.get_diabetes_location_area(cnes, equipe),
-            "hipertensao": self._repository.get_hypertension_location_area(
+            "hypertension": self._repository.get_hypertension_location_area(
                 cnes, equipe
             ),
+            "child": self._repository.get_child_location_area(),
+            "elderly": self._repository.get_elderly_location_area(),
         }

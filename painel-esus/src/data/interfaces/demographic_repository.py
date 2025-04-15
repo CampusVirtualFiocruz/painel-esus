@@ -47,20 +47,18 @@ class DemographicLocationAreaInterface(ABC):
     ) -> Dict:
         pass
 
+    @abstractmethod
+    def get_child_location_area(self) -> Dict:
+        pass
+
+    @abstractmethod
+    def get_elderly_location_area(self) -> Dict:
+        pass
+
 
 class DemographicTotalPeopleInterface(ABC):
     @abstractmethod
     def get_total_people(
-        self,
-        cnes: int = None,
-        equipe: int = None,
-    ) -> Dict:
-        pass
-
-
-class DemographicIndicatorsInterface(ABC):
-    @abstractmethod
-    def get_indicators(
         self,
         cnes: int = None,
         equipe: int = None,
