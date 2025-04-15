@@ -21,7 +21,7 @@ const Waffle = (props: DonutChart) => {
   );
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto", marginTop: "-200px" }}>
+    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
       <Nivo
         width={600}
         height={300}
@@ -36,10 +36,10 @@ const Waffle = (props: DonutChart) => {
         borderColor={"#ffffff"}
         motionStagger={2}
       />
-      <div style={{ display: "flex", height: "30px", marginTop: "-60px" }}>
+      <div style={{ width: "100%", display: "flex", height: "30px", marginTop: "40px" }}>
         {data.map(({ id, label, value }, dataIndex) => (
-          <div key={id} style={{ textAlign: "center" }}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
+          <div key={id} style={{ width: "100%", textAlign: "center" }}>
+            <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
               <FaUser size="26px" color={colors?.[dataIndex % data?.length]} />
             </div>
             <h4 style={{ paddingTop: "8px" }}>

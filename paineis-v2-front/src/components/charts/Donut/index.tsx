@@ -63,12 +63,13 @@ export function Donut(props: DonutChart) {
                       color: "black",
                       fontSize: 12,
                       marginBottom: 16,
+                      padding: [0, 30],
                     },
                     b: {
                       color: "black",
                       fontSize: 30,
                       fontWeight: "bold",
-                      
+                      padding: [0, 30],
                     },
                   },
                 },

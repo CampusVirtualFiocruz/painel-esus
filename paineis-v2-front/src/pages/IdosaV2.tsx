@@ -1,12 +1,13 @@
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
 import { Bar, Donut, ValueCard } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
-import "../styles/idosa.scss";
-import { charts } from "../components/charts/idoso-v2.mock";
 import Waffle from "../components/charts/Waffle";
 import { memo } from "react";
+import useReportDataIdosasV2 from "../hooks/sections/idosasV2/useReportDataIdosasV2";
+import { PainelParams } from "./Hipertensao";
+import "../styles/idosa.scss";
 
 const reportHeader = [
   {
@@ -34,7 +35,9 @@ const reportSections: any = [
         Chart: Bar,
         config: {
           colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
-          //colors: ["rgba(57,150,193,255)", "rgba(92,210,200,255)", "#dddddd"],
+          componentStyle: {
+            height: "500px",
+          },
           yAxis: {
             name: content?.["total-idosas-ubs"],
           },
@@ -226,8 +229,10 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
 const IdosaV2 = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
-  const reportData = { isLoading: false };
-  const report = charts;
+
+  const { id } = useParams<PainelParams>();
+  const reportData = useReportDataIdosasV2({ ubsId: id, squadId: equipe });
+  const report = reportData?.data;
 
   if (reportData?.isLoading) {
     return <center>Aguarde...</center>;
@@ -273,8 +278,7 @@ const IdosaV2 = () => {
           </div>
         </div>
       </>
-
-      {reportSections.map((chartList: any, colIndex: any) => (
+      {reportSections.map((chartList: any) => (
         <RenderChartGroup report={report} chartList={chartList} />
       ))}
       <center style={{ marginTop: "60px", marginBottom: "30px" }}>
@@ -283,7 +287,7 @@ const IdosaV2 = () => {
         </h2>
         <p>(Referentes aos últimos 12 meses)</p>
       </center>
-      {reportSectionsSecond.map((chartList: any, colIndex: any) => (
+      {reportSectionsSecond.map((chartList: any) => (
         <RenderChartGroup report={report} chartList={chartList} />
       ))}
     </ReportWrapper>
