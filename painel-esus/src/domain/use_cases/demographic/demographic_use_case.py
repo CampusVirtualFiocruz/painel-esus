@@ -24,7 +24,7 @@ class DemographicGenderUseCaseInterface(ABC):
 
 class DemographicIBGEPopulationUseCaseInterface(ABC):
     @abstractmethod
-    def execute(self) -> str:
+    def get_ibge_population(self) -> str:
         pass
 
 
