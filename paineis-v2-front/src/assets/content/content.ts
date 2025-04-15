@@ -19,6 +19,7 @@ export const content: any = {
   "6-meses": "6 meses",
   "9-meses": "9 meses",
   "12-meses": "12 meses",
+  "24-meses": "24 meses",
 
   "60-a-64-anos": "60 a 64 anos",
   "65-a-69-anos": "65 a 69 anos",

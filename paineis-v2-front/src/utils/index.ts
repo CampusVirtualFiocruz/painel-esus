@@ -240,3 +240,16 @@ export const profiles = [
   "CBO 322415: Auxiliar de saúde bucal",
   "CBO 411010: Assistente administrativo",
 ];
+
+export const groupBy = (input: any, key: string) => {
+  return Object.entries(
+    input.reduce((acc: any, currentValue: any) => {
+      let groupKey = currentValue[key];
+      if (!acc[groupKey]) {
+        acc[groupKey] = [];
+      }
+      acc[groupKey].push(currentValue);
+      return acc;
+    }, {})
+  ).map(([title, content]) => ({ title, content }));
+};
