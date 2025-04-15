@@ -95,13 +95,7 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
         for resp in response:
             if resp[0] in body:
                 if all(item is not None for item in resp):
-                    logging.info(
-                        "body[resp[0]][resp[1]][resp[2]] = int(resp[3]) => {}, {}, {}, {}".format(
-                            resp[0],resp[1],resp[2],resp[3]
-                        )
-                        )
                     body[resp[0]][resp[1]][resp[2]] = resp[3]
-        # print(body)
         return body
 
     def get_total_people(self, cnes: int = None, equipe: int = None):

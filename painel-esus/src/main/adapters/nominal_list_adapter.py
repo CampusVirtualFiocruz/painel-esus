@@ -55,29 +55,35 @@ class AlertRecord:
 
 class BaseNominalAdapter:
     def __init__(self, user):
-        endereco = user['endereco'] if user['endereco'] is not None else ""
-        endereco += " " + user['numero'] if user['numero'] is not None else ""
-        endereco += " " + user['bairro'] if user['bairro'] is not None else ""
+        if 'alerta_afericao_pa' not in user:
+            print('---------->')
+            print(user)
+            return 
+        endereco = self.get(user, 'endereco')
+        endereco += " " + self.get(user, 'numero')
+        endereco += " " + self.get(user, 'bairro')
 
         self.nome = user["nome"]
         self.nome_social = "-"
-        self.tipo_localidade = user["tipo_localidade"]
+        self.tipo_localidade = self.get(user,"tipo_localidade")
         self.cpf = user["cpf"]
         self.cns = user["cns"]
-        self.data_nascimento = user["data_nascimento"]
+        self.data_nascimento = self.get(user,"data_nascimento")
         self.idade = user["idade"]
         self.sexo = user["sexo"]
-        self.equipe = user["nome_equipe"]
-        self.microarea = user["micro_area"]
+        self.equipe = self.get(user,"nome_equipe")
+        self.microarea = self.get(user,"micro_area")
         self.endereco = endereco
-        self.tipo_logradouro = user["tipo_endereco"]
-        self.complemento = user["complemento"]
+        self.tipo_logradouro = self.get(user,"tipo_endereco")
+        self.complemento = self.get(user,"complemento")
         self.cep = user["cep"]
         self.telefone = user["telefone"]
         self.registros = []
-        self.primeiro_registro = user["dt_primeiro_reg_condicao"]
+        self.primeiro_registro = self.get(user,"dt_primeiro_reg_condicao")
 
-
+    def get(self, item, field):
+        return item[field] if field in item and item[field] is not None else ""
+    
 class HypertensionNominalListAdapter(BaseNominalAdapter):
 
     def __init__(self, user):
@@ -199,7 +205,6 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         super().__init__(user)
 
         alertas = [
-            "alerta_afericao_pa",
             "alerta_ultima_consulta_medico",
             "alerta_ultima_consulta_odontologica",
             "alerta_visita_acs",

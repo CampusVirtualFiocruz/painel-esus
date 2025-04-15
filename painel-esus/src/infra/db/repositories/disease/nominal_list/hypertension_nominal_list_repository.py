@@ -133,7 +133,7 @@ class HypertensionNominalListRepository:
             sql_where = " AND ".join(where_clause)
             sql_where = f" WHERE {sql_where}"
 
-        order = 'order by '
+        order = ''
         order_list = []
         mapped_columns = {
             'name': 'no_cidadao',
@@ -156,7 +156,11 @@ class HypertensionNominalListRepository:
         else:
             order_list = 'no_cidadao asc'
             
-        order += ", ".join(order_list)
+        if len(order_list)>0:
+            order = 'order by '
+            order += ", ".join(order_list)
+        
+        
         users = con.sql(
             pessoas_sql + sql_where + f" {order} LIMIT {limit} OFFSET {offset} "
         ).df()

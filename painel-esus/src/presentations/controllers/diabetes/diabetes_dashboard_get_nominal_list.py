@@ -4,7 +4,7 @@ from src.data.use_cases.diseases_dashboard.diabetes_nominal_list import (
 from src.presentations.controllers.utils.requests_utils import parse_request
 from src.presentations.http_types import HttpRequest, HttpResponse
 from src.presentations.interfaces.controller_interface import ControllerInterface
-
+from src.main.adapters.nominal_list_adapter import DiabetesNominalListAdapter
 
 class DiabetesDashboardGetNominalList(ControllerInterface):
     def __init__(self, use_case: DiabetesNominalListUseCase):
@@ -46,11 +46,7 @@ class DiabetesDashboardGetNominalList(ControllerInterface):
             q,
             sort
         )
-        response["items"] = [
-            DiabetesNominalListAdapter(r).to_dict() for r in response["items"]
-        ]
-        return response
-
+    
         return HttpResponse(status_code=200, body=response)
 
 
