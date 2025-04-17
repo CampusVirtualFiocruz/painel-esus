@@ -79,7 +79,7 @@ const ListaNominal = () => {
       <ReportWrapper
         title={
           "Lista Nominal / " +
-          (condicao === "Qualidade" ? "Qualidade de Cadastro" : condicao)
+          (condicao === "Qualidade" ? "Qualidade de Cadastro" : condicao === "Idosa" ? "Cuidado da Pessoa Idosa" : condicao)
         }
         subtitle=""
         footerNote={footerNote}

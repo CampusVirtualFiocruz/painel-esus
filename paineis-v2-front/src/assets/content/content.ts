@@ -133,8 +133,8 @@ export const content: any = {
   "total-idosas-ubs": "Total de pessoas idosas",
   "pessoas-por-sexo": "Pessoas idosas por faixa etária/sexo",
   "distribuicao-pessoas-raca-cor":
-    "Distribuição de pessoas idosas cadastradas por raça/cor",
-  "total-idosas-atendidas": "Total de pessoas idosas atendidas",
+    "Distribuição de pessoas idosas por raça/cor",
+  "total-idosas-atendidas": "Total de pessoas idosas atendidas nos últimos 12 meses",
   "duas-consultas-medicas-enfermagem":
     "Duas consultas médicas e/ou de enfermagem",
   "uma-nenhuma-consulta": "Com duas ou\nmais consultas",
