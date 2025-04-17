@@ -555,7 +555,7 @@ class IdosoNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=(
-                    "Sim" if user["agg_alerta_ivcf_aplicado"] == 1 else "Não"
+                    "Sim" if user["agg_ivcf_aplicado"] == 1 else "Não"
                 ),
                 exibir_alerta=user["agg_alerta_ivcf_aplicado"] == 1,
                 descricao="Avaliação do IVCF-20:",

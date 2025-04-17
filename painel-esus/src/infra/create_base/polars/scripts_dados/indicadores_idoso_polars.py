@@ -10,7 +10,6 @@ from dateutil.relativedelta import relativedelta
 from .codigos_cbo import *
 
 
-
 #from utils import ler_dados_raw,escrever_dados_raw
 def ler_dados_raw(nome_parquet,columns=""):
 
@@ -251,7 +250,13 @@ def gerar_banco():
     )
 
 
+    # In[132]:
+
+
     ### separando informações de interesse exames - sem ciaps e cids, apenas procedimentos avaliados ou solicitados
+
+
+    # In[133]:
 
 
     exames = (
@@ -266,6 +271,9 @@ def gerar_banco():
     # ## Passo 7. Manipular dados conforme necessidades dos Indicadores
 
     # ### Manipulando dados comuns aos indicadores
+
+    # In[134]:
+
 
 
     cad_grouped = (
@@ -363,10 +371,16 @@ def gerar_banco():
     )
 
 
+    # In[135]:
+
+
     # print(tb_pessoa_v2.glimpse())
 
 
     # ### Total de pessoas idosas - Dashboard
+
+    # In[136]:
+
 
     today = date.today()
 
@@ -387,9 +401,15 @@ def gerar_banco():
                 .otherwise(today.year - pl.col("dt_nasc_cidadao").dt.year() - 1).alias("idade")))
 
 
+    # In[137]:
+
+
     idoso = tb_pessoa_v2.filter(
         pl.col("idade") >= 60
     )
+
+
+    # In[138]:
 
 
     #dataframe para adicionar a todo os indicadores para conferir se a idade é maior ou igual a 61 anos
@@ -398,8 +418,14 @@ def gerar_banco():
 
     # ### Pessoas idosas por sexo - Dashboard
 
+    # In[139]:
+
+
     # COUNT ACV
     #tb_pessoa_v2['no_sexo_cidadao'].value_counts()
+
+
+    # In[140]:
 
 
     # idoso['no_sexo_cidadao'].value_counts()
@@ -407,10 +433,15 @@ def gerar_banco():
 
     # ### Pessoas idosas por raça/cor - Dashboard
 
-    #idoso['ds_raca_cor'].value_counts()
+    # In[141]:
+
+
 
 
     # ### Pessoas idosas por faixa etária - Dashboard
+
+    # In[142]:
+
 
     idoso = (idoso
         .with_columns(
@@ -425,10 +456,16 @@ def gerar_banco():
     )
 
 
+    # In[143]:
+
+
     #idoso['faixa_etaria'].value_counts()
 
 
     # ### Total de pessoas atendidas  nos últimos 12 meses - Dashboard
+
+    # In[144]:
+
 
     total_pessoas_atd = (
         fai_v2
@@ -451,6 +488,34 @@ def gerar_banco():
     # ### **Indicador I** - Pessoa idosa com duas consultas médica e/ou de enfermagem nos últimos 12 meses - Dashboard
     # 
     # ### Lista Nominal: Alerta quando  a quantidade for < 2
+
+    # In[145]:
+
+
+    aa = (fai_v2.join(
+            df_idade,
+            on="co_fat_cidadao_pec",
+            how="inner"
+        )
+        .select("co_seq_fat_atd_ind", "co_fat_cidadao_pec", "dt_atendimento", "co_dim_cbo_1", "co_dim_cbo_2","idade")
+        .filter(
+            (pl.col("co_dim_cbo_1").is_in(medicos_codigos) |
+            pl.col("co_dim_cbo_2").is_in(medicos_codigos)) |
+            (pl.col("co_dim_cbo_1").is_in(enfermeiros_codigos) |
+            pl.col("co_dim_cbo_2").is_in(enfermeiros_codigos))
+        )
+        .with_columns(
+            (pl.col("co_dim_cbo_1").is_in(medicos_codigos) |
+            pl.col("co_dim_cbo_2").is_in(medicos_codigos)).alias("is_medico"),
+
+            (pl.col("co_dim_cbo_1").is_in(enfermeiros_codigos) |
+            pl.col("co_dim_cbo_2").is_in(enfermeiros_codigos)).alias("is_enfermeiro")
+        )
+    )
+
+
+    # In[146]:
+
 
     fai_idoso_12meses = (
         fai_v2.join(
@@ -502,8 +567,8 @@ def gerar_banco():
                 .filter((pl.col("dt_atendimento") >= dt_12meses) & (pl.col("idade") >= 61))
                 .n_unique() >= 2
             )
-            .then(1)
-            .otherwise(0)
+            .then(0)
+            .otherwise(1)
             .alias("agg_alerta_medicos_enfermeiros"),
 
             (pl.col("co_seq_fat_atd_ind")
@@ -521,6 +586,9 @@ def gerar_banco():
             "duas_ultimas_datas_combinadas"
         )
     )
+
+
+    # In[147]:
 
 
     # separando as datas
@@ -558,6 +626,9 @@ def gerar_banco():
     # ##### - e quantidade de consultas realizadas nos últimos 12 meses (**"total_consulta_med_enferm"**)
     # ##### - Alerta se **"agg_medicos_enfermeiros" = 0**
 
+    # In[148]:
+
+
     # Left join idoso com indicador_medicos_enfermeiros
 
     idoso = idoso.join(
@@ -566,7 +637,11 @@ def gerar_banco():
         how="left"
     ).with_columns(
         pl.col("agg_medicos_enfermeiros").fill_null(0),
+        pl.col("agg_alerta_medicos_enfermeiros").fill_null(1)
     )
+
+
+    # In[149]:
 
 
     #idoso['agg_medicos_enfermeiros'].value_counts()
@@ -575,6 +650,9 @@ def gerar_banco():
     # ### **Indicador II** - Dois registros de peso e altura  realizados na data das consultas com médico e/ou enfermeiro nos últimos 12 meses - Dashboard
     # 
     # ### Lista Nominal: Alerta quando for "não"
+
+    # In[150]:
+
 
     # tabelas fonte: fai, fao e vis_dom
 
@@ -647,13 +725,25 @@ def gerar_banco():
     )
 
 
+    # In[151]:
+
+
     #peso_altura.filter(pl.col("co_fat_cidadao_pec") == 64756).sort("dt_atendimento", descending=True).select("co_fat_cidadao_pec","nu_altura","nu_peso","dt_atendimento","dt_nascimento")
+
+
+    # In[152]:
 
 
     #indicador_peso_altura_v1.filter(pl.col("co_fat_cidadao_pec") == 64756)
 
 
+    # In[153]:
+
+
     #indicador_peso_altura_v1
+
+
+    # In[154]:
 
 
     # Agora, pegando as datas de consultas com médicos e/ou enfermeiros
@@ -691,7 +781,13 @@ def gerar_banco():
     )
 
 
+    # In[ ]:
 
+
+
+
+
+    # In[155]:
 
 
     # Juntando dados datas peso e altura + medicos e enfermeiros
@@ -709,15 +805,15 @@ def gerar_banco():
     )
 
 
-
-
-
     # #### **Indicador II** e Itens da **Lista nominal** do Indicador II no df **"idoso"**:
     # ##### *A saber:*
     # ##### Número de pessoas idosas que tiveram dois registros de peso e altura simultâneos ocorridos na data das consultas com médico e/ou enfermeiro, realizados nos últimos 12 meses:**"agg_peso_altura" = 1**
     # 
     # ##### - Registro de peso e altura na mesma data de duas consultas médicas ou de enfermagem **(Sim = 1/Não = 0)**
     # ##### - Alerta se **"agg_peso_altura" = 0**
+
+    # In[156]:
+
 
 
     indicador_idoso_peso_altura_v2 = (
@@ -763,6 +859,9 @@ def gerar_banco():
     )
 
 
+    # In[157]:
+
+
     # Left join idoso com indicador_peso_altura
 
     idoso = idoso.join(
@@ -776,12 +875,18 @@ def gerar_banco():
     )
 
 
+    # In[158]:
+
+
     #idoso['agg_peso_altura'].value_counts()
 
 
     # ### **Indicador III** - Avaliação de creatinina nos últimos 12 meses - Dashboard
     # 
     # ### Lista Nominal: Data da última avaliação e Alerta quando for "não consta"
+
+    # In[159]:
+
 
     creatinina_dfs = (pl.concat([fao_v2, fai_v2], how="diagonal"))
 
@@ -818,7 +923,7 @@ def gerar_banco():
             pl.max("creatinina").alias("agg_creatinina_semdata"),
             
             pl.col("dt_atendimento")
-            .filter(pl.col("creatinina") == 1)
+            .filter(   (pl.col("creatinina") == 1) & (pl.col("dt_atendimento") >= calcular_data(24) ) )
             .max()
             .alias("dt_ultimo_creatinina"),
         )
@@ -859,6 +964,9 @@ def gerar_banco():
     # ##### - Data da última avaliação: **"dt_ultimo_creatinina"**
     # ##### - Alerta se "Não consta": **"agg_creatinina" = 0**
 
+    # In[160]:
+
+
     # Left join idoso com indicador_creatinina
 
     idoso = idoso.join(
@@ -876,6 +984,9 @@ def gerar_banco():
     # 
     # ### Lista Nominal:  ALERTA quando a quantidade for < 2
 
+    # In[161]:
+
+
     visita_asc = (
         vis_dom_v2
         .join(
@@ -885,13 +996,17 @@ def gerar_banco():
         )
         .select("co_fat_cidadao_pec","dt_atendimento","co_dim_cbo","idade")
         .filter(
-            (pl.col("co_dim_cbo").is_in(acs_tacs)) &
-            (pl.col("dt_atendimento") >= calcular_data(12)) 
+            (pl.col("co_dim_cbo").is_in(acs_tacs)  )
         )
         .group_by("co_fat_cidadao_pec")
         .agg([
             pl.col("idade").first().alias("idade"),
-            pl.col("dt_atendimento").len().alias("total_visitas_domiciliares_acs"),
+
+            pl.col("dt_atendimento")
+            .filter(pl.col("dt_atendimento") >= calcular_data(24))  
+            .count()  
+            .alias("total_visitas_domiciliares_acs"),
+            
             pl.min("dt_atendimento").alias("min_date"),
             pl.max("dt_atendimento").alias("max_date")
         ])
@@ -939,6 +1054,9 @@ def gerar_banco():
 
     # 
 
+    # In[162]:
+
+
     # Left join idoso com indicador_acs/tacs
 
     idoso = idoso.join(
@@ -952,12 +1070,18 @@ def gerar_banco():
     )
 
 
+    # In[163]:
+
+
     #idoso['agg_visitas_domiciliares_acs'].value_counts()
 
 
     # ### **Indicador V** - Registro de vacina influenza nos últimos 12 meses - Dashboard
     #     
     # ### Lista Nominal: Data da última vacina e Alerta quando for "não consta"
+
+    # In[164]:
+
 
     vacina_registro = (
         vacina_v2
@@ -968,36 +1092,56 @@ def gerar_banco():
         )
         .with_columns(
             (pl.when(
-                (pl.col("ds_filtro_imunobiologico").str.contains(rf"\b({vacina_influenza_codigos})\b")) 
-            ))
+                (pl.col("ds_filtro_imunobiologico").str.contains("|33|,|77|"))
+                )
             .then(1)
             .otherwise(0)
             .alias("tem_vacina_influenza"),
-        )
+        ))
         .sort("dt_atendimento", descending=True)
         .group_by("co_fat_cidadao_pec")
         .agg(
-            pl.col("tem_vacina_influenza")
-            .filter(  (pl.col("dt_atendimento") >= calcular_data(24) ) )
+            pl.col("idade").first().alias("idade"),
+            pl.col("dt_atendimento")
+            .filter((pl.col("tem_vacina_influenza") == 1 ) & (pl.col("dt_atendimento") >= calcular_data(24)  ))
             .max()
-            .alias("agg_vacinas_influenza"),
+            .alias("dt_ultimo_vacina_influenza"),
 
-            pl.col("tem_vacina_influenza")
-            .filter(  (pl.col("dt_atendimento") >= calcular_data(12) )  &  (pl.col("idade") >= 61) )
-            .max()
+            pl.max("tem_vacina_influenza").alias("agg_vacina_influenza_semdata"),
+
+        )
+        .with_columns(
+            pl.when(
+                (pl.col("dt_ultimo_vacina_influenza") >= calcular_data(12) ) &
+                (pl.col("agg_vacina_influenza_semdata") == 1)  &
+                (pl.col("idade") >= 61)
+            )
+            .then(0)
+            .otherwise(1)
             .alias("agg_alerta_vacinas_influenza"),
 
-            pl.col("tem_vacina_influenza")
-            .filter(  (pl.col("dt_atendimento") >= calcular_data(12) )  )
-            .max()
+            
+        pl.when(
+                (pl.col("dt_ultimo_vacina_influenza") >= calcular_data(24) ) &
+                (pl.col("agg_vacina_influenza_semdata") == 1) 
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_vacinas_influenza"),
+
+
+            pl.when(
+                (pl.col("dt_ultimo_vacina_influenza") >= calcular_data(12) ) &
+                (pl.col("agg_vacina_influenza_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
             .alias("agg_dashboard_vacinas_influenza"),
 
-            # Ultima data de atendimento sem restrigir o tempo, o tempo de 24 meses foi restringido ao criar vacina_v2
-            pl.col("dt_atendimento")
-            .max()
+            pl.col("dt_ultimo_vacina_influenza")
             .alias("dt_ultima_vacina"),
         )
-    )
+    ).drop("dt_ultimo_vacina_influenza","idade")
 
 
     # #### **Indicador V** e Itens da **Lista nominal** do Indicador V no df **"idoso"**:
@@ -1006,6 +1150,9 @@ def gerar_banco():
     # 
     # ##### - Data da última avaliação: **"dt_ultima_vacina"**
     # ##### - Alerta se "Não consta": **"agg_vacinas_influenza" = 0**
+
+    # In[165]:
+
 
     # Left join idoso com indicador_vacina
 
@@ -1020,12 +1167,12 @@ def gerar_banco():
     )
 
 
-    #idoso['agg_vacinas_influenza'].value_counts()
-
-
     # ### **Indicador VI** - Consulta com dentista na APS nos últimos 12 meses - Dashboard
     # 
     # ### Lista Nominal: Data da última consulta e Alerta quando for "não consta"
+
+    # In[166]:
+
 
     fao_atend_odonto = (
         fao_v2
@@ -1047,27 +1194,43 @@ def gerar_banco():
         .group_by("co_fat_cidadao_pec")
         .agg(
             pl.col("idade").first().alias("idade"),
-            
-            pl.col("cirurgiao_dentista")
-            .filter( (pl.col("dt_atendimento") >= calcular_data(24) )  )
-            .max()
+
+            pl.max("cirurgiao_dentista").alias("agg_cirurgiao_dentista_semdata"),
+
+            pl.col("dt_atendimento")
+                    .filter( (pl.col("cirurgiao_dentista") == 1) & (pl.col("dt_atendimento") >= calcular_data(24)  ))
+                    .max()
+                    .alias("dt_ultimo_atend_odonto"),
+
+        )
+        .with_columns(
+
+
+            pl.when(
+                (pl.col("dt_ultimo_atend_odonto") >= calcular_data(24) ) &
+                (pl.col("agg_cirurgiao_dentista_semdata") == 1) 
+            )
+            .then(1)
+            .otherwise(0)
             .alias("agg_cirurgiao_dentista"),
 
-            pl.col("cirurgiao_dentista")
-            .filter( (pl.col("dt_atendimento") >= calcular_data(12) )  &  (pl.col("idade") >= 61) )
-            .max()
+            pl.when(
+                (pl.col("dt_ultimo_atend_odonto") >= calcular_data(12) ) &
+                (pl.col("agg_cirurgiao_dentista_semdata") == 1)  &
+                (pl.col("idade") >= 61)
+            )
+            .then(0)
+            .otherwise(1)
             .alias("agg_alerta_cirurgiao_dentista"),
 
-            pl.col("cirurgiao_dentista")
-            .filter( (pl.col("dt_atendimento") >= calcular_data(12) ))
-            .max()
+            pl.when(
+                (pl.col("dt_ultimo_atend_odonto") >= calcular_data(12) ) &
+                (pl.col("agg_cirurgiao_dentista_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
             .alias("agg_dashboard_cirurgiao_dentista"),
 
-    
-            pl.col("dt_atendimento")
-            .filter( (pl.col("dt_atendimento") >= calcular_data(24) )  )  
-            .max()
-            .alias("dt_ultimo_atend_odonto"),
         )
     ).drop("idade")
 
@@ -1078,6 +1241,9 @@ def gerar_banco():
     # 
     # ##### - Data da última avaliação: **"dt_ultimo_atend_odonto"**
     # ##### - Alerta se "Não consta": **"agg_cirurgiao_dentista" = 0**
+
+    # In[167]:
+
 
     # Left join idoso com indicador_dentista
 
@@ -1092,12 +1258,18 @@ def gerar_banco():
     )
 
 
-    #idoso['agg_cirurgiao_dentista'].value_counts()
+    # In[ ]:
+
+
+
 
 
     # ### **Indicador VII** - Aplicação da IVCF-20 - Dashboard
     # 
     # ### Lista Nominal: Alerta quando for "não"
+
+    # In[168]:
+
 
 
 
@@ -1113,24 +1285,41 @@ def gerar_banco():
         ).group_by("co_fat_cidadao_pec")
         .agg(
             pl.col("idade").first().alias("idade"),
-            
-            pl.col("ivcf")
-                .filter(pl.col("dt_atendimento") >= dt_24meses)
-                .max()
-                .alias("agg_ivcf_aplicado"),
 
-            pl.col("ivcf")
-            .max()
-            .alias("agg_dashboard_ivcf_aplicado"),
+            pl.max("ivcf").alias("agg_ivcf_semdata"),
+            
+            pl.col("dt_atendimento")
+                    .filter( (pl.col("ivcf") == 1) & (pl.col("dt_atendimento") >= calcular_data(24)  ))
+                    .max()
+                    .alias("dt_ultimo_ivcf"),
             
         ).with_columns(
+
             pl.when(
-                (pl.col("agg_dashboard_ivcf_aplicado") == 1) &
-                (pl.col("idade") >= 61) 
+                (pl.col("dt_ultimo_ivcf") >= calcular_data(24) ) &
+                (pl.col("agg_ivcf_semdata") == 1) 
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_ivcf_aplicado"),
+
+            pl.when(
+                (pl.col("agg_ivcf_semdata") == 1)  &
+                (pl.col("idade") >= 61)
             )
             .then(0)
             .otherwise(1)
             .alias("agg_alerta_ivcf_aplicado"),
+
+            pl.when(
+                (pl.col("dt_ultimo_ivcf") >= calcular_data(12) ) &
+                (pl.col("agg_ivcf_semdata") == 1)
+            )
+            .then(1)
+            .otherwise(0)
+            .alias("agg_dashboard_ivcf_aplicado")
+
+            
         )
     ).select("co_fat_cidadao_pec","agg_ivcf_aplicado","agg_alerta_ivcf_aplicado","agg_dashboard_ivcf_aplicado")
 
@@ -1155,10 +1344,10 @@ def gerar_banco():
     # 
     # ##### - Alerta se "Não consta": **"agg_ivcf_avaliado" = 0**
 
-    #idoso['agg_ivcf_aplicado'].value_counts()
-
-
     # ## Passo 8. Criar tabela pessoa final com todas as variáveis necessárias para próximas etapas de desenvolvimento do Painel
+
+    # In[169]:
+
 
     # arrumando variáveis de unidade de saúde e equipe
 
@@ -1182,9 +1371,6 @@ def gerar_banco():
             .then(None)
             .otherwise(pl.col("codigo_unidade_saude"))
             .alias("codigo_unidade_saude"),
-        # pl.col("codigo_unidade_saude")
-        # .str.replace_all('-', "")
-        # .cast(pl.Int32,strict=False).alias("codigo_unidade_saude")
         ])
     )
 
@@ -1213,11 +1399,11 @@ def gerar_banco():
             .then(None)
             .otherwise(pl.col("nu_ine"))
             .alias("nu_ine"),
-        # pl.col("nu_ine")
-        # .str.replace_all('-', "")
-        # .cast(pl.Int32,strict=False).alias("nu_ine2")
         ]).filter(pl.col("st_registro_valido_equipe") == 1)
     )
+
+
+    # In[170]:
 
 
     # adicionando informações cidadaos conforme prioridades entre tabelas
@@ -1251,6 +1437,9 @@ def gerar_banco():
     )
 
 
+    # In[171]:
+
+
     #padronizando informações de endereço
     #endereço prioridade: domilicio -> cidadao
     colunas_cidadao = [
@@ -1281,6 +1470,8 @@ def gerar_banco():
         .alias(nomes)  # Mantém o nome original da coluna do cidadão
         for cidadao, domicilio, nomes in zip(colunas_cidadao, colunas_domicilio,colunas_nomes)
     ]
+    tabela_idoso_final = tabela_idoso_final.with_columns(expressoes)
+
     tabela_idoso_final = tabela_idoso_final.with_columns(expressoes)
 
 
