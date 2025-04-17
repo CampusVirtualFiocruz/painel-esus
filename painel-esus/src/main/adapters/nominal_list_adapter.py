@@ -485,7 +485,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=self.convert_nan(user["total_consulta_medico_enfermeiro"]),
                 exibir_alerta=user["agg_alerta_medicos_enfermeiros"] == 1,
-                descricao="Total de consultas médicas e/ou de enfermagem",
+                descricao="Total de consultas médicas e/ou de enfermagem nos últimos 12 meses:",
                 tipo_alerta="total_consulta_medico_enfermeiro",
                 classificacao='12-meses'
             )
@@ -497,7 +497,7 @@ class IdosoNominalListAdapter:
                     self.convert_date(user["data_penultima_consulta_medico_enfermeiro"]),
                 ],
                 exibir_alerta=user["agg_alerta_medicos_enfermeiros"] == 1,
-                descricao="Data das últimas duas consultas médicas e/ou de enfermagem",
+                descricao="Data das consultas médicas e/ou de enfermagem nos últimos 12 meses:",
                 tipo_alerta="data_ultimo_atendimento_medicos",
                 classificacao='12-meses'
             )
@@ -508,7 +508,7 @@ class IdosoNominalListAdapter:
                     "Sim" if user['agg_peso_altura'] == 1 else "Não"
                 ),
                 exibir_alerta=user["agg_alerta_peso_altura"] == 1,
-                descricao="Registro de peso e altura na mesma data de duas consultas médicas e/ou de enfermagem",
+                descricao="Houve registro simultâneo de peso e altura nos últimos 24 meses?",
                 tipo_alerta="alerta_peso_altura",
                 classificacao='24-meses'
             )
@@ -517,7 +517,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=self.convert_date(user["data_ultimo_creatinina"]),
                 exibir_alerta=user["agg_alerta_creatinina"] == 1,
-                descricao="Data do último registro de Creatinina ",
+                descricao="Data do registro de exame de creatinina nos últimos 24 meses:",
                 tipo_alerta="data_ultimo_registro_creatinina",
                 classificacao='24-meses'
             )
@@ -528,7 +528,7 @@ class IdosoNominalListAdapter:
                     self.convert_nan(user['total_visitas_domiciliares_acs'])
                 ),
                 exibir_alerta=user["agg_alerta_visitas_domiciliares_acs"] == 1,
-                descricao="Número de visitas domiciliares por ACS/TACS ",
+                descricao="Número de visitas domiciliares por ACS/TACS nos últimos 24 meses",
                 tipo_alerta="data_ultimo_registro_creatinina",
                 classificacao='24-meses'
             )
@@ -537,7 +537,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=self.convert_date(user["data_ultima_vacina"]),
                 exibir_alerta=user["agg_alerta_vacinas_influenza"] == 1,
-                descricao="Data de registro de vacina influenza",
+                descricao="Data de registro de vacina contra influenza nos últimos 24 meses",
                 tipo_alerta="data_ultima_vacina_influenza",
                 classificacao='24-meses'
             )
@@ -548,7 +548,7 @@ class IdosoNominalListAdapter:
             AlertRecord(
                 data=self.convert_date(user["data_ultimo_atendendimento_odonto"]),
                 exibir_alerta=user["agg_alerta_cirurgiao_dentista"] == 1,
-                descricao="Data da consulta odontológica na APS ",
+                descricao="Data das consultas odontológicas na APS nos últimos 24 meses",
                 tipo_alerta="alerta_cirurgiao_dentista",
                 classificacao='24-meses'
             )
@@ -559,7 +559,7 @@ class IdosoNominalListAdapter:
                     "Sim" if user["agg_ivcf_aplicado"] == 1 else "Não"
                 ),
                 exibir_alerta=user["agg_alerta_ivcf_aplicado"] == 1,
-                descricao="Avaliação do IVCF-20:",
+                descricao="Houve avaliação do IVCF-20 nos últimos 24 meses?",
                 tipo_alerta="alerta_ivcf_aplicado",
                 classificacao='24-meses'
             )

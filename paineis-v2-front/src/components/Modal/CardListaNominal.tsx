@@ -1,7 +1,7 @@
 import moment from "moment";
 import { capitalizeName } from "../../utils/stringUtils";
 import { groupBy } from "../../utils";
-import { content } from "../../assets/content/content";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/Tooltip";
 
 export function parseText(text: string | number): number | string {
   if (text === null || text === 0 || text === "" || text === "0") {
@@ -104,46 +104,62 @@ export function CardListaNominal({ item }: { item: any }) {
                             "Referente aos últimos " + content?.[title]
                           ).toUpperCase()}
                         </div>} */}
-                        <div style={{ marginLeft: "30px", maxWidth: "500px" }}>
+                        <div style={{ marginLeft: "30px", maxWidth: "500px", cursor: "help" }}>
                           {registerContent.map((registro: any) => (
                             <>
-                              <div className="latest-checkups">
-                                <p style={{ position: "relative" }}>
-                                  {registro?.descricao !==
-                                    "data-da-ultima-glicemia-capilar" && (
-                                    <>
-                                      {Boolean(registro?.exibirAlerta) && (
-                                        <span
-                                          className="iconCircle iconAlerta ms-2"
-                                          title="Alertas"
-                                          style={{
-                                            position: "absolute",
-                                            left: "-35px",
-                                          }}
-                                        >
-                                          !
-                                        </span>
-                                      )}
-                                      <strong>{registro?.descricao}</strong>
-                                      <span>
-                                        {Array.isArray(registro?.data) ? (
-                                          registro.data?.map(
-                                            (registerItem: any) => (
-                                              <div style={{ display: "block" }}>
-                                                ●&nbsp;{parseText(registerItem)}
+                              <Tooltip>
+                                <TooltipContent className="Tooltip">
+                                  <div>
+                                    Os sinais de alertas correspondem à não
+                                    conformidade com as orientações de boas
+                                    práticas, dentro de um período de 12 meses,
+                                    preconizadas pelo Ministério da Saúde
+                                  </div>
+                                </TooltipContent>
+                                <TooltipTrigger>
+                                  <div className="latest-checkups">
+                                    <p style={{ position: "relative" }}>
+                                      {registro?.descricao !==
+                                        "data-da-ultima-glicemia-capilar" && (
+                                        <>
+                                          {Boolean(registro?.exibirAlerta) && (
+                                            <span
+                                              className="iconCircle iconAlerta ms-2"
+                                              title="Alertas"
+                                              style={{
+                                                position: "absolute",
+                                                left: "-35px",
+                                              }}
+                                            >
+                                              !
+                                            </span>
+                                          )}
+                                          <strong>{registro?.descricao}</strong>
+                                          <span>
+                                            {Array.isArray(registro?.data) ? (
+                                              registro.data?.map(
+                                                (registerItem: any) => (
+                                                  <div
+                                                    style={{ display: "block" }}
+                                                  >
+                                                    &nbsp;
+                                                    {parseText(registerItem)}
+                                                  </div>
+                                                )
+                                              )
+                                            ) : (
+                                              <div>
+                                                &nbsp;
+                                                {parseText(registro?.data)}
                                               </div>
-                                            )
-                                          )
-                                        ) : (
-                                          <div>
-                                            ●&nbsp;{parseText(registro?.data)}
-                                          </div>
-                                        )}
-                                      </span>
-                                    </>
-                                  )}
-                                </p>
-                              </div>
+                                            )}
+                                          </span>
+                                        </>
+                                      )}
+                                    </p>
+                                  </div>
+                                </TooltipTrigger>
+                              </Tooltip>
                             </>
                           ))}
                         </div>

@@ -38,14 +38,7 @@ const reportSections: any = [
           componentStyle: {
             height: "500px",
           },
-          xAxis: {
-            sort: [
-              "60 a 69 anos",
-              "70 a 79 anos",
-              "80 a 89 anos",
-              "90 a 99 anos",
-            ],
-          },
+         
           yAxis: {
             name: content?.["total-idosas-ubs"],
           },
@@ -93,7 +86,6 @@ const reportSectionsSecond: any = [
       },
       "dois-registros-peso-altura": {
         Chart: Donut,
-        footerNote: <>*Pelo menos 01 (um) registro</>,
         config: {
           formatterKind: "perc",
           radius: [0, 80],

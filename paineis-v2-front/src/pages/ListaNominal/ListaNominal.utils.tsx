@@ -67,6 +67,17 @@ export const columns = ({ handleClick, condicao }: any) => {
       ),
     },
     {
+      name: "raca",
+      header: "Raça",
+      sortable: false,
+      render: (item: any) => (
+        <span
+        >
+            {item?.racaCor || "-"}
+        </span>
+      ),
+    },
+    {
       name: "equipe",
       header: "Equipe",
       sortable: true,
