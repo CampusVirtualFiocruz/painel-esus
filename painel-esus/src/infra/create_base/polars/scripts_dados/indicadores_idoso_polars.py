@@ -10,6 +10,8 @@ from dateutil.relativedelta import relativedelta
 from .codigos_cbo import *
 
 
+
+
 #from utils import ler_dados_raw,escrever_dados_raw
 def ler_dados_raw(nome_parquet,columns=""):
 
@@ -250,13 +252,13 @@ def gerar_banco():
     )
 
 
-    # In[132]:
+    # In[10]:
 
 
     ### separando informações de interesse exames - sem ciaps e cids, apenas procedimentos avaliados ou solicitados
 
 
-    # In[133]:
+    # In[11]:
 
 
     exames = (
@@ -272,7 +274,7 @@ def gerar_banco():
 
     # ### Manipulando dados comuns aos indicadores
 
-    # In[134]:
+    # In[12]:
 
 
 
@@ -371,7 +373,7 @@ def gerar_banco():
     )
 
 
-    # In[135]:
+    # In[13]:
 
 
     # print(tb_pessoa_v2.glimpse())
@@ -379,7 +381,7 @@ def gerar_banco():
 
     # ### Total de pessoas idosas - Dashboard
 
-    # In[136]:
+    # In[14]:
 
 
     today = date.today()
@@ -401,7 +403,7 @@ def gerar_banco():
                 .otherwise(today.year - pl.col("dt_nasc_cidadao").dt.year() - 1).alias("idade")))
 
 
-    # In[137]:
+    # In[15]:
 
 
     idoso = tb_pessoa_v2.filter(
@@ -409,7 +411,7 @@ def gerar_banco():
     )
 
 
-    # In[138]:
+    # In[16]:
 
 
     #dataframe para adicionar a todo os indicadores para conferir se a idade é maior ou igual a 61 anos
@@ -418,29 +420,39 @@ def gerar_banco():
 
     # ### Pessoas idosas por sexo - Dashboard
 
-    # In[139]:
+    # In[17]:
 
 
     # COUNT ACV
     #tb_pessoa_v2['no_sexo_cidadao'].value_counts()
+    categorias_validas_sexo = ["MASCULINO", "FEMININO", "INDETERMINADO"]
 
-
-    # In[140]:
-
-
-    # idoso['no_sexo_cidadao'].value_counts()
+    idoso = idoso.with_columns(
+        pl.when(pl.col("no_sexo_cidadao").str.to_uppercase().is_in(categorias_validas_sexo))
+        .then(pl.col("no_sexo_cidadao").str.to_uppercase())  # Mantém e padroniza para maiúsculas
+        .otherwise(pl.lit("NÃO INFORMADO"))  # Substitui valores inválidos
+        .alias("no_sexo_cidadao")  # Atualiza a coluna original
+    )
 
 
     # ### Pessoas idosas por raça/cor - Dashboard
 
-    # In[141]:
+    # In[18]:
 
 
+    categorias_validas = ["Branca", "Preta", "Amarela", "Parda", "Indígena"]
+
+    idoso = idoso.with_columns(
+        pl.when(pl.col("ds_raca_cor").is_in(categorias_validas))
+            .then(pl.col("ds_raca_cor"))  # Mantém o valor original se for válido
+            .otherwise(pl.lit("NÃO INFORMADO"))  # Substitui valores inválidos
+            .alias("ds_raca_cor")  # Atualiza a coluna original
+    )
 
 
     # ### Pessoas idosas por faixa etária - Dashboard
 
-    # In[142]:
+    # In[19]:
 
 
     idoso = (idoso
@@ -456,7 +468,7 @@ def gerar_banco():
     )
 
 
-    # In[143]:
+    # In[20]:
 
 
     #idoso['faixa_etaria'].value_counts()
@@ -464,7 +476,7 @@ def gerar_banco():
 
     # ### Total de pessoas atendidas  nos últimos 12 meses - Dashboard
 
-    # In[144]:
+    # In[21]:
 
 
     total_pessoas_atd = (
@@ -489,32 +501,7 @@ def gerar_banco():
     # 
     # ### Lista Nominal: Alerta quando  a quantidade for < 2
 
-    # In[145]:
-
-
-    aa = (fai_v2.join(
-            df_idade,
-            on="co_fat_cidadao_pec",
-            how="inner"
-        )
-        .select("co_seq_fat_atd_ind", "co_fat_cidadao_pec", "dt_atendimento", "co_dim_cbo_1", "co_dim_cbo_2","idade")
-        .filter(
-            (pl.col("co_dim_cbo_1").is_in(medicos_codigos) |
-            pl.col("co_dim_cbo_2").is_in(medicos_codigos)) |
-            (pl.col("co_dim_cbo_1").is_in(enfermeiros_codigos) |
-            pl.col("co_dim_cbo_2").is_in(enfermeiros_codigos))
-        )
-        .with_columns(
-            (pl.col("co_dim_cbo_1").is_in(medicos_codigos) |
-            pl.col("co_dim_cbo_2").is_in(medicos_codigos)).alias("is_medico"),
-
-            (pl.col("co_dim_cbo_1").is_in(enfermeiros_codigos) |
-            pl.col("co_dim_cbo_2").is_in(enfermeiros_codigos)).alias("is_enfermeiro")
-        )
-    )
-
-
-    # In[146]:
+    # In[22]:
 
 
     fai_idoso_12meses = (
@@ -563,32 +550,48 @@ def gerar_banco():
             # alerta 12
 
             pl.when(
-                pl.col("co_seq_fat_atd_ind")
-                .filter((pl.col("dt_atendimento") >= dt_12meses) & (pl.col("idade") >= 61))
-                .n_unique() >= 2
+                
+                    (pl.col("co_seq_fat_atd_ind")
+                    .filter(pl.col("dt_atendimento") >= dt_12meses)
+                    .n_unique() >= 2
+                )
             )
-            .then(0)
-            .otherwise(1)
+            .then(0)  
+            .otherwise(1)  
             .alias("agg_alerta_medicos_enfermeiros"),
 
+    
+        
             (pl.col("co_seq_fat_atd_ind")
                 .filter( (pl.col("dt_atendimento") >= dt_12meses) )
                 .n_unique() >= 2)
                 .cast(pl.Int8)
                 .alias("agg_dashboard_medicos_enfermeiros"),
-        )
-        .select(
+        ).with_columns(
+            pl.when(
+                (pl.col("idade") <= 60 ) 
+            )
+            .then(0)
+            .otherwise(pl.col("agg_alerta_medicos_enfermeiros"))
+            .alias("agg_alerta_medicos_enfermeiros"),             
+        ).select(
             "co_fat_cidadao_pec",
             "agg_medicos_enfermeiros",
             "agg_alerta_medicos_enfermeiros",
             "total_consulta_med_enferm",
             "idade",
-            "duas_ultimas_datas_combinadas"
+            "duas_ultimas_datas_combinadas",
         )
     )
 
 
-    # In[147]:
+    # In[23]:
+
+
+    fai_idoso_12meses.filter(pl.col("co_fat_cidadao_pec") == 3901)
+
+
+    # In[24]:
 
 
     # separando as datas
@@ -626,7 +629,7 @@ def gerar_banco():
     # ##### - e quantidade de consultas realizadas nos últimos 12 meses (**"total_consulta_med_enferm"**)
     # ##### - Alerta se **"agg_medicos_enfermeiros" = 0**
 
-    # In[148]:
+    # In[25]:
 
 
     # Left join idoso com indicador_medicos_enfermeiros
@@ -637,11 +640,14 @@ def gerar_banco():
         how="left"
     ).with_columns(
         pl.col("agg_medicos_enfermeiros").fill_null(0),
-        pl.col("agg_alerta_medicos_enfermeiros").fill_null(1)
+        pl.when(pl.col("idade") > 60)
+            .then(pl.col("agg_alerta_medicos_enfermeiros").fill_null(1))
+            .otherwise(pl.col("agg_alerta_medicos_enfermeiros"))
+            .alias("agg_alerta_medicos_enfermeiros")
     )
 
 
-    # In[149]:
+    # In[26]:
 
 
     #idoso['agg_medicos_enfermeiros'].value_counts()
@@ -651,7 +657,7 @@ def gerar_banco():
     # 
     # ### Lista Nominal: Alerta quando for "não"
 
-    # In[150]:
+    # In[27]:
 
 
     # tabelas fonte: fai, fao e vis_dom
@@ -725,25 +731,25 @@ def gerar_banco():
     )
 
 
-    # In[151]:
+    # In[28]:
 
 
     #peso_altura.filter(pl.col("co_fat_cidadao_pec") == 64756).sort("dt_atendimento", descending=True).select("co_fat_cidadao_pec","nu_altura","nu_peso","dt_atendimento","dt_nascimento")
 
 
-    # In[152]:
+    # In[29]:
 
 
     #indicador_peso_altura_v1.filter(pl.col("co_fat_cidadao_pec") == 64756)
 
 
-    # In[153]:
+    # In[30]:
 
 
     #indicador_peso_altura_v1
 
 
-    # In[154]:
+    # In[31]:
 
 
     # Agora, pegando as datas de consultas com médicos e/ou enfermeiros
@@ -787,7 +793,7 @@ def gerar_banco():
 
 
 
-    # In[155]:
+    # In[32]:
 
 
     # Juntando dados datas peso e altura + medicos e enfermeiros
@@ -812,7 +818,7 @@ def gerar_banco():
     # ##### - Registro de peso e altura na mesma data de duas consultas médicas ou de enfermagem **(Sim = 1/Não = 0)**
     # ##### - Alerta se **"agg_peso_altura" = 0**
 
-    # In[156]:
+    # In[33]:
 
 
 
@@ -849,17 +855,25 @@ def gerar_banco():
         )
         .with_columns(
             pl.when(
-                    (pl.col("agg_dashboard_peso_altura") == 1) &
-                    (pl.col("idade") >= 61)
+                    (pl.col("agg_dashboard_peso_altura") == 1)
                 )
                 .then(0)
                 .otherwise(1)
                 .alias("agg_alerta_peso_altura")
         )
+        .with_columns(
+            pl.when(
+                    (pl.col("idade") <= 60)
+                )
+            .then(0)
+            .otherwise(pl.col("agg_alerta_peso_altura"))
+            .alias("agg_alerta_peso_altura"),     
+        )
+        
     )
 
 
-    # In[157]:
+    # In[34]:
 
 
     # Left join idoso com indicador_peso_altura
@@ -871,11 +885,14 @@ def gerar_banco():
     ).with_columns(
         pl.col("agg_dashboard_peso_altura").fill_null(0),
         pl.col("agg_peso_altura").fill_null(0),
-        pl.col("agg_alerta_peso_altura").fill_null(1),
+        pl.when(pl.col("idade") > 60)
+            .then(pl.col("agg_alerta_peso_altura").fill_null(1))
+            .otherwise(pl.col("agg_alerta_peso_altura"))
+            .alias("agg_alerta_peso_altura")
     )
 
 
-    # In[158]:
+    # In[35]:
 
 
     #idoso['agg_peso_altura'].value_counts()
@@ -885,7 +902,7 @@ def gerar_banco():
     # 
     # ### Lista Nominal: Data da última avaliação e Alerta quando for "não consta"
 
-    # In[159]:
+    # In[36]:
 
 
     creatinina_dfs = (pl.concat([fao_v2, fai_v2], how="diagonal"))
@@ -939,12 +956,19 @@ def gerar_banco():
 
             pl.when(
                 (pl.col("dt_ultimo_creatinina") >= calcular_data(12) ) &
-                (pl.col("agg_creatinina_semdata") == 1)  &
-                (pl.col("idade") >= 61)
+                (pl.col("agg_creatinina_semdata") == 1)  
             )
             .then(0)
             .otherwise(1)
             .alias("agg_alerta_creatinina"),
+        ).with_columns(
+            pl.when(
+                (pl.col("idade") <= 60 )
+            )
+            .then(0)
+            .otherwise(pl.col("agg_alerta_creatinina"))
+            .alias("agg_alerta_creatinina"),
+                
 
             pl.when(
                 (pl.col("dt_ultimo_creatinina") >= calcular_data(12) ) &
@@ -964,7 +988,7 @@ def gerar_banco():
     # ##### - Data da última avaliação: **"dt_ultimo_creatinina"**
     # ##### - Alerta se "Não consta": **"agg_creatinina" = 0**
 
-    # In[160]:
+    # In[37]:
 
 
     # Left join idoso com indicador_creatinina
@@ -975,8 +999,12 @@ def gerar_banco():
         how="left"
     ).with_columns(
         pl.col("agg_creatinina").fill_null(0),
-        pl.col("agg_alerta_creatinina").fill_null(1),
+        #pl.col("agg_alerta_creatinina").fill_null(1),
         pl.col("agg_dashboard_creatinina").fill_null(0),
+        pl.when(pl.col("idade") > 60)
+            .then(pl.col("agg_alerta_creatinina").fill_null(1))
+            .otherwise(pl.col("agg_alerta_creatinina"))
+            .alias("agg_alerta_creatinina")
     )
 
 
@@ -984,7 +1012,7 @@ def gerar_banco():
     # 
     # ### Lista Nominal:  ALERTA quando a quantidade for < 2
 
-    # In[161]:
+    # In[38]:
 
 
     visita_asc = (
@@ -1006,6 +1034,11 @@ def gerar_banco():
             .filter(pl.col("dt_atendimento") >= calcular_data(24))  
             .count()  
             .alias("total_visitas_domiciliares_acs"),
+
+            pl.col("dt_atendimento")
+            .filter(pl.col("dt_atendimento") >= calcular_data(12))  
+            .count()  
+            .alias("total_visitas_domiciliares_acs_12"),
             
             pl.min("dt_atendimento").alias("min_date"),
             pl.max("dt_atendimento").alias("max_date")
@@ -1024,17 +1057,24 @@ def gerar_banco():
             .alias("agg_visitas_domiciliares_acs"),
 
             pl.when(
-                (pl.col("total_visitas_domiciliares_acs") >= 2) &
+                (pl.col("total_visitas_domiciliares_acs_12") >= 2) &
                 (pl.col("diff_dias") >= 30) &
-                (pl.col("idade") >= 61) &
                 (pl.col("max_date") >= calcular_data(12))
             )
             .then(0)
             .otherwise(1)
             .alias("agg_alerta_visitas_domiciliares_acs"),
 
+        ).with_columns(
             pl.when(
-                (pl.col("total_visitas_domiciliares_acs") >= 2) &
+                (pl.col("idade") <= 60) 
+            )
+            .then(0)
+            .otherwise(pl.col("agg_alerta_visitas_domiciliares_acs"))
+            .alias("agg_alerta_visitas_domiciliares_acs"),       
+
+            pl.when(
+                (pl.col("total_visitas_domiciliares_acs_12") >= 2) &
                 (pl.col("diff_dias") >= 30) &
                 (pl.col("max_date") >= calcular_data(12))
             )
@@ -1054,7 +1094,7 @@ def gerar_banco():
 
     # 
 
-    # In[162]:
+    # In[39]:
 
 
     # Left join idoso com indicador_acs/tacs
@@ -1070,7 +1110,7 @@ def gerar_banco():
     )
 
 
-    # In[163]:
+    # In[40]:
 
 
     #idoso['agg_visitas_domiciliares_acs'].value_counts()
@@ -1080,7 +1120,7 @@ def gerar_banco():
     #     
     # ### Lista Nominal: Data da última vacina e Alerta quando for "não consta"
 
-    # In[164]:
+    # In[41]:
 
 
     vacina_registro = (
@@ -1113,13 +1153,19 @@ def gerar_banco():
         .with_columns(
             pl.when(
                 (pl.col("dt_ultimo_vacina_influenza") >= calcular_data(12) ) &
-                (pl.col("agg_vacina_influenza_semdata") == 1)  &
-                (pl.col("idade") >= 61)
+                (pl.col("agg_vacina_influenza_semdata") == 1)
             )
             .then(0)
             .otherwise(1)
             .alias("agg_alerta_vacinas_influenza"),
 
+        ).with_columns(
+            pl.when(
+                (pl.col("idade") <= 60) 
+            )
+            .then(0)
+            .otherwise(pl.col("agg_alerta_vacinas_influenza"))
+            .alias("agg_alerta_vacinas_influenza"),    
             
         pl.when(
                 (pl.col("dt_ultimo_vacina_influenza") >= calcular_data(24) ) &
@@ -1151,7 +1197,7 @@ def gerar_banco():
     # ##### - Data da última avaliação: **"dt_ultima_vacina"**
     # ##### - Alerta se "Não consta": **"agg_vacinas_influenza" = 0**
 
-    # In[165]:
+    # In[42]:
 
 
     # Left join idoso com indicador_vacina
@@ -1171,7 +1217,7 @@ def gerar_banco():
     # 
     # ### Lista Nominal: Data da última consulta e Alerta quando for "não consta"
 
-    # In[166]:
+    # In[43]:
 
 
     fao_atend_odonto = (
@@ -1223,6 +1269,15 @@ def gerar_banco():
             .otherwise(1)
             .alias("agg_alerta_cirurgiao_dentista"),
 
+        ).with_columns(
+            
+            pl.when(
+                (pl.col("idade") <= 60) 
+            )
+            .then(0)
+            .otherwise(pl.col("agg_alerta_cirurgiao_dentista"))
+            .alias("agg_alerta_cirurgiao_dentista"),     
+
             pl.when(
                 (pl.col("dt_ultimo_atend_odonto") >= calcular_data(12) ) &
                 (pl.col("agg_cirurgiao_dentista_semdata") == 1)
@@ -1242,7 +1297,7 @@ def gerar_banco():
     # ##### - Data da última avaliação: **"dt_ultimo_atend_odonto"**
     # ##### - Alerta se "Não consta": **"agg_cirurgiao_dentista" = 0**
 
-    # In[167]:
+    # In[44]:
 
 
     # Left join idoso com indicador_dentista
@@ -1268,7 +1323,7 @@ def gerar_banco():
     # 
     # ### Lista Nominal: Alerta quando for "não"
 
-    # In[168]:
+    # In[45]:
 
 
 
@@ -1304,12 +1359,20 @@ def gerar_banco():
             .alias("agg_ivcf_aplicado"),
 
             pl.when(
-                (pl.col("agg_ivcf_semdata") == 1)  &
-                (pl.col("idade") >= 61)
+                (pl.col("agg_ivcf_semdata") == 1) 
             )
             .then(0)
             .otherwise(1)
             .alias("agg_alerta_ivcf_aplicado"),
+        ).with_columns(
+
+            
+            pl.when(
+                (pl.col("idade") <= 60) 
+            )
+            .then(0)
+            .otherwise(pl.col("agg_alerta_ivcf_aplicado"))
+            .alias("agg_alerta_ivcf_aplicado"),      
 
             pl.when(
                 (pl.col("dt_ultimo_ivcf") >= calcular_data(12) ) &
@@ -1346,7 +1409,7 @@ def gerar_banco():
 
     # ## Passo 8. Criar tabela pessoa final com todas as variáveis necessárias para próximas etapas de desenvolvimento do Painel
 
-    # In[169]:
+    # In[46]:
 
 
     # arrumando variáveis de unidade de saúde e equipe
@@ -1403,7 +1466,7 @@ def gerar_banco():
     )
 
 
-    # In[170]:
+    # In[47]:
 
 
     # adicionando informações cidadaos conforme prioridades entre tabelas
@@ -1437,7 +1500,7 @@ def gerar_banco():
     )
 
 
-    # In[171]:
+    # In[48]:
 
 
     #padronizando informações de endereço
@@ -1472,7 +1535,7 @@ def gerar_banco():
     ]
     tabela_idoso_final = tabela_idoso_final.with_columns(expressoes)
 
-    tabela_idoso_final = tabela_idoso_final.with_columns(expressoes)
+
 
 
     tabela_idoso_final = tabela_idoso_final.rename({
