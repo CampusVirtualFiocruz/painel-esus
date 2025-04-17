@@ -85,7 +85,7 @@ const reportSectionsSecond: any = [
           componentStyle: {
             height: "250px",
           },
-          colors: ["#0069D0", "#E4E4E4", "#84aaff", "#5c7ea0"],
+          colors: ["#E4E4E4","#0069D0",  "#84aaff", "#5c7ea0"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
