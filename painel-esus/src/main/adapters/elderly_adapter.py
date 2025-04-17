@@ -75,14 +75,25 @@ class ElderlyAdapter:
         return result
         
     def by_race(self, response):
-        result = { "data": [] }
-        map_ = {}
+        result = { "data": [
+            { 'tag':'branca', 'value': 0},
+            { 'tag':'preta', 'value': 0},
+            { 'tag':'parda', 'value': 0},
+            { 'tag':'amarela', 'value': 0},
+            { 'tag':'indigena', 'value': 0},            
+            ]
+        }
+        map_ = {
+            'branca': 0,
+            'preta': 1,
+            'parda': 2,
+            'amarela': 3,
+            'indigena': 4,
+        }
         for resp in response:
             if resp[0] is not None and resp[1] is not None:
-                result["data"].append({
-                    "tag": str(resp[0]).lower(),
-                    "value": resp[1]
-                })
+                key = str(resp[0]).lower()
+                result["data"][map_[key]]["value"] =  resp[1]
        
         return result
     
