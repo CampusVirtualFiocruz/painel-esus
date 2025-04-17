@@ -10,5 +10,6 @@ def by_gender(cnes: int = None, equipe: int = None):
     FROM read_parquet('./dados/output/idoso.parquet')
     {where_clause} 
     group by faixa_etaria, sexo
+    order by faixa_etaria asc
     """
 

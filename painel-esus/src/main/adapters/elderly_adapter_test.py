@@ -8,7 +8,7 @@ adapter = ElderlyAdapter()
 def test_by_gender():
     resp = repo.by_gender()
     result = adapter.by_gender(resp)
-    print(result)
+    # print(result)
     
 def test_by_race():
     resp = repo.by_race()

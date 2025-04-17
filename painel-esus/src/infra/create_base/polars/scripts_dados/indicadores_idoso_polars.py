@@ -11,11 +11,14 @@ from .codigos_cbo import *
 
 
 
+#from utils import ler_dados_raw,escrever_dados_raw
 def ler_dados_raw(nome_parquet,columns=""):
+
     try:
         os.getenv("ENV")
+    # print("aa")
         lazy_on = getenv("LAZY_ON", False) # se lazy_on true ler e escrever dados lazy, se lazy_on false, ler os dados da forma normal
-        print(lazy_on)
+
         working_directory  = os.getcwd()
 
         input_path = os.path.join(working_directory, "dados", "input") 
@@ -44,7 +47,6 @@ def escrever_dados_raw(df,nome_parquet):
     input_path = os.path.join(working_directory, "dados", "input") 
 
     output_path = os.path.join(working_directory, "dados", "output")  
-    print(pl.__version__)
     if lazy_on == 1:
          #tb_pessoa = pl.scan_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet")
          print(output_path + os.sep + nome_parquet)
@@ -57,7 +59,7 @@ def escrever_dados_raw(df,nome_parquet):
 
 
 def gerar_banco():
-
+    start_time = time.time()
     # ## Passo 3. Separar variáveis da(s) tabela(s) necessárias ao desenvolvimento do Indicador
 
     # ACV
@@ -174,7 +176,7 @@ def gerar_banco():
 
     dim_cbo = dim_cbo.with_columns(pl.col("co_seq_dim_cbo").cast(pl.Int64))
 
-# AJUSTE de CBO
+    # AJUSTE de CBO
 
     #FAI
 
@@ -426,12 +428,29 @@ def gerar_banco():
     #idoso['faixa_etaria'].value_counts()
 
 
+    # ### Total de pessoas atendidas  nos últimos 12 meses - Dashboard
+
+    total_pessoas_atd = (
+        fai_v2
+        .filter( pl.col("dt_atendimento") >= dt_12meses )
+        .group_by("co_fat_cidadao_pec")
+        .agg()
+        .with_columns(pl.lit(1).alias("pessoa_atendida_12_meses"))
+
+    )
+
+    idoso = idoso.join(
+        total_pessoas_atd,
+        on="co_fat_cidadao_pec",
+        how="left"
+    ).with_columns(
+        pl.col("pessoa_atendida_12_meses").fill_null(0),
+    )
+
+
     # ### **Indicador I** - Pessoa idosa com duas consultas médica e/ou de enfermagem nos últimos 12 meses - Dashboard
     # 
     # ### Lista Nominal: Alerta quando  a quantidade for < 2
-
-
-
 
     fai_idoso_12meses = (
         fai_v2.join(
@@ -1299,12 +1318,6 @@ def gerar_banco():
         'dt_ultimo_atend_odonto': 'data_ultimo_atendendimento_odonto',
         'dt_ultimo_creatinina': 'data_ultimo_creatinina'
     })
-
-
-    # deixando variáveis em ordem alfabética
-  #  tabela_idoso_final = tabela_idoso_final.select(sorted(tabela_idoso_final.columns))
-
-
     tabela_idoso_final = (tabela_idoso_final
                         .select(
                                 'agg_cirurgiao_dentista',
@@ -1365,9 +1378,8 @@ def gerar_banco():
                                 'tipo_localizacao_domicilio',
                                 'total_consulta_medico_enfermeiro',
                                 'total_visitas_domiciliares_acs',
+                                'pessoa_atendida_12_meses'
 
                             )
                         )
-
-
     escrever_dados_raw(tabela_idoso_final,"idoso.parquet")

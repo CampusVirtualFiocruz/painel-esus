@@ -37,7 +37,7 @@ const useReportDataIdosasV2 = ({ ubsId, squadId }: reportBasicInfo) => {
           }
         ),
         "duas-consultas-medicas-enfermagem": Api.get(
-          `/elderly/two-acs-visits${ubsParam}`,
+          `/elderly/two-medical-appointments${ubsParam}`,
           {
             params: {
               equipe: squadId,
