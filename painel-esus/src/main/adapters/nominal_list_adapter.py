@@ -504,7 +504,7 @@ class IdosoNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=(
-                    "Sim" if user['agg_alerta_peso_altura'] == 1 else "Não"
+                    "Sim" if user['agg_peso_altura'] == 1 else "Não"
                 ),
                 exibir_alerta=user["agg_alerta_peso_altura"] == 1,
                 descricao="Registro de peso e altura na mesma data de duas consultas médicas e/ou de enfermagem",
@@ -526,7 +526,7 @@ class IdosoNominalListAdapter:
                 data=(
                     self.convert_nan(user['total_visitas_domiciliares_acs'])
                 ),
-                exibir_alerta=user["agg_visitas_domiciliares_acs"] != 1,
+                exibir_alerta=user["agg_alerta_visitas_domiciliares_acs"] == 1,
                 descricao="Número de visitas domiciliares por ACS/TACS ",
                 tipo_alerta="data_ultimo_registro_creatinina",
                 classificacao='24-meses'
