@@ -128,7 +128,7 @@ export const content: any = {
     "Distribuição de crianças por local de moradia",
 
   //idosas
-  "total-idosas-ubs": "Total de pessoas idosas na UBS",
+  "total-idosas-ubs": "Total de pessoas idosas",
   "pessoas-por-sexo": "Pessoas idosas por faixa etária/sexo",
   "distribuicao-pessoas-raca-cor": "Distribuição de pessoas idosas cadastradas por raça/cor",
   "total-idosas-atendidas": "Total de pessoas idosas atendidas",
@@ -143,10 +143,10 @@ export const content: any = {
   "sem-avaliacao": "Sem avaliação",
   "consultadas": "Consultadas",
   "sem-consulta": "Sem consulta",
-  "dois-registros-peso-altura": "Dois registros de peso e altura",
+  "dois-registros-peso-altura": "Registro simultâneo de peso e altura",
   "duas-visitas-domiciliares-acs-tacs": "Duas visitas domiciliares por ACS/TACS",
   "avalicao-creatina": "Avaliação de creatinina",
-  "registro-vacina-influenza": "Registro de vacina influenza",
+  "registro-vacina-influenza": "Registro de vacina contra influenza",
   "consulta-com-dentista-aps": "Consulta com dentista na APS",
   "ivcf-20": "Aplicação do Índice de Vulnerabilidade Clínico-Funcional (IVCF-20)",
 

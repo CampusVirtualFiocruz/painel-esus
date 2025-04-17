@@ -97,13 +97,13 @@ export function CardListaNominal({ item }: { item: any }) {
                   ({ title, content: registerContent }: any) => {
                     return (
                       <>
-                        {Boolean(title) && title !== "undefined" && <div
+                        {/* {Boolean(title) && title !== "undefined" && <div
                           style={{ marginBottom: "30px", fontWeight: "bold" }}
                         >
                           {(
                             "Referente aos últimos " + content?.[title]
                           ).toUpperCase()}
-                        </div>}
+                        </div>} */}
                         <div style={{ marginLeft: "30px", maxWidth: "500px" }}>
                           {registerContent.map((registro: any) => (
                             <>

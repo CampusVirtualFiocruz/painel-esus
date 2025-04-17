@@ -33,7 +33,7 @@ type generalConfigs = {
 type LinearChart = {
   data: groupedValuesInput;
   config?: {
-    xAxis?: { name?: string };
+    xAxis?: { name?: string; sort: any };
     yAxis?: { name?: string };
     hideLegend?: boolean;
     invertAxis?: boolean;
@@ -88,6 +88,7 @@ export type DonutChart = PercentualChart & {
     radiusStart?: number | string;
     halfDonut?: boolean;
     roseType?: string;
+    sort?: any;
   };
 };
 export type DonutGroupChart = PercentualGroupChart;

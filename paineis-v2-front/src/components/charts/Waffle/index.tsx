@@ -6,16 +6,16 @@ import { FaUser } from "react-icons/fa";
 import { formatAsPercent } from "../../../utils";
 
 const colors = [
-  "#0B5B98",
-  "#0A406A",
-  "#49E8DB",
-  "#6595FF",
-  "#0B5B98",
-  "#D3D4DD",
-];
+   "#0B5B98",
+   "#0A406A",
+   "#49E8DB",
+   "#6595FF",
+   "#0B5B98",
+   "#D3D4DD",
+]
 
 const Waffle = (props: DonutChart) => {
-  const data = props.data.reduce(
+  let waffleData = props.data.reduce(
     (prev, curr) =>
       [
         ...prev,
@@ -28,17 +28,30 @@ const Waffle = (props: DonutChart) => {
     []
   );
 
-  const total = data.reduce(
+  if(props?.config?.sort){
+    const suggestionOrder = props?.config?.sort;
+    const sortedDataList = waffleData?.sort((a: any, b: any) => {
+      return (
+        suggestionOrder?.findIndex((s: any) => s === a?.label) -
+        suggestionOrder?.findIndex((s: any) => s === b?.label)
+      );
+    });
+    waffleData = sortedDataList;
+  }
+
+  const total = waffleData.reduce(
     (prev, curr: { value: number }) => (curr?.value ?? 0) + prev,
     0
   );
+
+  const cloneWaffleInfo:any = JSON.parse(JSON.stringify(waffleData));
 
   return (
     <div style={{ maxWidth: "600px", margin: "0 auto" }}>
       <Nivo
         width={600}
         height={300}
-        data={data}
+        data={cloneWaffleInfo}
         total={total}
         rows={10}
         columns={20}
@@ -47,6 +60,7 @@ const Waffle = (props: DonutChart) => {
         borderRadius={0}
         borderColor={"#ffffff"}
         motionStagger={2}
+        fillDirection="bottom"
       />
       <div
         style={{
@@ -56,7 +70,7 @@ const Waffle = (props: DonutChart) => {
           marginTop: "40px",
         }}
       >
-        {data.map(({ id, label, value }, dataIndex) => (
+        {cloneWaffleInfo.map(({ id, label, value }: any, dataIndex: any) => (
           <div key={id} style={{ width: "100%", textAlign: "center" }}>
             <div
               style={{
@@ -65,7 +79,7 @@ const Waffle = (props: DonutChart) => {
                 justifyContent: "center",
               }}
             >
-              <FaUser size="26px" color={colors?.[dataIndex % data?.length]} />
+              <FaUser size="26px" color={colors?.[dataIndex]} />
             </div>
             <h4 style={{ paddingTop: "8px" }}>
               <b>{formatAsPercent(String((value / total) * 100))}</b>

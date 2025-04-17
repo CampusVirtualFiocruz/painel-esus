@@ -34,9 +34,17 @@ const reportSections: any = [
       "pessoas-por-sexo": {
         Chart: Bar,
         config: {
-          colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
+          colors: ["#84aaff", "#0069d0", "#e4e4e4", "#5c7ea0"],
           componentStyle: {
             height: "500px",
+          },
+          xAxis: {
+            sort: [
+              "60 a 69 anos",
+              "70 a 79 anos",
+              "80 a 89 anos",
+              "90 a 99 anos",
+            ],
           },
           yAxis: {
             name: content?.["total-idosas-ubs"],
@@ -48,7 +56,14 @@ const reportSections: any = [
         config: {
           formatterKind: "perc",
           radiusStart: "0%",
-          colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
+          sort: [
+            "Branca",
+            "Preta",
+            "Amarela",
+            "Parda",
+            "Indígena",
+            "Não informado",
+          ],
           yAxis: {
             name: content?.["total-cadastros"],
           },
@@ -66,6 +81,7 @@ const reportSectionsSecond: any = [
         config: {
           formatterKind: "perc",
           radius: [0, 80],
+          sort: ["Com duas ou\nmais visitas", "Com uma ou\nnenhuma visita"],
           componentStyle: {
             height: "250px",
           },
@@ -77,9 +93,11 @@ const reportSectionsSecond: any = [
       },
       "dois-registros-peso-altura": {
         Chart: Donut,
+        footerNote: <>*Pelo menos 01 (um) registro</>,
         config: {
           formatterKind: "perc",
           radius: [0, 80],
+          sort: ["Com dois ou\nmais registros", "Com um ou\nnenhum registro"],
           componentStyle: {
             height: "250px",
           },
@@ -91,10 +109,16 @@ const reportSectionsSecond: any = [
       },
       "duas-visitas-domiciliares-acs-tacs": {
         Chart: Donut,
-        footerNote: <>*com intervalo mínimo de<br /> 30 dias entre as visitas</>,
+        footerNote: (
+          <>
+            *com intervalo mínimo de
+            <br /> 30 dias entre as visitas
+          </>
+        ),
         config: {
           formatterKind: "perc",
           radius: [0, 80],
+          sort: ["Com duas ou\nmais visitas", "Com uma ou\nnenhuma visita"],
           componentStyle: {
             height: "250px",
           },
@@ -112,6 +136,7 @@ const reportSectionsSecond: any = [
           formatterKind: "perc",
           roseType: "radius",
           radius: [50, 80],
+          sort: ["Avaliadas", "Sem avaliação"],
           colors: ["#6595FF", "#A3A3A3", "#84aaff", "#5c7ea0"],
           yAxis: {
             name: content?.["total-cadastros"],
@@ -124,6 +149,7 @@ const reportSectionsSecond: any = [
           formatterKind: "perc",
           roseType: "radius",
           radius: [50, 80],
+          sort: ["Vacinadas", "Não\nVacinadas"],
           colors: ["#49E8DB", "#A3A3A3", "#84aaff", "#5c7ea0"],
           yAxis: {
             name: content?.["total-cadastros"],
@@ -136,6 +162,7 @@ const reportSectionsSecond: any = [
           formatterKind: "perc",
           roseType: "radius",
           radius: [50, 80],
+          sort: ["Consultadas", "Sem consulta"],
           colors: ["#0069D0", "#A3A3A3", "#84aaff", "#5c7ea0"],
           yAxis: {
             name: content?.["total-cadastros"],
@@ -149,6 +176,7 @@ const reportSectionsSecond: any = [
       config: {
         formatterKind: "perc",
         radiusStart: "35%",
+        sort: ["Avaliadas", "Sem avaliação"],
         componentStyle: {
           marginTop: "30px",
           marginBottom: "-150px",
@@ -173,7 +201,7 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
 
     if (chartConfigs) {
       const xAxisNames = data?.map((d: any) => content?.[d?.tag] ?? d?.tag);
-      chartConfigs.xAxis = {};
+      chartConfigs.xAxis = { data: [], ...chartConfigs.xAxis };
       chartConfigs.xAxis.data = xAxisNames;
     }
 
@@ -200,27 +228,35 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
         >
           {content?.[chartKey] || chartKey}
         </h5>
-        {Boolean(chartList?.[chartKey]?.subtitle) && <p
-          style={{
-            textAlign: "center",
-            padding: renderSmall ? "30px" : "initial",
-          }}
-        >
-          {content?.[chartList?.[chartKey]?.subtitle] ?? chartList?.[chartKey]?.subtitle}
-        </p>}
+        {Boolean(chartList?.[chartKey]?.subtitle) && (
+          <p
+            style={{
+              textAlign: "center",
+              padding: renderSmall ? "30px" : "initial",
+            }}
+          >
+            {content?.[chartList?.[chartKey]?.subtitle] ??
+              chartList?.[chartKey]?.subtitle}
+          </p>
+        )}
         <CustomChart data={data} config={chartConfigs} />
-        {Boolean(chartList?.[chartKey]?.footerNote) && <center><p
-          style={{
-            width: "100%",
-            position: "absolute",
-            bottom: "-70px",
-            textAlign: "center",
-            fontSize: "12px",
-            padding: renderSmall ? "20px" : "initial",
-          }}
-        >
-          {content?.[chartList?.[chartKey]?.footerNote] ?? chartList?.[chartKey]?.footerNote}
-        </p></center>}
+        {Boolean(chartList?.[chartKey]?.footerNote) && (
+          <center>
+            <p
+              style={{
+                width: "100%",
+                position: "absolute",
+                bottom: "-70px",
+                textAlign: "center",
+                fontSize: "12px",
+                padding: renderSmall ? "20px" : "initial",
+              }}
+            >
+              {content?.[chartList?.[chartKey]?.footerNote] ??
+                chartList?.[chartKey]?.footerNote}
+            </p>
+          </center>
+        )}
       </div>
     );
   });
@@ -231,7 +267,7 @@ const IdosaV2 = () => {
   const equipe = params.get("equipe") as any;
 
   const { id } = useParams<PainelParams>();
-  const reportData = useReportDataIdosasV2({ ubsId: id, squadId: equipe });
+  const reportData: any = useReportDataIdosasV2({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
 
   if (reportData?.isLoading) {
