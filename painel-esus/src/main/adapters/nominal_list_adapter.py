@@ -469,6 +469,7 @@ class IdosoNominalListAdapter:
         self.tipo_logradouro = user["tipo_logradouro"]
         self.complemento = user["complemento"]
         self.cep = user["cep"]
+        self.raca_cor = user["raca_cor"]
         self.telefone = user["telefone"]
         self.possui_alertas = (
             user["agg_alerta_medicos_enfermeiros"] == 1
@@ -594,6 +595,7 @@ class IdosoNominalListAdapter:
                 "tipoLogradouro": self.tipo_logradouro,
                 "cep": self.cep,
                 "telefone": self.telefone,
+                "racaCor": self.raca_cor,
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [

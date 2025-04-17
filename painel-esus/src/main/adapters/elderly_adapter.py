@@ -90,8 +90,8 @@ class ElderlyAdapter:
         
     def two_medical_appointment(self, response):
         result = {"data": [
-            { "tag": "um-nenhum-registro", "value": 0},
-            { "tag": "dois-mais-registros", "value": 0},
+            { "tag": "uma-nenhuma-consulta", "value": 0},
+            { "tag": "duas-mais-consultas", "value": 0},
         ]}
         for resp in response:
             if resp[0] is not None and resp[1] is not None:
