@@ -35,6 +35,8 @@ class ElderlyRepository:
         sql = by_gender(cnes,equipe)
         con = duckdb.connect()
         result = con.sql(sql).fetchall()
+        if len(result) > 0 and '100' in result[0][0]: 
+            result = [list(result[2:])+list(result[:2]) ][0]
         return result
     
     def by_race(self, cnes: int = None, equipe: int = None):

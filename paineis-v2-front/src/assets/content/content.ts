@@ -2,6 +2,7 @@ export const content: any = {
   //comum
   urbana: "Zona Urbana",
   rural: "Zona Rural",
+  periurbana: "Zona Periurbana",
   sim: "Sim",
   nao: "Não",
   masc: "Masculino",
@@ -42,6 +43,7 @@ export const content: any = {
   "90-a-94-anos": "90 a 94 anos",
   "95-a-99-anos": "95 a 99 anos",
   "100-ou-mais": "100+ anos",
+  "100mais": "100+ anos",
 
   amarela: "Amarela",
   parda: "Parda",
@@ -130,24 +132,27 @@ export const content: any = {
   //idosas
   "total-idosas-ubs": "Total de pessoas idosas",
   "pessoas-por-sexo": "Pessoas idosas por faixa etária/sexo",
-  "distribuicao-pessoas-raca-cor": "Distribuição de pessoas idosas cadastradas por raça/cor",
+  "distribuicao-pessoas-raca-cor":
+    "Distribuição de pessoas idosas cadastradas por raça/cor",
   "total-idosas-atendidas": "Total de pessoas idosas atendidas",
-  "duas-consultas-medicas-enfermagem": "Duas consultas médicas e/ou de enfermagem",
+  "duas-consultas-medicas-enfermagem":
+    "Duas consultas médicas e/ou de enfermagem",
   "uma-nenhuma-consulta": "Com duas ou\nmais consultas",
   "duas-mais-consultas": "Com uma ou\nnenhuma consulta",
   "dois-mais-registros": "Com dois ou\nmais registros",
   "um-nenhum-registro": "Com um ou\nnenhum registro",
   "duas-mais-visitas": "Com duas ou\nmais visitas",
   "uma-nenhuma-visita": "Com uma ou\nnenhuma visita",
-  "avaliadas": "Avaliadas",
+  avaliadas: "Avaliadas",
   "sem-avaliacao": "Sem avaliação",
-  "consultadas": "Consultadas",
+  consultadas: "Consultadas",
   "sem-consulta": "Sem consulta",
   "dois-registros-peso-altura": "Registro simultâneo de peso e altura",
-  "duas-visitas-domiciliares-acs-tacs": "Duas visitas domiciliares por ACS/TACS",
+  "duas-visitas-domiciliares-acs-tacs":
+    "Duas visitas domiciliares por ACS/TACS",
   "avalicao-creatina": "Avaliação de creatinina",
   "registro-vacina-influenza": "Registro de vacina contra influenza",
   "consulta-com-dentista-aps": "Consulta com dentista na APS",
-  "ivcf-20": "Aplicação do Índice de Vulnerabilidade Clínico-Funcional (IVCF-20)",
-
+  "ivcf-20":
+    "Aplicação do Índice de Vulnerabilidade Clínico-Funcional (IVCF-20)",
 };

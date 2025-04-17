@@ -17,7 +17,7 @@ def get_medical_cares(cnes: int = None, equipe: int = None):
         if equipe is not None and equipe:
             where_clause += f" and codigo_equipe  = {equipe} "
     return f"""
-    SELECT count(*) total 
+    SELECT sum(pessoa_atendida_12_meses) total 
     FROM read_parquet('./dados/output/idoso.parquet') 
     {where_clause}
     """

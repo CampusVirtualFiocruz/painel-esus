@@ -64,6 +64,7 @@ class ElderlyAdapter:
         for key in map_.keys():
             _key = key.replace("a","-")
             _key += '-anos'
+            _key = _key.replace("100m-is-anos", "100-ou-mais")
             value ={
                 "tag": _key,
                 "value": map_[key]
