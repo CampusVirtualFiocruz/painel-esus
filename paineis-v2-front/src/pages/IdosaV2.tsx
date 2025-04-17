@@ -134,10 +134,10 @@ const reportSectionsSecond: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          roseType: "radius",
+          //roseType: "radius",
           radius: [50, 80],
           sort: ["Avaliadas", "Sem avaliação"],
-          colors: ["#6595FF", "#A3A3A3", "#84aaff", "#5c7ea0"],
+          colors: ["#6595FF", "#E4E4E4", "#84aaff", "#5c7ea0"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
@@ -147,10 +147,10 @@ const reportSectionsSecond: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          roseType: "radius",
+          //roseType: "radius",
           radius: [50, 80],
           sort: ["Vacinadas", "Não\nVacinadas"],
-          colors: ["#49E8DB", "#A3A3A3", "#84aaff", "#5c7ea0"],
+          colors: ["#49E8DB", "#E4E4E4", "#84aaff", "#5c7ea0"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
@@ -160,10 +160,10 @@ const reportSectionsSecond: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          roseType: "radius",
+          //roseType: "radius",
           radius: [50, 80],
           sort: ["Consultadas", "Sem consulta"],
-          colors: ["#0069D0", "#A3A3A3", "#84aaff", "#5c7ea0"],
+          colors: ["#0069D0", "#E4E4E4", "#84aaff", "#5c7ea0"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
