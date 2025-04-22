@@ -17,27 +17,30 @@ class AbstractGenerateBase(CreateBasesRepositoryInterface):
     def create_base(self):
         try:
             parquet_file = f"{self._base}.parquet"
-            # os.remove("dados/input/" + parquet_file)
             chunk_size = getenv("CHUNK_SIZE", 3000)
             
-            working_directory  = os.getcwd()
-            input_path = os.path.join(working_directory, "dados", "input") 
-            
+            working_directory = os.getcwd()
+            input_path = os.path.join(working_directory, "dados", "input")
+            full_path = os.path.join(input_path, parquet_file)
+
+            first_chunk = True
+
             with self.connection_handler as db:
                 engine = db.get_engine()
                 for chunk_dataframe in pd.read_sql(
-                    sql= text(self.base_sql), 
+                    sql=text(self.base_sql), 
                     con=engine, 
                     chunksize=chunk_size,
                     dtype=self.dtype,
                     parse_dates=self.parse_date
-                    ):
-                    
+                ):
                     chunk_dataframe.to_parquet(
-                        path=input_path+os.sep+parquet_file,
+                        path=full_path,
                         engine='fastparquet',
-                        append=False,
+                        append=not first_chunk,
+                        compression='snappy'
                     )
+                    first_chunk = False
 
         except Exception as e:
             logging.error("BASE: {} \n {}".format(self._base, __name__))
