@@ -292,7 +292,8 @@ def create_env(
             "CHUNK_SIZE=50000\n",
             "POLARS_SKIP_CPU_CHECK=True\n",
             "LOG_API=https://painel-logs.painelsaude.info\n",
-            "APPLICATION_VERSION=0.9.2",
+            "APPLICATION_VERSION=0.9.3",
+            "LAZY_ON=0",
         ]
         f.writelines(lines)
         f.close()
