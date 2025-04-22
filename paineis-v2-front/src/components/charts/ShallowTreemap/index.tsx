@@ -9,7 +9,6 @@ export function ShallowTreemap(props: DonutChart) {
     tooltip: {
       trigger: "item",
       formatter: (val: any) => { 
-          console.log(val)
               return [
                 `<strong>${val.data.name} (${val.data.percent}%)</strong>`,
                 `${val.data.value}`,

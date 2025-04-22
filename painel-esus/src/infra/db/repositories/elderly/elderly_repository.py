@@ -1,117 +1,93 @@
 import pandas as pd
-from sqlalchemy import or_
-from src.infra.db.entities.equipes import Equipes
-from src.infra.db.entities.idoso import Idoso
-from src.infra.db.entities.pessoas import Pessoas
+import duckdb
+import json
 from src.infra.db.repositories.elderly.sqls import (
-    get_elderly_total_influenza,
-    get_elderly_total_odonto,
-    get_elderly_total_on_ubs_and_team,
-    group_by_age_gender,
-    group_by_age_location,
-    group_by_imc,
-    group_by_race,
-    total_hipertension_diabetes,
-)
+    get_total_ubs,get_medical_cares, get_total_card, by_gender, by_race, medical_appointments, height_records, acs_visits,
+    ivcf_20,creatinine,dentist_appointment,influenza_vaccines, get_elderly_base,nominal_download)
 from src.infra.db.settings.connection_local import DBConnectionHandler
-
-columns = [
-    Idoso.cidadao_pec,
-    Idoso.atendimentos_medicos,
-    Idoso.data_ultimo_atendimento_medicos,
-    Idoso.indicador_atendimentos_medicos,
-    Idoso.medicoes_peso_altura,
-    Idoso.data_ultima_medicao_peso_altura,
-    Idoso.indicador_medicoes_peso_altura,
-    Idoso.imc,
-    Idoso.categoria_imc,
-    Idoso.registros_creatinina,
-    Idoso.data_ultimo_registro_creatinina,
-    Idoso.indicador_registros_creatinina,
-    Idoso.vacinas_influenza,
-    Idoso.data_ultima_vacina_influenza,
-    Idoso.indicador_vacinas_influenza,
-    Idoso.atendimentos_odontologicos,
-    Idoso.data_ultimo_atendimento_odontologico,
-    Idoso.indicador_atendimento_odontologico,
-    Idoso.visitas_domiciliares_acs,
-    Idoso.data_ultima_visita_domiciliar_acs,
-    Idoso.indicador_visitas_domiciliares_acs,
-    Pessoas.co_cidadao,
-    Pessoas.raca_cor,
-    Pessoas.cpf,
-    Pessoas.cns,
-    Pessoas.nome,
-    Pessoas.nome_social,
-    Pessoas.data_nascimento,
-    Pessoas.idade,
-    Pessoas.sexo,
-    Pessoas.identidade_genero,
-    Pessoas.telefone,
-    Pessoas.ultima_atualizacao_cidadao,
-    Pessoas.ultima_atualizacao_fcd,
-    Pessoas.tipo_endereco,
-    Pessoas.endereco,
-    Pessoas.complemento,
-    Pessoas.numero,
-    Pessoas.bairro,
-    Pessoas.cep,
-    Pessoas.tipo_localidade,
-    Equipes.nome_unidade_saude,
-    Equipes.nome_equipe,
-    Equipes.micro_area,
-]
+from src.env.conf import getenv
+from src.main.adapters.nominal_list_adapter import mock_word
 
 class ElderlyRepository:
+    def __init__(self):
+        self.mock_data = getenv("MOCK", False, False) == 'True'
 
-    def find_total(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = get_elderly_total_on_ubs_and_team(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
+    def total_ubs(self, cnes: int = None, equipe: int = None):
+        sql = get_total_ubs(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+        
+    def total_card(self, cnes: int = None, equipe: int = None):
+            sql = get_total_card(cnes,equipe)
+            con = duckdb.connect()
+            result = con.sql(sql).fetchall()
+            return result
+            
 
-    def find_group_by_age_location(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_by_age_location(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_race(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_by_race(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_age_gender(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_by_age_gender(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_influenza_rate(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = get_elderly_total_influenza(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_odonto_rate(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = get_elderly_total_odonto(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_total_hipertension_diabetes(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = total_hipertension_diabetes(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
-    def find_group_by_imc(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler().get_engine().connect() as con:
-            sql = group_by_imc(cnes, equipe)
-            result = con.execute(sql)
-            return list(result)
-
+    def total_medical_cares(self, cnes: int = None, equipe: int = None):
+        sql = get_medical_cares(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
+    def by_gender(self, cnes: int = None, equipe: int = None):
+        sql = by_gender(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        if len(result) > 0 and '100' in result[0][0]: 
+            result = [list(result[2:])+list(result[:2]) ][0]
+        return result
+    
+    def by_race(self, cnes: int = None, equipe: int = None):
+        sql = by_race(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
+    def medical_appointment(self, cnes: int = None, equipe: int = None):
+        sql = medical_appointments(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
+    def height_records(self, cnes: int = None, equipe: int = None):
+        sql = height_records(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
+    def acs_visits(self, cnes: int = None, equipe: int = None):
+        sql = acs_visits(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
+    def creatinine(self, cnes: int = None, equipe: int = None):
+        sql = creatinine(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
+    def dentist_appointment(self, cnes: int = None, equipe: int = None):
+        sql = dentist_appointment(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
+    def ivcf_20(self, cnes: int = None, equipe: int = None):
+        sql = ivcf_20(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
+    def influenza_vaccines(self, cnes: int = None, equipe: int = None):
+        sql = influenza_vaccines(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
+    
     def find_filter_nominal(
         self,
         cnes: int,
@@ -121,130 +97,108 @@ class ElderlyRepository:
         cpf: str = None,
         equipe: int = None,
         query: str = None,
+        sort=[]
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
-        with DBConnectionHandler() as db_con:
-            users = (
-                db_con.session.query(*columns)
-                .distinct(Idoso.cidadao_pec)
-                .join(
-                    Pessoas,
-                    Pessoas.cidadao_pec == Idoso.cidadao_pec,
-                )
-                .join(
-                    Equipes,
-                    Equipes.cidadao_pec == Idoso.cidadao_pec,
-                )
-            )
+        con = duckdb.connect()
+        pessoas_sql = get_elderly_base()
+        conditions = []
+        or_conditions = []
 
-            conditions, or_conditions = [],[]
-            if cnes is not None and cnes:
-                conditions+=[Equipes.codigo_unidade_saude == cnes]
+        if cnes is not None and cnes:
+            conditions += [f"codigo_unidade_saude = {cnes}"]
 
-            if nome is not None and nome:
-                conditions+=[Pessoas.nome.ilike(f"%{nome}%")]
+        if query is not None and query:
+            or_conditions += [
+                f"cpf ilike '%{query}%'",
+                f"nome ilike '%{query}%'",
+                f"cns ilike  '%{query}%'",
+            ]
+        if equipe is not None and equipe:
+            conditions += [f"codigo_equipe = {equipe}"]
 
-            if cpf is not None and cpf:
-                conditions=+[Pessoas.cpf.ilike(f"%{cpf}%")]
+        where_clause = []
+        sql_where, sql, sql_or = "", "", ""
 
-            if equipe is not None and equipe:
-                conditions+=[Equipes.codigo_equipe == equipe]
+        if len(conditions) > 0:
+            sql += " AND ".join(conditions)
+            where_clause += [f"({sql})"]
 
-            if query is not None and query:
-                or_conditions += [
-                    Pessoas.cpf.ilike(f"%{query}%"),
-                    Pessoas.cns.ilike(f"%{query}%"),
-                    Pessoas.nome.ilike(f"%{query}%"),
-                ]
-            if len(conditions) > 0:
-                users = users.filter(*conditions)
+        if len(or_conditions) > 0:
+            sql_or += " OR ".join(or_conditions)
+            where_clause += [f"({sql_or})"]
 
-            if len(or_conditions) > 0:
-                users = users.filter(or_(*or_conditions))
+        if len(where_clause) > 0:
+            offset = max(0, page - 1) * pagesize
+            limit = pagesize
+            sql_where = " AND ".join(where_clause)
+            sql_where = f" WHERE {sql_where}"
+        if len(where_clause)>0:
+            offset = max(0, page - 1) * pagesize
+            limit = pagesize
+            sql_where = " AND ".join(where_clause)
+            sql_where = f" WHERE {sql_where}"
+
+        order = ''
+        order_list = []
+        mapped_columns = {
+            'name': 'nome',
+            'cpf':'cpf',
+            'cns': 'cns',
+            'idade': 'idade',
+            'sexo': 'sexo',
+            'equipe': 'nome_equipe',
+            'micro_area': 'micro_area'
+        }
+        if len(sort) > 0:
+            for s in sort:
+                filter = json.loads(s)
+                if filter["field"] not in mapped_columns: continue
                 
-            users = users.group_by(Idoso.cidadao_pec)
-            total = users.count()
-            users = (
-                users.order_by(Pessoas.nome)
-                .offset(max(0, page - 1) * pagesize)
-                .limit(pagesize)
-            )
-            return {
-                "itemsCount": total,
-                "itemsPerPage": pagesize,
-                "page": page,
-                "pagesCount": round(total / pagesize),
-                "items": list(users),
-            }
+                direction = filter['direction'] if 'direction' in filter else'asc'
+                columns = mapped_columns[filter["field"]]
+                order_list.append( f'{columns} {direction}')
+        else:
+            order_list = ['nome asc']
+            
+        if len(order_list)>0:
+            order = 'order by '
+            order += ", ".join(order_list)
+        
+        users = con.sql(
+            pessoas_sql
+            + sql_where
+            + f"  {order} LIMIT {limit} OFFSET {offset} "
+        ).df()
+
+        users = users.to_dict(orient="records")
+        total = len(con.sql(pessoas_sql + sql_where).fetchall())
+        return {
+            "itemsCount": total,
+            "itemsPerPage": pagesize,
+            "page": page,
+            "pagesCount": round(total / pagesize),
+            "items": users,
+        }
 
     def find_all_download(self, cnes: int = None, equipe: int = None):
-        with DBConnectionHandler() as db_con:
-            where_clause = ""
-            if cnes is not None and cnes:
-                where_clause +=  f' where e.codigo_unidade_saude = {cnes} '
-                if equipe is not None and equipe:
-                    where_clause +=  f' and e.codigo_equipe = {equipe} '
-            response = pd.read_sql_query(
-                con=db_con.get_engine(),
-                sql=f"""select
-                    p.cidadao_pec as codigo_cidadao,
-                    p.nome  as nome,
-                    p.cns as cns,
-                    p.cpf as cpf,
-                    p.sexo as sexo,
-                    p.raca_cor  as "raca/cor",
-                    group_concat(e.micro_area) micro_area,
-                    group_concat(e.nome_equipe) nome_equipe,
-                    e.nome_unidade_saude,
-                    STRFTIME( '%d-%m-%Y',p.data_nascimento) data_nascimento,
-                    p.idade ,
-                    p.tipo_endereco ,
-                    p.endereco || ' ' || p.numero logradouro,
-                    p.complemento,
-                    p.bairro ,
-                    p.cep,
-                    p.tipo_localidade ,
-                    i.atendimentos_medicos,
-                    STRFTIME( '%d-%m-%Y',i.data_ultimo_atendimento_medicos) data_ultimo_atendimento_medicos,
-                    i.medicoes_peso_altura , 
-                    STRFTIME( '%d-%m-%Y',i.data_ultima_medicao_peso_altura) data_ultima_medicao_peso_altura, 
-                    case 
-                        when i.indicador_medicoes_peso_altura  = 1 then 'SIM'
-                        when i.indicador_medicoes_peso_altura != 1 then 'NÃO'	
-                    end indicador_medicoes_peso_altura ,
-                    i.imc , 
-                    i.categoria_imc , 
-                    i.registros_creatinina , 
-                    STRFTIME( '%d-%m-%Y',i.data_ultimo_registro_creatinina) data_ultimo_registro_creatinina, 
-                    case 
-                        when i.indicador_registros_creatinina   = 1 then 'SIM'
-                        when i.indicador_registros_creatinina  != 1 then 'NÃO'	
-                    end indicador_registros_creatinina  ,
-                    case 
-                        when i.indicador_visitas_domiciliares_acs   = 1 then 'SIM'
-                        when i.indicador_visitas_domiciliares_acs  != 1 then 'NÃO'	
-                    end indicador_visitas_domiciliares_acs  ,
-                    i.visitas_domiciliares_acs , 
-                    STRFTIME( '%d-%m-%Y',i.data_ultima_visita_domiciliar_acs) data_ultima_visita_domiciliar_acs, 
-                    i.vacinas_influenza , 
-                    STRFTIME( '%d-%m-%Y',i.data_ultima_vacina_influenza) data_ultima_vacina_influenza, 
-                    case 
-                        when i.indicador_vacinas_influenza   = 1 then 'SIM'
-                        when i.indicador_vacinas_influenza  != 1 then 'NÃO'	
-                    end indicador_vacinas_influenza  ,
-                    i.atendimentos_odontologicos , 
-                    STRFTIME( '%d-%m-%Y',i.data_ultimo_atendimento_odontologico) data_ultimo_atendimento_odontologico, 
-                    case 
-                        when i.indicador_atendimento_odontologico 	   = 1 then 'SIM'
-                        when i.indicador_atendimento_odontologico 	  != 1 then 'NÃO'	
-                    end indicador_atendimento_odontologico 	  
-                from
-                    idoso i   join pessoas p on p.cidadao_pec = i.cidadao_pec 
-                    left join equipes e on e.cidadao_pec  = p.cidadao_pec 
-                {where_clause}
-group by p.cidadao_pec	
-order by p.nome
-                """,
-            )
-            return response
+        sql = nominal_download(cnes,equipe)
+        con = duckdb.connect()
+        response = con.sql(sql).df()
+        if self.mock_data:
+            def parse(x):
+                x['cpf'] = mock_word(x['cpf'], 2)
+                x['cns'] = mock_word(x['cns'], 2)
+                x['nome'] = mock_word(x['nome'], 3, True)
+                x['telefone'] = mock_word(x['telefone'], 2)
+                x['endereco'] = mock_word(x['endereco'], 2)
+                x['numero'] = mock_word(x['numero'], 2)
+                x['cep'] = mock_word(x['cep'], 2)
+                x['complemento'] = mock_word(x['complemento'], 2)
+                x['bairro'] = mock_word(x['bairro'], 2)
+                x['nome_unidade_saude'] = mock_word(x['nome_unidade_saude'], 2)
+                x['nome_equipe'] = mock_word(x['nome_equipe'], 2)
+                return x            
+            response=response.apply(parse, axis=1)
+        return response

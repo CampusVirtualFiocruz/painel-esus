@@ -5,31 +5,60 @@ import "./style.scss";
 
 export function Bar(props: BarChart) {
   const series = new Set<string>();
+  let inputData = props.data;
 
-  props.data.forEach(({ value }) => {
+  inputData.forEach(({ value }) => {
     Object.keys(value).forEach((opt) => {
       series.add(String(opt));
     });
   });
 
+  if (props?.config?.xAxis?.sort) {
+    const suggestionOrder = props?.config?.xAxis?.sort;
+    const sortedList = inputData?.sort((a: any, b: any) => {
+      return (
+        suggestionOrder?.findIndex((s: any) => s === content[a?.tag]) -
+        suggestionOrder?.findIndex((s: any) => s === content[b?.tag])
+      );
+    });
+    inputData = sortedList;
+  }
+
   const chartSeries = Array.from(series).map((s: string) => {
-    return {
+    const chartSeriesData = inputData.reduce(
+      (prev, curr) =>
+        [
+          ...prev,
+          {
+            value: curr?.value?.[s],
+            name: content?.[curr?.tag] || curr?.tag,
+          } as any,
+        ] as any,
+      []
+    );
+
+    const barChartResult: any = {
       name: content?.[s] || s,
       type: "bar",
       stack: "total",
-      data: props.data.reduce(
-        (prev, curr) =>
-          [
-            ...prev,
-            {
-              value: curr?.value?.[s],
-              name: content?.[curr?.tag] || curr?.tag,
-            } as any,
-          ] as any,
-        []
-      ),
+      data: chartSeriesData,
       ...props?.config,
     };
+
+    if (props?.config?.xAxis?.sort) {
+      const suggestionOrder = props?.config?.xAxis?.sort;
+      const sortedAxisList = barChartResult.xAxis.data?.sort(
+        (a: any, b: any) => {
+          return (
+            suggestionOrder?.findIndex((s: any) => s === a) -
+            suggestionOrder?.findIndex((s: any) => s === b)
+          );
+        }
+      );
+      barChartResult.xAxis.data = sortedAxisList;
+    }
+
+    return barChartResult;
   });
 
   const options: any = {
@@ -92,6 +121,7 @@ export function Bar(props: BarChart) {
         width: "100%",
         minWidth: "316px",
         height: "600px",
+        ...(props?.config?.componentStyle || {}),
       }}
       opts={{ renderer: "svg" }}
     />

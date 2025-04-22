@@ -86,7 +86,7 @@ export const ReportFooter = ({
       </div>
 
       {userCanSelectUBS() && (
-        <Link onClick={handleToPainelMunicipio} style={{ color: "#343131" }}>
+        <Link onClick={handleToPainelMunicipio} style={{ color: "#343131", zIndex: 2 }}>
           {content.buttonBackToCity}
         </Link>
       )}

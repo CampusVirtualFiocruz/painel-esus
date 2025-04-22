@@ -44,7 +44,6 @@ export const BarChart = ({ titulo, data, colors }: BarchartType) => {
     }
   }
   for (let i of Object.keys(dict)) {
-    console.log("->", i, dict[i]);
     series.push({
       label: i == "-" ? "Não Informado" : i,
       data: dict[i],
@@ -125,7 +124,6 @@ export const BarChart = ({ titulo, data, colors }: BarchartType) => {
       };
     }),
   };
-  console.log("data", data);
   return (
     <div className="bar">
       <div className="vertical ms-1 me-4">{titulo}</div>
@@ -154,7 +152,6 @@ const FaixaEtaria = () => {
       const url = "oral-health/get-cares-by-age-range";
       const path = id ? `${url}/${id}` : url;
       const response = await Api.get<FaixaEtariaResponse[]>(path);
-      console.log("faixa etaria", response.data);
       return response.data;
     },
     {

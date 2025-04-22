@@ -204,7 +204,7 @@ def get_nominal_list(cnes=None):
     response = None
 
     try:
-        _validation(request.args.to_dict(), schema)
+        # _validation(request.args.to_dict(), schema)
         http_response = request_adapter(
             request, diabetes_dashboard_get_nominal_list())
         response = jsonify(http_response.body)

@@ -1,14 +1,11 @@
 import { useRef, useState, useEffect } from "react";
 import ReactDom from "react-dom";
-import { CgClose } from "react-icons/cg";
-import moment from "moment";
-
 import { VFlow, Radio } from "bold-ui";
-
-import "./style.scss";
+import { CgClose } from "react-icons/cg";
+import { CardListaNominal } from "./CardListaNominal";
+import { profiles } from "../../utils";
 import "../../styles/listaNominal.scss";
-import { capitalize, profiles } from "../../utils";
-import { capitalizeName } from "../../utils/stringUtils";
+import "./style.scss";
 
 interface IModal {
   data: {
@@ -20,22 +17,22 @@ interface IModal {
   initialProfile?: string;
 }
 
-function parseText(text: string): number | string {
-  // Verifica se o texto pode ser convertido em número
+export function parseText(text: string | number): number | string {
+  if (text === null || text === 0 || text === "" || text === "0") {
+    return "-";
+  }
+
   const parsedNumber = Number(text);
   if (!isNaN(parsedNumber)) {
     return parsedNumber;
   }
 
-  // Verifica se o texto é uma data válida
-  const parsedDate = new Date(new Date(text));
+  const parsedDate = new Date(new Date(String(text)));
   if (!isNaN(parsedDate.getTime())) {
-    // Retorna a data formatada para o padrão localizado
     return parsedDate.toLocaleDateString("pt-BR", { timeZone: "UTC" });
   }
+
   return text;
-  // if (text == "-") return text;
-  // throw new Error("O texto não é nem um número nem uma data válida.");
 }
 
 export function bodyPrimeiroTrimestre() {
@@ -172,112 +169,6 @@ export function bodyBoasPraticasCuidadoPessoasHipertensao() {
   );
 }
 
-export function bodyDetalhesCadastro(item: any) {
-  return (
-    <div className="d-flex flex-column mb-4">
-      <div className="user-details">
-        <h1>
-          {capitalizeName(
-            item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
-              ? item?.nomeSocialSelecionado
-              : item?.nome
-          )}
-        </h1>
-        <div className="address">
-          <p>
-            <strong>CPF:</strong> {item?.cpf} <br />
-            <strong>CNS:</strong> {item?.cns} <br />
-            <strong>Data de nascimento:</strong>{" "}
-            {item?.dataNascimento
-              ? moment.utc(item.dataNascimento).format("DD/MM/YYYY")
-              : "-"}
-            <br />
-            {item?.tipoLogradouro && (
-              <>
-                <strong>Tipo Logradouro: </strong>
-                {item.tipoLogradouro}
-                <br />
-              </>
-            )}
-            <strong>Endereço:</strong>{" "}
-            {item?.endereco && item.endereco !== "None None"
-              ? capitalizeName(item.endereco).replace("S/n", "S/N")
-              : "-"}{" "}
-            <br />
-            <strong>Complemento:</strong>{" "}
-            {item?.complemento ? capitalizeName(item?.complemento) : "-"} <br />
-            <strong>CEP:</strong> {item?.cep ? item?.cep : "-"} <br />
-            <strong>Telefone de contato:</strong>{" "}
-            {item?.telefone ? item?.telefone : "-"}{" "}
-          </p>
-        </div>
-        {Array.isArray(item?.detalhesCondicaoSaude) &&
-          item?.detalhesCondicaoSaude.map((condicao: any) => (
-            <>
-              {Boolean(
-                condicao?.cidCondicaoSaude || condicao?.primeiroDiagnostico
-              ) ? (
-                <div className="health-condition">
-                  {condicao?.cidCondicaoSaude && (
-                    <>
-                      <p>
-                        Condição de saúde:{" "}
-                        {item.diagnostico == "autoreferido"
-                          ? "AUTORREFERIDO "
-                          : "CID "}
-                        {condicao?.cidCondicaoSaude.join(", ")}
-                      </p>
-                    </>
-                  )}
-                  {condicao?.primeiroDiagnostico && (
-                    <>
-                      <p>
-                        Data do primeiro registro da condição:{" "}
-                        {parseText(condicao?.primeiroDiagnostico)}
-                      </p>
-                    </>
-                  )}
-                </div>
-              ) : (
-                <br />
-              )}
-              {Array.isArray(condicao?.registros) &&
-                condicao?.registros.map((registro: any) => (
-                  <div className="latest-checkups">
-                    <p>
-                      {registro?.descricao !==
-                        "data-da-ultima-glicemia-capilar" && (
-                        <>
-                          <strong>{registro?.descricao}</strong>
-                          <div>
-                            <p>
-                              {registro?.data === null ||
-                              registro?.data === 0 ||
-                              registro?.data === "" ||
-                              registro?.data === "0"
-                                ? "-"
-                                : parseText(registro?.data)}
-                            </p>
-                            {Boolean(registro?.exibirAlerta) && (
-                              <span
-                                className="iconCircle iconAlerta ms-2"
-                                title="Alertas"
-                              >
-                                !
-                              </span>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </p>
-                  </div>
-                ))}
-            </>
-          ))}
-      </div>
-    </div>
-  );
-}
 
 export function bodyPerfil(
   selectedValue: string,
@@ -312,7 +203,6 @@ export const Modal = ({
   setProfile,
   initialProfile,
 }: IModal) => {
-  // close the modal when clicking outside the modal.
   const modalRef = useRef<HTMLDivElement | null>(null);
 
   const closeModal = (e: any) => {
@@ -321,7 +211,6 @@ export const Modal = ({
     }
   };
 
-  // Profile state selection.
   const [selectedValue, setSelectedValue] = useState<string>(
     initialProfile || ""
   );
@@ -335,7 +224,6 @@ export const Modal = ({
     if (setProfile) setProfile(value);
   };
 
-  // render the modal JSX in the portal div.
   return ReactDom.createPortal(
     <div className="container-modal" ref={modalRef} onClick={closeModal}>
       <div className="modal d-flex flex-column align-items-start justify-content-start px-5 py-2">
@@ -351,7 +239,7 @@ export const Modal = ({
         {data &&
           data.loaded === 6 &&
           bodyBoasPraticasCuidadoPessoasHipertensao()}
-        {data && data.loaded === 7 && bodyDetalhesCadastro(data)}
+        {data && data.loaded === 7 && <CardListaNominal item={data} />}
         {data &&
           data.loaded === 8 &&
           bodyPerfil(selectedValue, handleProfileChange)}

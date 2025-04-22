@@ -339,7 +339,6 @@ def get_complications(cnes: int = None, equipe: int = None, hypertension=True):
     sql_total = get_disease_base_sql(None, None, hypertension)
     sql = f""" with 
         atendimentos as ({sql}),
-        total_atendimentos as ({sql_total}),
         lista as (
             select 
                 sum(n_infarto_agudo) n_infarto_agudo, 
@@ -347,7 +346,7 @@ def get_complications(cnes: int = None, equipe: int = None, hypertension=True):
                 sum(n_renal) n_renal,
                 sum(n_coronariana) n_coronariana, 
                 sum(n_cerebrovascular) n_cerebrovascular,
-                (select count(*) from total_atendimentos) as total    
+                (select count(*) from atendimentos) as total    
             from atendimentos
             )
         select  *
@@ -386,8 +385,7 @@ def get_imc(cnes: int = None, equipe: int = None, hypertension=True):
     sql_total = get_disease_base_sql(None, None, hypertension)
     sql = f""" with 
     patients as ({sql}),
-    total_list as ({sql_total}),
-    total as (select count(*) total from total_list),
+    total as (select count(*) total from patients),
     imc_lista as (
         select imc_categoria, count(*) total from patients group by imc_categoria
     )

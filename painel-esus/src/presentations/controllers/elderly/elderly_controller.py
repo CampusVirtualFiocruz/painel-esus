@@ -6,8 +6,8 @@ from src.main.adapters.request_adapter import HttpRequest, HttpResponse
 
 class ElderlyController:
 
-    def __init__(self, use_case: ElderlyRepository):
-        self.__use_case = use_case
+    def __init__(self, repository: ElderlyRepository):
+        self.__repository = repository
         self._adapter = ElderlyAdapter()
 
     def parse_request(self, request: HttpRequest):
@@ -18,60 +18,81 @@ class ElderlyController:
             equipe = int(request.query_params["equipe"])
         return cnes, equipe
 
-    def total(self, request: HttpRequest) -> HttpResponse:
+    def total_ubs(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
-        response = self.__use_case.find_total(cnes, equipe)
-        result = self._adapter.total(response)
+        response = self.__repository.total_ubs(cnes, equipe)
+        result = self._adapter.total_ubs(response)
         return HttpResponse(status_code=200, body=result)
 
-    def grouping_by_ages_location(self, request: HttpRequest) -> HttpResponse:
+    def total_card(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
-        response = self.__use_case.find_group_by_age_location(cnes, equipe)
-        result = self._adapter.age_location(response)
+        response = self.__repository.total_card(cnes, equipe)
+        result = self._adapter.total_card(response)
         return HttpResponse(status_code=200, body=result)
 
-    def grouping_by_race(self, request: HttpRequest) -> HttpResponse:
+    
+    def total_medical_cares(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
-
-        response = self.__use_case.find_group_by_race(cnes, equipe)
-        result = self._adapter.group_by_race(response)
+        response = self.__repository.total_medical_cares(cnes, equipe)
+        result = self._adapter.total_medical_cares(response)
         return HttpResponse(status_code=200, body=result)
-
-    def grouping_by_gender(self, request: HttpRequest) -> HttpResponse:
+    
+    def by_gender(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
-        response = self.__use_case.find_group_by_age_gender(cnes, equipe)
-        result = self._adapter.group_by_gender(response)
+        response = self.__repository.by_gender(cnes, equipe)
+        result = self._adapter.by_gender(response)
         return HttpResponse(status_code=200, body=result)
-
-    def grouping_imc_rate(self, request: HttpRequest) -> HttpResponse:
+    
+    def by_race(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
-        response = self.__use_case.find_group_by_imc(cnes, equipe)
-        result = self._adapter.group_by_imc(response)
+        response = self.__repository.by_race(cnes, equipe)
+        result = self._adapter.by_race(response)
         return HttpResponse(status_code=200, body=result)
-
-    def grouping_influenza_rate(self, request: HttpRequest) -> HttpResponse:
+    
+    def medical_appointment(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
-
-        response = self.__use_case.find_group_by_influenza_rate(cnes, equipe)
-        result = self._adapter.influenza_rate(response)
+        response = self.__repository.medical_appointment(cnes, equipe)
+        result = self._adapter.two_medical_appointment(response)
         return HttpResponse(status_code=200, body=result)
-
-    def grouping_odonto_rate(self, request: HttpRequest) -> HttpResponse:
+    
+    def height_records(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
-
-        response = self.__use_case.find_group_by_odonto_rate(cnes, equipe)
-        result = self._adapter.odonto_rate(response)
+        response = self.__repository.height_records(cnes, equipe)
+        result = self._adapter.two_height_records(response)
         return HttpResponse(status_code=200, body=result)
-
-    def grouping_total_disease_related(self, request: HttpRequest) -> HttpResponse:
+    
+    def acs_visits(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
-
-        response = self.__use_case.find_total_hipertension_diabetes(cnes, equipe)
-        result = self._adapter.total_hipertension_diabetes(response)
+        response = self.__repository.acs_visits(cnes, equipe)
+        result = self._adapter.two_acs_visits(response)
+        return HttpResponse(status_code=200, body=result)
+    
+    def creatinine(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = self.parse_request(request)
+        response = self.__repository.creatinine(cnes, equipe)
+        result = self._adapter.creatinine(response)
+        return HttpResponse(status_code=200, body=result)
+    
+    def dentist_appointment(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = self.parse_request(request)
+        response = self.__repository.dentist_appointment(cnes, equipe)
+        result = self._adapter.dentist_appointment(response)
+        return HttpResponse(status_code=200, body=result)
+    
+    def ivcf_20(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = self.parse_request(request)
+        response = self.__repository.ivcf_20(cnes, equipe)
+        result = self._adapter.ivcf_20(response)
+        return HttpResponse(status_code=200, body=result)
+    
+    def influenza_vaccines(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = self.parse_request(request)
+        response = self.__repository.influenza_vaccines(cnes, equipe)
+        result = self._adapter.influenza_vaccines(response)
         return HttpResponse(status_code=200, body=result)
 
     def get_nominal_list(self, request: HttpRequest) -> HttpResponse:
-        cnes, equipe, nome, cpf, page, page_size, q = (
+        cnes, equipe, nome, cpf, page, page_size, q, sort = (
             None,
             None,
             None,
@@ -79,6 +100,7 @@ class ElderlyController:
             0,
             10,
             None,
+            []
         )
 
         if request.path_params and "cnes" in request.path_params:
@@ -100,7 +122,10 @@ class ElderlyController:
             equipe = request.query_params["equipe"]
         if request.query_params and "q" in request.query_params:
             q = request.query_params["q"]
-        response = self.__use_case.find_filter_nominal(
+            
+        if request.query_params and "sort[]" in request.query_params:
+            sort = request.query_params.getlist('sort[]')
+        response = self.__repository.find_filter_nominal(
             cnes=cnes,
             equipe=equipe,
             page=page,
@@ -108,11 +133,15 @@ class ElderlyController:
             nome=nome,
             cpf=cpf,
             query=q,
+            sort=sort
         )
 
-        result = self._adapter.nominal_list(response)
-        return HttpResponse(status_code=200, body=result)
+        response["items"] = [
+            self._adapter.nominal_list(r).to_dict() for r in response["items"]
+        ]
+        
+        return HttpResponse(status_code=200, body=response)
 
     def get_nominal_list_download(self, request: HttpRequest):
         cnes, equipe = self.parse_request(request)
-        return self.__use_case.find_all_download(cnes=cnes, equipe=equipe)
+        return self.__repository.find_all_download(cnes=cnes, equipe=equipe)

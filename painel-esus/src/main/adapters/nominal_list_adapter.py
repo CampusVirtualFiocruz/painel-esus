@@ -1,5 +1,6 @@
 # pylint: disable=R0902, W4901, W0611, C0103
-
+import pandas as pd
+import math
 import numpy as np
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
@@ -30,48 +31,59 @@ class AlertRecord:
         data,
         exibir_alerta,
         tipo_alerta: str,
+        classificacao: str = None
     ):
         self.descricao = descricao
         self.data = data
         self.exibir_alerta = exibir_alerta
         self.tipo_alerta = tipo_alerta
+        self.classificacao = classificacao
 
     def to_dict(self):
-        return dict(
-            {
+        response = {
                 "descricao": self.descricao,
                 "data": self.data,
                 "exibirAlerta": self.exibir_alerta,
                 "tipoAlerta": self.tipo_alerta,
             }
+        if self.classificacao is not None:
+            response["classificacao"] = self.classificacao
+        return dict(
+            response
         )
 
 
 class BaseNominalAdapter:
     def __init__(self, user):
-        endereco = user['endereco'] if user['endereco'] is not None else ""
-        endereco += " " + user['numero'] if user['numero'] is not None else ""
-        endereco += " " + user['bairro'] if user['bairro'] is not None else ""
+        if 'alerta_afericao_pa' not in user:
+            print('---------->')
+            print(user)
+            return 
+        endereco = self.get(user, 'endereco')
+        endereco += " " + self.get(user, 'numero')
+        endereco += " " + self.get(user, 'bairro')
 
         self.nome = user["nome"]
         self.nome_social = "-"
-        self.tipo_localidade = user["tipo_localidade"]
+        self.tipo_localidade = self.get(user,"tipo_localidade")
         self.cpf = user["cpf"]
         self.cns = user["cns"]
-        self.data_nascimento = user["data_nascimento"]
+        self.data_nascimento = self.get(user,"data_nascimento")
         self.idade = user["idade"]
         self.sexo = user["sexo"]
-        self.equipe = user["nome_equipe"]
-        self.microarea = user["micro_area"]
+        self.equipe = self.get(user,"nome_equipe")
+        self.microarea = self.get(user,"micro_area")
         self.endereco = endereco
-        self.tipo_logradouro = user["tipo_endereco"]
-        self.complemento = user["complemento"]
+        self.tipo_logradouro = self.get(user,"tipo_endereco")
+        self.complemento = self.get(user,"complemento")
         self.cep = user["cep"]
         self.telefone = user["telefone"]
         self.registros = []
-        self.primeiro_registro = user["dt_primeiro_reg_condicao"]
+        self.primeiro_registro = self.get(user,"dt_primeiro_reg_condicao")
 
-
+    def get(self, item, field):
+        return item[field] if field in item and item[field] is not None else ""
+    
 class HypertensionNominalListAdapter(BaseNominalAdapter):
 
     def __init__(self, user):
@@ -193,7 +205,6 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         super().__init__(user)
 
         alertas = [
-            "alerta_afericao_pa",
             "alerta_ultima_consulta_medico",
             "alerta_ultima_consulta_odontologica",
             "alerta_visita_acs",
@@ -446,7 +457,7 @@ class IdosoNominalListAdapter:
     def __init__(self, user: Crianca):
         self.nome = user["nome"]
         self.nome_social = "-"
-        self.tipo_localidade = user["tipo_localidade"]
+        self.tipo_localidade = user["tipo_localizacao_domicilio"]
         self.cpf = user["cpf"]
         self.cns = user["cns"]
         self.data_nascimento = user["data_nascimento"]
@@ -454,69 +465,116 @@ class IdosoNominalListAdapter:
         self.sexo = user["sexo"]
         self.equipe = user["nome_equipe"]
         self.microarea = user["micro_area"]
-        self.endereco = f"""{user["endereco"]} {user["numero"]}, {user["bairro"]}"""
-        self.tipo_logradouro = user["tipo_endereco"]
+        self.endereco = f"""{user["logradouro"]} {user["numero"]}, {user["bairro"]}"""
+        self.tipo_logradouro = user["tipo_logradouro"]
         self.complemento = user["complemento"]
         self.cep = user["cep"]
+        self.raca_cor = user["raca_cor"]
         self.telefone = user["telefone"]
         self.possui_alertas = (
-            user["indicador_atendimentos_medicos"] != 1
-            or user["indicador_medicoes_peso_altura"] != 1
-            or user["indicador_registros_creatinina"] != 1
-            or user["indicador_vacinas_influenza"] != 1
-            or user["indicador_atendimento_odontologico"] != 1
-            or user["indicador_visitas_domiciliares_acs"] != 1
+            user["agg_alerta_medicos_enfermeiros"] == 1
+            or user["agg_alerta_creatinina"] == 1
+            or user["agg_alerta_cirurgiao_dentista"] == 1
+            or user["agg_alerta_ivcf_aplicado"] == 1
+            or user["agg_alerta_peso_altura"] == 1
+            or user["agg_alerta_vacinas_influenza"] == 1
+            or user["agg_alerta_visitas_domiciliares_acs"] == 1
         )
         self.registros = []
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_atendimento_medicos"],
-                exibir_alerta=user["indicador_atendimentos_medicos"] != 1,
-                descricao="Data do último atendimento Médico/Enfermeiro",
+                data=self.convert_nan(user["total_consulta_medico_enfermeiro"]),
+                exibir_alerta=user["agg_alerta_medicos_enfermeiros"] == 1,
+                descricao="Total de consultas médicas e/ou de enfermagem nos últimos 12 meses:",
+                tipo_alerta="total_consulta_medico_enfermeiro",
+                classificacao='12-meses'
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=[
+                    self.convert_date(user["data_ultima_consulta_medico_enfermeiro"]),
+                    self.convert_date(user["data_penultima_consulta_medico_enfermeiro"]),
+                ],
+                exibir_alerta=user["agg_alerta_medicos_enfermeiros"] == 1,
+                descricao="Data das consultas médicas e/ou de enfermagem nos últimos 12 meses:",
                 tipo_alerta="data_ultimo_atendimento_medicos",
+                classificacao='12-meses'
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultima_medicao_peso_altura"],
-                exibir_alerta=user["indicador_medicoes_peso_altura"] != 1,
-                descricao="Data da última medição de peso e altura",
-                tipo_alerta="data_ultima_medicao_peso_altura",
+                data=(
+                    "Sim" if user['agg_peso_altura'] == 1 else "Não"
+                ),
+                exibir_alerta=user["agg_alerta_peso_altura"] == 1,
+                descricao="Houve registro simultâneo de peso e altura nos últimos 24 meses?",
+                tipo_alerta="alerta_peso_altura",
+                classificacao='24-meses'
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_registro_creatinina"],
-                exibir_alerta=user["indicador_registros_creatinina"] != 1,
-                descricao="Data do último registro de Creatinina ",
+                data=self.convert_date(user["data_ultimo_creatinina"]),
+                exibir_alerta=user["agg_alerta_creatinina"] == 1,
+                descricao="Data do registro de exame de creatinina nos últimos 24 meses:",
                 tipo_alerta="data_ultimo_registro_creatinina",
+                classificacao='24-meses'
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultima_vacina_influenza"],
-                exibir_alerta=user["indicador_vacinas_influenza"] != 1,
-                descricao="Data do último registro de vacina da Influenza ",
+                data=(
+                    self.convert_nan(user['total_visitas_domiciliares_acs'])
+                ),
+                exibir_alerta=user["agg_alerta_visitas_domiciliares_acs"] == 1,
+                descricao="Número de visitas domiciliares por ACS/TACS nos últimos 24 meses",
+                tipo_alerta="data_ultimo_registro_creatinina",
+                classificacao='24-meses'
+            )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=self.convert_date(user["data_ultima_vacina"]),
+                exibir_alerta=user["agg_alerta_vacinas_influenza"] == 1,
+                descricao="Data de registro de vacina contra influenza nos últimos 24 meses",
                 tipo_alerta="data_ultima_vacina_influenza",
+                classificacao='24-meses'
+            )
+        )
+        
+        
+        self.registros.append(
+            AlertRecord(
+                data=self.convert_date(user["data_ultimo_atendendimento_odonto"]),
+                exibir_alerta=user["agg_alerta_cirurgiao_dentista"] == 1,
+                descricao="Data das consultas odontológicas na APS nos últimos 24 meses",
+                tipo_alerta="alerta_cirurgiao_dentista",
+                classificacao='24-meses'
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_atendimento_odontologico"],
-                exibir_alerta=user["indicador_atendimento_odontologico"] != 1,
-                descricao="Data do último registro de atendimento Odontológico ",
-                tipo_alerta="data_ultimo_atendimento_odontologico",
-            )
-        )
-        self.registros.append(
-            AlertRecord(
-                data=user["data_ultima_visita_domiciliar_acs"],
-                exibir_alerta=user["indicador_visitas_domiciliares_acs"] != 1,
-                descricao="Data da última visita do ACS ",
-                tipo_alerta="data_ultima_visita_domiciliar_acs",
+                data=(
+                    "Sim" if user["agg_ivcf_aplicado"] == 1 else "Não"
+                ),
+                exibir_alerta=user["agg_alerta_ivcf_aplicado"] == 1,
+                descricao="Houve avaliação do IVCF-20 nos últimos 24 meses?",
+                tipo_alerta="alerta_ivcf_aplicado",
+                classificacao='24-meses'
             )
         )
 
+    def convert_date(self, dt):
+        if issubclass(type(dt), type(pd.NaT)):
+            return None
+        return dt
+    
+    def convert_nan(self, dt):
+        if math.isnan(dt):
+            return 0
+        return dt    
+    
     def to_dict(self):
         return dict(
             {
@@ -537,6 +595,7 @@ class IdosoNominalListAdapter:
                 "tipoLogradouro": self.tipo_logradouro,
                 "cep": self.cep,
                 "telefone": self.telefone,
+                "racaCor": self.raca_cor,
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [

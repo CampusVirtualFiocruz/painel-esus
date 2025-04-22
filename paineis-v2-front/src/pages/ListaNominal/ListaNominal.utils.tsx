@@ -10,7 +10,7 @@ export const footerNotes = {
 export const columns = ({ handleClick, condicao }: any) => {
   const baseColumns = [
     {
-      name: "nome",
+      name: "name",
       header: "Nome",
       sortable: true,
       render: (item: any) => (
@@ -29,7 +29,7 @@ export const columns = ({ handleClick, condicao }: any) => {
     {
       name: "alert",
       header: <div className="iconHeader iconAlerta ms-2"></div>,
-      sortable: true,
+      sortable: false,
       render: (item: any) => {
         if (item.possuiAlertas) {
           return (
@@ -40,66 +40,47 @@ export const columns = ({ handleClick, condicao }: any) => {
         }
       },
     },
-    // {
-    //   name: "zone",
-    //   header: (
-    //     <div className="headerZone ms-2">
-    //       <div className="iconHeader iconRural"></div>
-    //       <div className="iconHeader iconUrbano"></div>
-    //     </div>
-    //   ),
-    //   sortable: true,
-    //   render: (item: any) => {
-    //     if (item.zonaUrbana) {
-    //       return (
-    //         <span className="iconCircle iconUrbano ms-2" title="Zona Urbana">
-    //           U
-    //         </span>
-    //       );
-    //     } else if (item.zonaRural) {
-    //       return (
-    //         <span className="iconCircle iconRural ms-2" title="Zona Rural">
-    //           R
-    //         </span>
-    //       );
-    //     }
-    //   },
-    // },
     {
       name: "cpf",
       header: "CPF",
+      sortable: true,
       render: (item: any) => <b>{item?.cpf || "-"}</b>,
     },
     {
       name: "cns",
       header: "CNS",
+      sortable: true,
       render: (item: any) => item?.cns || "-",
     },
     {
       name: "idade",
       header: "Idade",
+      sortable: true,
       render: (item: any) => <center>{item?.idade || "-"}</center>,
     },
-    // {
-    //   name: "diagnostico",
-    //   header: "Diagnóstico",
-    //   render: (item: any) => <center>{capitalize(item.diagnostico)}</center>,
-    // },
-    // {
-    //   name: "grupo-codicao",
-    //   header: "Grupo/Condição",
-    //   render: (item: any) => (item?.diagnostico || "-").toUpperCase(),
-    // },
     {
       name: "sexo",
       header: "Sexo",
+      sortable: true,
       render: (item: any) => (
         <center>{item.sexo === "MASCULINO" ? "M" : "F"}</center>
       ),
     },
     {
+      name: "raca",
+      header: "Raça",
+      sortable: false,
+      render: (item: any) => (
+        <span
+        >
+            {item?.racaCor || "-"}
+        </span>
+      ),
+    },
+    {
       name: "equipe",
       header: "Equipe",
+      sortable: true,
       render: (item: any) => (
         <span title={item.equipe}>
           {capitalizeName(String(item.equipe)?.toUpperCase().slice(0, 30))}
@@ -108,16 +89,18 @@ export const columns = ({ handleClick, condicao }: any) => {
       ),
     },
     {
-      name: "microarea",
+      name: "micro_area",
       header: "Microárea",
+      sortable: true,
       render: (item: any) => <center>{item.microarea}</center>,
     },
   ];
 
   if (condicao && !["Idosa", "Infantil", "Qualidade"].includes(condicao)) {
     baseColumns.splice(5, 0, {
-      name: "grupo-condicao",
+      name: "grupo_ condicao",
       header: "Grupo/Condição",
+      sortable: true,
       render: (item: any) => (item?.diagnostico || "-").toUpperCase(),
     });
   }

@@ -9,17 +9,11 @@ from src.data.interfaces.diseases_dashboard import DiseasesDashboardRepositoryIn
 from src.domain.dict_types import DiseaseDashboardTotal
 from src.domain.entities.disease import Disease
 from src.domain.entities.disease_exams import DiseaseExams
-from src.domain.entities.hypertension_complications import HypertensionComplications
-from src.domain.entities.imc.imc_model import ImcModel
 from src.errors import InvalidArgument
 from src.infra.db.repositories.disease.age_groups_location import AgeGroupsLocationDF
 from src.infra.db.repositories.disease.professional_group import ProfessionalsGroup
-from src.infra.db.repositories.sqls.nominal_list.autoreferido import (
-    autorreferidos_check,
-)
 from src.infra.db.settings.connection_local import DBConnectionHandler
 
-from ..sqls import LISTA_PESOS_ALTURAS
 from ..sqls.disease.auto_referidos import (
     get_autoreferidos,
     get_cares,
@@ -78,11 +72,6 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         con = duckdb.connect()
         patients = con.sql(cares_sql).fetchall()
         return patients
-        # with DBConnectionHandler() as db_con:
-        #     engine = db_con.get_engine()
-        #     sql = LISTA_PESOS_ALTURAS(self.disease.name, cnes, equipe)
-        #     print(f'cares_sql: {sql}')
-        #     return pd.read_sql_query(sql, con=engine)
 
     def _retrieve_procedures(
         self,
@@ -223,9 +212,6 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
             {"Doença Coronariana": init_complications(cares[3], cares[5])},
             {"Doença Cerebrovascular": init_complications(cares[4], cares[5])},
         ]
-        # hypertension_complications = HypertensionComplications(cares)
-        # statistics = hypertension_complications.compute_statistics()
-        # return statistics
 
     def get_professionals_count(self, cnes: int = None, equipe: int = None) -> Dict:
         cares = self._get_professionals(cnes, equipe)
@@ -316,7 +302,6 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
         for label in imc_labels.keys():
             result[label] = init_obj(imc_labels[label]["value"])
         for care in cares:
-            print((1 - round(care[1], 2)) * 100)
             result[care[0]]["com_consulta"] = round(float(care[1]), 2) * 100
             result[care[0]]["com_consulta_abs"] = int(care[2])
             result[care[0]]["sem_consulta"] = (1 - round(care[1], 2)) * 100
@@ -329,39 +314,6 @@ class DiseasesDashboardLocalRepository(DiseasesDashboardRepositoryInterface):
             imc_result[_key] = [_key, _value]
 
         return list(imc_result.values())
-        # imc_model = ImcModel()
-        # cares.apply(
-        #     lambda x: imc_model.check_presence(
-        #         weight=x["nu_peso"], height=x["nu_altura"]
-        #     ),
-        #     axis=1,
-        # )
-        # print(f'cares: {cares.shape}')
-        # results = [
-        #     imc_item.statistics_response(cares.shape[0])
-        #     for imc_item in imc_model.get_list()
-        # ]
-        # current_total = 0
-        # for i in results:
-        #     current_total += i[1]["com_consulta_abs"]
-
-        # total = cares.shape[0] - current_total
-        # consultas = 100 * round(float((total) / cares.shape[0]), 2) if cares.shape[0] > 0 else 0
-
-        # results = results + [
-        #     [
-        #         "Não Informado",
-        #         {
-        #             "com_consulta": consultas,
-        #             "com_consulta_abs": int((total)),
-        #             "limite": "Outros",
-        #             "sem_consulta": round(100 - consultas, 2),
-        #             "sem_consulta_abs": cares.shape[0] - (total),
-        #         },
-        #     ]
-        # ]
-
-        # return results
 
     def get_individual_exams_count(
         self,

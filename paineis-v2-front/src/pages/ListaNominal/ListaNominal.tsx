@@ -1,17 +1,13 @@
 import { useState } from "react";
 import { useParams, useLocation, useSearchParams } from "react-router-dom";
-import { useQuery } from "react-query";
 import { PagedTable, TextField, LocaleContext } from "bold-ui";
 import ptBr from "bold-ui/lib/i18n/locales/pt-BR";
 import { Modal } from "../../components/Modal";
 import ReportWrapper from "../../components/ui/ReportWrapper";
-import { useInfo } from "../../context/infoProvider/useInfo";
-import { getNomeUbs } from "../../utils";
-import { Api } from "../../services/api";
-import "../../styles/gestanteList.scss";
-import "../../styles/listaNominal.scss";
 import usePaginatedList from "./usePaginatedList";
 import { columns, Footer, footerNotes } from "./ListaNominal.utils";
+import "../../styles/gestanteList.scss";
+import "../../styles/listaNominal.scss";
 
 type PainelParams = {
   id: string;
@@ -50,37 +46,22 @@ const ListaNominal = () => {
   const condicao = String(queryParams.get("condicao"));
   const footerNote = footerNotes?.[condicao];
 
-  const { city } = useInfo();
-  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
-    "ubs",
-    async () => {
-      const response = await Api.get<any>("get-units");
-      const data = response.data;
-
-      const listData: any[] = data.data.map((ubs: any) => {
-        return {
-          label: ubs.no_unidade_saude,
-          value: ubs.co_seq_dim_unidade_saude,
-          id: ubs.co_seq_dim_unidade_saude,
-        };
-      });
-
-      return listData;
-    },
-    {
-      staleTime: 1000 * 60 * 10, //10 minutos
-    }
-  );
-
-  const { info, setParams, isLoadingInfo, pathToReport } = usePaginatedList({
+  const {
+    info,
+    params: tableParams,
+    setParams,
+    isLoadingInfo,
+    pathToReport,
+  } = usePaginatedList({
     condicao,
     equipe,
     id,
     searchTerm,
   });
 
-  const handleSortChange = (sort: string[]) =>
+  const handleSortChange = (sort: string[]) =>{
     setParams((state: any) => ({ ...state, sort }));
+  }
 
   const handlePageChange = (page: number) =>
     setParams((state: any) => ({ ...state, page: page + 1 }));
@@ -98,7 +79,7 @@ const ListaNominal = () => {
       <ReportWrapper
         title={
           "Lista Nominal / " +
-          (condicao === "Qualidade" ? "Qualidade de Cadastro" : condicao)
+          (condicao === "Qualidade" ? "Qualidade de Cadastro" : condicao === "Idosa" ? "Cuidado da Pessoa Idosa" : condicao)
         }
         subtitle=""
         footerNote={footerNote}
@@ -126,6 +107,7 @@ const ListaNominal = () => {
             onSizeChange={handleSizeChange}
             loading={isLoadingInfo}
             columns={columns({ handleClick, condicao })}
+            sort={tableParams?.sort as any}
           />
         </LocaleContext.Provider>
         <Footer pathToReport={pathToReport} condicao={condicao} id={id} />
