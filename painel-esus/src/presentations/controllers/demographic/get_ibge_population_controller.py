@@ -1,12 +1,12 @@
 from src.domain.use_cases.demographic.demographic_use_case import (
-    DemographicIBGEPopulationUseCaseInterface,
+    IBGEPopulationUseCaseInterface,
 )
 from src.presentations.http_types import HttpResponse
 from src.presentations.interfaces.controller_interface import ControllerInterface
 
 
-class DemographicGetIBGEPopulation(ControllerInterface):
-    def __init__(self, use_case: DemographicIBGEPopulationUseCaseInterface):
+class GetIBGEPopulationController(ControllerInterface):
+    def __init__(self, use_case: IBGEPopulationUseCaseInterface):
         self.__use_case = use_case
 
     def handle(self) -> HttpResponse:

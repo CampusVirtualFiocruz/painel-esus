@@ -1,13 +1,13 @@
 from typing import Optional
 
-from src.data.interfaces.demographic_repository import DemographicTotalPeopleInterface
+from src.data.interfaces.demographic_repository import TotalPeopleInterface
 from src.domain.use_cases.demographic.demographic_use_case import (
-    DemographicTotalPeopleUseCaseInterface,
+    TotalPeopleUseCaseInterface,
 )
 
 
-class GetTotalPeople(DemographicTotalPeopleUseCaseInterface):
-    def __init__(self, _repository: DemographicTotalPeopleInterface):
+class GetTotalPeopleUseCase(TotalPeopleUseCaseInterface):
+    def __init__(self, _repository: TotalPeopleInterface):
         self._repository = _repository
 
     def get_total_people(

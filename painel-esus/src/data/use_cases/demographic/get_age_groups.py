@@ -1,13 +1,13 @@
 from typing import Dict, Optional
 
-from src.data.interfaces.demographic_repository import DemographicAgeGroupsInterface
+from src.data.interfaces.demographic_repository import AgeGroupsInterface
 from src.domain.use_cases.demographic.demographic_use_case import (
-    DemographicAgeGroupsUseCaseInterface,
+    AgeGroupsUseCaseInterface,
 )
 
 
-class GetAgeGroups(DemographicAgeGroupsUseCaseInterface):
-    def __init__(self, _repository: DemographicAgeGroupsInterface):
+class GetAgeGroupsUseCase(AgeGroupsUseCaseInterface):
+    def __init__(self, _repository: AgeGroupsInterface):
         self._repository = _repository
 
     def get_age_groups(

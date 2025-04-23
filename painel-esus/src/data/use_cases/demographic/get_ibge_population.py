@@ -1,9 +1,9 @@
 from src.domain.use_cases.demographic.demographic_use_case import (
-    DemographicIBGEPopulationUseCaseInterface,
+    IBGEPopulationUseCaseInterface,
 )
 
 
-class GetIBGEPopulationUseCase(DemographicIBGEPopulationUseCaseInterface):
+class GetIBGEPopulationUseCase(IBGEPopulationUseCaseInterface):
     def __init__(self, _repository):
         self._repository = _repository
 

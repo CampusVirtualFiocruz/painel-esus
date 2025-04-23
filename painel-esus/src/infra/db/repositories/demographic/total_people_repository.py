@@ -1,9 +1,9 @@
 import duckdb
-from src.data.interfaces.demographic_repository import DemographicTotalPeopleInterface
+from src.data.interfaces.demographic_repository import TotalPeopleInterface
 from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import get_pessoas
 
 
-class TotalPeopleRepository(DemographicTotalPeopleInterface):
+class TotalPeopleRepository(TotalPeopleInterface):
 
     def __init__(self, db_connection=duckdb):
         self.db = db_connection

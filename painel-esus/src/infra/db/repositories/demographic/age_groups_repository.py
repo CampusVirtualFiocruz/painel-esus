@@ -4,12 +4,12 @@ from collections import OrderedDict
 from typing import Dict
 
 import duckdb
-from src.data.interfaces.demographic_repository import DemographicAgeGroupsInterface
+from src.data.interfaces.demographic_repository import AgeGroupsInterface
 from src.errors.logging import logging
 from src.infra.db.repositories.sqls.demographics import filter_by_gender_age
 
 
-class AgeGroupsRepository(DemographicAgeGroupsInterface):
+class AgeGroupsRepository(AgeGroupsInterface):
 
     def __init__(self, db_connection=duckdb):
         self.db = db_connection

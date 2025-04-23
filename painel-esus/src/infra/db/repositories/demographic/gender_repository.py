@@ -1,9 +1,9 @@
 import duckdb
-from src.data.interfaces.demographic_repository import DemographicGenderInterface
+from src.data.interfaces.demographic_repository import GenderInterface
 from src.infra.db.repositories.sqls.demographics import filter_by_sexo
 
 
-class GenderRepository(DemographicGenderInterface):
+class GenderRepository(GenderInterface):
 
     def __init__(self, db_connection=duckdb):
         self.db = db_connection
