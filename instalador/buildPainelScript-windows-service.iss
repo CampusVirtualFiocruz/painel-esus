@@ -53,17 +53,17 @@ Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}"; ValueType: string; Value
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".myp"; ValueData: ""
-// Cria submenu de serviço
 Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS"; ValueType: string; ValueName: ""; ValueData: "Gerenciar Painel eSUS"
 Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\icon\Icon_Painel_Purple_ICO.ico"
-Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Iniciar"; ValueType: string; ValueName: ""; ValueData: "Iniciar Serviço"
-Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Iniciar\command"; ValueType: string; ValueName: ""; \
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS"; ValueType: string; ValueName: "SubCommands"; ValueData: "PaineleSUS.Iniciar;PaineleSUS.Parar;PaineleSUS.Reiniciar"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS.Iniciar"; ValueType: string; ValueName: ""; ValueData: "Iniciar Serviço"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS.Iniciar\command"; ValueType: string; ValueName: ""; \
     ValueData: """{app}\nssm.exe"" start {#ServiceName}"
-Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Parar"; ValueType: string; ValueName: ""; ValueData: "Parar Serviço"
-Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Parar\command"; ValueType: string; ValueName: ""; \
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS.Parar"; ValueType: string; ValueName: ""; ValueData: "Parar Serviço"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS.Parar\command"; ValueType: string; ValueName: ""; \
     ValueData: """{app}\nssm.exe"" stop {#ServiceName}"
-Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Reiniciar"; ValueType: string; ValueName: ""; ValueData: "Reiniciar Serviço"
-Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Reiniciar\command"; ValueType: string; ValueName: ""; \
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS.Reiniciar"; ValueType: string; ValueName: ""; ValueData: "Reiniciar Serviço"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS.Reiniciar\command"; ValueType: string; ValueName: ""; \
     ValueData: """{app}\nssm.exe"" restart {#ServiceName}"
 
 [Icons]
