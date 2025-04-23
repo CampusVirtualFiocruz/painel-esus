@@ -89,12 +89,3 @@ function ShouldRunExe(): Boolean;
 begin
   Result := WizardSilent() = False;  // Apenas rodar se o instalador não estiver no modo silencioso
 end;
-
-procedure CurPageChanged(CurPageID: Integer);
-begin
-  if CurPageID = wpSelectTasks then
-  begin
-    WizardForm.TasksList.Visible := False;
-    WizardForm.SelectTasksPage.Description := 'Este aplicativo será instalado automaticamente como um serviço do Windows.';
-  end;
-end;
