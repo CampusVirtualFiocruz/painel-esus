@@ -1,8 +1,4 @@
 from src.infra.db.settings.connection import DBConnectionHandler
-import pandas as pd
-from sqlalchemy import text
-#import pyarrow as pa
-#import pyarrow.parquet as pq
 from src.env.conf import getenv
 from src.infra.create_base.polars.abstract_generate_base import AbstractGenerateBase
 
