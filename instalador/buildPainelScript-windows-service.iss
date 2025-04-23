@@ -95,6 +95,6 @@ begin
   if CurPageID = wpSelectTasks then
   begin
     WizardForm.TasksList.Visible := False;
-    WizardForm.TasksLabel.Caption := 'Este aplicativo será instalado automaticamente como um serviço do Windows.';
+    WizardForm.SelectTasksPage.Description := 'Este aplicativo será instalado automaticamente como um serviço do Windows.';
   end;
 end;
