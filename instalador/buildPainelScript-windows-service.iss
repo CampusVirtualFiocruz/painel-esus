@@ -37,7 +37,6 @@ Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortugue
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
-Name: "installservice"; Description: "Executar como serviço"; GroupDescription: "Opções de serviço:"; Flags: unchecked
 
 [Files]
 Source: "{#rootPath}\painel-esus\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
@@ -54,26 +53,34 @@ Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}"; ValueType: string; Value
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".myp"; ValueData: ""
+// Cria submenu de serviço
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS"; ValueType: string; ValueName: ""; ValueData: "Gerenciar Painel eSUS"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\icon\Icon_Painel_Purple_ICO.ico"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Iniciar"; ValueType: string; ValueName: ""; ValueData: "Iniciar Serviço"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Iniciar\command"; ValueType: string; ValueName: ""; \
+    ValueData: """{app}\nssm.exe"" start {#ServiceName}"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Parar"; ValueType: string; ValueName: ""; ValueData: "Parar Serviço"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Parar\command"; ValueType: string; ValueName: ""; \
+    ValueData: """{app}\nssm.exe"" stop {#ServiceName}"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Reiniciar"; ValueType: string; ValueName: ""; ValueData: "Reiniciar Serviço"
+Root: HKCR; Subkey: "DesktopBackground\shell\PaineleSUS\shell\Reiniciar\command"; ValueType: string; ValueName: ""; \
+    ValueData: """{app}\nssm.exe"" restart {#ServiceName}"
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{autoprograms}\Gerenciar Serviço\Iniciar Serviço"; Filename: "{app}\nssm.exe"; Parameters: "start {#ServiceName}"
-Name: "{autoprograms}\Gerenciar Serviço\Parar Serviço"; Filename: "{app}\nssm.exe"; Parameters: "stop {#ServiceName}"
-Name: "{autoprograms}\Gerenciar Serviço\Reiniciar Serviço"; Filename: "{app}\nssm.exe"; Parameters: "restart {#ServiceName}"
 
 [Run]
-; Instalação do serviço (caso opção estiver selecionada)
 Filename: "{app}\nssm.exe"; Parameters: "install {#ServiceName} ""{app}\{#MyAppExeName}"""; \
-    Flags: runhidden; StatusMsg: "Instalando serviço..."; Tasks: installservice
+    Flags: runhidden; StatusMsg: "Instalando serviço..."
 Filename: "{app}\nssm.exe"; Parameters: "set {#ServiceName} Description ""Serviço do Painel e-SUS APS"""; \
-    Flags: runhidden; StatusMsg: "Configurando serviço..."; Tasks: installservice
+    Flags: runhidden; StatusMsg: "Configurando serviço..."
 Filename: "{app}\nssm.exe"; Parameters: "start {#ServiceName}"; \
-    Flags: runhidden; StatusMsg: "Iniciando serviço..."; Tasks: installservice
-Filename: "{app}\{#ConfigExeName}"; Description: "Abrir configuração após a instalação"; Flags: postinstall skipifsilent unchecked runascurrentuser; Check: ShouldRunExe
+    Flags: runhidden; StatusMsg: "Iniciando serviço..."
+Filename: "{app}\{#ConfigExeName}"; Description: "Abrir configuração após a instalação"; \
+    Flags: postinstall skipifsilent unchecked runascurrentuser; Check: ShouldRunExe
 
 [UninstallRun]
-; Remove o serviço durante a desinstalação
 Filename: "{app}\nssm.exe"; Parameters: "stop {#ServiceName}"; Flags: runhidden
 Filename: "{app}\nssm.exe"; Parameters: "remove {#ServiceName} confirm"; Flags: runhidden
 
@@ -81,4 +88,13 @@ Filename: "{app}\nssm.exe"; Parameters: "remove {#ServiceName} confirm"; Flags: 
 function ShouldRunExe(): Boolean;
 begin
   Result := WizardSilent() = False;  // Apenas rodar se o instalador não estiver no modo silencioso
+end;
+
+procedure CurPageChanged(CurPageID: Integer);
+begin
+  if CurPageID = wpSelectTasks then
+  begin
+    WizardForm.TasksList.Visible := False;
+    WizardForm.TasksLabel.Caption := 'Este aplicativo será instalado automaticamente como um serviço do Windows.';
+  end;
 end;
