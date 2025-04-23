@@ -62,7 +62,35 @@ def get_location_area_composer():
     use_case = GetLocationAreaUseCase(repository)
     controller = GetLocationAreaController(use_case)
 
-    return controller
+    return controller.get_location_area
+
+
+def get_diabetes_by_location_area_composer():
+    repo = LocationAreaRepository()
+    use_case = GetLocationAreaUseCase(repo)
+    controller = GetLocationAreaController(use_case)
+    return controller.get_diabetes_by_location_area
+
+
+def get_hypertension_by_location_area_composer():
+    repo = LocationAreaRepository()
+    use_case = GetLocationAreaUseCase(repo)
+    controller = GetLocationAreaController(use_case)
+    return controller.get_hypertension_by_location_area
+
+
+def get_child_by_location_area_composer():
+    repo = LocationAreaRepository()
+    use_case = GetLocationAreaUseCase(repo)
+    controller = GetLocationAreaController(use_case)
+    return controller.get_child_by_location_area
+
+
+def get_elderly_by_location_area_composer():
+    repo = LocationAreaRepository()
+    use_case = GetLocationAreaUseCase(repo)
+    controller = GetLocationAreaController(use_case)
+    return controller.get_elderly_by_location_area
 
 
 def get_total_people_composer():
