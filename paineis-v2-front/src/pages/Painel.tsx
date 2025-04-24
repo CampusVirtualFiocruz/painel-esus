@@ -508,8 +508,8 @@ export function Painel() {
                 //   </div>
                 // </div>
                 <div
-                  className="card-condicao p-2"
-                  style="visibility: hidden;"
+                    className="card-condicao p-2"
+                    style={{ visibility: 'hidden' }}
                 ></div>
               )}
             </div>
