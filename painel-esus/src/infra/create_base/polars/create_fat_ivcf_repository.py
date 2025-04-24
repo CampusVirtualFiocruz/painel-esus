@@ -1,7 +1,7 @@
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.env.conf import getenv
 from src.infra.create_base.polars.abstract_generate_base import AbstractGenerateBase
-
+import pandas as pd
 class CreatIvcfBaseRepository(AbstractGenerateBase):
     _base = 'tb_fat_ivcf'
 
