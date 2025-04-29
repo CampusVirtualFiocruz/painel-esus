@@ -6,9 +6,10 @@ def by_gender(cnes: int = None, equipe: int = None):
         if equipe is not None and equipe:
             where_clause += f" and codigo_equipe  = {equipe} "
     return f"""
-    SELECT faixa_etaria, sexo, count(*) total
+    SELECT 
+        faixa_etaria, sexo, count(*) total
     FROM read_parquet('./dados/output/idoso.parquet')
-    {where_clause} 
+        {where_clause} 
     group by faixa_etaria, sexo
     order by faixa_etaria asc
     """

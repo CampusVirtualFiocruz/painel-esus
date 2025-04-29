@@ -16,6 +16,7 @@ class ElderlyController:
             cnes = int(request.path_params["cnes"])
         if request.query_params and "equipe" in request.query_params:
             equipe = int(request.query_params["equipe"])
+        
         return cnes, equipe
 
     def total_ubs(self, request: HttpRequest) -> HttpResponse:
