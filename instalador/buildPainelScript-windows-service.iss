@@ -53,13 +53,23 @@ Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}"; ValueType: string; Value
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".myp"; ValueData: ""
+
+; Item principal do menu de contexto
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Gerenciar Painel e-SUS APS"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\icon\Icon_Painel_Purple_ICO.ico"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: dword; ValueName: "CommandFlags"; ValueData: "0x20"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "SubCommands"; ValueData: ""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Position"; ValueData: "Top"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell"; Flags: uninsdeletekey
+
+; Subitem: Iniciar
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Iniciar"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Iniciar Serviço"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Iniciar\command"; ValueType: string; ValueData: """{app}\nssm.exe"" start {#ServiceName}"; Flags: uninsdeletekey
+
+; Subitem: Parar
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Parar"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Parar Serviço"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Parar\command"; ValueType: string; ValueData: """{app}\nssm.exe"" stop {#ServiceName}"; Flags: uninsdeletekey
+
+; Subitem: Reiniciar
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Reiniciar"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Reiniciar Serviço"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Reiniciar\command"; ValueType: string; ValueData: """{app}\nssm.exe"" restart {#ServiceName}"; Flags: uninsdeletekey
 
