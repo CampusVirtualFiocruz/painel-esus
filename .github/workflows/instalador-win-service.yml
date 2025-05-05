@@ -208,15 +208,15 @@ jobs:
           name: painel-esus
 
 
-  # notify-slack:
-  #   runs-on: ubuntu-latest
-  #   needs: create-exe-files
+  notify-slack:
+    runs-on: ubuntu-latest
+    needs: create-exe-files
 
-  #   steps:
-  #     - name: Notify Slack
-  #       run: |
-  #         version="${{ github.head_ref || github.ref_name }}"
-  #         clean_version=$(echo "$version" | sed 's/^v//')
-  #         curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} -H 'Content-type: application/json' \
-  #           --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *'"$clean_version"'* \n Download-windows: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.exe" \n Download-linux: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.tar.gz"}'
+    steps:
+      - name: Notify Slack
+        run: |
+          version="${{ github.head_ref || github.ref_name }}"
+          clean_version=$(echo "$version" | sed 's/^v//')
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} -H 'Content-type: application/json' \
+            --data '{"text": "*Instalador Gerado* :inbox_tray:\n  Versão: *'"$clean_version"'* \n Download-windows: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.exe" \n Download-linux: https://painel-esus-public.s3.sa-east-1.amazonaws.com/instalador/painel-esus-setup'"$clean_version"'.tar.gz"}'
 
