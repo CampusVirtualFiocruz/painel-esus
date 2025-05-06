@@ -116,8 +116,8 @@ register_blueprint(
 )
 
 
-# oral_path = OralHealthPath()
-# register_blueprint(app, (oral_health_bp, oral_path.root_path), [token_required])
+oral_path = OralHealthPath()
+register_blueprint(app, (oral_health_bp, oral_path.root_path), [token_required])
 
 # smoking = SmokingPath()
 # register_blueprint(

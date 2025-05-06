@@ -1,7 +1,7 @@
 from src.data.use_cases.oral_health.oral_health_dashboard import \
     OralHealthDashboardUseCase
-from src.infra.db.repositories.odonto.oral_health_dashboard_repository import \
-    OralHealthDashboardRepository
+from src.infra.db.repositories.oral_health.oral_health_repository import \
+    OralHealthRepository
 from src.presentations.controllers.oral_health import OralHealthGetAllCaresByPlaceController
 from src.presentations.controllers.oral_health import OralHealthGetCaresByAgeRangeController
 from src.presentations.controllers.oral_health import OralHealthGetCaresByGenderController
@@ -12,9 +12,11 @@ from src.presentations.controllers.oral_health import OralHealthGetCaresByTypeOf
 from src.presentations.controllers.oral_health import OralHealthGetExtractionProceduresProportionController
 from src.presentations.controllers.oral_health import OralHealthGetTotalController
 
+import duckdb
+
 
 def oral_health_dashboard_get_total():
-    repository = OralHealthDashboardRepository()
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetTotalController(use_case)
 
@@ -22,7 +24,7 @@ def oral_health_dashboard_get_total():
 
 
 def oral_health_dashboard_get_cares_by_line_of_services():
-    repository = OralHealthDashboardRepository()
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetCaresByLineOfServicesController(use_case)
 
@@ -30,7 +32,7 @@ def oral_health_dashboard_get_cares_by_line_of_services():
 
 
 def oral_health_dashboard_get_cares_by_type_of_services():
-    repository = OralHealthDashboardRepository()
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetCaresByTypeOfServicesController(use_case)
 
@@ -38,7 +40,7 @@ def oral_health_dashboard_get_cares_by_type_of_services():
 
 
 def oral_health_get_extraction_procedures_proportion():
-    repository = OralHealthDashboardRepository()
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetExtractionProceduresProportionController(
         use_case)
@@ -47,7 +49,7 @@ def oral_health_get_extraction_procedures_proportion():
 
 
 def oral_health_get_cares_by_age_range():
-    repository = OralHealthDashboardRepository()
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetCaresByAgeRangeController(use_case)
 
@@ -55,7 +57,8 @@ def oral_health_get_cares_by_age_range():
 
 
 def oral_health_get_cares_by_gender():
-    repository = OralHealthDashboardRepository()
+    session = duckdb.connect()
+    repository = OralHealthRepository(session)
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetCaresByGenderController(use_case)
 
@@ -63,7 +66,7 @@ def oral_health_get_cares_by_gender():
 
 
 def oral_health_get_cares_by_outcome():
-    repository = OralHealthDashboardRepository()
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetCaresByOutcomeController(use_case)
 
@@ -71,7 +74,7 @@ def oral_health_get_cares_by_outcome():
 
 
 def oral_health_get_cares_by_place():
-    repository = OralHealthDashboardRepository()
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetCaresByPlaceController(use_case)
 
@@ -79,7 +82,7 @@ def oral_health_get_cares_by_place():
 
 
 def oral_health_get_all_cares_by_place():
-    repository = OralHealthDashboardRepository()
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetAllCaresByPlaceController(use_case)
 
