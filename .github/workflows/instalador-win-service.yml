@@ -160,17 +160,17 @@ jobs:
         shell: cmd
 
       - name: Build EXE config
-        working-directory: ./painel-esus
+        working-directory: ./painel-esus/interface
         run: |
           python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
-          pyinstaller --icon=.\icon\config.ico -n config --onefile .\interface.py
+          pip3 install -r requirements-interface.txt
+          pyinstaller --icon=.\icon\config.ico -n config --onefile .\__main__.py
         shell: cmd
 
       - name: Build EXE run
         working-directory: ./painel-esus
         run: |
-          pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
+          pyinstaller --icon=.\interface\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
         shell: cmd
 
 
