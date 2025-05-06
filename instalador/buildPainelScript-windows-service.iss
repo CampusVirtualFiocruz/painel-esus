@@ -26,7 +26,7 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 OutputDir={#rootPath}\instalador\output
 OutputBaseFilename=painel-esus-setup{#MyAppVersion}
-SetupIconFile={#rootPath}\painel-esus\icon\Icon_Painel_Purple_ICO.ico
+SetupIconFile={#rootPath}\painel-esus\interface\icon\Icon_Painel_Purple_ICO.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -41,7 +41,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "{#rootPath}\painel-esus\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\paineis-v2-front\static-files\*"; DestDir: "{app}\static-files"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#rootPath}\painel-esus\icon\*"; DestDir: "{app}\icon"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#rootPath}\painel-esus\interface\icon\*"; DestDir: "{app}\icon"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#rootPath}\painel-esus\dist\config.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\dist\painel-esus.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\ibge.csv"; DestDir: "{app}"; Flags: ignoreversion
@@ -56,7 +56,7 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes
 
 ; Item principal do menu de contexto
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Gerenciar Painel e-SUS APS"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\icon\Icon_Painel_Purple_ICO.ico"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\interface\icon\Icon_Painel_Purple_ICO.ico"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "SubCommands"; ValueData: ""; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Position"; ValueData: "Top"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell"; Flags: uninsdeletekey
