@@ -27,7 +27,7 @@ def center_window_to_display(
 
 root = ctk.CTk()
 if os.name != "posix":
-    root.iconbitmap("interface/icon/Icon_Painel_Purple_ICO.ico")
+    root.iconbitmap("icon/Icon_Painel_Purple_ICO.ico")
 root.title("Configurar")
 root.geometry(center_window_to_display(root, 800, 600, root._get_window_scaling()))
 
@@ -56,7 +56,7 @@ def connect_db(new_window):
         res = pd.read_sql_query("select * from information_schema.tables", con=engine)
 
         image_path = os.getcwd()
-        image_path = os.path.join(image_path, "./interface/icon/success.png")
+        image_path = os.path.join(image_path, "icon/success.png")
 
         my_image = ctk.CTkImage(
             light_image=Image.open(image_path),
@@ -87,7 +87,7 @@ def connect_db_with_params(
         # print("CONECTOU", res.shape)
 
         image_path = os.getcwd()
-        image_path = os.path.join(image_path, "interface/icon/success.png")
+        image_path = os.path.join(image_path, "icon/success.png")
 
         my_image = ctk.CTkImage(
             light_image=Image.open(image_path),
@@ -110,7 +110,7 @@ def connect_db_with_params(
 def connection_error_db(new_window):
     # print("ERRO DE CONEXÃO")
     image_path = os.getcwd()
-    image_path = os.path.join(image_path, "interface/icon/error.png")
+    image_path = os.path.join(image_path, "icon/error.png")
 
     my_image = ctk.CTkImage(
         light_image=Image.open(image_path),
@@ -196,7 +196,7 @@ def exists_env(root):
     label.pack(pady=12, padx=10)
 
     image_path = os.getcwd()
-    image_path = os.path.join(image_path, "interface/icon/env.png")
+    image_path = os.path.join(image_path, "icon/env.png")
 
     my_image = ctk.CTkImage(
         light_image=Image.open(image_path),
@@ -369,7 +369,7 @@ def success_frame():
     label.pack(pady=12, padx=10)
 
     image_path = os.getcwd()
-    image_path = os.path.join(image_path, "interface/icon/success.png")
+    image_path = os.path.join(image_path, "icon/success.png")
 
     my_image = ctk.CTkImage(
         light_image=Image.open(image_path),
@@ -450,7 +450,7 @@ def tabs():
     label_info.pack(pady=12, padx=10)
 
     image_path = os.getcwd()
-    image_path = os.path.join(image_path, "interface/icon/database.png")
+    image_path = os.path.join(image_path, "icon/database.png")
     my_image = ctk.CTkImage(
         light_image=Image.open(image_path),
         dark_image=Image.open(image_path),
@@ -522,7 +522,7 @@ def tabs():
     frame_painel.pack(fill="both", expand=True)
 
     image_path_painel = os.getcwd()
-    image_path_painel = os.path.join(image_path_painel, "interface/icon/painel.png")
+    image_path_painel = os.path.join(image_path_painel, "icon/painel.png")
     painel_image = ctk.CTkImage(
         light_image=Image.open(image_path_painel),
         dark_image=Image.open(image_path_painel),
