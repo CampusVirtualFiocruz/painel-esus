@@ -181,7 +181,7 @@ def oral_health_get_cares_by_age_range_fn(cnes=None):
     methods=["GET"],
     endpoint="get_cares_by_gender_id",
 )
-@cache.cached()
+@cache.cached(query_string=True)
 def oral_health_get_cares_by_gender_fn(cnes=None):
     http_response = None
     response = None

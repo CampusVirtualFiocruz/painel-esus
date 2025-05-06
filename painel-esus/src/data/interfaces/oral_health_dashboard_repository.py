@@ -22,7 +22,7 @@ class OralHealthDashboardRepositoryInterface(ABC):
     def get_oral_health_cares_by_age_range(self,  cnes: int = None): pass
 
     @abstractmethod
-    def get_oral_health_cares_by_gender(self,  cnes: int = None): pass
+    def get_oral_health_cares_by_gender(self,  cnes: int = None, equipe: int = None, category:str = None): pass
 
     @abstractmethod
     def get_oral_health_cares_by_outcome(

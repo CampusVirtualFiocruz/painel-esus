@@ -2,22 +2,25 @@ from typing import Literal
 
 def gen_where_category(category):
     if category == 'atendidas':
-        return ' where atendimento_odonto=1 '
+        return 'atendimento_odonto=1 '
+    elif category == 'cadastradas':
+        return 'cadastradas_odonto=1 '
     else:
-        return ' where cadastro_odonto=1 '
+        raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
     
-def gen_where_cnes_equipe(where_clause, cnes, equipe):
-    
-    if cnes is not None and cnes:
-        if 'where' not in where_clause:
-            where_clause = ' WHERE '+where_clause
-        else:
-            where_clause += f" AND "
-        where_clause += f" codigo_unidade_saude  = {cnes} "
-        if equipe is not None and equipe:
-            where_clause += f" and codigo_equipe  = {equipe} " 
-            
-    return where_clause
+def gen_where_cnes_equipe(base_clause, cnes, equipe):
+    clauses = []
+
+    if base_clause:
+        clauses.append(base_clause)
+
+    if cnes:
+        clauses.append(f" codigo_unidade_saude  = {cnes} ")
+
+    if equipe:
+        clauses.append(f" codigo_equipe = {equipe} ")
+
+    return f"WHERE {' AND '.join(clauses)} " if clauses else ''
 
 def get_suffix(column, category):
     if category == 'atendidas':
@@ -41,10 +44,10 @@ def by_race(
 def by_gender(
     cnes: int = None, 
     equipe: int = None, 
-    category: Literal['atendidas','cadastradas'] = 'atendidas',):
+    category: str = None):
     
     where_clause = gen_where_category(category)
-    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)   
+    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)
     return f"""
         select 
             sexo, faixa_etaria, count(*) as total
