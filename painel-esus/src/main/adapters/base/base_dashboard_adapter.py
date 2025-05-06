@@ -37,7 +37,7 @@ class BaseDashboardAdapter:
         }
 
     def group_race(self, response):
-        base_tags = ["branca", "preta", "parda", "amarela", "indigena"]
+        base_tags = ["branca", "preta", "parda", "amarela", "indigena", "nao-informado"]
         result = {"data": [{"tag": tag, "value": 0} for tag in base_tags]}
         idx = {tag: i for i, tag in enumerate(base_tags)}
 

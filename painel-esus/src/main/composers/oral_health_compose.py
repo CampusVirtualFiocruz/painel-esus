@@ -14,6 +14,8 @@ from src.presentations.controllers.oral_health import OralHealthGetTotalControll
 
 import duckdb
 
+from src.presentations.controllers.oral_health.oral_health_get_cares_by_race import OralHealthGetCaresByRaceController
+
 
 def oral_health_dashboard_get_total():
     repository = OralHealthRepository()
@@ -61,6 +63,15 @@ def oral_health_get_cares_by_gender():
     repository = OralHealthRepository(session)
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetCaresByGenderController(use_case)
+
+    return controller.handle
+
+
+def oral_health_get_cares_by_race():
+    session = duckdb.connect()
+    repository = OralHealthRepository(session)
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthGetCaresByRaceController(use_case)
 
     return controller.handle
 

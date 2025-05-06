@@ -6,7 +6,7 @@ from flask import request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.oral_health_compose import (
-    oral_health_dashboard_get_cares_by_line_of_services,
+    oral_health_dashboard_get_cares_by_line_of_services, oral_health_get_cares_by_race,
 )
 from src.main.composers.oral_health_compose import (
     oral_health_dashboard_get_cares_by_type_of_services,
@@ -35,6 +35,7 @@ class OralHealthPath:
         "get_extraction_procedures_proportion": "/get-extraction-procedures-proportion",
         "get_cares_by_age_range": "/get-cares-by-age-range",
         "get_cares_by_gender": "/get-cares-by-gender",
+        "get_group_by_race": "/get_group-by-race",
         "get_cares_by_outcome": "/get-cares-by-outcome",
         "get_cares_by_place": "/get-cares-by-place",
         "get_all_cares_by_place": "/get-all-cares-by-place",
@@ -188,6 +189,29 @@ def oral_health_get_cares_by_gender_fn(cnes=None):
     try:
         http_response = request_adapter(
             request, oral_health_get_cares_by_gender())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+
+@oral_health_bp.route(
+    f"{urls['get_group_by_race']}", methods=["GET"], endpoint="get_group_by_race"
+)
+@oral_health_bp.route(
+    f"{urls['get_group_by_race']}/<cnes>",
+    methods=["GET"],
+    endpoint="get_group_by_race_id",
+)
+@cache.cached(query_string=True)
+def oral_health_get_cares_by_race_fn(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(
+            request, oral_health_get_cares_by_race())
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)

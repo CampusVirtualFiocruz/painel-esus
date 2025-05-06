@@ -10,9 +10,9 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         sql = by_gender(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
-    def get_oral_health_cares_by_race(self, cnes=None, equipe=None, category='atendidas'):
+    def get_oral_health_cares_by_race(self, cnes=None, equipe=None, category: str = None):
         sql = by_race(cnes, equipe, category)
-        return self.session.execute(sql).mappings().all()
+        return self.session.execute(sql).fetchall()
 
     def get_first_appointment(self, cnes=None, equipe=None, category='atendidas'):
         sql = first_appointment(cnes, equipe, category)

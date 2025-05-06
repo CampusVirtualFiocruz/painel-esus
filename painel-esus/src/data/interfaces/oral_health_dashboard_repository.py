@@ -35,3 +35,7 @@ class OralHealthDashboardRepositoryInterface(ABC):
     @abstractmethod
     def get_oral_health_all_cares_by_place(
         self,  cnes: int = None) -> DataFrame: pass
+
+    @abstractmethod
+    def get_oral_health_cares_by_race(
+            self, cnes=None, equipe=None, category: str = None) -> DataFrame: pass
