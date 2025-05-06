@@ -39,11 +39,11 @@ Name: "brazilianportuguese"; MessagesFile: "compiler:Languages\BrazilianPortugue
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "{#rootPath}\painel-esus\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#rootPath}\painel-esus\interface\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\paineis-v2-front\static-files\*"; DestDir: "{app}\static-files"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#rootPath}\painel-esus\interface\icon\*"; DestDir: "{app}\icon"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#rootPath}\painel-esus\dist\config.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#rootPath}\painel-esus\dist\painel-esus.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#rootPath}\painel-esus\interface\dist\config.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#rootPath}\painel-esus\interface\dist\painel-esus.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\ibge.csv"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
 
