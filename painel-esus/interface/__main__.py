@@ -7,7 +7,7 @@ import customtkinter as ctk
 import pandas as pd
 from customtkinter import CTkProgressBar, IntVar
 from PIL import Image
-from src.errors.logging import logging
+# from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
 
 ctk.set_appearance_mode("dark")
