@@ -168,9 +168,9 @@ jobs:
         shell: cmd
 
       - name: Build EXE run
-        working-directory: ./painel-esus
+        working-directory: ./painel-esus/interface
         run: |
-          pyinstaller --icon=.\interface\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile .\run.py
+          pyinstaller --icon=.\icon\Icon_Painel_Purple_ICO.ico -n painel-esus --onefile ..\run.py
         shell: cmd
 
 
