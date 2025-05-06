@@ -31,13 +31,13 @@ def get_suffix(column, category):
 def by_race(
     cnes: int = None, 
     equipe: int = None, 
-    category: Literal['atendidas','cadastradas'] = 'atendidas',):
+    category: str = None,):
     where_clause = gen_where_category(category)
     where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)   
     
     return f"""
             SELECT  raca_cor, count(*) as total
-            FROM read_parquet('./dados/output/saude_bucal.parquet') 
+            FROM read_parquet('/home/allanbontempo/programacao/fiocruz/painel-esus/painel-esus/src/infra/db/repositories/oral_health/sqls/dados/output/saude_bucal.parquet') 
             {where_clause}
             group by raca_cor """
             
@@ -51,7 +51,7 @@ def by_gender(
     return f"""
         select 
             sexo, faixa_etaria, count(*) as total
-        from read_parquet('./dados/output/saude_bucal.parquet') 
+        from read_parquet('/home/allanbontempo/programacao/fiocruz/painel-esus/painel-esus/src/infra/db/repositories/oral_health/sqls/dados/output/saude_bucal.parquet') 
         {where_clause}
         group by sexo, faixa_etaria
         order by sexo, max(idade);
