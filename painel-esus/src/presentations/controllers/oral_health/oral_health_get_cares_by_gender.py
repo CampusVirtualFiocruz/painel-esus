@@ -12,10 +12,6 @@ class OralHealthGetCaresByGenderController(ControllerInterface):
         self.__adapter = OralHealthAdapter()
 
     def handle(self, request: HttpRequest) -> HttpResponse:
-        cnes = None
-        if request.path_params and 'cnes' in request.path_params:
-            cnes = int(request.path_params['cnes'])
-
         cnes = int(request.path_params['cnes']) if request.path_params and 'cnes' in request.path_params else None
         equipe_param = request.query_params.get("equipe")
         equipe = int(equipe_param) if equipe_param and equipe_param.isdigit() else None
