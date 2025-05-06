@@ -1,4 +1,5 @@
 from src.domain.use_cases.oral_health_dashboard_use_case import OralHealthDashboardUseCaseInterface
+from src.presentations.helpers.request_params_helper import extract_cnes_equipe_category
 from src.presentations.http_types import HttpRequest
 from src.presentations.http_types import HttpResponse
 from src.presentations.interfaces.controller_interface import \
@@ -12,10 +13,7 @@ class OralHealthGetCaresByGenderController(ControllerInterface):
         self.__adapter = OralHealthAdapter()
 
     def handle(self, request: HttpRequest) -> HttpResponse:
-        cnes = int(request.path_params['cnes']) if request.path_params and 'cnes' in request.path_params else None
-        equipe_param = request.query_params.get("equipe")
-        equipe = int(equipe_param) if equipe_param and equipe_param.isdigit() else None
-        category = request.query_params.get('category', 'atendidas')
+        cnes, equipe, category = extract_cnes_equipe_category(request)
 
         response = self.__use_case.get_oral_health_cares_by_gender(cnes, equipe, category)
         adapted_response = self.__adapter.by_gender(response)
