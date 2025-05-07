@@ -11,6 +11,7 @@
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 #define ConfigExeName "config.exe"
 #define rootPath "D:\a\painel-esus\painel-esus"
+#define ServiceName "PaineleSUSService"
 
 [Setup]
 AppId={{91B895F7-3F8C-4B4C-A898-AF39516ADBFC}
@@ -44,6 +45,7 @@ Source: "{#rootPath}\painel-esus\interface\icon\*"; DestDir: "{app}\icon"; Flags
 Source: "{#rootPath}\painel-esus\interface\dist\config.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\interface\dist\painel-esus.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\ibge.csv"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#rootPath}\painel-esus\nssm.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
@@ -52,13 +54,45 @@ Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: s
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
 Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".myp"; ValueData: ""
 
+; Item principal do menu de contexto
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Gerenciar Painel e-SUS APS"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\interface\icon\Icon_Painel_Purple_ICO.ico"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "SubCommands"; ValueData: ""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Position"; ValueData: "Top"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell"; Flags: uninsdeletekey
+
+; Subitem: Iniciar
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Iniciar"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Iniciar"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Iniciar"; ValueType: string; ValueName: "Verb"; ValueData: "runas"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Iniciar\command"; ValueType: string; ValueData: """cmd.exe"" /C """"{app}\nssm.exe"" start {#ServiceName} && timeout /t 3"""; Flags: uninsdeletekey
+
+; Subitem: Pausar
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Pausar"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Pausar"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Pausar"; ValueType: string; ValueName: "Verb"; ValueData: "runas"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Pausar\command"; ValueType: string; ValueData: """cmd.exe"" /C """"{app}\nssm.exe"" stop {#ServiceName} && timeout /t 3"""; Flags: uninsdeletekey
+
+; Subitem: Reiniciar
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Reiniciar"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Reiniciar"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Reiniciar"; ValueType: string; ValueName: "Verb"; ValueData: "runas"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Reiniciar\command"; ValueType: string; ValueData: """cmd.exe"" /C """"{app}\nssm.exe"" restart {#ServiceName} && timeout /t 3"""; Flags: uninsdeletekey
+
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
+Filename: "{app}\nssm.exe"; Parameters: "install {#ServiceName} ""{app}\{#MyAppExeName}"""; \
+    Flags: runhidden; StatusMsg: "Instalando serviço..."
+Filename: "{app}\nssm.exe"; Parameters: "set {#ServiceName} Description ""Serviço do Painel e-SUS APS"""; \
+    Flags: runhidden; StatusMsg: "Configurando serviço..."
+Filename: "{app}\nssm.exe"; Parameters: "start {#ServiceName}"; \
+    Flags: runhidden; StatusMsg: "Iniciando serviço..."
 Filename: "{app}\{#ConfigExeName}"; Description: "Abrir configuração após a instalação"; \
     Flags: postinstall skipifsilent unchecked runascurrentuser; Check: ShouldRunExe
+
+[UninstallRun]
+Filename: "{app}\nssm.exe"; Parameters: "stop {#ServiceName}"; Flags: runhidden
+Filename: "{app}\nssm.exe"; Parameters: "remove {#ServiceName} confirm"; Flags: runhidden
 
 [Code]
 function ShouldRunExe(): Boolean;
