@@ -1,63 +1,42 @@
-from src.data.use_cases.oral_health.oral_health_dashboard import \
-    OralHealthDashboardUseCase
-from src.infra.db.repositories.oral_health.oral_health_repository import \
-    OralHealthRepository
-from src.presentations.controllers.oral_health import OralHealthGetAllCaresByPlaceController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByAgeRangeController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByGenderController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByLineOfServicesController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByOutcomeController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByPlaceController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByTypeOfServicesController
-from src.presentations.controllers.oral_health import OralHealthGetExtractionProceduresProportionController
-from src.presentations.controllers.oral_health import OralHealthGetTotalController
-
 import duckdb
 
-from src.presentations.controllers.oral_health.oral_health_get_cares_by_race import OralHealthGetCaresByRaceController
-from src.presentations.controllers.oral_health.oral_health_get_conclued_treatment import \
-    OralHealthGetConcluedTreatmentController
-from src.presentations.controllers.oral_health.oral_health_get_first_appointment import \
-    OralHealthGetFirstAppointmentController
+from src.data.use_cases.oral_health.oral_health_use_case import (
+    OralHealthDashboardUseCase,
+)
+from src.infra.db.repositories.oral_health.oral_health_repository import (
+    OralHealthRepository,
+)
+from src.presentations.controllers.oral_health import (
+    OralHealthGetCaresByGenderController,
+)
+from src.presentations.controllers.oral_health.oral_health_get_atraumatic_treatment import (
+    OralHealthGetAtraumaticTreatmentController,
+)
+from src.presentations.controllers.oral_health.oral_health_get_cares_by_race import (
+    OralHealthGetCaresByRaceController,
+)
+from src.presentations.controllers.oral_health.oral_health_get_conclued_treatment import (
+    OralHealthGetConcluedTreatmentController,
+)
+from src.presentations.controllers.oral_health.oral_health_get_extraction import (
+    OralHealthGetExtractionController,
+)
+from src.presentations.controllers.oral_health.oral_health_get_first_appointment import (
+    OralHealthGetFirstAppointmentController,
+)
+from src.presentations.controllers.oral_health.oral_health_get_prevention_procedures import (
+    OralHealthGetPreventionProceduresController,
+)
+from src.presentations.controllers.oral_health.oral_health_get_supervised_brushing import (
+    OralHealthGetSupervisedBrushingController,
+)
 
 
-def oral_health_dashboard_get_total():
-    repository = OralHealthRepository()
+def oral_health_get_extraction():
+    session = duckdb.connect()
+    repository = OralHealthRepository(session)
     use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetTotalController(use_case)
-
-    return controller.handle
-
-
-def oral_health_dashboard_get_cares_by_line_of_services():
-    repository = OralHealthRepository()
-    use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByLineOfServicesController(use_case)
-
-    return controller.handle
-
-
-def oral_health_dashboard_get_cares_by_type_of_services():
-    repository = OralHealthRepository()
-    use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByTypeOfServicesController(use_case)
-
-    return controller.handle
-
-
-def oral_health_get_extraction_procedures_proportion():
-    repository = OralHealthRepository()
-    use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetExtractionProceduresProportionController(
-        use_case)
-
-    return controller.handle
-
-
-def oral_health_get_cares_by_age_range():
-    repository = OralHealthRepository()
-    use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByAgeRangeController(use_case)
+    controller = OralHealthGetExtractionController(use_case)
 
     return controller.handle
 
@@ -89,7 +68,6 @@ def oral_health_get_first_appointment():
     return controller.handle
 
 
-
 def oral_health_get_conclued_treatment():
     session = duckdb.connect()
     repository = OralHealthRepository(session)
@@ -99,25 +77,28 @@ def oral_health_get_conclued_treatment():
     return controller.handle
 
 
-def oral_health_get_cares_by_outcome():
-    repository = OralHealthRepository()
+def oral_health_get_prevention_procedures():
+    session = duckdb.connect()
+    repository = OralHealthRepository(session)
     use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByOutcomeController(use_case)
+    controller = OralHealthGetPreventionProceduresController(use_case)
 
     return controller.handle
 
 
-def oral_health_get_cares_by_place():
-    repository = OralHealthRepository()
+def oral_health_get_supervised_brushing():
+    session = duckdb.connect()
+    repository = OralHealthRepository(session)
     use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByPlaceController(use_case)
+    controller = OralHealthGetSupervisedBrushingController(use_case)
 
     return controller.handle
 
 
-def oral_health_get_all_cares_by_place():
-    repository = OralHealthRepository()
+def oral_health_get_atraumatic_treatment():
+    session = duckdb.connect()
+    repository = OralHealthRepository(session)
     use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetAllCaresByPlaceController(use_case)
+    controller = OralHealthGetAtraumaticTreatmentController(use_case)
 
     return controller.handle
