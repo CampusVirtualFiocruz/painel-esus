@@ -14,9 +14,9 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         sql = by_race(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
-    def get_first_appointment(self, cnes=None, equipe=None, category='atendidas'):
+    def get_oral_health_first_appointment(self, cnes=None, equipe=None, category: str = None):
         sql = first_appointment(cnes, equipe, category)
-        return self.session.execute(sql).mappings().all()
+        return self.session.execute(sql).fetchall()
 
     def get_conclued_treatment(self, cnes=None, equipe=None, category='atendidas'):
         sql = conclued_treatment(cnes, equipe, category)

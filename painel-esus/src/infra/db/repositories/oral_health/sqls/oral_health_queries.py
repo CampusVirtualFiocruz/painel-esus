@@ -60,7 +60,7 @@ def by_gender(
 def base_chart(
     cnes: int = None, 
     equipe: int = None, 
-    category: Literal['atendidas','cadastradas'] = 'atendidas',
+    category: str = None,
     column: str = None):
     where_clause=''
     where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)   
@@ -69,14 +69,14 @@ def base_chart(
     return f"""
         select 
             {_column}, count(*)
-        from read_parquet('./dados/output/saude_bucal.parquet')  
+        from read_parquet('/home/allanbontempo/programacao/fiocruz/painel-esus/painel-esus/src/infra/db/repositories/oral_health/sqls/dados/output/saude_bucal.parquet')  
         {where_clause}
         group by {_column}
         """  
 def first_appointment(
     cnes: int = None, 
     equipe: int = None, 
-    category: Literal['atendidas','cadastradas'] = 'atendidas',):
+    category: str = None,):
     
     return base_chart(cnes, equipe, category, 'agg_primeira_consulta')         
                 
