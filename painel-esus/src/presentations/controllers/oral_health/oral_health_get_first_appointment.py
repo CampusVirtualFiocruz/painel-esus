@@ -6,7 +6,7 @@ from src.presentations.interfaces.controller_interface import \
     ControllerInterface
 from src.main.adapters.oral_healthy_adapter import OralHealthAdapter
 
-class OralHealthGetCaresByRaceController(ControllerInterface):
+class OralHealthGetFirstAppointmentController(ControllerInterface):
 
     def __init__(self, use_case: OralHealthDashboardUseCaseInterface):
         self.__use_case = use_case
@@ -15,8 +15,8 @@ class OralHealthGetCaresByRaceController(ControllerInterface):
     def handle(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe, category = extract_cnes_equipe_category(request)
 
-        response = self.__use_case.get_oral_health_cares_by_race(cnes, equipe, category)
-        adapted_response = self.__adapter.group_count_binary(response)
+        response = self.__use_case.get_oral_health_first_appointment(cnes, equipe, category)
+        adapted_response = self.__adapter.first_appointment(response)
         
         return HttpResponse(
             status_code=200,
