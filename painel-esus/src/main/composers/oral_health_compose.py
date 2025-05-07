@@ -15,6 +15,8 @@ from src.presentations.controllers.oral_health import OralHealthGetTotalControll
 import duckdb
 
 from src.presentations.controllers.oral_health.oral_health_get_cares_by_race import OralHealthGetCaresByRaceController
+from src.presentations.controllers.oral_health.oral_health_get_conclued_treatment import \
+    OralHealthGetConcluedTreatmentController
 from src.presentations.controllers.oral_health.oral_health_get_first_appointment import \
     OralHealthGetFirstAppointmentController
 
@@ -83,6 +85,16 @@ def oral_health_get_first_appointment():
     repository = OralHealthRepository(session)
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetFirstAppointmentController(use_case)
+
+    return controller.handle
+
+
+
+def oral_health_get_conclued_treatment():
+    session = duckdb.connect()
+    repository = OralHealthRepository(session)
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthGetConcluedTreatmentController(use_case)
 
     return controller.handle
 

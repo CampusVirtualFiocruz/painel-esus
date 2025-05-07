@@ -37,6 +37,7 @@ class OralHealthPath:
         "get_cares_by_age_range": "/get-cares-by-age-range",
         "get_cares_by_gender": "/get-cares-by-gender",
         "get_first_appointment": "/get-first-appointment",
+        "get_conclued_treatment": "/get-conclued-treatment",
         "get_group_by_race": "/get-group-by-race",
         "get_cares_by_outcome": "/get-cares-by-outcome",
         "get_cares_by_place": "/get-cares-by-place",
@@ -232,6 +233,30 @@ def oral_health_get_cares_by_race_fn(cnes=None):
 )
 @cache.cached(query_string=True)
 def oral_health_get_first_appointment_fn(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(
+            request, oral_health_get_first_appointment())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+
+
+@oral_health_bp.route(
+    f"{urls['get_conclued_treatment']}", methods=["GET"], endpoint="get_conclued_treatment"
+)
+@oral_health_bp.route(
+    f"{urls['get_conclued_treatment']}/<cnes>",
+    methods=["GET"],
+    endpoint="get_conclued_treatment_id",
+)
+@cache.cached(query_string=True)
+def oral_health_get_conclued_treatment_fn(cnes=None):
     http_response = None
     response = None
     try:
