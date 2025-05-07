@@ -25,8 +25,10 @@ def gen_where_cnes_equipe(base_clause, cnes, equipe):
 def get_suffix(column, category):
     if category == 'atendidas':
         return f'{column}_atendidas'
-    else:
+    elif category == 'cadastradas':
         return f'{column}_cadastradas'
+    else:
+        raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
     
 def by_race(
     cnes: int = None, 
@@ -88,25 +90,25 @@ def conclued_treatment(cnes: int = None,
         
 def extraction(cnes: int = None, 
     equipe: int = None, 
-    category: Literal['atendidas','cadastradas'] = 'atendidas',):
-    
+    category:str = None,):
+
     return base_chart(cnes, equipe, category, 'agg_realizaram_exodontia')   
 
 def prevention_procedures(cnes: int = None, 
     equipe: int = None, 
-    category: Literal['atendidas','cadastradas'] = 'atendidas',):
+    category: str = None,):
     
     return base_chart(cnes, equipe, category, 'agg_procedimentos_preventivos')     
 
 def atraumatic_treatment(cnes: int = None, 
     equipe: int = None, 
-    category: Literal['atendidas','cadastradas'] = 'atendidas',):
+    category: str = None,):
     
     return base_chart(cnes, equipe, category, 'agg_TRA')  
     
 def supervised_brushing(cnes: int = None, 
     equipe: int = None, 
-    category: Literal['atendidas','cadastradas'] = 'atendidas',):
+    category: str = None,):
     
     return base_chart(cnes, equipe, category, 'agg_realizaram_exodontia')    
     
