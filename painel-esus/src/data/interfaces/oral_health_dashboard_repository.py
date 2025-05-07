@@ -43,3 +43,7 @@ class OralHealthDashboardRepositoryInterface(ABC):
     @abstractmethod
     def get_oral_health_first_appointment(
             self, cnes=None, equipe=None, category: str = None) -> DataFrame: pass
+
+    @abstractmethod
+    def get_oral_health_conclued_treatment(
+            self, cnes=None, equipe=None, category: str = None) -> DataFrame: pass

@@ -82,7 +82,7 @@ def first_appointment(
                 
 def conclued_treatment(cnes: int = None, 
     equipe: int = None, 
-    category: Literal['atendidas','cadastradas'] = 'atendidas',):
+    category: str = None,):
     
     return base_chart(cnes, equipe, category, 'agg_tratamento_odonto_concluido')        
         

@@ -58,6 +58,12 @@ class OralHealthDashboardUseCase(OralHealthDashboardUseCaseInterface):
         response = self._repository.get_oral_health_first_appointment(cnes, equipe, category)
         return response
 
+    def get_oral_health_conclued_treatment(self,  cnes: int = None, equipe: int = None, category: str = None):
+        if cnes and not isinstance(cnes, int):
+            raise InvalidArgument('CNES must be int')
+        response = self._repository.get_oral_health_conclued_treatment(cnes, equipe, category)
+        return response
+
     def get_oral_health_cares_by_outcome(self,  cnes: int = None):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument('CNES must be int')
