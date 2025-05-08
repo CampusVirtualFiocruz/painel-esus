@@ -186,7 +186,7 @@ jobs:
           dir .
           dir painel-esus\interface
           dir instalador
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript-windows-service.iss"
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.6.iss"
         shell: cmd
 
       # - name: Upload para AWS S3
