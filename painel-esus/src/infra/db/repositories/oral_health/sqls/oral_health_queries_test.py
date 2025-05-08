@@ -1,7 +1,9 @@
 from .oral_health_queries import (
     first_appointment,
     conclued_treatment,
-    extraction
+    extraction,
+    by_race,
+    by_gender
 )
 import duckdb
 
@@ -41,3 +43,23 @@ def test_extraction():
     print(result2)
     
     assert result1[0][1] > result2[0][1]      
+
+def test_by_race():
+    sql = by_race(None, None, 'atendidas')
+    result1 = run(sql)
+    print(result1)
+    
+    sql = by_race(26, None, 'atendidas')
+    result2 = run(sql)
+    print(result2)
+    
+    assert result1[0][1] > result2[0][1]  
+    
+def test_by_gender():
+    sql = by_gender(None, None, 'atendidas')
+    result1 = run(sql)
+    
+    sql = by_gender(26, None, 'atendidas')
+    result2 = run(sql)
+    
+    assert result1[1][2] > result2[1][2]      
