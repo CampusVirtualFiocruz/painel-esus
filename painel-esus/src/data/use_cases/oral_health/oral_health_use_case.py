@@ -81,6 +81,32 @@ class OralHealthDashboardUseCase(OralHealthDashboardUseCaseInterface):
             cnes, equipe, category
         )
         return response
+    
+    def find_filter_nominal(
+        self,
+        cnes: int,
+        page: int = 0,
+        pagesize: int = 10,
+        nome: str = None,
+        cpf: str = None,
+        equipe: int = None,
+        query: str = None,
+        sort=[],
+        category: str = 'atendidas'
+    ):
+        self.__valid_cnes(cnes)
+        response = self._repository.find_filter_nominal(
+            cnes,
+            page,
+            pagesize,
+            nome,
+            cpf,
+            equipe,
+            query,
+            sort,
+            category
+        )
+        return response
 
     def __valid_cnes(self, cnes):
         if cnes and not isinstance(cnes, int):

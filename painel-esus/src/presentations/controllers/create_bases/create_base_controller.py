@@ -25,7 +25,8 @@ from src.infra.create_base.polars import (
     CreateVacinacaoBaseRepository,
     CreateVisistaDomiciliarBaseRepository,
     CreatIvcfBaseRepository,
-    CreateIndicadoresIdososRepository
+    CreateIndicadoresIdososRepository,
+    CreateIndicadoresSaudeBucalRepository
 )
 
 
@@ -71,7 +72,8 @@ class CreateBasesController:
                     CreateIndicadoresCadastroRepository(),
                     CreateIndicadoresHipertensaoRepository(),
                     CreateIndicadoresDiabetesRepository(),
-                    CreateIndicadoresIdososRepository()
+                    CreateIndicadoresIdososRepository(),
+                    CreateIndicadoresSaudeBucalRepository()
                 ]
             ]
 

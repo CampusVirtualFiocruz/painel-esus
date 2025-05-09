@@ -1,6 +1,7 @@
 import pandas as pd
-from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.create_base.polars.abstract_generate_base import AbstractGenerateBase
+from src.infra.db.settings.connection import DBConnectionHandler
+
 
 class CreateCadIndividualBaseRepository(AbstractGenerateBase):
     _base = 'tb_fat_cad_individual'
@@ -17,6 +18,7 @@ class CreateCadIndividualBaseRepository(AbstractGenerateBase):
             "st_diabete",
             "nu_uuid_ficha",
             "co_dim_raca_cor",
+            "st_comunidade_tradicional",
         ]
         dtype = {
             "co_seq_fat_cad_individual": pd.Int64Dtype(),
@@ -28,6 +30,7 @@ class CreateCadIndividualBaseRepository(AbstractGenerateBase):
             "st_diabete": pd.Int64Dtype(),
             "nu_uuid_ficha": pd.StringDtype(),
             "co_dim_raca_cor": pd.Int64Dtype(),
+            "st_comunidade_tradicional": pd.StringDtype()
         }
         self._sql = "SELECT {} FROM tb_fat_cad_individual order by co_seq_fat_cad_individual".format(", ".join(fci_vars))
         super().__init__( DBConnectionHandler(), self._sql, dtype)

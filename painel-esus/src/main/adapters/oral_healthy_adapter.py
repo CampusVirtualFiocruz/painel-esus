@@ -1,5 +1,5 @@
 from src.main.adapters.base.base_dashboard_adapter import BaseDashboardAdapter
-
+from src.main.adapters.nominal_list_adapter import OralHealtNominalListAdapter
 
 class OralHealthAdapter(BaseDashboardAdapter):
 
@@ -26,3 +26,7 @@ class OralHealthAdapter(BaseDashboardAdapter):
 
     def supervised_brushing(self, response):
         return self.group_count_binary(response, "nao-realizado", "realizado")
+    
+    def nominal_list(self, response):
+        return OralHealtNominalListAdapter(response)
+    

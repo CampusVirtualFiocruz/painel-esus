@@ -50,3 +50,18 @@ class OralHealthDashboardUseCaseInterface(ABC):
         self, cnes=None, equipe=None, category: str = None
     ):
         pass
+    
+    @abstractmethod
+    def find_filter_nominal(
+        self,
+        cnes: int,
+        page: int = 0,
+        pagesize: int = 10,
+        nome: str = None,
+        cpf: str = None,
+        equipe: int = None,
+        query: str = None,
+        sort=[],
+        category: str = 'atendidas'
+    ): pass
+    

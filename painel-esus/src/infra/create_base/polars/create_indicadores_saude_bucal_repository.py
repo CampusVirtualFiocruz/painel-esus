@@ -1,15 +1,13 @@
 import logging
-from src.data.interfaces.create_bases.create_bases_repository import (
-    CreateBasesRepositoryInterface,
-)
-from src.infra.create_base.polars.scripts_dados.indicadores_idoso_polars import (
+
+from src.infra.create_base.polars.scripts_dados.indicadores_saude_bucal_polars import (
     gerar_banco,
 )
 
 
-class CreateIndicadoresIdososRepository(CreateBasesRepositoryInterface):
+class CreateIndicadoresSaudeBucalRepository():
 
-    _base = 'indicadores_idoso'
+    _base = "indicadores_saude_bucal"
     
     def __init__(self):
         ...
@@ -22,9 +20,7 @@ class CreateIndicadoresIdososRepository(CreateBasesRepositoryInterface):
             gerar_banco()
         except FileNotFoundError as e:
             # Trata o caso onde o interpretador Python não é encontrado
-            logging.error(str(e))
+            logging.error(e)
         except Exception as e:
             # Trata quaisquer outras exceções
             logging.error(f"Ocorreu um erro inesperado: {str(e)}")
-
-
