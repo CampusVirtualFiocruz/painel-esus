@@ -4,6 +4,7 @@ import re
 
 import numpy as np
 import pandas as pd
+from sqlalchemy import true
 from src.domain.entities.diabetes import Diabetes
 from src.domain.entities.hypertension import Hypertension
 from src.env.conf import getenv
@@ -711,7 +712,8 @@ class RecordNominalListAdapter:
 
 class OralHealtNominalListAdapter:
 
-    def __init__(self, user: Crianca):
+    def __init__(self, user, category: str = 'atendidas'):
+        self.category = category
         self.nome = user["nome"]
         self.nome_social = "-"
         self.tipo_localidade = user["tipo_localizacao_domicilio"]
@@ -728,94 +730,75 @@ class OralHealtNominalListAdapter:
         self.cep = user["cep"]
         self.raca_cor = user["raca_cor"]
         self.telefone = user["telefone"]
-        self.possui_alertas = (
-            user["agg_alerta_medicos_enfermeiros"] == 1
-            or user["agg_alerta_creatinina"] == 1
-            or user["agg_alerta_cirurgiao_dentista"] == 1
-            or user["agg_alerta_ivcf_aplicado"] == 1
-            or user["agg_alerta_peso_altura"] == 1
-            or user["agg_alerta_vacinas_influenza"] == 1
-            or user["agg_alerta_visitas_domiciliares_acs"] == 1
-        )
+        self.possui_alertas = self.check_alert(user)
         self.registros = []
         self.registros.append(
             AlertRecord(
-                data=self.convert_nan(user["total_consulta_medico_enfermeiro"]),
-                exibir_alerta=user["agg_alerta_medicos_enfermeiros"] == 1,
-                descricao="Total de consultas médicas e/ou de enfermagem nos últimos 12 meses:",
-                tipo_alerta="total_consulta_medico_enfermeiro",
-                classificacao="12-meses",
+                data=self.convert_date(self.select_column( user, "data_primeira_consulta")),
+                exibir_alerta=self.select_column(user, 'agg_primeira_consulta') == 1,
+                descricao="Data da primeira consulta odontológica programática",
+                tipo_alerta="primeira_consulta",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=[
-                    self.convert_date(user["data_ultima_consulta_medico_enfermeiro"]),
-                    self.convert_date(
-                        user["data_penultima_consulta_medico_enfermeiro"]
-                    ),
-                ],
-                exibir_alerta=user["agg_alerta_medicos_enfermeiros"] == 1,
-                descricao="Data das consultas médicas e/ou de enfermagem nos últimos 12 meses:",
-                tipo_alerta="data_ultimo_atendimento_medicos",
-                classificacao="12-meses",
+                data=self.convert_date(self.select_column( user, "data_tratamento_concluido")),
+                exibir_alerta=self.select_column( user, "agg_tratamento_odonto_concluido") == 1,
+                descricao="Data de conclusão do tratamento odontológico",
+                tipo_alerta="conclusao_tratamento",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=("Sim" if user["agg_peso_altura"] == 1 else "Não"),
-                exibir_alerta=user["agg_alerta_peso_altura"] == 1,
-                descricao="Houve registro simultâneo de peso e altura nos últimos 24 meses?",
-                tipo_alerta="alerta_peso_altura",
-                classificacao="24-meses",
-            )
-        )
-        self.registros.append(
-            AlertRecord(
-                data=self.convert_date(user["data_ultimo_creatinina"]),
-                exibir_alerta=user["agg_alerta_creatinina"] == 1,
-                descricao="Data do registro de exame de creatinina nos últimos 24 meses:",
-                tipo_alerta="data_ultimo_registro_creatinina",
-                classificacao="24-meses",
-            )
-        )
-        self.registros.append(
-            AlertRecord(
-                data=(self.convert_nan(user["total_visitas_domiciliares_acs"])),
-                exibir_alerta=user["agg_alerta_visitas_domiciliares_acs"] == 1,
-                descricao="Número de visitas domiciliares por ACS/TACS nos últimos 24 meses",
-                tipo_alerta="data_ultimo_registro_creatinina",
-                classificacao="24-meses",
-            )
-        )
-        self.registros.append(
-            AlertRecord(
-                data=self.convert_date(user["data_ultima_vacina"]),
-                exibir_alerta=user["agg_alerta_vacinas_influenza"] == 1,
-                descricao="Data de registro de vacina contra influenza nos últimos 24 meses",
-                tipo_alerta="data_ultima_vacina_influenza",
-                classificacao="24-meses",
+                data=self.convert_nan(self.select_column( user, "total_exodontia")),
+                exibir_alerta=self.select_column( user, "agg_realizaram_exodontia") == 1,
+                descricao="Quantidade de exodontias realizadas",
+                tipo_alerta="xodontia_realizadas",
             )
         )
 
+        prevent_codes = self.extract_procedures(user, 'codigos_procedimentos_preventivos')
+        description_codes = self.extract_procedures(user, 'descricao_procedimentos_preventivos')
+        label_alert = list(zip(prevent_codes, description_codes))
+        alert_list = [ f'{item[0]} - {item[1]}' if len(item[1])>1 else '' for item in label_alert ]
         self.registros.append(
             AlertRecord(
-                data=self.convert_date(user["data_ultimo_atendendimento_odonto"]),
-                exibir_alerta=user["agg_alerta_cirurgiao_dentista"] == 1,
-                descricao="Data das consultas odontológicas na APS nos últimos 24 meses",
-                tipo_alerta="alerta_cirurgiao_dentista",
-                classificacao="24-meses",
+                data=alert_list,
+                exibir_alerta=self.select_column( user, "agg_procedimentos_preventivos") == 1,
+                descricao="Procedimentos preventivos realizados:",
+                tipo_alerta="procedimentos_realizados",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=("Sim" if user["agg_ivcf_aplicado"] == 1 else "Não"),
-                exibir_alerta=user["agg_alerta_ivcf_aplicado"] == 1,
-                descricao="Houve avaliação do IVCF-20 nos últimos 24 meses?",
-                tipo_alerta="alerta_ivcf_aplicado",
-                classificacao="24-meses",
+                data=self.convert_date(self.select_column(user,'data_TRA')),
+                exibir_alerta=self.select_column( user, "agg_TRA") == 1,
+                descricao="Data do último tratamento restaurador atraumático",
+                tipo_alerta="data_utltimo_tra",
             )
         )
+
+    def check_alert( self, user):
+
+        if self.category == 'cadastradas':
+            return ( user["agg_TRA_cadastradas"] == 1
+                or user["agg_primeira_consulta_cadastradas"] == 1
+                or user["agg_realizaram_exodontia_cadastradas"] == 1
+                or user['agg_procedimentos_preventivos_cadastradas'] == 1
+                or user['agg_tratamento_odonto_concluido_cadastradas'] == 1 )
+        else:
+            return ( user["agg_TRA_atendidas"] == 1
+                or user["agg_primeira_consulta_atendidas"] == 1
+                or user["agg_procedimentos_preventivos_atendidas"] == 1
+                or user["agg_realizaram_exodontia_atendidas"] == 1
+                or user['agg_tratamento_odonto_concluido_atendidas'] == 1 )
+            
+    def extract_procedures(self, user, column):
+        data = user[f'{column}_{self.category}']
+        return data.split('|') if data is not None else []
+    
+    def select_column(self, user, column):
+        return user[f'{column}_{self.category}']
 
     def convert_date(self, dt):
         if issubclass(type(dt), type(pd.NaT)):

@@ -30,7 +30,7 @@ class CreateCadIndividualBaseRepository(AbstractGenerateBase):
             "st_diabete": pd.Int64Dtype(),
             "nu_uuid_ficha": pd.StringDtype(),
             "co_dim_raca_cor": pd.Int64Dtype(),
-            "st_comunidade_tradicional": pd.StringDtype()
+            "st_comunidade_tradicional": pd.Int64Dtype(),
         }
         self._sql = "SELECT {} FROM tb_fat_cad_individual order by co_seq_fat_cad_individual".format(", ".join(fci_vars))
         super().__init__( DBConnectionHandler(), self._sql, dtype)

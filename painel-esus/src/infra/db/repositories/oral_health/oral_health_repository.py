@@ -1,18 +1,20 @@
 import json
+
 import duckdb
 from src.data.interfaces.oral_health_dashboard_repository import (
     OralHealthDashboardRepositoryInterface,
 )
+
 from .sqls.oral_health_queries import (
+    atraumatic_treatment,
     by_gender,
     by_race,
-    first_appointment,
     conclued_treatment,
     extraction,
+    first_appointment,
+    oral_healt_base_sql,
     prevention_procedures,
-    atraumatic_treatment,
     supervised_brushing,
-    oral_healt_base_sql
 )
 
 
@@ -83,8 +85,6 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         conditions = []
         or_conditions = []
 
-        print(cnes, equipe)
-        print('-----')
         if cnes is not None and cnes:
             conditions += [f"codigo_unidade_saude = {cnes}"]
 
@@ -153,7 +153,6 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
 
         users = users.to_dict(orient="records")
         total = len(con.sql(oral_health + sql_where).fetchall())
-        print( oral_health + sql_where )
         return {
             "itemsCount": total,
             "itemsPerPage": pagesize,

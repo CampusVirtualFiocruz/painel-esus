@@ -3,8 +3,7 @@ from src.domain.use_cases.oral_health_dashboard_use_case import (
 )
 from src.main.adapters.oral_healthy_adapter import OralHealthAdapter
 from src.presentations.helpers.request_params_helper import extract_cnes_equipe_category
-from src.presentations.http_types import HttpRequest
-from src.presentations.http_types import HttpResponse
+from src.presentations.http_types import HttpRequest, HttpResponse
 from src.presentations.interfaces.controller_interface import ControllerInterface
 
 
@@ -46,17 +45,15 @@ class OralHealthNominalListController(ControllerInterface):
             equipe = request.query_params["equipe"]
         if request.query_params and "q" in request.query_params:
             q = request.query_params["q"]
-            
+
         if request.query_params and "sort[]" in request.query_params:
             sort = request.query_params.getlist('sort[]')
-        
+
         if request.query_params and "category" in request.query_params:
             category = request.query_params['category']
-        
-        print(cnes, equipe, nome, cpf, page, page_size, q, sort, category)
+
         return cnes, equipe, nome, cpf, page, page_size, q, sort, category
-        
-    
+
     def handle(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe, nome, cpf, page, page_size, q, sort, category = self._extract_nominal_params(request)
 
@@ -72,7 +69,7 @@ class OralHealthNominalListController(ControllerInterface):
             category
         )
         response["items"] = [
-            self.__adapter.nominal_list(r).to_dict() for r in response["items"]
+            self.__adapter.nominal_list(r, category).to_dict() for r in response["items"]
         ]
 
         return HttpResponse(status_code=200, body=response)

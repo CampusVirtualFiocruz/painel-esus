@@ -37,8 +37,8 @@ class CreateAtendOdontoBaseRepository(AbstractGenerateBase):
             "nu_altura": pd.Float64Dtype(),
             "co_dim_tipo_consulta": pd.Int64Dtype(),
             "st_conduta_tratamento_concluid": pd.Int64Dtype(),
-            "st_paciente_necessidades_espec": pd.StringDtype(),
-            "st_gestante": pd.StringDtype(),
+            "st_paciente_necessidades_espec": pd.Int64Dtype(),
+            "st_gestante": pd.Int64Dtype(),
         }
         self._sql = "SELECT {} FROM tb_fat_atendimento_odonto order by co_seq_fat_atd_odnt".format(", ".join(fao_vars))
         super().__init__( DBConnectionHandler(), self._sql, dtype)

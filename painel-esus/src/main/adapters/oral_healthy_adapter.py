@@ -26,7 +26,6 @@ class OralHealthAdapter(BaseDashboardAdapter):
 
     def supervised_brushing(self, response):
         return self.group_count_binary(response, "nao-realizado", "realizado")
-    
-    def nominal_list(self, response):
-        return OralHealtNominalListAdapter(response)
-    
+
+    def nominal_list(self, response, category):
+        return OralHealtNominalListAdapter(response, category)

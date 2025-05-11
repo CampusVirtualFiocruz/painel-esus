@@ -1,9 +1,11 @@
-import polars as pl
 import os
-from datetime import datetime,date
-from src.env.conf import getenv
-from .codigos_cbo import *
+from datetime import date, datetime
+
+import polars as pl
 from dateutil.relativedelta import relativedelta
+from src.env.conf import getenv
+
+from .codigos_cbo import *
 
 
 def ler_dados_raw(nome_parquet,columns=""):
@@ -49,11 +51,10 @@ def escrever_dados_raw(df,nome_parquet):
 
 
 def gerar_banco():
-    # ACV
     coluns_acv_geral = ['co_unico_ultima_ficha','dt_nascimento_cidadao','no_sexo_cidadao','nu_cpf_cidadao',
                 'nu_cns_cidadao','nu_telefone_celular','nu_telefone_contato','no_cidadao'
                 ,'nu_micro_area_domicilio','nu_micro_area_tb_cidadao','nu_ine_vinc_equipe','nu_cnes_vinc_equipe',
-                'ds_tipo_localizacao_domicilio','dt_ultima_atualizacao_cidadao','co_seq_acomp_cidadaos_vinc']
+                'ds_tipo_localizacao_domicilio','dt_ultima_atualizacao_cidadao','co_seq_acomp_cidadaos_vinc','tp_identidade_genero_cidadao']
 
 
     coluns_acv_end = ['no_tipo_logradouro_tb_cidadao','ds_logradouro_tb_cidadao',
@@ -65,11 +66,13 @@ def gerar_banco():
     columns_acv = coluns_acv_geral + coluns_acv_end
 
     # FCI
-    selected_columns_fci = ["co_fat_cidadao_pec","co_dim_tempo","nu_uuid_ficha","co_dim_raca_cor","nu_micro_area"]
+    selected_columns_fci = ["co_fat_cidadao_pec","co_dim_tempo","nu_uuid_ficha","co_dim_raca_cor","nu_micro_area",'st_comunidade_tradicional']
 
 
     # FAOI
-    columns_fao = ['co_fat_cidadao_pec','co_dim_tempo',"nu_altura","nu_peso",'co_dim_cbo_1','co_dim_cbo_2','co_seq_fat_atd_odnt','ds_filtro_procedimentos','co_dim_tipo_consulta', 'st_conduta_tratamento_concluid']
+    columns_fao = ['co_fat_cidadao_pec','co_dim_tempo',"nu_altura","nu_peso",'co_dim_cbo_1','co_dim_cbo_2',
+                'co_seq_fat_atd_odnt','ds_filtro_procedimentos','co_dim_tipo_consulta', 'st_conduta_tratamento_concluid','st_paciente_necessidades_espec','st_gestante']
+
 
 
     tb_pessoa = ler_dados_raw("tb_acomp_cidadaos_vinculados.parquet",columns_acv)
@@ -90,15 +93,6 @@ def gerar_banco():
 
     fci = fci.join(dim_raca_cor,on="co_dim_raca_cor",how='left')
 
-    dt_24meses = datetime.today() - relativedelta(months=24)
-    dt_30meses = datetime.today() - relativedelta(months=30)
-
-    def calcular_data(meses: int):
-        return datetime.today() - relativedelta(months=meses)
-
-
-    # ## Passo 6. Filtrar os códigos de profissionais, exames ou condições de saúde dos Indicadores
-
 
     coluns_cbo = ['nu_cbo','co_seq_dim_cbo']
 
@@ -108,6 +102,66 @@ def gerar_banco():
     dim_cbo = dim_cbo.with_columns(pl.col("co_seq_dim_cbo").cast(pl.Int64))
 
 
+
+    fci = (
+        fci
+        .with_columns(
+            pl.when(pl.col("st_comunidade_tradicional") == 1)
+                .then(pl.lit("Sim"))
+                .when(pl.col("st_comunidade_tradicional") == 0)
+                .then(pl.lit("Não"))
+                .otherwise(pl.lit("Sem Informação"))
+                .alias("st_comunidade_tradicional")
+        )
+        
+    )
+
+
+    tb_pessoa = (
+        tb_pessoa
+        .with_columns(
+            pl.when(pl.col("tp_identidade_genero_cidadao") == "HOMEM_CIS").then(pl.lit("Homem cisgênero"))
+            .when(pl.col("tp_identidade_genero_cidadao") == "MULHER_CIS").then(pl.lit("Mulher cisgênero"))
+            .when(pl.col("tp_identidade_genero_cidadao") == "HOMEM_TRANS").then(pl.lit("Homem transgênero"))
+            .when(pl.col("tp_identidade_genero_cidadao") == "MULHER_TRANS").then(pl.lit("Mulher transgênero"))
+            .when(pl.col("tp_identidade_genero_cidadao") == "TRAVESTI").then(pl.lit("Travesti"))
+            .when(pl.col("tp_identidade_genero_cidadao") == "NAO_BINARIO").then(pl.lit("Não-binário"))
+            .when(pl.col("tp_identidade_genero_cidadao") == "OUTRO_IDENTIDADE_GENERO").then(pl.lit("Outra"))
+            .otherwise(pl.lit("Sem Informação"))  
+            .alias("tp_identidade_genero_cidadao")
+        )  
+    )
+
+
+
+    # In[ ]:
+
+
+
+
+
+    # In[ ]:
+
+
+
+
+
+    # ## Passo 5. Criar variáveis de tempo de acordo com Indicadores
+
+    # In[8]:
+
+
+
+    dt_24meses = datetime.today() - relativedelta(months=24)
+    dt_30meses = datetime.today() - relativedelta(months=30)
+
+    def calcular_data(meses: int):
+        return datetime.today() - relativedelta(months=meses)
+
+
+    # ## Passo 6. Filtrar os códigos de profissionais, exames ou condições de saúde dos Indicadores
+
+    # In[11]:
 
 
     # AJUSTE de CBO
@@ -139,7 +193,46 @@ def gerar_banco():
 
     # ### Manipulando dados comuns aos indicadores
 
+    # In[12]:
 
+
+
+    fao_v2 = (
+        fao
+        .with_columns(
+            pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento")
+        )
+        .filter(
+            pl.col("co_fat_cidadao_pec").is_not_null()
+        ))
+
+
+    fao_vars = (
+        fao_v2
+        .filter(pl.col("dt_atendimento") >= dt_30meses)
+        .select("co_fat_cidadao_pec", "st_paciente_necessidades_espec", "st_gestante", "dt_atendimento")
+        .sort("dt_atendimento", descending=True)
+        .group_by("co_fat_cidadao_pec")
+        .agg(
+            pl.col("st_paciente_necessidades_espec").first().alias("st_paciente_necessidades_espec"),
+            pl.col("st_gestante").first().alias("st_gestante"),
+        )
+        .with_columns(
+            pl.when(pl.col("st_gestante") == 1)
+                .then(pl.lit("Sim"))
+                .when(pl.col("st_gestante") == 0)
+                .then(pl.lit("Não"))
+                .otherwise(pl.lit("Sem Informação"))
+                .alias("st_gestante"),
+
+            pl.when(pl.col("st_paciente_necessidades_espec") == 1)
+                .then(pl.lit("Sim"))
+                .when(pl.col("st_paciente_necessidades_espec") == 0)
+                .then(pl.lit("Não"))
+                .otherwise(pl.lit("Sem Informação"))
+                .alias("st_paciente_necessidades_espec"),
+        )
+    )
 
 
     cad_grouped = (
@@ -153,12 +246,12 @@ def gerar_banco():
         .group_by("co_fat_cidadao_pec")
         .agg([
             pl.col("dt_atendimento").max().alias("dt_ultima_fci"),
-            pl.col("ds_raca_cor").first().alias("ds_raca_cor")  ,
+            pl.col("ds_raca_cor").first().alias("ds_raca_cor"),
         ])
     )
 
 
-    fci_v2 = fci.select("co_fat_cidadao_pec","nu_uuid_ficha","nu_micro_area_fci")
+    fci_v2 = fci.select("co_fat_cidadao_pec","nu_uuid_ficha","nu_micro_area_fci","st_comunidade_tradicional")
 
 
     tb_pessoa = (
@@ -178,7 +271,13 @@ def gerar_banco():
         cad_grouped,
         on="co_fat_cidadao_pec",
         how="left"
+    ).join(
+        fao_vars, #capturar st_paciente_necessidades_espec e st_gestante
+        on="co_fat_cidadao_pec",
+        how="left"
     )
+
+
 
     # removendo co_fat_cidadao_pec duplicados priorizando chave, depois data, depois variável inteira
 
@@ -192,16 +291,10 @@ def gerar_banco():
 
     # criando dt_atendimento para FAO, usada em mais de um indicador, e filtrando cidadaos não nulos
 
-    fao_v2 = (
-        fao
-        .with_columns(
-            pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento")
-        )
-        .filter(
-            pl.col("co_fat_cidadao_pec").is_not_null()
-        ))
 
 
+
+    # In[13]:
 
 
     today = date.today()
@@ -224,6 +317,7 @@ def gerar_banco():
                 .otherwise(today.year - pl.col("dt_nasc_cidadao").dt.year() - 1).alias("idade")))
 
 
+    # In[14]:
 
 
     tb_pessoa_odonto = (
@@ -254,6 +348,7 @@ def gerar_banco():
     # cadastradas_odonto == 1
 
 
+    # In[15]:
 
 
     tb_pessoa_odonto_populacao = tb_pessoa_odonto.select("co_fat_cidadao_pec","cadastradas_odonto","atendimento_odonto")
@@ -276,6 +371,7 @@ def gerar_banco():
 
     # #### Total de pessoas atendidas - Dashboard
 
+    # In[16]:
 
 
     # pessoas atendidas nos últimos 2 anos: atendimento_odonto == 1
@@ -293,6 +389,7 @@ def gerar_banco():
 
     # #### Total de pessoas atendidas segundo sexo - Dashboard
 
+    # In[17]:
 
 
 
@@ -308,6 +405,7 @@ def gerar_banco():
 
     # #### Total de pessoas atendidas segundo raça/cor - Dashboard
 
+    # In[18]:
 
 
     categorias_validas = ["Branca", "Preta", "Amarela", "Parda", "Indígena"]
@@ -322,6 +420,7 @@ def gerar_banco():
 
     # #### Total de pessoas atendidas segundo faixa etária - Dashboard
 
+    # In[19]:
 
 
     tb_pessoa_odonto = (tb_pessoa_odonto
@@ -350,6 +449,7 @@ def gerar_banco():
     # #### Card da Lista Nominal: Exibir a data da 1ª consulta ou se não tiver realizado nenhuma consulta colocar um hífen
     # 
 
+    # In[20]:
 
 
     indicador_primeira_consulta_at = (
@@ -395,10 +495,12 @@ def gerar_banco():
     )
 
 
+    # #### Indicador I e Itens da **Lista nominal** do Indicador I no df **"tb_pessoa_odonto_final"**:  
     # #### *A saber:*
     # ##### Número de cidadãos atendidos pela Equipe de Saúde Bucal que realizaram a primeira consulta odontológica nos últimos 2 anos: **'agg_primeira_consulta'= 1**
     # ##### - data da primeira consulta odontológica programática (**"dt_primeira_consulta_atendidas"**) ou "-" se ausente
 
+    # In[21]:
 
 
     atendidas = (
@@ -415,6 +517,7 @@ def gerar_banco():
     )
 
 
+    # In[22]:
 
 
     #print(atendidas["agg_primeira_consulta_atendidas"].value_counts())
@@ -424,6 +527,7 @@ def gerar_banco():
     # 
     # ### Card da Lista Nominal: Exibir a data da conclusão do tratamento ou se não tiver finalizado colocar um hífen
 
+    # In[23]:
 
 
     tratamento_odontologico_concluido_at = (
@@ -462,6 +566,7 @@ def gerar_banco():
     )
 
 
+    # In[24]:
 
 
     #tratamento_odontologico_concluido_at["dt_tratamento_concluido_atendidas"].describe()
@@ -473,6 +578,7 @@ def gerar_banco():
     # 
     # ##### - Exibir a data da conclusão do tratamento ou se não tiver finalizado colocar um hífen: **"dt_tratamento_concluido_atendidas**
 
+    # In[25]:
 
 
     atendidas = (
@@ -488,6 +594,7 @@ def gerar_banco():
     )
 
 
+    # In[26]:
 
 
     #atendidas["agg_tratamento_odonto_concluido_atendidas"].value_counts()
@@ -497,6 +604,7 @@ def gerar_banco():
     # 
     # ### Card da Nominal: Exibir quantidade de exodontias realizadas
 
+    # In[27]:
 
 
     import re
@@ -506,6 +614,7 @@ def gerar_banco():
     regex_pattern = rf"\|({'|'.join(codigos_procurados)})\|"
 
 
+    # In[28]:
 
 
 
@@ -550,16 +659,19 @@ def gerar_banco():
     )
 
 
+    # In[29]:
 
 
     #tb_pessoa_odonto_exodontia_at["agg_realizaram_exodontia_atendidas"].value_counts()
 
 
+    # In[30]:
 
 
     #tb_pessoa_odonto_exodontia_at["total_exodontia_atendidas"].value_counts()
 
 
+    # In[31]:
 
 
     #tb_pessoa_odonto_exodontia_at["agg_realizaram_exodontia_atendidas"].value_counts()
@@ -571,6 +683,7 @@ def gerar_banco():
     # 
     # ##### Exibir a quantidade de exodontias realizadas: **"total_exodontia_atendidas"**
 
+    # In[32]:
 
 
     atendidas = (
@@ -591,6 +704,7 @@ def gerar_banco():
     # 
     # ### Card Lista Nominal:  Exibir a descrição do procedimento realizado conforme o SIGTAP ou se não tiver realizado nenhum procedimento colocar um hífen
 
+    # In[33]:
 
 
     # Dicionário de códigos para descrições
@@ -663,16 +777,19 @@ def gerar_banco():
     )
 
 
+    # In[34]:
 
 
     #print(indicador_procedimentos_preventivos_at["agg_procedimentos_preventivos_atendidas"].value_counts())
 
 
+    # In[35]:
 
 
     #print(indicador_procedimentos_preventivos_at["codigos_procedimentos_preventivos_atendidas"].value_counts())
 
 
+    # In[36]:
 
 
     #print(indicador_procedimentos_preventivos_at["descricao_procedimentos_preventivos_atendidas"].value_counts())
@@ -684,6 +801,7 @@ def gerar_banco():
     # 
     # ##### - Exibir a descrição (e código) do procedimento realizado conforme o SIGTAP ou se não tiver realizado nenhum procedimento colocar um hífen **"codigos_preventivos_atendidas"**, **"procedimentos_preventivos_atendidas"**
 
+    # In[37]:
 
 
     atendidas = (
@@ -701,16 +819,19 @@ def gerar_banco():
     )
 
 
+    # In[38]:
 
 
     #print(atendidas["codigos_procedimentos_preventivos_atendidas"].len())
 
 
+    # In[39]:
 
 
     #print(atendidas["descricao_procedimentos_preventivos_atendidas"].len())
 
 
+    # In[40]:
 
 
     #print(atendidas["agg_procedimentos_preventivos_atendidas"].value_counts())
@@ -720,6 +841,7 @@ def gerar_banco():
     # 
     # ### Lista Nominal: Exibir a data do último procedimento ou se não tiver realizado colocar um hífen
 
+    # In[41]:
 
 
     tb_pessoa_odonto_TRA_at = (
@@ -771,11 +893,13 @@ def gerar_banco():
     )
 
 
+    # In[42]:
 
 
     #print(tb_pessoa_odonto_TRA_at["agg_TRA_atendidas"].value_counts())
 
 
+    # In[43]:
 
 
     #print(tb_pessoa_odonto_TRA_at["dt_TRA_atendidas"].value_counts())
@@ -787,6 +911,7 @@ def gerar_banco():
     # 
     # ##### - Exibir a data do último procedimento ou se não tiver realizado colocar um hífen: **dt_tratamento_restaurador_atendidas**
 
+    # In[44]:
 
 
     atendidas = (
@@ -802,6 +927,7 @@ def gerar_banco():
     )
 
 
+    # In[45]:
 
 
     #print(atendidas["agg_TRA_atendidas"].value_counts())
@@ -811,6 +937,7 @@ def gerar_banco():
     # 
     # ### Card Lista Nominal: Exibir a data da realização ou se não tiver realizado colocar um hífen
 
+    # In[46]:
 
 
     # ESTE INDICADOR NÃO SERÁ APRESENTADO NA PRIMEIRA VERSÃO, POIS NÃO USAREMOS A TABELA DE ATIVIDADE COLETIVA
@@ -822,6 +949,7 @@ def gerar_banco():
     # 
     # ##### - Exibir a data da realização ou se não tiver realizado colocar um hífen: **"dt_escovacao_supervisionada_atendidas"**
 
+    # In[47]:
 
 
     # ESTE INDICADOR NÃO SERÁ APRESENTADO NA PRIMEIRA VERSÃO, POIS NÃO USAREMOS A TABELA DE ATIVIDADE COLETIVA
@@ -831,6 +959,7 @@ def gerar_banco():
 
     # ### Total de pessoas cadastradas
 
+    # In[48]:
 
 
     #  pessoas cadastradas com cadastro atualizado nos últimos 2 anos: 
@@ -849,6 +978,7 @@ def gerar_banco():
 
     # ### Total de pessoas cadastradas segundo sexo / raça cor / faixa etária
 
+    # In[49]:
 
 
     cadastradas = (
@@ -861,11 +991,13 @@ def gerar_banco():
     )
 
 
+    # In[50]:
 
 
     #print(cadastradas["no_sexo_cidadao"].value_counts())
 
 
+    # In[51]:
 
 
     #print(cadastradas["ds_raca_cor"].value_counts())
@@ -876,6 +1008,7 @@ def gerar_banco():
     # 
     # ### Card da Lista Nominal: Exibir a data da 1ª consulta ou se não tiver realizado nenhuma consulta colocar um hífen
 
+    # In[52]:
 
 
     indicador_primeira_consulta_cad = (
@@ -921,20 +1054,24 @@ def gerar_banco():
     )
 
 
+    # In[53]:
 
 
     #indicador_primeira_consulta_cad.filter(pl.col("co_fat_cidadao_pec") == 281)
 
 
+    # In[54]:
 
 
     #print(indicador_primeira_consulta_cad["dt_primeira_consulta_cadastradas"].describe())
 
 
+    # #### Indicador I e Itens da **Lista nominal** do Indicador I no df **"tb_pessoa_odonto_final"**:  
     # #### *A saber:*
     # ##### Número de cidadãos cadastrados pela Equipe de Saúde Bucal que realizaram a primeira consulta odontológica nos últimos 2 anos: **'agg_cidadaos_cadastrados'= 1**
     # ##### - data da primeira consulta odontológica programática (**"dt_primeira_consulta_cadastradas"**) ou "-" se ausente
 
+    # In[55]:
 
 
     cadastradas = (
@@ -950,6 +1087,7 @@ def gerar_banco():
     )
 
 
+    # In[56]:
 
 
     #cadastradas["agg_primeira_consulta_cadastradas"].value_counts()
@@ -959,6 +1097,7 @@ def gerar_banco():
     # 
     # ### Card da Lista Nominal: Exibir a data da conclusão do tratamento ou se não tiver finalizado colocar um hífen
 
+    # In[57]:
 
 
     tratamento_odontologico_concluido_cad = (
@@ -993,11 +1132,13 @@ def gerar_banco():
     )
 
 
+    # In[58]:
 
 
     #tratamento_odontologico_concluido_cad["agg_tratamento_odonto_concluido_cadastradas"].value_counts()
 
 
+    # In[59]:
 
 
     #tratamento_odontologico_concluido_cad["dt_tratamento_concluido_cadastradas"].describe()
@@ -1009,6 +1150,7 @@ def gerar_banco():
     # 
     # ##### - Exibir a data da conclusão do tratamento ou se não tiver finalizado colocar um hífen: **"dt_tratamento_concluido_cadastradas**
 
+    # In[60]:
 
 
     cadastradas = (
@@ -1024,6 +1166,7 @@ def gerar_banco():
     )
 
 
+    # In[61]:
 
 
     #cadastradas["agg_tratamento_odonto_concluido_cadastradas"].value_counts()
@@ -1033,6 +1176,7 @@ def gerar_banco():
     # 
     # ### Card da Nominal: Exibir quantidade de exodontias realizadas
 
+    # In[62]:
 
 
     import re
@@ -1042,6 +1186,7 @@ def gerar_banco():
     regex_pattern = rf"\|({'|'.join(codigos_procurados)})\|"
 
 
+    # In[63]:
 
 
     tb_pessoa_odonto_exodontia_cad = (
@@ -1098,6 +1243,7 @@ def gerar_banco():
     # 
     # ##### Exibir a quantidade de exodontias realizadas: **"dt_exodontia_cadastradas"**
 
+    # In[64]:
 
 
     cadastradas = (
@@ -1114,6 +1260,7 @@ def gerar_banco():
     )
 
 
+    # In[65]:
 
 
     #cadastradas["agg_realizaram_exodontia_cadastradas"].value_counts()
@@ -1123,6 +1270,7 @@ def gerar_banco():
     # 
     # ### Card Lista Nominal:  Exibir a descrição do procedimento realizado conforme o SIGTAP ou se não tiver realizado nenhum procedimento colocar um hífen
 
+    # In[66]:
 
 
     ### dicionário de procedimentos e funções na etapa de "atendidas"
@@ -1166,16 +1314,19 @@ def gerar_banco():
     )
 
 
+    # In[67]:
 
 
     #print(indicador_procedimentos_preventivos_cad["codigos_procedimentos_preventivos_cadastradas"].value_counts())
 
 
+    # In[68]:
 
 
     #print(indicador_procedimentos_preventivos_cad["descricao_procedimentos_preventivos_cadastradas"].value_counts())
 
 
+    # In[69]:
 
 
     #print(indicador_procedimentos_preventivos_cad["agg_procedimentos_preventivos_cadastradas"].value_counts())
@@ -1187,6 +1338,7 @@ def gerar_banco():
     # 
     # ##### - Exibir a descrição do procedimento realizado conforme o SIGTAP ou se não tiver realizado nenhum procedimento colocar um hífen **"procedimentos_preventivos_cadastradas**
 
+    # In[70]:
 
 
     cadastradas = (
@@ -1208,11 +1360,13 @@ def gerar_banco():
     # 
     # ### Lista Nominal: Exibir a data do último procedimento ou se não tiver realizado colocar um hífen
 
+    # In[ ]:
 
 
 
 
 
+    # In[71]:
 
 
     tb_pessoa_odonto_TRA_cad = (
@@ -1264,6 +1418,7 @@ def gerar_banco():
     # 
     # ##### - Exibir a data do último procedimento ou se não tiver realizado colocar um hífen: **dt_tratamento_restaurador_cadastradas**
 
+    # In[72]:
 
 
     cadastradas = (
@@ -1280,6 +1435,7 @@ def gerar_banco():
 
 
 
+    # In[73]:
 
 
     #cadastradas["agg_TRA_cadastradas"].value_counts()
@@ -1289,6 +1445,7 @@ def gerar_banco():
     # 
     # ### Card Lista Nominal: Exibir a data da realização ou se não tiver realizado colocar um hífen
 
+    # In[74]:
 
 
     # ESTE INDICADOR NÃO SERÁ APRESENTADO NA PRIMEIRA VERSÃO, POIS NÃO USAREMOS A TABELA DE ATIVIDADE COLETIVA
@@ -1300,6 +1457,7 @@ def gerar_banco():
     # 
     # ##### - Exibir a data da realização ou se não tiver realizado colocar um hífen: **"dt_escovacao_supervisionada_cadastradas"**
 
+    # In[75]:
 
 
     # ESTE INDICADOR NÃO SERÁ APRESENTADO NA PRIMEIRA VERSÃO, POIS NÃO USAREMOS A TABELA DE ATIVIDADE COLETIVA
@@ -1307,6 +1465,7 @@ def gerar_banco():
 
     # ## Passo 8. Criar tabela pessoa final com todas as variáveis necessárias para próximas etapas de desenvolvimento do Painel
 
+    # In[76]:
 
 
     # arrumando variáveis de unidade de saúde e equipe
@@ -1363,6 +1522,7 @@ def gerar_banco():
     )
 
 
+    # In[77]:
 
 
     # adicionando informações cidadaos conforme prioridades entre tabelas
@@ -1396,6 +1556,7 @@ def gerar_banco():
     )
 
 
+    # In[78]:
 
 
     #padronizando informações de endereço
@@ -1431,6 +1592,7 @@ def gerar_banco():
     tb_pessoa_odonto_final = tb_pessoa_odonto_final.with_columns(expressoes)
 
 
+    # In[79]:
 
 
     tb_pessoa_odonto_final = (
@@ -1466,6 +1628,7 @@ def gerar_banco():
     )
 
 
+    # In[80]:
 
 
     tb_pessoa_odonto_final = tb_pessoa_odonto_final.rename({
@@ -1485,6 +1648,7 @@ def gerar_banco():
         'no_municipio': 'municipio',
         'no_tipo_logradouro': 'tipo_logradouro',
         'no_bairro': 'bairro',
+
         # Novas renomeações adicionadas
         'st_registro_valido_equipe': 'status_registro_valido_equipe',
         'st_registro_valido_und_saude': 'status_registro_valido_unidade_saude',
@@ -1504,12 +1668,12 @@ def gerar_banco():
     })
 
 
+    # In[81]:
 
 
-    # deixando variáveis em ordem alfabética
-    #tabela_pessoa_odonto_final = tb_pessoa_odonto_final.select((tb_pessoa_odonto_final.columns))
 
 
+    # In[82]:
 
 
     tabela_pessoa_odonto_final = (tb_pessoa_odonto_final
@@ -1568,7 +1732,11 @@ def gerar_banco():
                                 'telefone',
                                 'tipo_localizacao_domicilio',
                                 'total_exodontia_atendidas',
-                                'total_exodontia_cadastradas'
+                                'total_exodontia_cadastradas',
+                                'st_comunidade_tradicional',
+                                'st_gestante',
+                                'st_paciente_necessidades_espec',
+                                'tp_identidade_genero_cidadao'
                             )
                         )
 
