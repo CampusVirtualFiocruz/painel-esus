@@ -1,5 +1,6 @@
 from typing import Literal
 
+
 def gen_where_category(category):
     if category == 'atendidas':
         return 'atendimento_odonto=1 '
@@ -7,7 +8,7 @@ def gen_where_category(category):
         return 'cadastradas_odonto=1 '
     else:
         raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
-    
+
 def gen_where_cnes_equipe(base_clause, cnes, equipe):
     clauses = []
 
@@ -29,14 +30,23 @@ def get_suffix(column, category):
         return f'{column}_cadastradas'
     else:
         raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
-    
+
 def oral_healt_base_sql():
     
     return f"""
             SELECT  *
             FROM read_parquet('./dados/output/saude_bucal.parquet')
             """
-    
+
+def get_total_card(cnes: int = None, 
+    equipe: int = None, ):
+    where_clause = gen_where_cnes_equipe('', cnes, equipe)
+    return f"""
+            SELECT tipo_localizacao_domicilio, count(*) as total
+            FROM read_parquet('./dados/output/saude_bucal.parquet') 
+            {where_clause}
+            group by tipo_localizacao_domicilio """
+
 def by_race(
     cnes: int = None, 
     equipe: int = None, 
@@ -49,7 +59,7 @@ def by_race(
             FROM read_parquet('./dados/output/saude_bucal.parquet') 
             {where_clause}
             group by raca_cor """
-            
+
 def by_gender(
     cnes: int = None, 
     equipe: int = None, 
@@ -88,13 +98,13 @@ def first_appointment(
     category: str = None,):
     
     return base_chart(cnes, equipe, category, 'agg_primeira_consulta')         
-                
+
 def conclued_treatment(cnes: int = None, 
     equipe: int = None, 
     category: str = None,):
     
     return base_chart(cnes, equipe, category, 'agg_tratamento_odonto_concluido')        
-        
+
 def extraction(cnes: int = None, 
     equipe: int = None, 
     category:str = None,):
@@ -112,11 +122,9 @@ def atraumatic_treatment(cnes: int = None,
     category: str = None,):
     
     return base_chart(cnes, equipe, category, 'agg_TRA')  
-    
+
 def supervised_brushing(cnes: int = None, 
     equipe: int = None, 
     category: str = None,):
     
     return base_chart(cnes, equipe, category, 'agg_realizaram_exodontia')    
-    
-    

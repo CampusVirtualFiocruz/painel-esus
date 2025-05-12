@@ -12,6 +12,7 @@ from .sqls.oral_health_queries import (
     conclued_treatment,
     extraction,
     first_appointment,
+    get_total_card,
     oral_healt_base_sql,
     prevention_procedures,
     supervised_brushing,
@@ -21,6 +22,10 @@ from .sqls.oral_health_queries import (
 class OralHealthRepository(OralHealthDashboardRepositoryInterface):
     def __init__(self,):
         self.session = duckdb.connect()
+
+    def total_card(self, cnes: int = None, equipe: int = None):
+        sql = get_total_card(cnes, equipe)
+        return self.session.execute(sql).fetchall()
 
     def get_oral_health_cares_by_gender(
         self, cnes=None, equipe=None, category: str = None
@@ -65,7 +70,7 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
     ):
         sql = supervised_brushing(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
-    
+
     def find_filter_nominal(
         self,
         cnes: int,
@@ -134,17 +139,17 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
             for s in sort:
                 filter = json.loads(s)
                 if filter["field"] not in mapped_columns: continue
-                
+
                 direction = filter['direction'] if 'direction' in filter else'asc'
                 columns = mapped_columns[filter["field"]]
                 order_list.append( f'{columns} {direction}')
         else:
             order_list = ['nome asc']
-            
+
         if len(order_list)>0:
             order = 'order by '
             order += ", ".join(order_list)
-        
+
         users = con.sql(
             oral_health
             + sql_where
@@ -181,4 +186,3 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
                 return x            
             response=response.apply(parse, axis=1)
         return response
-
