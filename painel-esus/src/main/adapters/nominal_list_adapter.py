@@ -730,6 +730,10 @@ class OralHealtNominalListAdapter:
         self.cep = user["cep"]
         self.raca_cor = user["raca_cor"]
         self.telefone = user["telefone"]
+        self.identidadeGenero = user['tp_identidade_genero_cidadao'] 
+        self.necessidadesEspeciais = user['st_paciente_necessidades_espec']
+        self.povosComunidades = user['st_comunidade_tradicional']
+
         self.possui_alertas = self.check_alert(user)
         self.registros = []
         self.registros.append(
