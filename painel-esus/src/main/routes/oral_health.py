@@ -1,21 +1,18 @@
 # pylint: disable=W0613
 # pylint: disable=E0401,C0301,W0612,W0611
-from flask import Blueprint
-from flask import jsonify
-from flask import request
-
+from flask import Blueprint, jsonify, request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.oral_health_compose import (
-    oral_health_get_cares_by_race,
-    oral_health_get_first_appointment,
-    oral_health_get_extraction,
+    oral_health_get_atraumatic_treatment,
     oral_health_get_cares_by_gender,
+    oral_health_get_cares_by_race,
     oral_health_get_conclued_treatment,
+    oral_health_get_extraction,
+    oral_health_get_first_appointment,
+    oral_health_get_nominal_list,
     oral_health_get_prevention_procedures,
     oral_health_get_supervised_brushing,
-    oral_health_get_atraumatic_treatment,
-    oral_health_get_nominal_list
 )
 from src.main.server.cache import cache
 
@@ -152,6 +149,7 @@ def oral_health_get_conclued_treatment_fn(cnes=None):
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)
+    return response, http_response.status_code
 
 
 @oral_health_bp.route(

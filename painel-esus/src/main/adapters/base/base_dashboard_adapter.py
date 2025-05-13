@@ -67,4 +67,3 @@ class BaseDashboardAdapter:
         }
         faixa = faixa.lower().strip()
         return mapping.get(faixa, faixa)
-
