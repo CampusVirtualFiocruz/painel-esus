@@ -23,7 +23,7 @@ export const Primary: Story = {
       data: 523,
       config: {
         description: "Total de crianças até 2 anos cadastradas",
-        icon: "paperdark",
+        // icon: "paperdark",
       },
   },
 };

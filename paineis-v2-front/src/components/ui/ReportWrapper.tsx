@@ -1,12 +1,14 @@
 import { HTMLProps, ReactNode } from "react";
-import { Header } from "../Header";
+import { Header } from "../HeaderNew";
 import { Footer } from "../Footer";
 import { getNomeUbs } from "../../utils";
 import { useInfo } from "../../context/infoProvider/useInfo";
 import { useQuery } from "react-query";
 import { Api } from "../../services/api";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { PainelParams } from "./ReportFooter";
+import { useAuth } from "../../context/AuthProvider/useAuth";
+import { getUserLocalStorage } from "../../context/AuthProvider/util";
 
 type Lista = {
   nome_equipe: string;
@@ -41,7 +43,11 @@ const ReportWrapper = ({
   footerNote?: string;
 } & HTMLProps<HTMLDivElement>) => {
   const { id } = useParams<PainelParams>();
-  const { city } = useInfo();
+  const infoContext = useInfo();
+  console.log(infoContext);
+  const { logout } = useAuth();
+  const user = getUserLocalStorage();
+  let navigate = useNavigate();
 
   const [params] = useSearchParams();
   const equipe = params.get("equipe");
@@ -88,7 +94,7 @@ const ReportWrapper = ({
     }
   );
 
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : city;
+  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : infoContext?.city;
   const prefix = (() => {
     if (equipe) {
       return equipe
@@ -114,7 +120,7 @@ const ReportWrapper = ({
       }}
       {...props}
     >
-      <Header />
+      <Header logout={logout} user={user} navigate={navigate} infoContext={infoContext} />
       <div
         style={{
           flex: 1,

@@ -1,3 +1,6 @@
+import React from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import type { Meta, StoryObj } from "@storybook/react";
 import { content } from "./../../assets/content/content";
 import {
@@ -11,6 +14,47 @@ import { charts } from "../../components/charts/infantil.mock";
 import { Footer } from "../../components/Footer";
 import { Button, Link } from "bold-ui";
 import { FaUser } from "react-icons/fa";
+import ReportWrapper from '../../components/ui/ReportWrapper';
+import { AuthContext } from '../../context/AuthProvider';
+import { InfoProvider } from '../../context/infoProvider';
+import { http, HttpResponse, delay } from 'msw';
+
+const queryClient = new QueryClient();
+
+// const MockAuthProvider = ({ children }: { children: React.ReactNode }) => (
+//   <AuthContext.Provider value={{
+//     logout: () => {},
+//     user: { fullName: 'Usuário Storybook' }
+//   }}>
+//     {children}
+//   </AuthContext.Provider>
+// );
+
+queryClient.setQueryData('ubs', [
+  {
+    label: 'UBS Teste',
+    value: 1,
+    id: 1,
+    qtd: 100,
+  },
+]);
+
+queryClient.setQueryData('get-teams/1', [
+  {
+    label: 'Equipe 1 (1)',
+    value: 1,
+    nome_equipe: 'Equipe 1',
+    codigo_equipe: 1,
+  },
+]);
+
+queryClient.setQueryData('city-informations', {
+  municipio: 'Cidade Storybook',
+  uf: 'SB',
+  cep: '00000-000',
+  codIgbe: '1234567',
+  estado: 'Estado SB'
+});
 
 const reportHeader = [
   {
@@ -77,175 +121,11 @@ const reportSections = [
   },
 ];
 
-const ReportFooter = ({
-  chaveListaNominal,
-  equipe,
-}: {
-  chaveListaNominal?:
-    | "Hipertensão"
-    | "Diabetes"
-    | "Idosa"
-    | "Qualidade"
-    | "Infantil";
-  equipe?: any;
-}) => {
-  const handleToViewList = () => {};
-
-  const handleToPainelMunicipio = () => {};
-
-  const handleToPainelUBS = () => {};
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "20px",
-        marginTop: "30px",
-        marginBottom: "120px",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          gap: "20px",
-        }}
-      >
-        {chaveListaNominal && (
-          <Button
-            style={{
-              backgroundColor: "#343131",
-              color: "white",
-              width: "250px",
-            }}
-            onClick={handleToViewList}
-          >
-            <FaUser style={{ marginRight: "10px" }} />
-            {content.buttonViewList}
-          </Button>
-        )}
-        <Button
-          kind="primary"
-          onClick={handleToPainelUBS}
-          style={{
-            width: "250px",
-          }}
-        >
-          {content.buttonBackToUbs}
-        </Button>
-      </div>
-      <Link onClick={handleToPainelMunicipio} style={{ color: "#343131" }}>
-        {content.buttonBackToCity}
-      </Link>
-    </div>
-  );
-};
-
-const ReportWrapper = ({
-  title,
-  subtitle,
-  children,
-  header,
-  footer,
-  footerNote,
-  ...props
-}: any) => {
-  const prefix = "";
-  const titleWithDetails = `${prefix ? prefix + "/" : ""} ${title}`;
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flex: 1,
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-      {...props}
-    >
-      {/* <Header /> */}
-      <div
-        style={{
-          flex: 1,
-          color: "#24252E",
-          backgroundColor: "white",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              marginTop: "50px",
-              display: "block",
-              width: "40px",
-              height: "4px",
-              backgroundColor: "black",
-              content: " ",
-            }}
-          />
-          <h1
-            style={{
-              display: "inline-block",
-              textAlign: "center",
-              marginTop: "20px",
-              fontWeight: "bold",
-              marginRight: "10px",
-            }}
-          >
-            {titleWithDetails}
-          </h1>
-          {Boolean(subtitle) && (
-            <p
-              style={{
-                display: "inline-block",
-              }}
-            >
-              {subtitle}
-            </p>
-          )}
-        </div>
-        <div style={{ width: "100%" }}>{header}</div>
-        <div className="container" style={{ marginTop: "20px" }}>
-          <div className="row justify-content-center">{children}</div>
-          {Boolean(footerNote) && (
-            <div
-              style={{
-                backgroundColor: "#edf3f8",
-                borderRadius: "10px",
-                padding: "16px 20px",
-                marginBottom: "26px",
-              }}
-            >
-              {footerNote}
-            </div>
-          )}
-        </div>
-        {/*  {footer} */}
-      </div>
-      <Footer />
-    </div>
-  );
-};
-
 const Infantil = () => {
   const report = charts;
 
   return (
-    <ReportWrapper
-      title={"Documentação - Relatório Exemplo"}
-      subtitle="(cuidado até o 2º ano de vida de acordo com a data da última atualização pelo município)"
-      footer={<ReportFooter chaveListaNominal="Infantil" equipe={undefined} />}
-    >
+    <>
       {reportSections.map((chartList: any, colIndex) => (
         <div className="col-12 col-md-6">
           {colIndex === 0 && (
@@ -310,12 +190,31 @@ const Infantil = () => {
           })}
         </div>
       ))}
-    </ReportWrapper>
+    </>
   );
 };
 
 const Report = () => {
-  return <Infantil />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      {/* <MockAuthProvider> */}
+        <InfoProvider>
+          <MemoryRouter initialEntries={['/painel/1?equipe=1']}>
+            <Routes>
+              <Route
+                path="/painel/:id"
+                element={
+                  <ReportWrapper title="Documentação - Relatório Exemplo" subtitle="(cuidado até o 2º ano de vida de acordo com a data da última atualização pelo município)">
+                    <Infantil />
+                  </ReportWrapper>
+                }
+              />
+            </Routes>
+          </MemoryRouter>
+        </InfoProvider>
+      {/* </MockAuthProvider> */}
+    </QueryClientProvider>
+  );
 };
 
 const meta = {
@@ -331,6 +230,24 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const MockedSuccess: Story = {
+  parameters: {
+    msw: {
+      handlers: [
+        http.get('/city-informations', () => {
+          return HttpResponse.json({
+            cep: '00000-000',
+            codIgbe: '12345',
+            estado: 'PERNAMBUCO',
+            municipio: 'LIVRAMENTO',
+            uf: 'PE',
+          });
+        }),
+      ],
+    },
+  },
+};
 
 export const Basic: Story = {
   args: {},
