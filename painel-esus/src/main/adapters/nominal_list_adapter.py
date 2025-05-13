@@ -835,6 +835,9 @@ class OralHealtNominalListAdapter:
                 "cep": self.cep,
                 "telefone": self.telefone,
                 "racaCor": self.raca_cor,
+                "identidadeGenero": self.identidadeGenero,
+                "necessidadesEspeciais": self.necessidadesEspeciais,
+                "povosComunidades": self.povosComunidades,
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [
