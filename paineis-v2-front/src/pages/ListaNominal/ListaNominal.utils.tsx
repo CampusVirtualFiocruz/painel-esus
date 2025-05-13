@@ -70,12 +70,7 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "raca",
       header: "Raça",
       sortable: false,
-      render: (item: any) => (
-        <span
-        >
-            {item?.racaCor || "-"}
-        </span>
-      ),
+      render: (item: any) => <span>{item?.racaCor || "-"}</span>,
     },
     {
       name: "equipe",
@@ -102,6 +97,27 @@ export const columns = ({ handleClick, condicao }: any) => {
       header: "Grupo/Condição",
       sortable: true,
       render: (item: any) => (item?.diagnostico || "-").toUpperCase(),
+    });
+  }
+
+  if (condicao === "Bucal") {
+    baseColumns.push({
+      name: "identidadeGenero",
+      header: "Identidade de Gênero",
+      sortable: false,
+      render: (item: any) => <span>{item?.identidadeGenero || "-"}</span>,
+    });
+    baseColumns.push({
+      name: "necessidadesEspeciais",
+      header: "Necessidades Especiais",
+      sortable: false,
+      render: (item: any) => <span>{item?.necessidadesEspeciais || "-"}</span>,
+    });
+    baseColumns.push({
+      name: "povosComunidades",
+      header: "Povos de Comunidades",
+      sortable: false,
+      render: (item: any) => <span>{item?.povosComunidades || "-"}</span>,
     });
   }
 
