@@ -1,27 +1,19 @@
 import { BarChart, DonutChart, WaffleChart } from "./charts.types";
 
-type MockRelatorioSaudeBucalV2 = {
+type MockRelatorioIdosoV2 = {
   "pessoas-por-sexo": BarChart;
   "distribuicao-pessoas-raca-cor": WaffleChart;
-  "primeira-consulta-odonto-realizada": DonutChart;
-  "tratamento-odonto-concluico": DonutChart;
-  "exodontia-realizada": DonutChart;
-  "procedimentos-preventivos-realizados": DonutChart;
-  "tra-realizado": DonutChart;
-  "escovacao-supervisionada-realizada": DonutChart;
+  "primeira-consulta-odonto": DonutChart;
+  "concluiu-tratamento-odonto": DonutChart;
+  "realizou-exodontia": DonutChart;
+  "realizou-preventivo-odonto": DonutChart;
+  "realizou-tra-odonto": DonutChart;
+  "realizou-escovacao-supervisionada": DonutChart;
 };
 
-export const charts: MockRelatorioSaudeBucalV2 = {
+export const charts: MockRelatorioIdosoV2 = {
   "pessoas-por-sexo": {
     data: [
-      {
-        tag: "menos-1-ano",
-        value: {
-          feminino: 20,
-          masculino: 20,
-          indeterminado: 2,
-        },
-      },
       {
         tag: "60-64-anos",
         value: {
@@ -68,75 +60,75 @@ export const charts: MockRelatorioSaudeBucalV2 = {
       },
     ],
   },
-  "primeira-consulta-odonto-realizada": {
+  "primeira-consulta-odonto": {
     data: [
       {
-        tag: "realizado",
-        value: 27,
+        tag: "",
+        value: 87,
       },
       {
-        tag: "nao-realizado",
-        value: 73,
+        tag: "",
+        value: 13,
       },
     ],
   },
-  "tratamento-odonto-concluico": {
+  "concluiu-tratamento-odonto": {
     data: [
       {
-        tag: "realizado",
-        value: 27,
+        tag: "",
+        value: 82,
       },
       {
-        tag: "nao-realizado",
-        value: 73,
+        tag: "",
+        value: 18,
       },
     ],
   },
-  "exodontia-realizada": {
+  "realizou-exodontia": {
     data: [
       {
-        tag: "realizado",
-        value: 27,
+        tag: "",
+        value: 87,
       },
       {
-        tag: "nao-realizado",
-        value: 73,
+        tag: "",
+        value: 13,
       },
     ],
   },
-  "procedimentos-preventivos-realizados": {
+  "realizou-preventivo-odonto": {
     data: [
       {
-        tag: "realizado",
-        value: 27,
+        tag: "",
+        value: 87,
       },
       {
-        tag: "nao-realizado",
-        value: 73,
+        tag: "",
+        value: 13,
       },
     ],
   },
-  "tra-realizado": {
+  "realizou-tra-odonto": {
     data: [
       {
-        tag: "realizado",
-        value: 27,
+        tag: "",
+        value: 87,
       },
       {
-        tag: "nao-realizado",
-        value: 73,
+        tag: "",
+        value: 13,
       },
     ],
   },
-  "escovacao-supervisionada-realizada": {
+  "realizou-escovacao-supervisionada": {
     data: [
       {
-        tag: "realizado",
-        value: 27,
+        tag: "",
+        value: 87,
       },
       {
-        tag: "nao-realizado",
-        value: 73,
+        tag: "",
+        value: 13,
       },
     ],
   },

@@ -30,12 +30,14 @@ const ReportWrapper = ({
   children,
   header,
   footer,
+  preheader,
   footerNote,
   ...props
 }: {
   title: string;
   subtitle?: string;
   header?: ReactNode;
+  preheader?: ReactNode;
   footer?: ReactNode;
   children: ReactNode;
   footerNote?: string;
@@ -71,15 +73,19 @@ const ReportWrapper = ({
   const { data: teamsData, isLoading: isLoadingTeam } = useQuery(
     "get-teams/" + id,
     async () => {
-      const response = await Api.get<ResponseData>("get-teams/" + id);
-      const data = response.data;
-      const listData: TypeUbs[] = data.data.map((i: any) => {
-        return {
-          ...i,
-          label: i.nome_equipe + " (" + i.codigo_equipe + ")",
-          value: i.codigo_equipe,
-        };
-      });
+      let listData: TypeUbs[] = [];
+
+      if (id) {
+        const response = await Api.get<ResponseData>("get-teams/" + id);
+        const data = response.data;
+        listData = data.data.map((i: any) => {
+          return {
+            ...i,
+            label: i.nome_equipe + " (" + i.codigo_equipe + ")",
+            value: i.codigo_equipe,
+          };
+        });
+      }
 
       return listData;
     },
@@ -122,6 +128,7 @@ const ReportWrapper = ({
           backgroundColor: "white",
         }}
       >
+        {preheader}
         <div
           style={{
             display: "flex",

@@ -70,10 +70,14 @@ const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
 
 export function SelecionarVisualizacao() {
   let navigate = useNavigate();
-  const { currentProfile }:any = useAuth();
+  const { currentProfile }: any = useAuth();
 
-  const [currentUbs, setCurrentUbs] = useState<any>(currentProfile?.currentUbs || undefined);
-  const [currentTeam, setCurrentTeam] = useState<any>(currentProfile?.currentTeam || undefined);
+  const [currentUbs, setCurrentUbs] = useState<any>(
+    currentProfile?.currentUbs || undefined
+  );
+  const [currentTeam, setCurrentTeam] = useState<any>(
+    currentProfile?.currentTeam || undefined
+  );
 
   const { data, isLoading, error } = useQuery(
     "ubs",
@@ -95,18 +99,20 @@ export function SelecionarVisualizacao() {
   );
 
   const { data: teamsData } = useQuery(
-    "get-teams/"+currentUbs,
+    "get-teams/" + currentUbs,
     async () => {
-      const response = await Api.get<ResponseData>("get-teams/"+currentUbs);
-      const data = response.data;
-      const listData: TypeUbs[] = data.data.map((i: any) => {
-        return {
-          ...i,
-          label: i.nome_equipe + " (" + i.codigo_equipe + ")",
-          value: i.codigo_equipe,
-        };
-      });
-
+      let listData: TypeUbs[] = [];
+      if (currentUbs) {
+        const response = await Api.get<ResponseData>("get-teams/" + currentUbs);
+        const data = response.data;
+        listData = data.data.map((i: any) => {
+          return {
+            ...i,
+            label: i.nome_equipe + " (" + i.codigo_equipe + ")",
+            value: i.codigo_equipe,
+          };
+        });
+      }
       return listData;
     },
     {
@@ -116,14 +122,14 @@ export function SelecionarVisualizacao() {
 
   const handleToPainel = () => {
     navigate("/painelx");
-  }
+  };
 
   const teamSuggestion = currentTeam || currentProfile?.currentTeam;
   const ubsSuggestion = currentUbs || currentProfile?.currentUbs;
 
   const handleToPainelWithTeam = () => {
     navigate(`/painel/${ubsSuggestion}?equipe=${teamSuggestion}`);
-  }
+  };
 
   const handleToPainelWithUbs = () => {
     navigate(`/painel/${ubsSuggestion}`);
@@ -156,7 +162,6 @@ export function SelecionarVisualizacao() {
                 onClick={handleToPainel}
                 type="button"
                 kind="primary"
-                
                 style={{ marginTop: "10px" }}
               >
                 Município
@@ -177,73 +182,85 @@ export function SelecionarVisualizacao() {
                 </div>
               ) : (
                 <>
-                  {!currentProfile?.currentUbs && <Select
-                    isClearable
-                    placeholder="UBS"
-                    noOptionsMessage={() => "Nenhuma UBS encontrada"}
-                    options={data}
-                    styles={selectStyle}
-                    onChange={onChangeSelection}
-                  />}
-                  { (currentUbs || currentProfile?.currentUbs) && <Button
-                    onClick={handleToPainelWithUbs}
-                    type="button"
-                    kind="primary"
-                    
-                    style={{ marginTop: "10px" }}
-                  >
-                    Acessar UBS
-                  </Button>}
+                  {!currentProfile?.currentUbs && (
+                    <Select
+                      isClearable
+                      placeholder="UBS"
+                      noOptionsMessage={() => "Nenhuma UBS encontrada"}
+                      options={data}
+                      styles={selectStyle}
+                      onChange={onChangeSelection}
+                    />
+                  )}
+                  {(currentUbs || currentProfile?.currentUbs) && (
+                    <Button
+                      onClick={handleToPainelWithUbs}
+                      type="button"
+                      kind="primary"
+                      style={{ marginTop: "10px" }}
+                    >
+                      Acessar UBS
+                    </Button>
+                  )}
                 </>
               )}
             </div>
           </div>
 
-        {currentProfile?.info != "not-configured" && <div className="container-combo-ubs ms-md-4"
-                style={{
-                  opacity: (currentUbs || currentProfile?.currentUbs) ? 1 : 0.5
-                }}>
-            <div className="container-icone">
-              <img
-                className="icone-equipe"
-                src={iconeEquipe}
-                alt="Ícone de Equipe"
-              />
-              {isLoading ? (
-                <div className="combo-ubs d-flex align-items-center justify-content-center">
-                  <Spinner size="sm" /> Carregando lista de equipes
-                </div>
-              ) : error ? (
-                <div className="combo-ubs d-flex align-items-center justify-content-center">
-                  Falha ao carregar lista de equipes
-                </div>
-              ) : (
-                <>
-                {!currentProfile?.currentTeam && <Select
-                  isClearable
-                  placeholder={"Equipe"}
-                  noOptionsMessage={() => "Nenhuma equipe encontrada"}
-                  options={teamsData}
-                  styles={selectStyle}
-                  onChange={onChangeTeamSelection}
-                  isDisabled={!currentUbs}
-                />}
-                {(!(currentUbs || currentProfile?.currentUbs)) ?<p style={{ fontSize: "12px" }}>
-                 Selecione uma ubs para continuar
-                </p>: null}
-                  { (currentTeam || currentProfile?.currentTeam) && <Button
-                    onClick={handleToPainelWithTeam}
-                    type="button"
-                    kind="primary"
-                    
-                    style={{ marginTop: "10px" }}
-                  >
-                    Acessar Equipe
-                  </Button>}
-                </>
-              )}
+          {currentProfile?.info != "not-configured" && (
+            <div
+              className="container-combo-ubs ms-md-4"
+              style={{
+                opacity: currentUbs || currentProfile?.currentUbs ? 1 : 0.5,
+              }}
+            >
+              <div className="container-icone">
+                <img
+                  className="icone-equipe"
+                  src={iconeEquipe}
+                  alt="Ícone de Equipe"
+                />
+                {isLoading ? (
+                  <div className="combo-ubs d-flex align-items-center justify-content-center">
+                    <Spinner size="sm" /> Carregando lista de equipes
+                  </div>
+                ) : error ? (
+                  <div className="combo-ubs d-flex align-items-center justify-content-center">
+                    Falha ao carregar lista de equipes
+                  </div>
+                ) : (
+                  <>
+                    {!currentProfile?.currentTeam && (
+                      <Select
+                        isClearable
+                        placeholder={"Equipe"}
+                        noOptionsMessage={() => "Nenhuma equipe encontrada"}
+                        options={teamsData}
+                        styles={selectStyle}
+                        onChange={onChangeTeamSelection}
+                        isDisabled={!currentUbs}
+                      />
+                    )}
+                    {!(currentUbs || currentProfile?.currentUbs) ? (
+                      <p style={{ fontSize: "12px" }}>
+                        Selecione uma ubs para continuar
+                      </p>
+                    ) : null}
+                    {(currentTeam || currentProfile?.currentTeam) && (
+                      <Button
+                        onClick={handleToPainelWithTeam}
+                        type="button"
+                        kind="primary"
+                        style={{ marginTop: "10px" }}
+                      >
+                        Acessar Equipe
+                      </Button>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-          </div> }
+          )}
         </div>
       </div>
       <Footer />

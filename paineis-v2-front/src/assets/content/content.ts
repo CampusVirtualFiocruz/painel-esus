@@ -1,4 +1,6 @@
 export const content: any = {
+  "": "",
+
   //comum
   urbana: "Zona Urbana",
   rural: "Zona Rural",
@@ -155,4 +157,12 @@ export const content: any = {
   "consulta-com-dentista-aps": "Consulta com dentista na APS",
   "ivcf-20":
     "Aplicação do Índice de Vulnerabilidade Clínico-Funcional (IVCF-20)",
+
+    //saude bucal
+    "primeira-consulta-odonto": "Pessoas que realizaram a primeira consulta odontológica",
+    "concluiu-tratamento-odonto": "Pessoas que concluíram o tratamento odontológico",
+    "realizou-exodontia": "Pessoas que realizaram exodontia",
+    "realizou-preventivo-odonto": "Pessoas que realizaram procedimentos preventivos",
+    "realizou-tra-odonto": "Pessoas que realizaram tratamento restaurador atraumático (TRA)",
+    "realizou-escovacao-supervisionada": "Pessoas que realizaram escovação supervisionada",
 };

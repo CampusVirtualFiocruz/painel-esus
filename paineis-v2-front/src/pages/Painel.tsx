@@ -512,6 +512,21 @@ export function Painel() {
                     style={{ visibility: 'hidden' }}
                 ></div>
               )}
+             {/*  {Boolean(dadosPainel?.indicators?.saudeBucal) && (
+                <div className="card-condicao p-2" onClick={handleToIdosa}>
+                  <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img
+                      width={"30%"}
+                      src={old}
+                      alt="Pessoa Idosa"
+                      className="mx-2"
+                    />
+                    <Condicao data={dadosPainel?.indicators?.idosa} />
+                  </div>
+                </div>
+              )} */}
             </div>
             <div className="d-flex my-5 justify-content-center">
               <div className="container-areas d-flex align-items-center me-4">
