@@ -91,7 +91,7 @@ export const columns = ({ handleClick, condicao }: any) => {
     },
   ];
 
-  if (condicao && !["Idosa", "Infantil", "Qualidade"].includes(condicao)) {
+  if (condicao && !["Idosa", "Infantil", "Qualidade", "Bucal"].includes(condicao)) {
     baseColumns.splice(5, 0, {
       name: "grupo_ condicao",
       header: "Grupo/Condição",
