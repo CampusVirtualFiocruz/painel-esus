@@ -20,8 +20,7 @@ import { SelecionarUbs } from "./pages/SelecionarUbs";
 import { SelecionarVisualizacao } from "./pages/SelecionarVisualizacao";
 import Tabagismo from "./pages/Tabagismo";
 import FeridaVascular from "./pages/FeridaVascular";
-import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
-import BucalV2 from "./pages/BucalV2";
+import Bucal from "./pages/Bucal";
 import Qualidade from "./pages/Qualidade";
 import Infantil from "./pages/Infantil";
 import Idosa from "./pages/Idosa";
@@ -354,7 +353,7 @@ function App() {
                 path="/saude-bucal"
                 element={
                   <ProtectedLayout>
-                    <SaudeBucal />
+                    <Bucal />
                   </ProtectedLayout>
                 }
               />
@@ -362,23 +361,7 @@ function App() {
                 path="/saude-bucal/:id"
                 element={
                   <ProtectedLayout>
-                    <SaudeBucal />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/saude-bucalV2"
-                element={
-                  <ProtectedLayout>
-                    <BucalV2 />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/saude-bucalV2/:id"
-                element={
-                  <ProtectedLayout>
-                    <BucalV2 />
+                    <Bucal />
                   </ProtectedLayout>
                 }
               />

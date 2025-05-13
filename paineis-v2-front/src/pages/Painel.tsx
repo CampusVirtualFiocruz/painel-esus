@@ -4,6 +4,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Spinner } from "reactstrap";
 import { Button } from "bold-ui";
+import { MdInfoOutline } from "react-icons/md";
 
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -12,21 +13,8 @@ import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
 import { Zonas } from "../charts/Zonas";
 import { Api } from "../services/api";
-
-import masculino from "../assets/images/masculino.svg";
-import feminino from "../assets/images/feminino.svg";
-import homem from "../assets/images/homem.svg";
-import mulher from "../assets/images/mulher.svg";
-import diabetes from "../assets/images/menu/diabetes.png";
-import hipertensao from "../assets/images/menu/hipertensao.png";
-import children from "../assets/images/menu/children.png";
-import old from "../assets/images/menu/old.png";
-import quality from "../assets/images/menu/quality.png";
-
 import { useInfo } from "../context/infoProvider/useInfo";
-
 import "../styles/painel.scss";
-import { MdInfoOutline } from "react-icons/md";
 import {
   Tooltip,
   TooltipContent,
@@ -34,7 +22,17 @@ import {
 } from "../components/ui/Tooltip";
 import { Typography } from "../components/ui/Typography";
 import Card from "../components/ui/Card";
-import { userCanSelectUBS } from "../App";
+
+import masculino from "../assets/images/masculino.svg";
+import feminino from "../assets/images/feminino.svg";
+import homem from "../assets/images/homem.svg";
+import mulher from "../assets/images/mulher.svg";
+import diabetes from "../assets/images/menu/diabetes.png";
+import hipertensao from "../assets/images/menu/hipertensao.png";
+import bucal from "../assets/images/menu/bucal.png";
+/* import children from "../assets/images/menu/children.png";
+import old from "../assets/images/menu/old.png"; */
+import quality from "../assets/images/menu/quality.png";
 
 type PainelParams = {
   id: string;
@@ -86,6 +84,7 @@ interface IPainel {
   indicators: {
     diabetes: Indicator;
     gestantes: Indicator;
+    saude_bucal: Indicator;
     hipertensao: Indicator;
     crianca: Indicator;
     idosa: Indicator;
@@ -143,8 +142,7 @@ export function Painel() {
 
     getDados();
 
-    return () => {
-    };
+    return () => {};
   }, [id]);
 
   const {
@@ -183,55 +181,22 @@ export function Painel() {
     navigate(`/painel/${e.value}`);
   };
 
-  const openReport = (
-    report: "diabetes" | "hipertensao" | "infantil" | "qualidade" | "idosa"
+  type availableRoutesToThemedReport = | "diabetes"
+  | "hipertensao"
+  | "infantil"
+  | "qualidade"
+  | "idosaV2"
+  | "saude-bucal";
+
+  const handleToThemedReport = (
+    key: availableRoutesToThemedReport
   ) => {
-    if (id !== undefined) {
-      navigate(`/diabetes/${id}${equipe ? `?equipe=${equipe}` : ""}`);
+    if (id) {
+      navigate(`/${key}/${id}${equipe ? `?equipe=${equipe}` : ""}`);
     } else {
-      navigate(`/diabetes${equipe ? `?equipe=${equipe}` : ""}`);
+      navigate(`/${key}${equipe ? `?equipe=${equipe}` : ""}`);
     }
   };
-
-  function handleToDiabetes() {
-    if (id !== undefined) {
-      navigate(`/diabetes/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/diabetes${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
-
-  function handleToHipertensao() {
-    if (id !== undefined) {
-      navigate(`/hipertensao/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/hipertensao${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
-
-  function handleToInfantil() {
-    if (id !== undefined) {
-      navigate(`/infantil/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/infantil${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
-
-  function handleToQualidade() {
-    if (id !== undefined) {
-      navigate(`/qualidade/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/qualidade${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
-
-  function handleToIdosa() {
-    if (id !== undefined) {
-      navigate(`/idosaV2/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/idosaV2${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
 
   return (
     <div id="page-painel">
@@ -445,7 +410,10 @@ export function Painel() {
           </div>
           <div className="container">
             <div className="row container-cards-condicoes">
-              <div className="card-condicao p-2" onClick={handleToDiabetes}>
+              <div
+                className="card-condicao p-2"
+                onClick={() => handleToThemedReport("diabetes")}
+              >
                 <span className="nome-condicao">Diabetes</span>
                 <h4>{somaIndicador(dadosPainel?.indicators?.diabetes)}</h4>
                 <div className="d-flex align-items-center">
@@ -453,7 +421,10 @@ export function Painel() {
                   <Condicao data={dadosPainel?.indicators?.diabetes} />
                 </div>
               </div>
-              <div className="card-condicao p-2" onClick={handleToHipertensao}>
+              <div
+                className="card-condicao p-2"
+                onClick={() => handleToThemedReport("hipertensao")}
+              >
                 <span className="nome-condicao">Hipertensão</span>
                 <h4>{somaIndicador(dadosPainel?.indicators?.hipertensao)}</h4>
                 <div className="d-flex align-items-center">
@@ -484,7 +455,10 @@ export function Painel() {
               style={{ marginTop: "20px" }}
             >
               {Boolean(dadosPainel?.indicators?.qualidade) && (
-                <div className="card-condicao p-2" onClick={handleToQualidade}>
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("qualidade")}
+                >
                   <span className="nome-condicao">Qualidade de Cadastros</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.qualidade)}</h4>
                   <div className="d-flex align-items-center">
@@ -493,7 +467,7 @@ export function Painel() {
                   </div>
                 </div>
               )}
-              {Boolean(dadosPainel?.indicators?.idosa) && (
+              {/* {Boolean(dadosPainel?.indicators?.idosa) && (
                 // <div className="card-condicao p-2" onClick={handleToIdosa}>
                 //   <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
                 //   <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>
@@ -511,22 +485,25 @@ export function Painel() {
                     className="card-condicao p-2"
                     style={{ visibility: 'hidden' }}
                 ></div>
-              )}
-             {/*  {Boolean(dadosPainel?.indicators?.saudeBucal) && (
-                <div className="card-condicao p-2" onClick={handleToIdosa}>
-                  <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
-                  <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>
+              )} */}
+              {Boolean(dadosPainel?.indicators?.saude_bucal) && (
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("saude-bucal")}
+                >
+                  <span className="nome-condicao">Saúde Bucal</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.saude_bucal)}</h4>
                   <div className="d-flex align-items-center">
                     <img
-                      width={"30%"}
-                      src={old}
-                      alt="Pessoa Idosa"
+                      width={"34%"}
+                      src={bucal}
+                      alt="Saude Bucal"
                       className="mx-2"
                     />
-                    <Condicao data={dadosPainel?.indicators?.idosa} />
+                    <Condicao data={dadosPainel?.indicators?.saude_bucal} />
                   </div>
                 </div>
-              )} */}
+              )}
             </div>
             <div className="d-flex my-5 justify-content-center">
               <div className="container-areas d-flex align-items-center me-4">

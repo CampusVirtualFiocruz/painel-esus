@@ -15,6 +15,9 @@ export const content: any = {
   "nao-informado": "Não informado",
   total: "Total",
 
+  realizado: "Realizado",
+  "nao-realizado": "Não Realizado",
+
   "1-meses": "1 mês",
   "2-meses": "2 meses",
   "3-meses": "3 meses",
@@ -24,6 +27,17 @@ export const content: any = {
   "12-meses": "12 meses",
   "24-meses": "24 meses",
 
+  'menos-1-ano': "Menos 1 ano",
+  '1-4-anos': "1 a 4 anos",
+  '5-9-anos': "5 a 9 anos",
+  '10-14-anos': "10 a 14 anos",
+  '15-19-anos': "15 a 19 anos",
+  '20-29-anos': "20 a 29 anos",
+  '30-39-anos': "30 a 39 anos",
+  '40-49-anos': "40 a 49 anos",
+  '50-59-anos': "50 a 59 anos",
+  '60a69': "60 a 69 anos",
+  '70a79': "70 a 79 anos",
   "60-64-anos": "60 a 64 anos",
   "60-69-anos": "60 a 69 anos",
   "65-69-anos": "65 a 69 anos",
@@ -44,6 +58,8 @@ export const content: any = {
   "85-a-89-anos": "85 a 89 anos",
   "90-a-94-anos": "90 a 94 anos",
   "95-a-99-anos": "95 a 99 anos",
+  
+  '80mais': "80+ anos",
   "100-ou-mais": "100+ anos",
   "100mais": "100+ anos",
 
@@ -159,6 +175,7 @@ export const content: any = {
     "Aplicação do Índice de Vulnerabilidade Clínico-Funcional (IVCF-20)",
 
     //saude bucal
+    "tota-atendidas": "Total de pessoas atendidas",
     "primeira-consulta-odonto": "Pessoas que realizaram a primeira consulta odontológica",
     "concluiu-tratamento-odonto": "Pessoas que concluíram o tratamento odontológico",
     "realizou-exodontia": "Pessoas que realizaram exodontia",

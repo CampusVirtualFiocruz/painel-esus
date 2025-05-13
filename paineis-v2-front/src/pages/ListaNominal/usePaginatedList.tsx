@@ -17,6 +17,7 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
     Idosa: "elderly",
     Infantil: "children",
     Qualidade: "cadastros",
+    Bucal: "oral-health",
   } as any;
 
   const { data: info, isLoading: isLoadingInfo } = useQuery(

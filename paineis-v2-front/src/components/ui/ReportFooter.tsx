@@ -22,6 +22,7 @@ export const ReportFooter = ({
     | "Diabetes"
     | "Idosa"
     | "Qualidade"
+    | "Bucal"
     | "Infantil";
   equipe?: any;
 }) => {
@@ -73,20 +74,22 @@ export const ReportFooter = ({
           </Button>
         )}
         {id != undefined && (
-            <Button
-              kind="primary"
-              onClick={handleToPainelUBS}
-              style={{
-                width: "250px",
-              }}
-            >
-              {content.buttonBackToUbs}
-            </Button>
+          <Button
+            kind="primary"
+            onClick={handleToPainelUBS}
+            style={{
+              width: "250px",
+            }}
+          >
+            {content.buttonBackToUbs}
+          </Button>
         )}
       </div>
-
       {userCanSelectUBS() && (
-        <Link onClick={handleToPainelMunicipio} style={{ color: "#343131", zIndex: 2 }}>
+        <Link
+          onClick={handleToPainelMunicipio}
+          style={{ color: "#343131", zIndex: 2 }}
+        >
           {content.buttonBackToCity}
         </Link>
       )}

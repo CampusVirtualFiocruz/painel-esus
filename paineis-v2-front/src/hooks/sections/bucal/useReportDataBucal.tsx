@@ -7,37 +7,43 @@ type reportBasicInfo = {
   recorte?: string | undefined;
 };
 
-const useReportDataBucalV2 = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
+const useReportDataBucal = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
   return useQuery(
-    ["relatorio-bucal", ubsId, equipe],
+    ["relatorio-bucal", ubsId, equipe, recorte],
     async () => {
       const ubsParam = ubsId ? `/${ubsId}` : "";
 
       const requests = {
+         "total": Api.get(`/oral-health/get-total${ubsParam}`, {
+          params: {
+            equipe: equipe,
+            recorte: recorte,
+          },
+        }),
         "pessoas-por-sexo": Api.get(
           `/oral-health/get-cares-by-gender${ubsParam}`,
           {
             params: {
               equipe: equipe,
-              recorte: recorte
+              recorte: recorte,
             },
           }
         ),
-        /* "distribuicao-pessoas-raca-cor": Api.get(
+        "distribuicao-pessoas-raca-cor": Api.get(
           `/oral-health/get-group-by-race${ubsParam}`,
           {
             params: {
               equipe: equipe,
-              recorte: recorte
+              recorte: recorte,
             },
           }
-        ),  */
+        ),
         "primeira-consulta-odonto": Api.get(
           `/oral-health/get-first-appointment${ubsParam}`,
           {
             params: {
               equipe: equipe,
-              recorte: recorte
+              recorte: recorte,
             },
           }
         ),
@@ -46,7 +52,7 @@ const useReportDataBucalV2 = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
           {
             params: {
               equipe: equipe,
-              recorte: recorte
+              recorte: recorte,
             },
           }
         ),
@@ -55,7 +61,7 @@ const useReportDataBucalV2 = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
           {
             params: {
               equipe: equipe,
-              recorte: recorte
+              recorte: recorte,
             },
           }
         ),
@@ -64,7 +70,7 @@ const useReportDataBucalV2 = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
           {
             params: {
               equipe: equipe,
-              recorte: recorte
+              recorte: recorte,
             },
           }
         ),
@@ -73,7 +79,7 @@ const useReportDataBucalV2 = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
           {
             params: {
               equipe: equipe,
-              recorte: recorte
+              recorte: recorte,
             },
           }
         ),
@@ -93,7 +99,6 @@ const useReportDataBucalV2 = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
 
       return {
         ...reducedData,
-        // ...reducedData?.indicadores?.data,
       };
     },
     {
@@ -102,4 +107,4 @@ const useReportDataBucalV2 = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
   );
 };
 
-export default useReportDataBucalV2;
+export default useReportDataBucal;
