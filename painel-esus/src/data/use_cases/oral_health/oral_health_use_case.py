@@ -12,6 +12,11 @@ class OralHealthDashboardUseCase(OralHealthDashboardUseCaseInterface):
     def __init__(self, _repository: OralHealthDashboardRepositoryInterface):
         self._repository = _repository
 
+    def get_oral_health_total(self, cnes: int = None, equipe: int = None):
+        self.__valid_cnes(cnes)
+        response = self._repository.total_ubs(cnes, equipe)
+        return response
+    
     def get_oral_health_extraction(
         self, cnes: int = None, equipe: int = None, category: str = None
     ):
@@ -81,7 +86,7 @@ class OralHealthDashboardUseCase(OralHealthDashboardUseCaseInterface):
             cnes, equipe, category
         )
         return response
-    
+
     def find_filter_nominal(
         self,
         cnes: int,

@@ -28,7 +28,13 @@ from src.presentations.controllers.oral_health.oral_health_get_prevention_proced
 from src.presentations.controllers.oral_health.oral_health_get_supervised_brushing import (
     OralHealthGetSupervisedBrushingController,
 )
-from src.presentations.controllers.oral_health.oral_health_nominal_list import (OralHealthNominalListController)
+from src.presentations.controllers.oral_health.oral_health_nominal_list import (
+    OralHealthNominalListController,
+)
+from src.presentations.controllers.oral_health.oral_health_total import (
+    OralHealthTotalController,
+)
+
 
 def oral_health_get_extraction():
     repository = OralHealthRepository()
@@ -97,4 +103,10 @@ def oral_health_get_nominal_list():
     repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthNominalListController(use_case)
+    return controller.handle
+
+def oral_health_get_total():
+    repository = OralHealthRepository()
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthTotalController(use_case)
     return controller.handle

@@ -43,9 +43,24 @@ def get_total_card(cnes: int = None,
     where_clause = gen_where_cnes_equipe('', cnes, equipe)
     return f"""
             SELECT tipo_localizacao_domicilio, count(*) as total
-            FROM read_parquet('./dados/output/saude_bucal.parquet') 
+            FROM read_parquet('./dados/output/saude_bucal.parquet')
             {where_clause}
             group by tipo_localizacao_domicilio """
+
+
+def get_total_ubs(
+    cnes: int = None,
+    equipe: int = None,
+    category: str = None,
+):
+    where_clause = gen_where_category(category)
+    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)
+    return f"""
+    SELECT count(*) total 
+    FROM read_parquet('./dados/output/saude_bucal.parquet') 
+    {where_clause} 
+    """
+
 
 def by_race(
     cnes: int = None, 

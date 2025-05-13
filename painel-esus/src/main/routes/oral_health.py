@@ -13,6 +13,7 @@ from src.main.composers.oral_health_compose import (
     oral_health_get_nominal_list,
     oral_health_get_prevention_procedures,
     oral_health_get_supervised_brushing,
+    oral_health_get_total,
 )
 from src.main.server.cache import cache
 
@@ -31,6 +32,7 @@ class OralHealthPath:
         "get_supervised_brushing": "/get-supervised-brushing",
         "get_atraumatic_treatment": "/get-atraumatic-treatment",
         "get_nominal_list": "/get-nominal-list",
+        "get_total": "/get-total",
     }
 
 
@@ -248,6 +250,30 @@ def oral_health_get_nominal_list_fn(cnes=None):
     except Exception as exception:
         http_response = handle_errors(exception)
 
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+
+@oral_health_bp.route(
+    f"{urls['get_total']}",
+    methods=["GET"],
+    endpoint="get_total",
+)
+@oral_health_bp.route(
+    f"{urls['get_total']}/<cnes>",
+    methods=["GET"],
+    endpoint="get_total_id",
+)
+# @cache.cached()
+def oral_health_get_total_fn(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, oral_health_get_total())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception)
         response = jsonify(http_response.body)
 
     return response, http_response.status_code

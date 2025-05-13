@@ -1,5 +1,6 @@
 # pylint: disable=E0401
 from abc import ABC, abstractmethod
+from ast import Dict
 
 from pandas import DataFrame
 
@@ -67,3 +68,6 @@ class OralHealthDashboardRepositoryInterface(ABC):
         category: str = 'atendidas'
     ) -> DataFrame:
         pass
+
+    @abstractmethod
+    def total_ubs(self, cnes: int = None, equipe: int = None) -> Dict: pass 

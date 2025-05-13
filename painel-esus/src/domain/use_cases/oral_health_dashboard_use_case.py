@@ -65,3 +65,8 @@ class OralHealthDashboardUseCaseInterface(ABC):
         category: str = 'atendidas'
     ): pass
     
+    @abstractmethod
+    def get_oral_health_total(
+        self, cnes: int = None, equipe: int = None
+    ):
+        pass

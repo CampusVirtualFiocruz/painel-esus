@@ -13,6 +13,7 @@ from .sqls.oral_health_queries import (
     extraction,
     first_appointment,
     get_total_card,
+    get_total_ubs,
     oral_healt_base_sql,
     prevention_procedures,
     supervised_brushing,
@@ -26,6 +27,21 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
     def total_card(self, cnes: int = None, equipe: int = None):
         sql = get_total_card(cnes, equipe)
         return self.session.execute(sql).fetchall()
+
+    def total_ubs(self, cnes: int = None, equipe: int = None):
+
+        cadastradas = self.session.execute(get_total_ubs(cnes,equipe,'cadastradas')).fetchall()
+        atendidas = self.session.execute(
+            get_total_ubs(cnes, equipe, "atendidas")
+        ).fetchall()
+        return {
+            "atendidas": (
+                atendidas[0][0] if len(atendidas) > 0 and len(atendidas[0]) > 0 else 0
+            ),
+            "cadastradas": (
+                cadastradas[0][0] if len(cadastradas) > 0 and len(cadastradas[0]) > 0 else 0
+            ),
+        }
 
     def get_oral_health_cares_by_gender(
         self, cnes=None, equipe=None, category: str = None
