@@ -10,7 +10,7 @@ from src.infra.db.repositories.city_informations_repository import (
     CityInformationsRepository,
 )
 from src.main.routes.city_informations_route import CityInfoPath
-from src.main.routes.demographic_route import DemographichPath
+from src.main.routes.demographic_route import DemographicPath
 from src.main.routes.diabetes_routes import DiabetesPath
 from src.main.routes.hypertension_routes import HypertensionPath
 from src.main.routes.oral_health import OralHealthPath
@@ -54,7 +54,7 @@ class CreateCacheUseCase:
         units_list = city_info.get_units().to_dict(orient="records")
 
         city = CityInfoPath()
-        demographic = DemographichPath
+        demographic = DemographicPath()
         units = UnitsPath()
         root_path = "http://localhost:5001"
 

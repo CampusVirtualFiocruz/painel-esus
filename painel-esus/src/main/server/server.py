@@ -12,7 +12,7 @@ from src.env import env as config
 from src.errors.logging import logging
 from src.main.routes.children_routes import ChildrenPath, children_bp
 from src.main.routes.city_informations_route import CityInfoPath, city_informations_bp
-from src.main.routes.demographic_route import DemographichPath, demographics_bp
+from src.main.routes.demographic_route import DemographicPath, demographics_bp
 from src.main.routes.diabetes_routes import DiabetesPath, diabetes_bp
 from src.main.routes.elderly_routes import ElderlyPath, elderly_bp
 from src.main.routes.hypertension_routes import HypertensionPath, hypertension_bp
@@ -91,7 +91,7 @@ teams = TeamsPath()
 app.register_blueprint(teams_bp, url_prefix=teams.root_path)
 
 
-demographics_info = DemographichPath()
+demographics_info = DemographicPath()
 register_blueprint(
     app,
     (demographics_bp, demographics_info.root_path),

@@ -17,7 +17,7 @@ from .utils import handle_request
 demographics_bp = Blueprint("demographics", __name__)
 
 
-class DemographichPath:
+class DemographicPath:
     root_path = "/v1/demographic"
     urls = {
         "age_groups": "/age-groups",
@@ -32,7 +32,7 @@ class DemographichPath:
     }
 
 
-demographics = DemographichPath()
+demographics = DemographicPath()
 URLS = demographics.urls
 ROOT = demographics.root_path
 

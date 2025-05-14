@@ -38,7 +38,7 @@ painel-v2-front/**/build
 **/deploy.sh
 **/*.parquet
 **/**/*.parquet
-dados/input/** 
+dados/input/**
 dados/output/**
 #build
 **/static-files
@@ -46,7 +46,7 @@ dados/output/**
 paineis-v2-front/static-files/
 
 **/package-lock.json
-# **/yarn.lock
+**/yarn.lock
 
 run.spec
 docker-compose.yaml
