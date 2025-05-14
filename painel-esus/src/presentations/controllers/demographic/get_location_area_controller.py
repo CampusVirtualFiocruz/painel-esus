@@ -27,10 +27,10 @@ class GetLocationAreaController:
         response = self.__use_case.get_hypertension_by_location_area(cnes, equipe)
         return HttpResponse(status_code=200, body={"data": response})
 
-    def get_child_by_location_area(self) -> HttpResponse:
+    def get_child_by_location_area(self, request: HttpRequest) -> HttpResponse:
         response = self.__use_case.get_child_by_location_area()
         return HttpResponse(status_code=200, body={"data": response})
 
-    def get_elderly_by_location_area(self) -> HttpResponse:
+    def get_elderly_by_location_area(self, request: HttpRequest) -> HttpResponse:
         response = self.__use_case.get_elderly_by_location_area()
         return HttpResponse(status_code=200, body={"data": response})
