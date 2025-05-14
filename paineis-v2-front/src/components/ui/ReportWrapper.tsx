@@ -44,7 +44,6 @@ const ReportWrapper = ({
 } & HTMLProps<HTMLDivElement>) => {
   const { id } = useParams<PainelParams>();
   const infoContext = useInfo();
-  console.log(infoContext);
   const { logout } = useAuth();
   const user = getUserLocalStorage();
   let navigate = useNavigate();

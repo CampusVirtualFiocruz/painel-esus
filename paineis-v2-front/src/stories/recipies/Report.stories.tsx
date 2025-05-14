@@ -11,50 +11,17 @@ import {
   ProgressBar,
 } from "./../../components/charts";
 import { charts } from "../../components/charts/infantil.mock";
-import { Footer } from "../../components/Footer";
-import { Button, Link } from "bold-ui";
-import { FaUser } from "react-icons/fa";
 import ReportWrapper from '../../components/ui/ReportWrapper';
 import { AuthContext } from '../../context/AuthProvider';
 import { InfoProvider } from '../../context/infoProvider';
-import { http, HttpResponse, delay } from 'msw';
+import { http } from 'msw';
 
-const queryClient = new QueryClient();
-
-// const MockAuthProvider = ({ children }: { children: React.ReactNode }) => (
-//   <AuthContext.Provider value={{
-//     logout: () => {},
-//     user: { fullName: 'Usuário Storybook' }
-//   }}>
-//     {children}
-//   </AuthContext.Provider>
-// );
-
-queryClient.setQueryData('ubs', [
-  {
-    label: 'UBS Teste',
-    value: 1,
-    id: 1,
-    qtd: 100,
-  },
-]);
-
-queryClient.setQueryData('get-teams/1', [
-  {
-    label: 'Equipe 1 (1)',
-    value: 1,
-    nome_equipe: 'Equipe 1',
-    codigo_equipe: 1,
-  },
-]);
-
-queryClient.setQueryData('city-informations', {
-  municipio: 'Cidade Storybook',
-  uf: 'SB',
-  cep: '00000-000',
-  codIgbe: '1234567',
-  estado: 'Estado SB'
-});
+const mockAuth = { 
+  authenticate: async () => {},
+  logout: () => {},
+  chooseProfile: (profileData: any) => {},
+  profilesList: [],
+ };
 
 const reportHeader = [
   {
@@ -194,61 +161,76 @@ const Infantil = () => {
   );
 };
 
-const Report = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      {/* <MockAuthProvider> */}
-        <InfoProvider>
-          <MemoryRouter initialEntries={['/painel/1?equipe=1']}>
-            <Routes>
-              <Route
-                path="/painel/:id"
-                element={
-                  <ReportWrapper title="Documentação - Relatório Exemplo" subtitle="(cuidado até o 2º ano de vida de acordo com a data da última atualização pelo município)">
-                    <Infantil />
-                  </ReportWrapper>
-                }
-              />
-            </Routes>
-          </MemoryRouter>
-        </InfoProvider>
-      {/* </MockAuthProvider> */}
-    </QueryClientProvider>
-  );
-};
+// Story component with routing
+const ReportStory: React.FC = () => (
+  <MemoryRouter initialEntries={["/painel/1?equipe=1"]}>
+    <Routes>
+      <Route
+        path="/painel/:id"
+        element={
+          <ReportWrapper
+            title="Documentação - Relatório Exemplo"
+            subtitle="(cuidado até o 2º ano de vida de acordo com a data da última atualização pelo município)"
+          >
+            <Infantil />
+          </ReportWrapper>
+        }
+      />
+    </Routes>
+  </MemoryRouter>
+);
 
-const meta = {
-  title: "Recipies/Report",
-  component: Report,
-  parameters: {
-    //layout: 'centered',
-  },
-  tags: ["autodocs"],
-  argTypes: {},
-  args: {},
-} satisfies Meta;
-
-export default meta;
-type Story = StoryObj<typeof meta>;
-
-export const MockedSuccess: Story = {
+const meta: Meta<typeof ReportStory> = {
+  title: 'Recipies/Report',
+  component: ReportStory,
+  decorators: [
+    (Story) => {
+      const queryClient = new QueryClient();
+      window.localStorage.setItem('u', JSON.stringify({ fullName: 'João Silva' }));
+      return (
+        <QueryClientProvider client={queryClient}>
+          <AuthContext.Provider value={mockAuth}>
+            <InfoProvider>
+              <Story />
+            </InfoProvider>
+          </AuthContext.Provider>
+        </QueryClientProvider>
+      );
+    },
+  ],
   parameters: {
     msw: {
       handlers: [
-        http.get('/city-informations', () => {
-          return HttpResponse.json({
-            cep: '00000-000',
-            codIgbe: '12345',
-            estado: 'PERNAMBUCO',
-            municipio: 'LIVRAMENTO',
+        http.get('/v1/get-units', () => {
+          return new Response(JSON.stringify({
+            data: [
+              { no_unidade_saude: 'UBS Central', co_seq_dim_unidade_saude: 1 },
+              { no_unidade_saude: 'UBS Norte', co_seq_dim_unidade_saude: 2 },
+            ],
+          }))
+        }),
+        http.get('/v1/get-teams/:id', ({ params }) => {
+          return new Response(JSON.stringify({
+            data: [
+              { nome_equipe: 'Equipe Alpha', codigo_equipe: Number(params.id) || 2 },
+              { nome_equipe: 'Equipe Beta', codigo_equipe: Number(params.id) + 1 || 3 },
+            ],
+          }))
+        }),
+        http.get('/v1/city-informations', () => {
+          return new Response(JSON.stringify({
+            cep: '55000000',
+            codIgbe: '2604106',
+            estado: 'Pernambuco',
+            municipio: 'Caruaru',
             uf: 'PE',
-          });
+          }))
         }),
       ],
     },
   },
-};
+  tags: ['autodocs'],
+} satisfies Meta<typeof ReportStory>;
 
-export const Basic: Story = {
-  args: {},
-};
+export default meta;
+export const Primary: StoryObj<typeof ReportStory> = {};
