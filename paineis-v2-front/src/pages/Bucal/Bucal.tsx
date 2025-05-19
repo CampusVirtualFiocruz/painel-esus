@@ -189,7 +189,7 @@ const Bucal = () => {
                 setRecorte("atendidos");
               }}
             >
-              Atendidos
+              Atendidas
             </Button>
             <Button
               style={{ height: "36px" }}
@@ -198,7 +198,7 @@ const Bucal = () => {
                 setRecorte("cadastrados");
               }}
             >
-              Cadastrados
+              Cadastradas
             </Button>
           </div>
         }
