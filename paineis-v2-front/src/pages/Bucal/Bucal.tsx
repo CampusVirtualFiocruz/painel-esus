@@ -268,7 +268,7 @@ const Bucal = () => {
           <h2>
             <b>Proporção referente a quantidade de pessoas atendidas na UBS:</b>
           </h2>
-          <p>(Dados referentes aos últimos 30 meses)</p>
+          <p>(Dados referentes aos últimos 24 meses)</p>
         </center>
         {charts.map((chartList: any) => (
           <RenderChartGroup
