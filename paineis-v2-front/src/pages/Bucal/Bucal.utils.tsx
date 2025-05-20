@@ -32,25 +32,29 @@ export const fixedLegend = [
   },
 ];
 
-export const reportSections: any = [
+export const reportSections: any = (recorte: "atendidos" | "cadastrados") => [
   {
     row: {
       "pessoas-por-sexo": {
         Chart: Bar,
         config: {
+          overrideTitle: recorte === "atendidos" ? "total-faixa-atendidas" : "total-faixa-cadastradas",
           colors: ["#84aaff", "#0069d0", "#e4e4e4", "#5c7ea0"],
           componentStyle: {
             height: "500px",
           },
-
           yAxis: {
-            name: content?.["tota-atendidas"],
+            name: recorte === "atendidos" ? content?.["total-atendidas"] : content?.["total-cadastradas"],
+          },
+          xAxis: {
+            name: "",
           },
         },
       },
       "distribuicao-pessoas-raca-cor": {
         Chart: Waffle,
         config: {
+          overrideTitle: recorte === "atendidos" ? "distribuicao-atendidas" : "distribuicao-cadastradas",
           formatterKind: "perc",
           radiusStart: "0%",
           sort: [
@@ -61,9 +65,6 @@ export const reportSections: any = [
             "Indígena",
             "Não informado",
           ],
-          yAxis: {
-            name: content?.["total-cadastros"],
-          },
         },
       },
     },

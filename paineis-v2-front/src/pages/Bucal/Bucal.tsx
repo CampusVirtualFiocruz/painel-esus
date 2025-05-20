@@ -3,7 +3,6 @@ import { Button } from "bold-ui";
 import { useParams, useSearchParams } from "react-router-dom";
 
 import People from "../../assets/images/people.svg";
-import Medkit from "../../assets/images/medkit.png";
 import { ReportFooter } from "../../components/ui/ReportFooter";
 import ReportWrapper from "../../components/ui/ReportWrapper";
 import { content } from "../../assets/content/content";
@@ -11,6 +10,7 @@ import useReportDataBucal from "../../hooks/sections/bucal/useReportDataBucal";
 import { PainelParams } from "../Hipertensao";
 import { fixedLegend, getColorizedCharts, reportSections } from "./Bucal.utils";
 import "../../styles/idosa.scss";
+import { formataNumero } from "../../utils";
 
 
 const RenderChartGroup = ({
@@ -72,7 +72,7 @@ const RenderChartGroup = ({
             minHeight: "110px",
           }}
         >
-          {content?.[chartKey] || chartKey}
+          {content?.[chartConfigs?.overrideTitle] || content?.[chartKey] || chartKey}
         </h5>
         {Boolean(chartList?.[chartKey]?.subtitle) && (
           <p
@@ -235,7 +235,7 @@ const Bucal = () => {
               width={"30px"}
               style={{ filter: recorte === "atendidos" ? "brightness(10)" : "", transform: "translate(-10px, -5px)"}}
             />
-            <span style={{ fontSize: "26px" }}>{report?.total?.data?.atendidas}</span>
+            <span style={{ fontSize: "26px" }}>{formataNumero(report?.total?.data?.atendidas)}</span>
           </div>
           <div
             style={{
@@ -258,15 +258,15 @@ const Bucal = () => {
               width={"30px"}
               style={{ filter: recorte !== "atendidos" ? "brightness(10)" : "", transform: "translate(-10px, -5px)"}}
             />
-            <span style={{ fontSize: "26px" }}>{report?.total?.data?.cadastradas}</span>
+            <span style={{ fontSize: "26px" }}>{formataNumero(report?.total?.data?.cadastradas)}</span>
           </div>
         </div>
-        {reportSections.map((chartList: any) => (
+        {reportSections(recorte).map((chartList: any) => (
           <RenderChartGroup report={report} chartList={chartList} />
         ))}
         <center style={{ marginTop: "60px", marginBottom: "30px" }}>
           <h2>
-            <b>Proporção referente a quantidade de pessoas atendidas na UBS:</b>
+            <b>Proporção referente a quantidade de pessoas {recorte === "atendidos" ? "atendidas" : "cadastradas"} na UBS:</b>
           </h2>
           <p>(Dados referentes aos últimos 24 meses)</p>
         </center>

@@ -59,9 +59,9 @@ const ListaNominal = () => {
     searchTerm,
   });
 
-  const handleSortChange = (sort: string[]) =>{
+  const handleSortChange = (sort: string[]) => {
     setParams((state: any) => ({ ...state, sort }));
-  }
+  };
 
   const handlePageChange = (page: number) =>
     setParams((state: any) => ({ ...state, page: page + 1 }));
@@ -73,13 +73,30 @@ const ListaNominal = () => {
       totalPages: Math.max(1, Math.ceil(state.totalElements / size)),
     }));
 
+  const alertMessage = `
+    Os sinais de alertas correspondem à não
+    conformidade com as orientações de boas
+    práticas, dentro de um período de ${condicao === "Bucal" ? 24 : 12} meses,
+    preconizadas pelo Ministério da Saúde
+  `;
+
   return (
     <div id="page-painel">
-      {showModal && <Modal data={data} setShowModal={setShowModal} />}
+      {showModal && (
+        <Modal
+          data={data}
+          setShowModal={setShowModal}
+          config={{ alertMessage }}
+        />
+      )}
       <ReportWrapper
         title={
           "Lista Nominal / " +
-          (condicao === "Qualidade" ? "Qualidade de Cadastro" : condicao === "Idosa" ? "Cuidado da Pessoa Idosa" : condicao)
+          (condicao === "Qualidade"
+            ? "Qualidade de Cadastro"
+            : condicao === "Idosa"
+            ? "Cuidado da Pessoa Idosa"
+            : condicao)
         }
         subtitle=""
         footerNote={footerNote}

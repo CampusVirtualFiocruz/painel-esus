@@ -15,6 +15,7 @@ interface IModal {
   setShowModal: (status: boolean) => void;
   setProfile?: (profile: string) => void;
   initialProfile?: string;
+  config?: { alertMessage?: string };
 }
 
 export function parseText(text: string | number): number | string {
@@ -202,6 +203,7 @@ export const Modal = ({
   setShowModal,
   setProfile,
   initialProfile,
+  config,
 }: IModal) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
 
@@ -239,7 +241,7 @@ export const Modal = ({
         {data &&
           data.loaded === 6 &&
           bodyBoasPraticasCuidadoPessoasHipertensao()}
-        {data && data.loaded === 7 && <CardListaNominal item={data} />}
+        {data && data.loaded === 7 && <CardListaNominal item={data} {...config} />}
         {data &&
           data.loaded === 8 &&
           bodyPerfil(selectedValue, handleProfileChange)}

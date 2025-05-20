@@ -21,9 +21,20 @@ export function parseText(text: string | number): number | string {
   return text;
 }
 
-export function CardListaNominal({ item }: { item: any }) {
-  console.log({ item });
+const defaultMessage = `
+  Os sinais de alertas correspondem à não
+  conformidade com as orientações de boas
+  práticas, dentro de um período de 12 meses,
+  preconizadas pelo Ministério da Saúde
+`;
 
+export const CardListaNominal = ({
+  item,
+  config,
+}: {
+  item: any;
+  config?: { alertMessage: string };
+}) => {
   return (
     <div className="d-flex flex-column mb-4">
       <div className="user-details">
@@ -94,76 +105,70 @@ export function CardListaNominal({ item }: { item: any }) {
                   <br />
                 )}
                 {groupBy(condicao?.registros, "classificacao").map(
-                  ({ title, content: registerContent }: any) => {
+                  ({ content: registerContent }: any) => {
                     return (
-                      <>
-                        {/* {Boolean(title) && title !== "undefined" && <div
-                          style={{ marginBottom: "30px", fontWeight: "bold" }}
-                        >
-                          {(
-                            "Referente aos últimos " + content?.[title]
-                          ).toUpperCase()}
-                        </div>} */}
-                        <div style={{ marginLeft: "30px", maxWidth: "500px", cursor: "help" }}>
-                          {registerContent.map((registro: any) => (
-                            <>
-                              <Tooltip>
-                                <TooltipContent className="Tooltip">
-                                  <div>
-                                    Os sinais de alertas correspondem à não
-                                    conformidade com as orientações de boas
-                                    práticas, dentro de um período de 12 meses,
-                                    preconizadas pelo Ministério da Saúde
-                                  </div>
-                                </TooltipContent>
-                                <TooltipTrigger>
-                                  <div className="latest-checkups">
-                                    <p style={{ position: "relative" }}>
-                                      {registro?.descricao !==
-                                        "data-da-ultima-glicemia-capilar" && (
-                                        <>
-                                          {Boolean(registro?.exibirAlerta) && (
-                                            <span
-                                              className="iconCircle iconAlerta ms-2"
-                                              title="Alertas"
-                                              style={{
-                                                position: "absolute",
-                                                left: "-35px",
-                                              }}
-                                            >
-                                              !
-                                            </span>
-                                          )}
-                                          <strong>{registro?.descricao}</strong>
-                                          <span>
-                                            {Array.isArray(registro?.data) ? (
-                                              registro.data?.map(
-                                                (registerItem: any) => (
-                                                  <div
-                                                    style={{ display: "block" }}
-                                                  >
-                                                    &nbsp;
-                                                    {parseText(registerItem)}
-                                                  </div>
-                                                )
-                                              )
-                                            ) : (
-                                              <div>
-                                                &nbsp;
-                                                {parseText(registro?.data)}
-                                              </div>
-                                            )}
+                      <div
+                        style={{
+                          marginLeft: "30px",
+                          maxWidth: "500px",
+                          cursor: "help",
+                        }}
+                      >
+                        {registerContent.map((registro: any) => (
+                          <>
+                            <Tooltip>
+                              <TooltipContent className="Tooltip">
+                                <div>
+                                  {config?.alertMessage ?? defaultMessage}
+                                </div>
+                              </TooltipContent>
+                              <TooltipTrigger>
+                                <div className="latest-checkups">
+                                  <p style={{ position: "relative" }}>
+                                    {registro?.descricao !==
+                                      "data-da-ultima-glicemia-capilar" && (
+                                      <>
+                                        {Boolean(registro?.exibirAlerta) && (
+                                          <span
+                                            className="iconCircle iconAlerta ms-2"
+                                            title="Alertas"
+                                            style={{
+                                              position: "absolute",
+                                              left: "-35px",
+                                            }}
+                                          >
+                                            !
                                           </span>
-                                        </>
-                                      )}
-                                    </p>
-                                  </div>
-                                </TooltipTrigger>
-                              </Tooltip>
-                            </>
-                          ))}
-                        </div>
-                      </>
+                                        )}
+                                        <strong>{registro?.descricao}</strong>
+                                        <span>
+                                          {Array.isArray(registro?.data) ? (
+                                            registro.data?.map(
+                                              (registerItem: any) => (
+                                                <div
+                                                  style={{ display: "block" }}
+                                                >
+                                                  &nbsp;
+                                                  {parseText(registerItem)}
+                                                </div>
+                                              )
+                                            )
+                                          ) : (
+                                            <div>
+                                              &nbsp;
+                                              {parseText(registro?.data)}
+                                            </div>
+                                          )}
+                                        </span>
+                                      </>
+                                    )}
+                                  </p>
+                                </div>
+                              </TooltipTrigger>
+                            </Tooltip>
+                          </>
+                        ))}
+                      </div>
                     );
                   }
                 )}
@@ -173,4 +178,4 @@ export function CardListaNominal({ item }: { item: any }) {
       </div>
     </div>
   );
-}
+};
