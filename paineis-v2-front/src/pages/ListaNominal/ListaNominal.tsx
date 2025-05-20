@@ -45,7 +45,7 @@ const ListaNominal = () => {
   const queryParams = new URLSearchParams(location.search);
   const condicao = String(queryParams.get("condicao"));
   const footerNote = footerNotes?.[condicao];
-  const [recorte, setRecorte] = useState<"" | "atendidas" | "cadastrados">(
+  const [recorte, setRecorte] = useState<"" | "atendidas" | "cadastradas">(
     condicao === "Bucal" ? "atendidas" : ""
   );
 
@@ -129,9 +129,9 @@ const ListaNominal = () => {
               </Button>
               <Button
                 style={{ height: "36px" }}
-                kind={recorte === "cadastrados" ? "primary" : "normal"}
+                kind={recorte === "cadastradas" ? "primary" : "normal"}
                 onClick={() => {
-                  setRecorte("cadastrados");
+                  setRecorte("cadastradas");
                 }}
               >
                 Cadastradas

@@ -1,7 +1,7 @@
 import { Bar, Donut, Waffle } from "../../components/charts";
 import { content } from "../../assets/content/content";
 
-export const reportSections: any = (recorte: "atendidas" | "cadastrados") => [
+export const reportSections: any = (recorte: "atendidas" | "cadastradas") => [
   {
     row: {
       "pessoas-por-sexo": {

@@ -178,6 +178,7 @@ const ReportWrapper = ({
                 borderRadius: "10px",
                 padding: "16px 20px",
                 marginBottom: "26px",
+                marginTop: "40px"
               }}
             >
               {footerNote}

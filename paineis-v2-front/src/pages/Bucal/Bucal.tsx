@@ -69,7 +69,9 @@ const RenderChartGroup = ({
             minHeight: "110px",
           }}
         >
-          {content?.[chartConfigs?.overrideTitle] || content?.[chartKey] || chartKey}
+          {content?.[chartConfigs?.overrideTitle] ||
+            content?.[chartKey] ||
+            chartKey}
         </h5>
         {Boolean(chartList?.[chartKey]?.subtitle) && (
           <p
@@ -126,6 +128,7 @@ const Bucal = () => {
       <ReportWrapper
         title={"Saúde Bucal"}
         footer={<ReportFooter chaveListaNominal="Bucal" equipe={equipe} />}
+        footerNote="Para fins desse relatório serão considerados todos os atendimentos odontológicos da pessoa, ainda que tenham ocorrido em outra unidade de saúde, conforme regra de cálculo preconizada."
         preheader={
           <div
             style={{
@@ -168,51 +171,89 @@ const Bucal = () => {
             fontWeight: "bold",
           }}
         >
-          <div
-            style={{
-              flex: 1,
-              padding: "20px",
-              backgroundColor: recorte === "atendidas" ? "#0069D0" : "",
-              border: recorte === "atendidas" ? "white" : "1px solid black",
-              color: recorte === "atendidas" ? "white" : "black",
-              textAlign: "center",
-            }}
-          >
-            <span style={{ display: "block", fontSize: "16px", marginBottom: "8px" }}>
-              Total de pessoas
-              <br />
-              atendidas na UBS
-            </span>
-            <img
-              src={People}
-              alt="Icone de pessoas"
-              width={"30px"}
-              style={{ filter: recorte === "atendidas" ? "brightness(10)" : "", transform: "translate(-10px, -5px)"}}
-            />
-            <span style={{ fontSize: "26px" }}>{formataNumero(report?.total?.data?.atendidas)}</span>
+          <div>
+            <div
+              style={{
+                flex: 1,
+                padding: "20px",
+                backgroundColor: recorte === "atendidas" ? "#0069D0" : "",
+                border: recorte === "atendidas" ? "white" : "1px solid black",
+                color: recorte === "atendidas" ? "white" : "black",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  display: "block",
+                  fontSize: "16px",
+                  marginBottom: "8px",
+                }}
+              >
+                Total de pessoas
+                <br />
+                atendidas na UBS
+              </span>
+              <img
+                src={People}
+                alt="Icone de pessoas"
+                width={"30px"}
+                style={{
+                  filter: recorte === "atendidas" ? "brightness(10)" : "",
+                  transform: "translate(-10px, -5px)",
+                }}
+              />
+              <span style={{ fontSize: "26px" }}>
+                {formataNumero(report?.total?.data?.atendidas)}
+              </span>
+            </div>
+            <span>&nbsp;</span>
           </div>
-          <div
-            style={{
-              flex: 1,
-              padding: "20px",
-              backgroundColor: recorte !== "atendidas" ? "#0069D0" : "",
-              border: recorte !== "atendidas" ? "white" : "1px solid black",
-              color: recorte !== "atendidas" ? "white" : "black",
-              textAlign: "center",
-            }}
-          >
-            <span style={{ display: "block", fontSize: "16px", marginBottom: "8px" }}>
-              Total de pessoas
-              <br />
-              cadastradas na UBS
-            </span>
-            <img
-              src={People}
-              alt="Icone de pessoas"
-              width={"30px"}
-              style={{ filter: recorte !== "atendidas" ? "brightness(10)" : "", transform: "translate(-10px, -5px)"}}
-            />
-            <span style={{ fontSize: "26px" }}>{formataNumero(report?.total?.data?.cadastradas)}</span>
+          <div>
+            <div
+              style={{
+                flex: 1,
+                padding: "20px",
+                backgroundColor: recorte !== "atendidas" ? "#0069D0" : "",
+                border: recorte !== "atendidas" ? "white" : "1px solid black",
+                color: recorte !== "atendidas" ? "white" : "black",
+                textAlign: "center",
+              }}
+            >
+              <span
+                style={{
+                  display: "block",
+                  fontSize: "16px",
+                  marginBottom: "8px",
+                }}
+              >
+                Total de pessoas
+                <br />
+                cadastradas na UBS
+              </span>
+              <img
+                src={People}
+                alt="Icone de pessoas"
+                width={"30px"}
+                style={{
+                  filter: recorte !== "atendidas" ? "brightness(10)" : "",
+                  transform: "translate(-10px, -5px)",
+                }}
+              />
+              <span style={{ fontSize: "26px" }}>
+                {formataNumero(report?.total?.data?.cadastradas)}
+              </span>
+            </div>
+            <div
+              style={{
+                marginTop: "2px",
+                width: "100%",
+                textAlign: "right",
+                fontWeight: "initial",
+                fontSize: "14px",
+              }}
+            >
+              *nos últimos 24 meses
+            </div>
           </div>
         </div>
         {reportSections(recorte).map((chartList: any) => (
@@ -220,15 +261,15 @@ const Bucal = () => {
         ))}
         <center style={{ marginTop: "60px", marginBottom: "30px" }}>
           <h2>
-            <b>Proporção referente a quantidade de pessoas {recorte === "atendidas" ? "atendidas" : "cadastradas"} na UBS:</b>
+            <b>
+              Proporção referente a quantidade de pessoas{" "}
+              {recorte === "atendidas" ? "atendidas" : "cadastradas"} na UBS:
+            </b>
           </h2>
           <p>(Dados referentes aos últimos 24 meses)</p>
         </center>
         {reportCharts.map((chartList: any) => (
-          <RenderChartGroup
-            report={report}
-            chartList={chartList}
-          />
+          <RenderChartGroup report={report} chartList={chartList} />
         ))}
       </ReportWrapper>
     </>
