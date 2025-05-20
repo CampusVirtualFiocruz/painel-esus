@@ -7,7 +7,7 @@ export const footerNotes = {
   Hipertensão: `O número total de pessoas com Hipertensão incluídas na Lista Nominal equivale ao conjunto de indivíduos que tiveram atendimentos individuais com registro do código CID e/ou CIAP correspondente à Hipertensão na Ficha de Atendimento Individual, somado ao conjunto de pessoas com registro autorreferido de Hipertensão na Ficha de Cadastro Individual.`,
 } as any;
 
-const renderString = (s: string) => s === "Sem Informação" ? "-" : (s || "-");
+const renderString = (s: string) => (s === "Sem Informação" ? "-" : s || "-");
 
 export const columns = ({ handleClick, condicao }: any) => {
   const baseColumns = [
@@ -16,16 +16,16 @@ export const columns = ({ handleClick, condicao }: any) => {
       header: "Nome",
       sortable: true,
       render: (item: any) => (
-        <span
+        <div
           onClick={() => handleClick(item)}
-          style={{ marginLeft: "16px", cursor: "pointer" }}
+          style={{ padding: "2px 16px", cursor: "pointer" }}
         >
           {capitalizeName(
             item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
               ? `${item?.nomeSocialSelecionado} *`
               : item?.nome
           )}
-        </span>
+        </div>
       ),
     },
     {
@@ -46,7 +46,9 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "cpf",
       header: "CPF",
       sortable: true,
-      render: (item: any) => <b>{renderString(item?.cpf)}</b>,
+      render: (item: any) => (
+        <b style={{ padding: "4px 8px" }}>{renderString(item?.cpf)}</b>
+      ),
     },
     {
       name: "cns",
@@ -58,28 +60,28 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "idade",
       header: "Idade",
       sortable: true,
-      render: (item: any) => <center>{renderString(item?.idade)}</center>,
+      render: (item: any) => <center style={{ padding: "4px" }}>{renderString(item?.idade)}</center>,
     },
     {
       name: "sexo",
       header: "Sexo",
       sortable: true,
       render: (item: any) => (
-        <center>{item.sexo === "MASCULINO" ? "M" : "F"}</center>
+        <center style={{ padding: "4px" }}>{item.sexo === "MASCULINO" ? "M" : "F"}</center>
       ),
     },
     {
       name: "raca",
       header: "Raça",
       sortable: false,
-      render: (item: any) => <span>{renderString(item?.racaCor)}</span>,
+      render: (item: any) => <span style={{ padding: "4px" }}>{renderString(item?.racaCor)}</span>,
     },
     {
       name: "equipe",
       header: "Equipe",
       sortable: true,
       render: (item: any) => (
-        <span title={item.equipe}>
+        <span title={item.equipe} style={{ padding: "4px" }}>
           {capitalizeName(String(item.equipe)?.toUpperCase().slice(0, 30))}
           {String(item.equipe).length > 30 ? "..." : ""}
         </span>
@@ -89,16 +91,19 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "micro_area",
       header: "Microárea",
       sortable: true,
-      render: (item: any) => <center>{item.microarea}</center>,
+      render: (item: any) => <center style={{ padding: "4px" }}>{item.microarea}</center>,
     },
   ];
 
-  if (condicao && !["Idosa", "Infantil", "Qualidade", "Bucal"].includes(condicao)) {
+  if (
+    condicao &&
+    !["Idosa", "Infantil", "Qualidade", "Bucal"].includes(condicao)
+  ) {
     baseColumns.splice(5, 0, {
       name: "grupo_ condicao",
       header: "Grupo/Condição",
       sortable: true,
-      render: (item: any) => (renderString(item?.diagnostico)).toUpperCase(),
+      render: (item: any) => renderString(item?.diagnostico).toUpperCase(),
     });
   }
 
@@ -107,19 +112,25 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "identidadeGenero",
       header: "Identidade de Gênero",
       sortable: false,
-      render: (item: any) => <span>{renderString(item?.identidadeGenero)}</span>,
+      render: (item: any) => (
+        <span>{renderString(item?.identidadeGenero)}</span>
+      ),
     });
     baseColumns.push({
       name: "necessidadesEspeciais",
       header: "Necessidades Especiais",
       sortable: false,
-      render: (item: any) => <span>{renderString(item?.necessidadesEspeciais)}</span>,
+      render: (item: any) => (
+        <span>{renderString(item?.necessidadesEspeciais)}</span>
+      ),
     });
     baseColumns.push({
       name: "povosComunidades",
       header: "Povos de Comunidades",
       sortable: false,
-      render: (item: any) => <span>{renderString(item?.povosComunidades)}</span>,
+      render: (item: any) => (
+        <span>{renderString(item?.povosComunidades)}</span>
+      ),
     });
   }
 
