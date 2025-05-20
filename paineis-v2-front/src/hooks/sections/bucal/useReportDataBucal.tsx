@@ -65,8 +65,8 @@ const useReportDataBucal = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
             },
           }
         ),
-        "realizou-escovacao-supervisionada": Api.get(
-          `/oral-health/get-supervised-brushing${ubsParam}`,
+        "concluido-tratamento": Api.get(
+          `/oral-health/get-conclued-treatment${ubsParam}`,
           {
             params: {
               equipe: equipe,

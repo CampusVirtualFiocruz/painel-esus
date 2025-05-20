@@ -181,6 +181,7 @@ export const content: any = {
     "total-faixa-cadastradas": "Pessoas cadastradas por faixa etária/sexo",
     "distribuicao-cadastradas": "Distribuição de pessoas cadastradas por raça/cor",
     "distribuicao-atendidas": "Distribuição de pessoas atendidas por raça/cor",
+    "concluido-tratamento": "Pessoas que concluíram o tratamento odontológico",
     "primeira-consulta-odonto": "Pessoas que realizaram a primeira consulta odontológica",
     "concluiu-tratamento-odonto": "Pessoas que concluíram o tratamento odontológico",
     "realizou-exodontia": "Pessoas que realizaram exodontia",

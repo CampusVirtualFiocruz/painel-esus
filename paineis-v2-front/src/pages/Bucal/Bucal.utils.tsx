@@ -89,6 +89,21 @@ export const realizedProceduresCharts: any = [
           },
         },
       },
+      "concluido-tratamento": {
+        Chart: Donut,
+        config: {
+          formatterKind: "perc",
+          radius: [50, 80],
+          componentStyle: {
+            height: "250px",
+          },
+          sort: ["Realizado", "Não Realizado"],
+          colors: ["to-be-defined", "#E4E4E4"],
+          yAxis: {
+            name: content?.["total-cadastros"],
+          },
+        },
+      },
       "realizou-exodontia": {
         Chart: Donut,
         config: {
@@ -104,6 +119,8 @@ export const realizedProceduresCharts: any = [
           },
         },
       },
+    },
+    secondRow: {
       "realizou-preventivo-odonto": {
         Chart: Donut,
         config: {
@@ -119,24 +136,7 @@ export const realizedProceduresCharts: any = [
           },
         },
       },
-    },
-    secondRow: {
       "realizou-tra-odonto": {
-        Chart: Donut,
-        config: {
-          formatterKind: "perc",
-          radius: [50, 80],
-          componentStyle: {
-            height: "250px",
-          },
-          sort: ["Realizado", "Não Realizado"],
-          colors: ["to-be-defined", "#E4E4E4"],
-          yAxis: {
-            name: content?.["total-cadastros"],
-          },
-        },
-      },
-      "realizou-escovacao-supervisionada": {
         Chart: Donut,
         config: {
           formatterKind: "perc",
