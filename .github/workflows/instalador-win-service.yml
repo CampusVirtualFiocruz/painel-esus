@@ -2,7 +2,7 @@ name: Build and Deploy Windows Service
 
 on:
   push:
-    branches: [v*]
+    branches: [x*]
 
 jobs:
   build-frontend:
@@ -152,12 +152,12 @@ jobs:
         run: pip install pyinstaller
         shell: cmd
 
-      # - name: Download NSSM
-      #   run: |
-      #     curl -L -o nssm.zip https://nssm.cc/release/nssm-2.24.zip
-      #     powershell -Command "Expand-Archive -Path nssm.zip -DestinationPath ."
-      #     copy .\nssm-2.24\win64\nssm.exe .\painel-esus\nssm.exe
-      #   shell: cmd
+      - name: Download NSSM
+        run: |
+          curl -L -o nssm.zip https://nssm.cc/release/nssm-2.24.zip
+          powershell -Command "Expand-Archive -Path nssm.zip -DestinationPath ."
+          copy .\nssm-2.24\win64\nssm.exe .\painel-esus\nssm.exe
+        shell: cmd
 
       - name: Build EXE config
         working-directory: ./painel-esus/interface
@@ -186,7 +186,7 @@ jobs:
           dir .
           dir painel-esus\interface
           dir instalador
-          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript2.6.iss"
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\instalador\buildPainelScript-windows-service.iss"
         shell: cmd
 
       # - name: Upload para AWS S3
