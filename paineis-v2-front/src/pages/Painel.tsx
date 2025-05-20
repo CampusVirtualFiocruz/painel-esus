@@ -30,8 +30,8 @@ import mulher from "../assets/images/mulher.svg";
 import diabetes from "../assets/images/menu/diabetes.png";
 import hipertensao from "../assets/images/menu/hipertensao.png";
 import bucal from "../assets/images/menu/bucal.png";
-/* import children from "../assets/images/menu/children.png";
-import old from "../assets/images/menu/old.png"; */
+//import children from "../assets/images/menu/children.png";
+import old from "../assets/images/menu/old.png";
 import quality from "../assets/images/menu/quality.png";
 
 type PainelParams = {
@@ -467,25 +467,24 @@ export function Painel() {
                   </div>
                 </div>
               )}
-              {/* {Boolean(dadosPainel?.indicators?.idosa) && (
-                // <div className="card-condicao p-2" onClick={handleToIdosa}>
-                //   <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
-                //   <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>
-                //   <div className="d-flex align-items-center">
-                //     <img
-                //       width={"30%"}
-                //       src={old}
-                //       alt="Pessoa Idosa"
-                //       className="mx-2"
-                //     />
-                //     <Condicao data={dadosPainel?.indicators?.idosa} />
-                //   </div>
-                // </div>
+              {Boolean(dadosPainel?.indicators?.idosa) && (
                 <div
-                    className="card-condicao p-2"
-                    style={{ visibility: 'hidden' }}
-                ></div>
-              )} */}
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport('idosaV2')}
+                >
+                  <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img
+                      width={"30%"}
+                      src={old}
+                      alt="Pessoa Idosa"
+                      className="mx-2"
+                    />
+                    <Condicao data={dadosPainel?.indicators?.idosa} />
+                  </div>
+                </div>
+              )}
               {Boolean(dadosPainel?.indicators?.saude_bucal) && (
                 <div
                   className="card-condicao p-2"

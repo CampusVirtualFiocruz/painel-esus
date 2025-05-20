@@ -2,9 +2,9 @@ from typing import Literal
 
 
 def gen_where_category(category):
-    if category == 'atendidas':
+    if category == 'atendidos':
         return 'atendimento_odonto=1 '
-    elif category == 'cadastradas':
+    elif category == 'cadastrados':
         return 'cadastradas_odonto=1 '
     else:
         raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
@@ -24,9 +24,9 @@ def gen_where_cnes_equipe(base_clause, cnes, equipe):
     return f"WHERE {' AND '.join(clauses)} " if clauses else ''
 
 def get_suffix(column, category):
-    if category == 'atendidas':
+    if category == 'atendidos':
         return f'{column}_atendidas'
-    elif category == 'cadastradas':
+    elif category == 'cadastrados':
         return f'{column}_cadastradas'
     else:
         raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
@@ -96,10 +96,10 @@ def base_chart(
     equipe: int = None, 
     category: str = None,
     column: str = None):
-    where_clause=''
+    where_clause = gen_where_category(category)
     where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)   
     _column = get_suffix(column, category)
-    
+
     return f"""
         select 
             {_column}, count(*)
