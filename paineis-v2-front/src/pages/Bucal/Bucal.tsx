@@ -152,8 +152,8 @@ const ClassificationFooter = ({ data }: any) => {
 const Bucal = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
-  const [recorte, setRecorte] = useState<"atendidos" | "cadastrados">(
-    "atendidos"
+  const [recorte, setRecorte] = useState<"atendidas" | "cadastradas">(
+    "atendidas"
   );
 
   const { id } = useParams<PainelParams>();
@@ -184,18 +184,18 @@ const Bucal = () => {
           >
             <Button
               style={{ height: "36px" }}
-              kind={recorte === "atendidos" ? "primary" : "normal"}
+              kind={recorte === "atendidas" ? "primary" : "normal"}
               onClick={() => {
-                setRecorte("atendidos");
+                setRecorte("atendidas");
               }}
             >
               Atendidas
             </Button>
             <Button
               style={{ height: "36px" }}
-              kind={recorte === "cadastrados" ? "primary" : "normal"}
+              kind={recorte === "cadastradas" ? "primary" : "normal"}
               onClick={() => {
-                setRecorte("cadastrados");
+                setRecorte("cadastradas");
               }}
             >
               Cadastradas
@@ -218,9 +218,9 @@ const Bucal = () => {
             style={{
               flex: 1,
               padding: "20px",
-              backgroundColor: recorte === "atendidos" ? "#0069D0" : "",
-              border: recorte === "atendidos" ? "white" : "1px solid black",
-              color: recorte === "atendidos" ? "white" : "black",
+              backgroundColor: recorte === "atendidas" ? "#0069D0" : "",
+              border: recorte === "atendidas" ? "white" : "1px solid black",
+              color: recorte === "atendidas" ? "white" : "black",
               textAlign: "center",
             }}
           >
@@ -233,7 +233,7 @@ const Bucal = () => {
               src={People}
               alt="Icone de pessoas"
               width={"30px"}
-              style={{ filter: recorte === "atendidos" ? "brightness(10)" : "", transform: "translate(-10px, -5px)"}}
+              style={{ filter: recorte === "atendidas" ? "brightness(10)" : "", transform: "translate(-10px, -5px)"}}
             />
             <span style={{ fontSize: "26px" }}>{formataNumero(report?.total?.data?.atendidas)}</span>
           </div>
@@ -241,9 +241,9 @@ const Bucal = () => {
             style={{
               flex: 1,
               padding: "20px",
-              backgroundColor: recorte !== "atendidos" ? "#0069D0" : "",
-              border: recorte !== "atendidos" ? "white" : "1px solid black",
-              color: recorte !== "atendidos" ? "white" : "black",
+              backgroundColor: recorte !== "atendidas" ? "#0069D0" : "",
+              border: recorte !== "atendidas" ? "white" : "1px solid black",
+              color: recorte !== "atendidas" ? "white" : "black",
               textAlign: "center",
             }}
           >
@@ -256,7 +256,7 @@ const Bucal = () => {
               src={People}
               alt="Icone de pessoas"
               width={"30px"}
-              style={{ filter: recorte !== "atendidos" ? "brightness(10)" : "", transform: "translate(-10px, -5px)"}}
+              style={{ filter: recorte !== "atendidas" ? "brightness(10)" : "", transform: "translate(-10px, -5px)"}}
             />
             <span style={{ fontSize: "26px" }}>{formataNumero(report?.total?.data?.cadastradas)}</span>
           </div>

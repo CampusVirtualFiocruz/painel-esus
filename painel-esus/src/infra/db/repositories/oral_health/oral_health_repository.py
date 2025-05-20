@@ -30,9 +30,9 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
 
     def total_ubs(self, cnes: int = None, equipe: int = None):
 
-        cadastradas = self.session.execute(get_total_ubs(cnes,equipe,'cadastrados')).fetchall()
+        cadastradas = self.session.execute(get_total_ubs(cnes,equipe,'cadastradas')).fetchall()
         atendidas = self.session.execute(
-            get_total_ubs(cnes, equipe, "atendidos")
+            get_total_ubs(cnes, equipe, "atendidas")
         ).fetchall()
         return {
             "atendidas": (
@@ -97,7 +97,7 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         equipe: int = None,
         query: str = None,
         sort=[],
-        category: str = 'atendidos'
+        category: str = 'atendidas'
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0

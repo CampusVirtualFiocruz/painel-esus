@@ -2,9 +2,9 @@ from typing import Literal
 
 
 def gen_where_category(category):
-    if category == 'atendidos':
+    if category == 'atendidas':
         return 'atendimento_odonto=1 '
-    elif category == 'cadastrados':
+    elif category == 'cadastradas':
         return 'cadastradas_odonto=1 '
     else:
         raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
@@ -24,9 +24,9 @@ def gen_where_cnes_equipe(base_clause, cnes, equipe):
     return f"WHERE {' AND '.join(clauses)} " if clauses else ''
 
 def get_suffix(column, category):
-    if category == 'atendidos':
+    if category == 'atendidas':
         return f'{column}_atendidas'
-    elif category == 'cadastrados':
+    elif category == 'cadastradas':
         return f'{column}_cadastradas'
     else:
         raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
