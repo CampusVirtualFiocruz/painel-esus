@@ -8,16 +8,14 @@ import ReportWrapper from "../../components/ui/ReportWrapper";
 import { content } from "../../assets/content/content";
 import useReportDataBucal from "../../hooks/sections/bucal/useReportDataBucal";
 import { PainelParams } from "../Hipertensao";
-import { fixedLegend, getColorizedCharts, reportSections } from "./Bucal.utils";
+import { reportCharts, reportSections } from "./Bucal.utils";
 import "../../styles/idosa.scss";
 import { formataNumero } from "../../utils";
-
 
 const RenderChartGroup = ({
   report,
   chartList,
   renderSmall,
-  ChartFooter,
   alignMiddle,
 }: any) => {
   return Object.keys(chartList).map((chartKey) => {
@@ -46,7 +44,6 @@ const RenderChartGroup = ({
             report={report}
             chartList={chartList?.[chartKey]}
             renderSmall
-            ChartFooter={ChartFooter}
             alignMiddle={isSecondRow}
           />
         </div>
@@ -103,50 +100,9 @@ const RenderChartGroup = ({
             </p>
           </center>
         )}
-        {ChartFooter && <ChartFooter data={data} />}
       </div>
     );
   });
-};
-
-const ClassificationFooter = ({ data }: any) => {
-  let percentage: any = undefined;
-  let hasHighlightConfig =
-    data && Array.isArray(data) && data?.[1]?.tag === "realizado";
-
-  if (hasHighlightConfig) {
-    const mainValue = data?.[1]?.value;
-    const total = mainValue + data?.[0]?.value;
-    percentage = (mainValue / total) * 100;
-  }
-
-  return (
-    <div>
-      {fixedLegend.map(({ color, title, text, min, max }) => {
-        const shouldHighlight = percentage >= min && percentage < max;
-
-        return (
-          <div
-            style={{
-              padding: "3px",
-              border: shouldHighlight ? "1px gray solid" : "",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                width: "20px",
-                backgroundColor: color,
-              }}
-            >
-              &nbsp;
-            </span>{" "}
-            {title}: {text}
-          </div>
-        );
-      })}
-    </div>
-  );
 };
 
 const Bucal = () => {
@@ -164,8 +120,6 @@ const Bucal = () => {
   if (reportData?.isLoading) {
     return <center>Aguarde...</center>;
   }
-
-  const charts = getColorizedCharts(reportData);
 
   return (
     <>
@@ -270,11 +224,10 @@ const Bucal = () => {
           </h2>
           <p>(Dados referentes aos últimos 24 meses)</p>
         </center>
-        {charts.map((chartList: any) => (
+        {reportCharts.map((chartList: any) => (
           <RenderChartGroup
             report={report}
             chartList={chartList}
-            ChartFooter={ClassificationFooter}
           />
         ))}
       </ReportWrapper>

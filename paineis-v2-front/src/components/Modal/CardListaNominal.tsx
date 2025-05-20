@@ -33,7 +33,7 @@ export const CardListaNominal = ({
   config,
 }: {
   item: any;
-  config?: { alertMessage: string };
+  config?: { alertMessage?: string };
 }) => {
   return (
     <div className="d-flex flex-column mb-4">

@@ -89,6 +89,7 @@ export type DonutChart = PercentualChart & {
     halfDonut?: boolean;
     roseType?: string;
     sort?: any;
+    rangedLegend?: Array<any>
   };
 };
 export type DonutGroupChart = PercentualGroupChart;

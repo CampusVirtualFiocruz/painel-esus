@@ -9,6 +9,52 @@ const formatters = {
   perc: ["{b|{d}%}", "{a|{b}}"].join("\n"),
 };
 
+const removeDuplicatesByKey = <T, K extends keyof T>(arr: T[], key: K): T[] =>
+  Array.from(new Map(arr.map((item) => [item[key], item])).values());
+
+const ClassificationFooter = ({ data, rangedLegend }: any) => {
+  let percentage: any = undefined;
+  let hasHighlightConfig =
+    data && Array.isArray(data) && data?.[1]?.tag === "realizado";
+
+  if (hasHighlightConfig) {
+    const mainValue = data?.[1]?.value;
+    const total = mainValue + data?.[0]?.value;
+    percentage = (mainValue / total) * 100;
+  }
+
+  return (
+    <div>
+      {removeDuplicatesByKey<typeof rangedLegend, string>(
+        rangedLegend,
+        "title"
+      ).map(({ color, title, text, window }: any) => {
+        const shouldHighlight = Boolean(window.find(({ min, max }: { min: number, max: number }) => percentage >= min && percentage < max));
+
+        return (
+          <div
+            style={{
+              padding: "3px",
+              border: shouldHighlight ? "1px gray solid" : "",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-block",
+                width: "20px",
+                backgroundColor: color,
+              }}
+            >
+              &nbsp;
+            </span>{" "}
+            {title}: {text}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 export function Donut(props: DonutChart) {
   const f = String(props?.config?.formatterKind) as keyof typeof formatters;
 
@@ -41,7 +87,7 @@ export function Donut(props: DonutChart) {
     []
   );
 
-  if(props?.config?.sort){
+  if (props?.config?.sort) {
     const suggestionOrder = props?.config?.sort;
     const sortedDataList = donutData?.sort((a: any, b: any) => {
       return (
@@ -52,8 +98,32 @@ export function Donut(props: DonutChart) {
     donutData = sortedDataList;
   }
 
+  let chartColor = props?.config?.colors || ["#09406A", "#5CD2C8"];
+
+  if (props?.config?.rangedLegend) {
+    let percentage: any = undefined;
+    let hasHighlightConfig =
+      props.data &&
+      Array.isArray(props.data) &&
+      props.data?.[1]?.tag === "realizado";
+
+    if (hasHighlightConfig) {
+      const data: any = props.data;
+      const mainValue = data?.[1]?.value;
+      const total = mainValue + data?.[0]?.value;
+      percentage = (mainValue / total) * 100;
+    }
+
+    props?.config?.rangedLegend.forEach(({ color, window }) => {
+      const shouldHighlight = Boolean(window.find(({ min, max }: { min: number, max: number }) => percentage >= min && percentage < max));
+      if (shouldHighlight) {
+        chartColor = [color, "#E4E4E4"];
+      }
+    });
+  }
+
   const options = {
-    color: props?.config?.colors || ["#09406A", "#5CD2C8"],
+    color: chartColor,
     tooltip: {
       trigger: "item",
       label: {
@@ -100,15 +170,23 @@ export function Donut(props: DonutChart) {
   }
 
   return (
-    <ReactECharts
-      option={options}
-      style={{
-        width: "100%",
-        minWidth: "316px",
-        height: "316px",
-        ...(props?.config?.componentStyle || {}),
-      }}
-      opts={{ renderer: "svg" }}
-    />
+    <>
+      <ReactECharts
+        option={options}
+        style={{
+          width: "100%",
+          minWidth: "316px",
+          height: "316px",
+          ...(props?.config?.componentStyle || {}),
+        }}
+        opts={{ renderer: "svg" }}
+      />
+      {props?.config?.rangedLegend && (
+        <ClassificationFooter
+          data={props.data}
+          rangedLegend={props?.config.rangedLegend}
+        />
+      )}
+    </>
   );
 }

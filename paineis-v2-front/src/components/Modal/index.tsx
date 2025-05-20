@@ -241,7 +241,7 @@ export const Modal = ({
         {data &&
           data.loaded === 6 &&
           bodyBoasPraticasCuidadoPessoasHipertensao()}
-        {data && data.loaded === 7 && <CardListaNominal item={data} {...config} />}
+        {data && data.loaded === 7 && <CardListaNominal item={data} config={config} />}
         {data &&
           data.loaded === 8 &&
           bodyPerfil(selectedValue, handleProfileChange)}
