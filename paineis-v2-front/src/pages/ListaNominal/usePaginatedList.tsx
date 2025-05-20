@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Api } from "../../services/api";
 
-const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
+const usePaginatedList = ({ condicao, equipe, id, searchTerm, config }: any) => {
   const [params, setParams] = useState<any>({
     page: 1,
     size: 10,
@@ -24,15 +24,15 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
     [
       "nominal-list" + condicao + equipe + id,
       { condicao, equipe, id, pathToReport, searchTerm, ...params },
+      config
     ],
     async () => {
       let path = `${pathToReport?.[condicao]}/get-nominal-list/${id}`;
 
-      const response = await Api.get(path, {
+      const requestParams = {
         params: {
           itemsPerPage: params.size,
           page: params.page,
-       //   sort: params?.sort,
           q: searchTerm,
           sort: (params?.sort || []).map((item: string) => ({
             field: item.split("-").join(""),
@@ -40,7 +40,14 @@ const usePaginatedList = ({ condicao, equipe, id, searchTerm }: any) => {
           })),
           equipe,
         },
-      });
+      } as any;
+
+      if(config?.possuiRecorte){
+        requestParams.params = { recorte: config?.recorte, ...requestParams.params };
+      }
+
+      const response = await Api.get(path, requestParams);
+
       return response?.data;
     },
     {

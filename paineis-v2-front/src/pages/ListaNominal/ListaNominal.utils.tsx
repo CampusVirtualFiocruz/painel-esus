@@ -7,6 +7,8 @@ export const footerNotes = {
   Hipertensão: `O número total de pessoas com Hipertensão incluídas na Lista Nominal equivale ao conjunto de indivíduos que tiveram atendimentos individuais com registro do código CID e/ou CIAP correspondente à Hipertensão na Ficha de Atendimento Individual, somado ao conjunto de pessoas com registro autorreferido de Hipertensão na Ficha de Cadastro Individual.`,
 } as any;
 
+const renderString = (s: string) => s === "Sem Informação" ? "-" : (s || "-");
+
 export const columns = ({ handleClick, condicao }: any) => {
   const baseColumns = [
     {
@@ -44,19 +46,19 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "cpf",
       header: "CPF",
       sortable: true,
-      render: (item: any) => <b>{item?.cpf || "-"}</b>,
+      render: (item: any) => <b>{renderString(item?.cpf)}</b>,
     },
     {
       name: "cns",
       header: "CNS",
       sortable: true,
-      render: (item: any) => item?.cns || "-",
+      render: (item: any) => renderString(item?.cns),
     },
     {
       name: "idade",
       header: "Idade",
       sortable: true,
-      render: (item: any) => <center>{item?.idade || "-"}</center>,
+      render: (item: any) => <center>{renderString(item?.idade)}</center>,
     },
     {
       name: "sexo",
@@ -70,7 +72,7 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "raca",
       header: "Raça",
       sortable: false,
-      render: (item: any) => <span>{item?.racaCor || "-"}</span>,
+      render: (item: any) => <span>{renderString(item?.racaCor)}</span>,
     },
     {
       name: "equipe",
@@ -96,7 +98,7 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "grupo_ condicao",
       header: "Grupo/Condição",
       sortable: true,
-      render: (item: any) => (item?.diagnostico || "-").toUpperCase(),
+      render: (item: any) => (renderString(item?.diagnostico)).toUpperCase(),
     });
   }
 
@@ -105,19 +107,19 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "identidadeGenero",
       header: "Identidade de Gênero",
       sortable: false,
-      render: (item: any) => <span>{item?.identidadeGenero || "-"}</span>,
+      render: (item: any) => <span>{renderString(item?.identidadeGenero)}</span>,
     });
     baseColumns.push({
       name: "necessidadesEspeciais",
       header: "Necessidades Especiais",
       sortable: false,
-      render: (item: any) => <span>{item?.necessidadesEspeciais || "-"}</span>,
+      render: (item: any) => <span>{renderString(item?.necessidadesEspeciais)}</span>,
     });
     baseColumns.push({
       name: "povosComunidades",
       header: "Povos de Comunidades",
       sortable: false,
-      render: (item: any) => <span>{item?.povosComunidades || "-"}</span>,
+      render: (item: any) => <span>{renderString(item?.povosComunidades)}</span>,
     });
   }
 

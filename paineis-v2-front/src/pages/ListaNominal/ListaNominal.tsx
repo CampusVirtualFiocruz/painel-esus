@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useLocation, useSearchParams } from "react-router-dom";
-import { PagedTable, TextField, LocaleContext } from "bold-ui";
+import { PagedTable, TextField, LocaleContext, Button } from "bold-ui";
 import ptBr from "bold-ui/lib/i18n/locales/pt-BR";
 import { Modal } from "../../components/Modal";
 import ReportWrapper from "../../components/ui/ReportWrapper";
@@ -45,6 +45,9 @@ const ListaNominal = () => {
   const queryParams = new URLSearchParams(location.search);
   const condicao = String(queryParams.get("condicao"));
   const footerNote = footerNotes?.[condicao];
+  const [recorte, setRecorte] = useState<"" | "atendidos" | "cadastrados">(
+    condicao === "Bucal" ? "atendidos" : ""
+  );
 
   const {
     info,
@@ -57,6 +60,10 @@ const ListaNominal = () => {
     equipe,
     id,
     searchTerm,
+    config: {
+      possuiRecorte: condicao === "Bucal",
+      recorte
+    }
   });
 
   const handleSortChange = (sort: string[]) => {
@@ -100,6 +107,38 @@ const ListaNominal = () => {
         }
         subtitle=""
         footerNote={footerNote}
+        preheader={
+          condicao === "Bucal" ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "end",
+                justifyContent: "end",
+                margin: "20px 20px",
+                gap: "10px",
+              }}
+            >
+              <Button
+                style={{ height: "36px" }}
+                kind={recorte === "atendidos" ? "primary" : "normal"}
+                onClick={() => {
+                  setRecorte("atendidos");
+                }}
+              >
+                Atendidas
+              </Button>
+              <Button
+                style={{ height: "36px" }}
+                kind={recorte === "cadastrados" ? "primary" : "normal"}
+                onClick={() => {
+                  setRecorte("cadastrados");
+                }}
+              >
+                Cadastradas
+              </Button>
+            </div>
+          ) : null
+        }
       >
         <div className="search">
           <TextField
