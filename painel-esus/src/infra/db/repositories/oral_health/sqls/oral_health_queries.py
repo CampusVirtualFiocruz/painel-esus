@@ -96,10 +96,10 @@ def base_chart(
     equipe: int = None, 
     category: str = None,
     column: str = None):
-    where_clause=''
+    where_clause = gen_where_category(category)
     where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)   
     _column = get_suffix(column, category)
-    
+
     return f"""
         select 
             {_column}, count(*)

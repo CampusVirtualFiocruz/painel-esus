@@ -108,7 +108,7 @@ const RenderChartGroup = ({
 const Bucal = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
-  const [recorte, setRecorte] = useState<"atendidas" | "cadastrados">(
+  const [recorte, setRecorte] = useState<"atendidas" | "cadastradas">(
     "atendidas"
   );
 
@@ -147,9 +147,9 @@ const Bucal = () => {
             </Button>
             <Button
               style={{ height: "36px" }}
-              kind={recorte === "cadastrados" ? "primary" : "normal"}
+              kind={recorte === "cadastradas" ? "primary" : "normal"}
               onClick={() => {
-                setRecorte("cadastrados");
+                setRecorte("cadastradas");
               }}
             >
               Cadastradas

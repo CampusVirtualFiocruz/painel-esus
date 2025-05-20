@@ -50,7 +50,7 @@ urls = oral_path.urls
     methods=["GET"],
     endpoint="get_extraction_id",
 )
-@cache.cached()
+#@cache.cached()
 def oral_health_get_extraction_fn(cnes=None):
     http_response = None
     response = None
@@ -72,7 +72,7 @@ def oral_health_get_extraction_fn(cnes=None):
     methods=["GET"],
     endpoint="get_cares_by_gender_id",
 )
-@cache.cached(query_string=True)
+#@cache.cached(query_string=True)
 def oral_health_get_cares_by_gender_fn(cnes=None):
     http_response = None
     response = None
@@ -94,7 +94,7 @@ def oral_health_get_cares_by_gender_fn(cnes=None):
     methods=["GET"],
     endpoint="get_group_by_race_id",
 )
-@cache.cached(query_string=True)
+#@cache.cached(query_string=True)
 def oral_health_get_cares_by_race_fn(cnes=None):
     http_response = None
     response = None
@@ -118,7 +118,7 @@ def oral_health_get_cares_by_race_fn(cnes=None):
     methods=["GET"],
     endpoint="get_first_appointment_id",
 )
-@cache.cached(query_string=True)
+#@cache.cached(query_string=True)
 def oral_health_get_first_appointment_fn(cnes=None):
     http_response = None
     response = None
@@ -142,7 +142,7 @@ def oral_health_get_first_appointment_fn(cnes=None):
     methods=["GET"],
     endpoint="get_conclued_treatment_id",
 )
-@cache.cached(query_string=True)
+#@cache.cached(query_string=True)
 def oral_health_get_conclued_treatment_fn(cnes=None):
     http_response = None
     response = None
@@ -164,7 +164,7 @@ def oral_health_get_conclued_treatment_fn(cnes=None):
     methods=["GET"],
     endpoint="get_prevention_procedures_id",
 )
-@cache.cached(query_string=True)
+#@cache.cached(query_string=True)
 def oral_health_get_prevention_procedures_fn(cnes=None):
     http_response = None
     response = None
@@ -191,7 +191,7 @@ def oral_health_get_prevention_procedures_fn(cnes=None):
     methods=["GET"],
     endpoint="get_supervised_brushing_id",
 )
-@cache.cached(query_string=True)
+#@cache.cached(query_string=True)
 def oral_health_get_supervised_brushing_fn(cnes=None):
     http_response = None
     response = None
@@ -216,7 +216,7 @@ def oral_health_get_supervised_brushing_fn(cnes=None):
     methods=["GET"],
     endpoint="get_atraumatic_treatment_id",
 )
-@cache.cached(query_string=True)
+#@cache.cached(query_string=True)
 def oral_health_get_atraumatic_treatment_fn(cnes=None):
     http_response = None
     response = None
@@ -240,7 +240,7 @@ def oral_health_get_atraumatic_treatment_fn(cnes=None):
     methods=["GET"],
     endpoint="get_nominal_list_id",
 )
-@cache.cached(query_string=True)
+#@cache.cached(query_string=True)
 def oral_health_get_nominal_list_fn(cnes=None):
     http_response = None
     response = None
@@ -265,7 +265,7 @@ def oral_health_get_nominal_list_fn(cnes=None):
     methods=["GET"],
     endpoint="get_total_id",
 )
-# @cache.cached()
+## @cache.cached()
 def oral_health_get_total_fn(cnes=None):
     http_response = None
     response = None

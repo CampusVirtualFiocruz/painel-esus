@@ -4,6 +4,6 @@ def extract_cnes_equipe_category(request):
     equipe_param = request.query_params.get("equipe")
     equipe = int(equipe_param) if equipe_param and equipe_param.isdigit() else None
 
-    category = request.query_params.get("category") or "atendidas"
+    category = request.query_params.get("recorte") or "atendidas"
 
     return cnes, equipe, category

@@ -49,8 +49,8 @@ class OralHealthNominalListController(ControllerInterface):
         if request.query_params and "sort[]" in request.query_params:
             sort = request.query_params.getlist('sort[]')
 
-        if request.query_params and "category" in request.query_params:
-            category = request.query_params['category']
+        if request.query_params and "recorte" in request.query_params:
+            category = request.query_params['recorte']
 
         return cnes, equipe, nome, cpf, page, page_size, q, sort, category
 
