@@ -1,14 +1,14 @@
 import { Bar, Donut, Waffle } from "../../components/charts";
 import { content } from "../../assets/content/content";
 
-export const reportSections: any = (recorte: "atendidos" | "cadastrados") => [
+export const reportSections: any = (recorte: "atendidas" | "cadastrados") => [
   {
     row: {
       "pessoas-por-sexo": {
         Chart: Bar,
         config: {
           overrideTitle:
-            recorte === "atendidos"
+            recorte === "atendidas"
               ? "total-faixa-atendidas"
               : "total-faixa-cadastradas",
           colors: ["#84aaff", "#0069d0", "#e4e4e4", "#5c7ea0"],
@@ -17,7 +17,7 @@ export const reportSections: any = (recorte: "atendidos" | "cadastrados") => [
           },
           yAxis: {
             name:
-              recorte === "atendidos"
+              recorte === "atendidas"
                 ? content?.["total-atendidas"]
                 : content?.["total-cadastradas"],
           },
@@ -30,7 +30,7 @@ export const reportSections: any = (recorte: "atendidos" | "cadastrados") => [
         Chart: Waffle,
         config: {
           overrideTitle:
-            recorte === "atendidos"
+            recorte === "atendidas"
               ? "distribuicao-atendidas"
               : "distribuicao-cadastradas",
           formatterKind: "perc",
