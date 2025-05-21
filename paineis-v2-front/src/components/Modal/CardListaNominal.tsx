@@ -33,7 +33,7 @@ export const CardListaNominal = ({
   config,
 }: {
   item: any;
-  config?: { alertMessage?: string };
+  config?: { alertMessage?: string; alertBeforeDetails?: string };
 }) => {
   return (
     <div className="d-flex flex-column mb-4">
@@ -73,6 +73,7 @@ export const CardListaNominal = ({
             {item?.telefone ? item?.telefone : "-"}{" "}
           </p>
         </div>
+        {Boolean(config?.alertBeforeDetails) ? <b style={{ lineHeight: "40px" }}>{config?.alertBeforeDetails}</b> : null}
         {Array.isArray(item?.detalhesCondicaoSaude) &&
           item?.detalhesCondicaoSaude.map((condicao: any) => {
             return (

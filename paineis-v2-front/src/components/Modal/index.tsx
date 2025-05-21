@@ -15,7 +15,7 @@ interface IModal {
   setShowModal: (status: boolean) => void;
   setProfile?: (profile: string) => void;
   initialProfile?: string;
-  config?: { alertMessage?: string };
+  config?: { alertMessage?: string; alertBeforeDetails?: string };
 }
 
 export function parseText(text: string | number): number | string {

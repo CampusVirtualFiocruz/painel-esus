@@ -61,6 +61,7 @@ const Waffle = (props: DonutChart) => {
         borderColor={"#ffffff"}
         motionStagger={2}
         fillDirection="bottom"
+        emptyColor={"#ffffff"}
       />
       <div
         style={{

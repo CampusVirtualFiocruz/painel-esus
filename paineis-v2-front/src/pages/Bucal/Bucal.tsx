@@ -171,7 +171,11 @@ const Bucal = () => {
             fontWeight: "bold",
           }}
         >
-          <div>
+          <div
+            style={{
+              flex: 1,
+            }}
+          >
             <div
               style={{
                 flex: 1,
@@ -208,7 +212,11 @@ const Bucal = () => {
             </div>
             <span>&nbsp;</span>
           </div>
-          <div>
+          <div
+            style={{
+              flex: 1,
+            }}
+          >
             <div
               style={{
                 flex: 1,

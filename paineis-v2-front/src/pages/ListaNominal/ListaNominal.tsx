@@ -62,8 +62,8 @@ const ListaNominal = () => {
     searchTerm,
     config: {
       possuiRecorte: condicao === "Bucal",
-      recorte
-    }
+      recorte,
+    },
   });
 
   const handleSortChange = (sort: string[]) => {
@@ -87,19 +87,23 @@ const ListaNominal = () => {
     preconizadas pelo Ministério da Saúde
   `;
 
+  const alertBeforeDetails = condicao === "Bucal" ? "DADOS REFERENTES AOS ÚLTIMOS 30 MESES" : "";
+
   return (
     <div id="page-painel">
       {showModal && (
         <Modal
           data={data}
           setShowModal={setShowModal}
-          config={{ alertMessage }}
+          config={{ alertMessage, alertBeforeDetails }}
         />
       )}
       <ReportWrapper
         title={
           "Lista Nominal / " +
-          (condicao === "Qualidade"
+          (condicao === "Bucal"
+            ? "Saúde Bucal"
+            : condicao === "Qualidade"
             ? "Qualidade de Cadastro"
             : condicao === "Idosa"
             ? "Cuidado da Pessoa Idosa"

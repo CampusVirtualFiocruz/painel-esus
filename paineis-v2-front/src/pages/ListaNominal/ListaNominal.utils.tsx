@@ -18,7 +18,7 @@ export const columns = ({ handleClick, condicao }: any) => {
       render: (item: any) => (
         <div
           onClick={() => handleClick(item)}
-          style={{ padding: "2px 16px", cursor: "pointer" }}
+          style={{ padding: "4px 16px", cursor: "pointer", textDecoration: "underline" }}
         >
           {capitalizeName(
             item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
@@ -111,7 +111,7 @@ export const columns = ({ handleClick, condicao }: any) => {
     baseColumns.push({
       name: "identidadeGenero",
       header: "Identidade de Gênero",
-      sortable: false,
+      sortable: true,
       render: (item: any) => (
         <span>{renderString(item?.identidadeGenero)}</span>
       ),
@@ -119,7 +119,7 @@ export const columns = ({ handleClick, condicao }: any) => {
     baseColumns.push({
       name: "necessidadesEspeciais",
       header: "Necessidades Especiais",
-      sortable: false,
+      sortable: true,
       render: (item: any) => (
         <span>{renderString(item?.necessidadesEspeciais)}</span>
       ),
@@ -127,7 +127,7 @@ export const columns = ({ handleClick, condicao }: any) => {
     baseColumns.push({
       name: "povosComunidades",
       header: "Povos de Comunidades",
-      sortable: false,
+      sortable: true,
       render: (item: any) => (
         <span>{renderString(item?.povosComunidades)}</span>
       ),
