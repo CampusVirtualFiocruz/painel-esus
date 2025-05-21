@@ -118,6 +118,11 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         if equipe is not None and equipe:
             conditions += [f"codigo_equipe = {equipe}"]
 
+        if category is not None and category == 'atendidas':
+            conditions += [f"atendimento_odonto = 1"]
+        elif category is not None and category == 'cadastradas':
+            conditions += [f"cadastradas_odonto = 1"]
+
         where_clause = []
         sql_where, sql, sql_or = "", "", ""
 
