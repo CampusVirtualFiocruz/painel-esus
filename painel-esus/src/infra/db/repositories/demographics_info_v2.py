@@ -202,7 +202,7 @@ class DemographicsInfoV2Repository(DemographicsInfoRepositoryInterface):
 
     def get_oral_health_total(self, cnes: int = None, equipe: int = None):
         repo = OralHealthRepository()
-        result_location_area_sql = repo.total_card(cnes, equipe)
+        result_location_area_sql = repo.total_card(cnes, equipe, 'atendidas')
 
         location_body = {"rural": 0, "urbano": 0, "nao_informado": 0}
         location_map = {

@@ -2,12 +2,15 @@ from typing import Literal
 
 
 def gen_where_category(category):
-    if category == 'atendidas':
-        return 'atendimento_odonto=1 '
-    elif category == 'cadastradas':
-        return 'cadastradas_odonto=1 '
+    if category == "atendidas":
+        return "atendimento_odonto=1 "
+    elif category == "cadastradas":
+        return "cadastradas_odonto=1 "
     else:
-        raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
+        raise ValueError(
+            f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'."
+        )
+
 
 def gen_where_cnes_equipe(base_clause, cnes, equipe):
     clauses = []
@@ -21,26 +24,35 @@ def gen_where_cnes_equipe(base_clause, cnes, equipe):
     if equipe:
         clauses.append(f" codigo_equipe = {equipe} ")
 
-    return f"WHERE {' AND '.join(clauses)} " if clauses else ''
+    return f"WHERE {' AND '.join(clauses)} " if clauses else ""
+
 
 def get_suffix(column, category):
-    if category == 'atendidas':
-        return f'{column}_atendidas'
-    elif category == 'cadastradas':
-        return f'{column}_cadastradas'
+    if category == "atendidas":
+        return f"{column}_atendidas"
+    elif category == "cadastradas":
+        return f"{column}_cadastradas"
     else:
-        raise ValueError(f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'.")
+        raise ValueError(
+            f"Categoria inválida: '{category}'. Esperado 'atendidas' ou 'cadastradas'."
+        )
+
 
 def oral_healt_base_sql():
-    
+
     return f"""
             SELECT  *
             FROM read_parquet('./dados/output/saude_bucal.parquet')
             """
 
-def get_total_card(cnes: int = None, 
-    equipe: int = None, ):
-    where_clause = gen_where_cnes_equipe('', cnes, equipe)
+
+def get_total_card(
+    cnes: int = None,
+    equipe: int = None,
+    category: str = "atendidas",
+):
+    where_clause = gen_where_category(category)
+    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)
     return f"""
             SELECT tipo_localizacao_domicilio, count(*) as total
             FROM read_parquet('./dados/output/saude_bucal.parquet')
@@ -63,23 +75,22 @@ def get_total_ubs(
 
 
 def by_race(
-    cnes: int = None, 
-    equipe: int = None, 
-    category: str = None,):
+    cnes: int = None,
+    equipe: int = None,
+    category: str = None,
+):
     where_clause = gen_where_category(category)
-    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)   
-    
+    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)
+
     return f"""
             SELECT  raca_cor, count(*) as total
             FROM read_parquet('./dados/output/saude_bucal.parquet') 
             {where_clause}
             group by raca_cor """
 
-def by_gender(
-    cnes: int = None, 
-    equipe: int = None, 
-    category: str = None):
-    
+
+def by_gender(cnes: int = None, equipe: int = None, category: str = None):
+
     where_clause = gen_where_category(category)
     where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)
     return f"""
@@ -91,13 +102,12 @@ def by_gender(
         order by sexo, max(idade);
                 """
 
+
 def base_chart(
-    cnes: int = None, 
-    equipe: int = None, 
-    category: str = None,
-    column: str = None):
+    cnes: int = None, equipe: int = None, category: str = None, column: str = None
+):
     where_clause = gen_where_category(category)
-    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)   
+    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)
     _column = get_suffix(column, category)
 
     return f"""
@@ -106,40 +116,58 @@ def base_chart(
         from read_parquet('./dados/output/saude_bucal.parquet')  
         {where_clause}
         group by {_column}
-        """  
+        """
+
+
 def first_appointment(
-    cnes: int = None, 
-    equipe: int = None, 
-    category: str = None,):
-    
-    return base_chart(cnes, equipe, category, 'agg_primeira_consulta')         
+    cnes: int = None,
+    equipe: int = None,
+    category: str = None,
+):
 
-def conclued_treatment(cnes: int = None, 
-    equipe: int = None, 
-    category: str = None,):
-    
-    return base_chart(cnes, equipe, category, 'agg_tratamento_odonto_concluido')        
+    return base_chart(cnes, equipe, category, "agg_primeira_consulta")
 
-def extraction(cnes: int = None, 
-    equipe: int = None, 
-    category:str = None,):
 
-    return base_chart(cnes, equipe, category, 'agg_realizaram_exodontia')   
+def conclued_treatment(
+    cnes: int = None,
+    equipe: int = None,
+    category: str = None,
+):
 
-def prevention_procedures(cnes: int = None, 
-    equipe: int = None, 
-    category: str = None,):
-    
-    return base_chart(cnes, equipe, category, 'agg_procedimentos_preventivos')     
+    return base_chart(cnes, equipe, category, "agg_tratamento_odonto_concluido")
 
-def atraumatic_treatment(cnes: int = None, 
-    equipe: int = None, 
-    category: str = None,):
-    
-    return base_chart(cnes, equipe, category, 'agg_TRA')  
 
-def supervised_brushing(cnes: int = None, 
-    equipe: int = None, 
-    category: str = None,):
-    
-    return base_chart(cnes, equipe, category, 'agg_realizaram_exodontia')    
+def extraction(
+    cnes: int = None,
+    equipe: int = None,
+    category: str = None,
+):
+
+    return base_chart(cnes, equipe, category, "agg_realizaram_exodontia")
+
+
+def prevention_procedures(
+    cnes: int = None,
+    equipe: int = None,
+    category: str = None,
+):
+
+    return base_chart(cnes, equipe, category, "agg_procedimentos_preventivos")
+
+
+def atraumatic_treatment(
+    cnes: int = None,
+    equipe: int = None,
+    category: str = None,
+):
+
+    return base_chart(cnes, equipe, category, "agg_TRA")
+
+
+def supervised_brushing(
+    cnes: int = None,
+    equipe: int = None,
+    category: str = None,
+):
+
+    return base_chart(cnes, equipe, category, "agg_realizaram_exodontia")

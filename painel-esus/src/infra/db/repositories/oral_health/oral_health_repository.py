@@ -24,8 +24,8 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
     def __init__(self,):
         self.session = duckdb.connect()
 
-    def total_card(self, cnes: int = None, equipe: int = None):
-        sql = get_total_card(cnes, equipe)
+    def total_card(self, cnes: int = None, equipe: int = None, category: str = 'atentidas'):
+        sql = get_total_card(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
     def total_ubs(self, cnes: int = None, equipe: int = None):
@@ -148,13 +148,16 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         order = ''
         order_list = []
         mapped_columns = {
-            'name': 'nome',
-            'cpf':'cpf',
-            'cns': 'cns',
-            'idade': 'idade',
-            'sexo': 'sexo',
-            'equipe': 'nome_equipe',
-            'micro_area': 'micro_area'
+            "name": "nome",
+            "cpf": "cpf",
+            "cns": "cns",
+            "idade": "idade",
+            "sexo": "sexo",
+            "equipe": "nome_equipe",
+            "micro_area": "micro_area",
+            "identidadeGenero": "tp_identidade_genero_cidadao",
+            "necessidadesEspeciais": "st_paciente_necessidades_espec",
+            "povosComunidades": "st_comunidade_tradicional",
         }
         if len(sort) > 0:
             for s in sort:
