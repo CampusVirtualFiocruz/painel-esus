@@ -56,7 +56,7 @@ export const reportCharts: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [0, 80],
+          radius: [0, 60],
           sort: ["Realizado", "Não Realizado"],
           rangedLegend: [
             {
@@ -97,7 +97,7 @@ export const reportCharts: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [50, 80],
+          radius: [0, 60],
           componentStyle: {
             height: "250px",
           },
@@ -138,7 +138,7 @@ export const reportCharts: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [0, 80],
+          radius: [0, 60],
           sort: ["Realizado", "Não Realizado"],
           rangedLegend: [
             {
@@ -181,7 +181,7 @@ export const reportCharts: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [0, 80],
+          radius: [40, 60],
           componentStyle: {
             height: "250px",
           },
@@ -231,7 +231,7 @@ export const reportCharts: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [50, 80],
+          radius: [40, 60],
           componentStyle: {
             height: "250px",
           },
