@@ -83,8 +83,7 @@ const RenderChartGroup = ({
           style={{
             fontWeight: "bold",
             textAlign: "center",
-            padding: renderSmall ? "30px" : "initial",
-            minHeight: "110px",
+            paddingTop: renderSmall ? "30px" : "initial",
           }}
         >
           {content?.[chartConfigs?.overrideTitle] ||
@@ -219,7 +218,7 @@ const Bucal = () => {
               >
                 Total de pessoas
                 <br />
-                atendidas {getChartDescription('', ReportViewTypeEnum, [])}
+                atendidas {getChartDescription('', reportViewType, [])}
               </span>
               <img
                 src={People}
@@ -260,7 +259,7 @@ const Bucal = () => {
               >
                 Total de pessoas
                 <br />
-                cadastradas {getChartDescription('', ReportViewTypeEnum, [])}
+                cadastradas {getChartDescription('', reportViewType, [])}
               </span>
               <img
                 src={People}
@@ -295,7 +294,7 @@ const Bucal = () => {
           <h2>
             <b>
               Proporção referente a quantidade de pessoas{" "}
-              {recorte === "atendidas" ? "atendidas" : "cadastradas"} {getChartDescription('', ReportViewTypeEnum, [])}:
+              {recorte === "atendidas" ? "atendidas" : "cadastradas"} {getChartDescription('', reportViewType, [])}:
             </b>
           </h2>
           <p>(Dados referentes aos últimos 24 meses)</p>

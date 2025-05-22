@@ -22,7 +22,7 @@ const ClassificationFooter = ({ data, rangedLegend }: any) => {
     const total = mainValue + data?.[0]?.value;
     percentage = (mainValue / total) * 100;
   }
-
+/* 
   return (
     <div>
       {removeDuplicatesByKey<typeof rangedLegend, string>(
@@ -51,6 +51,56 @@ const ClassificationFooter = ({ data, rangedLegend }: any) => {
           </div>
         );
       })}
+    </div>
+  ); */
+
+  return (
+    <div>
+      {removeDuplicatesByKey<typeof rangedLegend, string>(
+        rangedLegend,
+        "title"
+      ).map(({ color, title, text, window }: any) => {
+        const shouldHighlight = Boolean(window.find(({ min, max }: { min: number, max: number }) => percentage >= min && percentage < max));
+
+        if(!shouldHighlight){
+          return null;
+        }
+
+        return (
+          <div
+            style={{
+              padding: "3px",
+            }}
+          >
+            <span
+              style={{
+                display: "inline-block",
+                width: "20px",
+                backgroundColor: color,
+              }}
+            >
+              &nbsp;
+            </span>{" "}
+            Realizado
+          </div>
+        );
+      })}
+      <div
+        style={{
+          padding: "3px",
+        }}
+      >
+        <span
+          style={{
+            display: "inline-block",
+            width: "20px",
+            backgroundColor: "#d6d6d6",
+          }}
+        >
+          &nbsp;
+        </span>{" "}
+        Não Realizado
+      </div>
     </div>
   );
 };

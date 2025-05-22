@@ -1,10 +1,12 @@
 export function getChartDescription(description: string | undefined, reportViewType: any, content: Record<string, any>) {
   const baseDesc = !!content?.[String(description)] ? String(content?.[String(description)]) : description || '';
   
+  console.log({reportViewType})
+
   if (reportViewType) {
     let sufixo = " no município";
-    if (reportViewType === "EQUIPE") sufixo = " na Equipe";
-    if (reportViewType === "UBS") sufixo = " na UBS";
+    if (String(reportViewType).toUpperCase() === "EQUIPE") sufixo = " na equipe";
+    if (String(reportViewType).toUpperCase() === "UBS") sufixo = " na UBS";
     return baseDesc + sufixo;
   }
   
