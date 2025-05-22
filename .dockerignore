@@ -1,4 +1,6 @@
 .env
+**/.env
+venv/**
 src/bases/**
 dados/**
 dados/**
@@ -8,3 +10,9 @@ build/**
 **/*.log
 **/*.log.*
 **/*.spec
+**/.DS_Store
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+**/.env**
