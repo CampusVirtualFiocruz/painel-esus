@@ -2,6 +2,7 @@ import ReactECharts from "echarts-for-react";
 import { BarChart } from "../charts.types";
 import { content } from "../../../assets/content/content";
 import "./style.scss";
+import { getChartDescription } from "../../../utils/chartTitleUtils";
 
 export function Bar(props: BarChart) {
   const series = new Set<string>();
@@ -100,7 +101,7 @@ export function Bar(props: BarChart) {
           formatter: "{value}",
           fontSize: 12,
         },
-        name: props?.config?.yAxis?.name ?? undefined,
+        name: getChartDescription(props?.config?.yAxis?.name, props.config?.reportViewType, content),
         nameLocation: "middle",
         nameGap: 40,
       },

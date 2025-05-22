@@ -11,6 +11,7 @@ import { getNomeUbs } from "../utils";
 import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
 import "../styles/idosa.scss";
+import { ReportViewTypeEnum } from "../utils/viewTypeEnum";
 
 const reportHeader = [
   {
@@ -119,6 +120,7 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
   return Object.keys(chartList).map((chartKey) => {
     const CustomChart = chartList?.[chartKey]?.Chart;
     const chartConfigs = chartList?.[chartKey]?.config;
+    console.log({chartConfigs})
     const data = (report as any)?.[chartKey]?.data;
     const isRow = chartKey === "row";
 
@@ -226,6 +228,8 @@ const Idosa = () => {
                     Object.keys(chartList).map((chartKey) => {
                       const CustomChart = chartList?.[chartKey]?.Chart;
                       const chartConfigs = chartList?.[chartKey]?.config;
+                      console.log({chartConfigs})
+                      // chartConfigs.reportViewType = !!equipe ? ReportViewTypeEnum.EQUIPE : !!id ? ReportViewTypeEnum.UBS : ReportViewTypeEnum.MUNICIPIO;
                       const data = (report as any)?.[chartKey]?.data;
 
                       // "100+ anos" como item final dos gráficos
@@ -243,7 +247,7 @@ const Idosa = () => {
                         pessoasPorSexo.push(cemOuMaisItem);
                       }
 
-                      return <CustomChart data={data} config={chartConfigs} />;
+                      return <CustomChart data={data} config={chartConfigs}  />;
                     })
                   )}
                 </div>

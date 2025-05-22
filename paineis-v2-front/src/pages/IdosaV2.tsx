@@ -4,10 +4,12 @@ import { Bar, Donut, ValueCard } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import Waffle from "../components/charts/Waffle";
-import { memo } from "react";
+import { memo, useEffect, useMemo } from "react";
 import useReportDataIdosasV2 from "../hooks/sections/idosasV2/useReportDataIdosasV2";
 import { PainelParams } from "./Hipertensao";
 import "../styles/idosa.scss";
+import { ReportViewTypeEnum } from "../utils/viewTypeEnum";
+import { getChartDescription } from "../utils/chartTitleUtils";
 
 const reportHeader = [
   {
@@ -38,7 +40,7 @@ const reportSections: any = [
           componentStyle: {
             height: "500px",
           },
-         
+
           yAxis: {
             name: content?.["total-idosas-ubs"],
           },
@@ -78,7 +80,7 @@ const reportSectionsSecond: any = [
           componentStyle: {
             height: "250px",
           },
-          colors: ["#E4E4E4","#0069D0",  "#84aaff", "#5c7ea0"],
+          colors: ["#E4E4E4", "#0069D0", "#84aaff", "#5c7ea0"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
@@ -184,7 +186,7 @@ const reportSectionsSecond: any = [
   },
 ];
 
-const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
+const RenderChartGroup = ({ report, chartList, renderSmall, reportViewType }: any) => {
   return Object.keys(chartList).map((chartKey) => {
     const CustomChart = chartList?.[chartKey]?.Chart;
     const chartConfigs = chartList?.[chartKey]?.config;
@@ -197,6 +199,20 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
       chartConfigs.xAxis.data = xAxisNames;
     }
 
+    const configWithYAxisName = chartConfigs && chartConfigs.yAxis
+      ? {
+          ...chartConfigs,
+          yAxis: {
+            ...chartConfigs.yAxis,
+            name: getChartDescription(
+              chartConfigs.yAxis.name,
+              reportViewType,
+              content
+            ),
+          },
+        }
+      : chartConfigs;
+
     if (isRow) {
       return (
         <div className="is-row">
@@ -204,6 +220,7 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
             report={report}
             chartList={chartList?.[chartKey]}
             renderSmall
+            reportViewType={reportViewType}
           />
         </div>
       );
@@ -231,7 +248,7 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
               chartList?.[chartKey]?.subtitle}
           </p>
         )}
-        <CustomChart data={data} config={chartConfigs} />
+        <CustomChart data={data} config={configWithYAxisName} />
         {Boolean(chartList?.[chartKey]?.footerNote) && (
           <center>
             <p
@@ -261,6 +278,12 @@ const IdosaV2 = () => {
   const { id } = useParams<PainelParams>();
   const reportData: any = useReportDataIdosasV2({ ubsId: id, squadId: equipe });
   const report = reportData?.data;
+
+  const reportViewType = !!equipe
+    ? ReportViewTypeEnum.EQUIPE
+    : !!id
+      ? ReportViewTypeEnum.UBS
+      : ReportViewTypeEnum.MUNICIPIO;
 
   if (reportData?.isLoading) {
     return <center>Aguarde...</center>;
@@ -295,10 +318,10 @@ const IdosaV2 = () => {
           >
             {reportHeader.map((chartList: any) =>
               Object.keys(chartList).map((chartKey) => {
-                console.log("achou data", chartKey);
                 const CustomChart = chartList?.[chartKey]?.Chart;
                 const chartConfigs = chartList?.[chartKey]?.config;
                 const data = (report as any)?.[chartKey]?.data;
+                chartConfigs.reportViewType = reportViewType;
 
                 return <CustomChart data={data} config={chartConfigs} />;
               })
@@ -307,7 +330,11 @@ const IdosaV2 = () => {
         </div>
       </>
       {reportSections.map((chartList: any) => (
-        <RenderChartGroup report={report} chartList={chartList} />
+        <RenderChartGroup
+          report={report}
+          chartList={chartList}
+          reportViewType={reportViewType}
+        />
       ))}
       <center style={{ marginTop: "60px", marginBottom: "30px" }}>
         <h2>
@@ -316,7 +343,11 @@ const IdosaV2 = () => {
         <p>(Referentes aos últimos 12 meses)</p>
       </center>
       {reportSectionsSecond.map((chartList: any) => (
-        <RenderChartGroup report={report} chartList={chartList} />
+        <RenderChartGroup
+          report={report}
+          chartList={chartList}
+          reportViewType={reportViewType}
+        />
       ))}
     </ReportWrapper>
   );

@@ -11,12 +11,15 @@ import { PainelParams } from "../Hipertensao";
 import { reportCharts, reportSections } from "./Bucal.utils";
 import "../../styles/idosa.scss";
 import { formataNumero } from "../../utils";
+import { getChartDescription } from "../../utils/chartTitleUtils";
+import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
 
 const RenderChartGroup = ({
   report,
   chartList,
   renderSmall,
   alignMiddle,
+  reportViewType,
 }: any) => {
   return Object.keys(chartList).map((chartKey) => {
     const CustomChart = chartList?.[chartKey]?.Chart;
@@ -30,6 +33,20 @@ const RenderChartGroup = ({
       chartConfigs.xAxis = { data: [], ...chartConfigs.xAxis };
       chartConfigs.xAxis.data = xAxisNames;
     }
+
+    const configWithYAxisName = chartConfigs && chartConfigs.yAxis
+      ? {
+          ...chartConfigs,
+          yAxis: {
+            ...chartConfigs.yAxis,
+            name: getChartDescription(
+              chartConfigs.yAxis.name,
+              reportViewType,
+              content
+            ),
+          },
+        }
+      : chartConfigs;
 
     if (isRow) {
       return (
@@ -45,6 +62,7 @@ const RenderChartGroup = ({
             chartList={chartList?.[chartKey]}
             renderSmall
             alignMiddle={isSecondRow}
+            reportViewType={reportViewType}
           />
         </div>
       );
@@ -84,7 +102,7 @@ const RenderChartGroup = ({
               chartList?.[chartKey]?.subtitle}
           </p>
         )}
-        <CustomChart data={data} config={chartConfigs} />
+        <CustomChart data={data} config={configWithYAxisName} />
         {Boolean(chartList?.[chartKey]?.footerNote) && (
           <center>
             <p
@@ -116,6 +134,12 @@ const Bucal = () => {
 
   const { id } = useParams<PainelParams>();
   const reportData: any = useReportDataBucal({ ubsId: id, equipe, recorte });
+
+  const reportViewType = !!equipe
+    ? ReportViewTypeEnum.EQUIPE
+    : !!id
+      ? ReportViewTypeEnum.UBS
+      : ReportViewTypeEnum.MUNICIPIO;
 
   const report = reportData?.data;
 
@@ -195,7 +219,7 @@ const Bucal = () => {
               >
                 Total de pessoas
                 <br />
-                atendidas na UBS
+                atendidas {getChartDescription('', ReportViewTypeEnum, [])}
               </span>
               <img
                 src={People}
@@ -236,7 +260,7 @@ const Bucal = () => {
               >
                 Total de pessoas
                 <br />
-                cadastradas na UBS
+                cadastradas {getChartDescription('', ReportViewTypeEnum, [])}
               </span>
               <img
                 src={People}
@@ -265,13 +289,13 @@ const Bucal = () => {
           </div>
         </div>
         {reportSections(recorte).map((chartList: any) => (
-          <RenderChartGroup report={report} chartList={chartList} />
+          <RenderChartGroup report={report} chartList={chartList} reportViewType={reportViewType} />
         ))}
         <center style={{ marginTop: "60px", marginBottom: "30px" }}>
           <h2>
             <b>
               Proporção referente a quantidade de pessoas{" "}
-              {recorte === "atendidas" ? "atendidas" : "cadastradas"} na UBS:
+              {recorte === "atendidas" ? "atendidas" : "cadastradas"} {getChartDescription('', ReportViewTypeEnum, [])}:
             </b>
           </h2>
           <p>(Dados referentes aos últimos 24 meses)</p>

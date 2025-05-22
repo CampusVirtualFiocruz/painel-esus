@@ -2,6 +2,8 @@
 // Tipos de suporte
 //
 
+import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
+
 export type groupedValuesInput = Array<{
   value: {
     [tag: string]: number;
@@ -28,6 +30,7 @@ type generalConfigs = {
   colors?: Array<string>;
   formatterKind?: string;
   componentStyle?: object;
+  reportViewType?: ReportViewTypeEnum.EQUIPE | ReportViewTypeEnum.UBS |  ReportViewTypeEnum.MUNICIPIO;
 };
 
 type LinearChart = {
