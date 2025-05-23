@@ -59,18 +59,19 @@ jobs:
           ls -la
           python -m pip install --upgrade pip
           pip3 install -r requirements.txt
+          pip3 install -r ./interface/requirements-interface.txt
 
       - name: Build EXE config
         working-directory: ./painel-esus
         run: |
-          pyinstaller --icon=./icon/config.ico -n config --onefile ./interface.py --hidden-import='PIL._tkinter_finder'
+          pyinstaller --icon=./interface/icon/config.ico -n config --onefile ./interface.py --hidden-import='PIL._tkinter_finder'
           cd dist
           ls -la
 
       - name: Build EXE run
         working-directory: ./painel-esus
         run: |
-          pyinstaller --icon=./icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile --collect-all pyarrow run.py
+          pyinstaller --icon=./interface/icon/Icon_Painel_Purple_ICO.ico -n painel-esus --onefile run.py
           cd dist
           ls -la
 
@@ -102,23 +103,23 @@ jobs:
             -C $(pwd)/painel-esus/dist/ config \
             -C $(pwd)/painel-esus/dist/ painel-esus
 
-      # - name: Upload para AWS S3
-      #   if: success() # Executa este step apenas se o build for bem-sucedido
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     AWS_REGION: "us-east-1"
-      #   run: |
-      #     version="${{ github.head_ref || github.ref_name }}"
-      #     clean_version=$(echo "$version" | sed 's/^v//')
-      #     aws s3 cp painel-esus-setup$clean_version.tar.gz \
-      #     "s3://painel-esus-public/instalador/"
-      #   shell: bash
-      # - name: Validate files and compress
-      #   run: |
-      #     version="${{ github.head_ref || github.ref_name }}"
-      #     clean_version=$(echo "$version" | sed 's/^v//')
-      #     mv painel-esus-setup$clean_version.tar.gz painel-esus-setup-linux.tar.gz
+      - name: Upload para AWS S3
+        if: success() # Executa este step apenas se o build for bem-sucedido
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "us-east-1"
+        run: |
+          version="${{ github.head_ref || github.ref_name }}"
+          clean_version=$(echo "$version" | sed 's/^v//')
+          aws s3 cp painel-esus-setup$clean_version.tar.gz \
+          "s3://painel-esus-public/instalador/"
+        shell: bash
+      - name: Validate files and compress
+        run: |
+          version="${{ github.head_ref || github.ref_name }}"
+          clean_version=$(echo "$version" | sed 's/^v//')
+          mv painel-esus-setup$clean_version.tar.gz painel-esus-setup-linux.tar.gz
 
   create-exe-files:
     needs: [build-backend]
