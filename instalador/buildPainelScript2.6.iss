@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Painel eSUS"
-#define MyAppVersion "v0.9.5"
+#define MyAppVersion "v0.9.6"
 #define MyAppPublisher "Fiocruz"
 #define MyAppURL "https://painelsaude.fiocruz.br"
 #define MyAppExeName "painel-esus.exe"
