@@ -733,6 +733,7 @@ class OralHealtNominalListAdapter:
         self.identidadeGenero = user['tp_identidade_genero_cidadao'] 
         self.necessidadesEspeciais = user['st_paciente_necessidades_espec']
         self.povosComunidades = user['st_comunidade_tradicional']
+        self.gestante = user["st_gestante"]
 
         self.possui_alertas = self.check_alert(user)
         self.registros = []
@@ -800,11 +801,11 @@ class OralHealtNominalListAdapter:
                 # or user["agg_realizaram_exodontia_atendidas"] == 0
                 # or user['agg_tratamento_odonto_concluido_atendidas'] == 0 
                 )
-            
+
     def extract_procedures(self, user, column):
         data = user[f'{column}_{self.category}']
         return data.split('|') if data is not None else []
-    
+
     def select_column(self, user, column):
         return user[f'{column}_{self.category}']
 
@@ -842,6 +843,7 @@ class OralHealtNominalListAdapter:
                 "identidadeGenero": self.identidadeGenero,
                 "necessidadesEspeciais": self.necessidadesEspeciais,
                 "povosComunidades": self.povosComunidades,
+                "gestante": self.gestante,
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [

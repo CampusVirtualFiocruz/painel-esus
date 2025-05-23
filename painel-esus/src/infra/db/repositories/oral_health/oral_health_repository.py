@@ -157,6 +157,7 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
             "cns": "cns",
             "idade": "idade",
             "sexo": "sexo",
+            "gestante": "gestante",
             "equipe": "nome_equipe",
             "micro_area": "micro_area",
             "identidadeGenero": "tp_identidade_genero_cidadao",
