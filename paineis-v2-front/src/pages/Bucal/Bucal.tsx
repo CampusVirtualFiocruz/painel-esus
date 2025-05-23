@@ -34,19 +34,20 @@ const RenderChartGroup = ({
       chartConfigs.xAxis.data = xAxisNames;
     }
 
-    const configWithYAxisName = chartConfigs && chartConfigs.yAxis
-      ? {
-          ...chartConfigs,
-          yAxis: {
-            ...chartConfigs.yAxis,
-            name: getChartDescription(
-              chartConfigs.yAxis.name,
-              reportViewType,
-              content
-            ),
-          },
-        }
-      : chartConfigs;
+    const configWithYAxisName =
+      chartConfigs && chartConfigs.yAxis
+        ? {
+            ...chartConfigs,
+            yAxis: {
+              ...chartConfigs.yAxis,
+              name: getChartDescription(
+                chartConfigs.yAxis.name,
+                reportViewType,
+                content
+              ),
+            },
+          }
+        : chartConfigs;
 
     if (isRow) {
       return (
@@ -137,8 +138,8 @@ const Bucal = () => {
   const reportViewType = !!equipe
     ? ReportViewTypeEnum.EQUIPE
     : !!id
-      ? ReportViewTypeEnum.UBS
-      : ReportViewTypeEnum.MUNICIPIO;
+    ? ReportViewTypeEnum.UBS
+    : ReportViewTypeEnum.MUNICIPIO;
 
   const report = reportData?.data;
 
@@ -146,12 +147,34 @@ const Bucal = () => {
     return <center>Aguarde...</center>;
   }
 
+  const footerNote =
+    recorte === "atendidas" ? (
+      <>
+        A <b>População Atendida</b> se refere à todas as pessoas vinculadas à
+        uma equipe que tenham realizado algum atendimento odontológico nos
+        últimos 2 anos. Para fins deste relatório serão considerados todos os
+        atendimentos odontológicos da pessoa, ainda que tenham sido realizados
+        em outra Unidade de Saúde, conforme a regra de cálculo preconizada. Não
+        serão incluídas na População Atendida as pessoas que realizaram
+        atendimento odontológico, porém, não possuem Ficha da Cadastro
+        Individual.
+      </>
+    ) : (
+      <>
+        A <b>População Cadastrada</b> se refere à todas as pessoas vinculadas à
+        uma equipe que tenham a Ficha de Cadastro Individual atualizada nos
+        últimos 2 anos. Para fins deste relatório serão considerados todos os
+        atendimentos odontológicos da pessoa, ainda que tenham sido realizados
+        em outra Unidade de Saúde, conforme a regra de cálculo preconizada.
+      </>
+    );
+
   return (
     <>
       <ReportWrapper
         title={"Saúde Bucal"}
         footer={<ReportFooter chaveListaNominal="Bucal" equipe={equipe} />}
-        footerNote="Para fins desse relatório serão considerados todos os atendimentos odontológicos da pessoa, ainda que tenham ocorrido em outra unidade de saúde, conforme regra de cálculo preconizada."
+        footerNote={footerNote}
         preheader={
           <div
             style={{
@@ -218,7 +241,7 @@ const Bucal = () => {
               >
                 Total de pessoas
                 <br />
-                atendidas {getChartDescription('', reportViewType, [])}
+                atendidas {getChartDescription("", reportViewType, [])}
               </span>
               <img
                 src={People}
@@ -259,7 +282,7 @@ const Bucal = () => {
               >
                 Total de pessoas
                 <br />
-                cadastradas {getChartDescription('', reportViewType, [])}
+                cadastradas {getChartDescription("", reportViewType, [])}*
               </span>
               <img
                 src={People}
@@ -288,13 +311,18 @@ const Bucal = () => {
           </div>
         </div>
         {reportSections(recorte).map((chartList: any) => (
-          <RenderChartGroup report={report} chartList={chartList} reportViewType={reportViewType} />
+          <RenderChartGroup
+            report={report}
+            chartList={chartList}
+            reportViewType={reportViewType}
+          />
         ))}
         <center style={{ marginTop: "60px", marginBottom: "30px" }}>
           <h2>
             <b>
               Proporção referente a quantidade de pessoas{" "}
-              {recorte === "atendidas" ? "atendidas" : "cadastradas"} {getChartDescription('', reportViewType, [])}:
+              {recorte === "atendidas" ? "atendidas" : "cadastradas"}{" "}
+              {getChartDescription("", reportViewType, [])}:
             </b>
           </h2>
           <p>(Dados referentes aos últimos 24 meses)</p>

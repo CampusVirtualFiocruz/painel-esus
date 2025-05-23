@@ -29,6 +29,20 @@ export const columns = ({ handleClick, condicao }: any) => {
       ),
     },
     {
+      name: "gestante",
+      header: <div className="iconHeader iconGestante ms-2"></div>,
+      sortable: false,
+      render: (item: any) => {
+        if (String(item.gestante).toUpperCase() === "SIM"){
+          return (
+            <span className="iconCircle iconGestante ms-2" title="Alertas">
+              G
+            </span>
+          );
+        }
+      },
+    },
+    {
       name: "alert",
       header: <div className="iconHeader iconAlerta ms-2"></div>,
       sortable: false,

@@ -38,13 +38,27 @@ export const CardListaNominal = ({
   return (
     <div className="d-flex flex-column mb-4">
       <div className="user-details">
-        <h1>
-          {capitalizeName(
-            item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
-              ? item?.nomeSocialSelecionado
-              : item?.nome
-          )}
-        </h1>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "start",
+            alignItems: "center",
+            gap: "6px",
+            marginBottom: "10px",
+          }}
+        >
+          {String(item.gestante).toUpperCase() === "SIM" && <span className="iconCircle iconGestante" title="Alertas">
+              G
+            </span>
+          }
+          <h1 style={{ padding: "0px", margin: "0px" }}>
+            {capitalizeName(
+              item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
+                ? item?.nomeSocialSelecionado
+                : item?.nome
+            )}
+          </h1>
+        </div>
         <div className="address">
           <p>
             <strong>CPF:</strong> {item?.cpf} <br />
@@ -73,7 +87,9 @@ export const CardListaNominal = ({
             {item?.telefone ? item?.telefone : "-"}{" "}
           </p>
         </div>
-        {Boolean(config?.alertBeforeDetails) ? <b style={{ lineHeight: "40px" }}>{config?.alertBeforeDetails}</b> : null}
+        {Boolean(config?.alertBeforeDetails) ? (
+          <b style={{ lineHeight: "40px" }}>{config?.alertBeforeDetails}</b>
+        ) : null}
         {Array.isArray(item?.detalhesCondicaoSaude) &&
           item?.detalhesCondicaoSaude.map((condicao: any) => {
             return (

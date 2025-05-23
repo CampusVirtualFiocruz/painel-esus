@@ -40,7 +40,7 @@ const ReportWrapper = ({
   preheader?: ReactNode;
   footer?: ReactNode;
   children: ReactNode;
-  footerNote?: string;
+  footerNote?: string | ReactNode;
 } & HTMLProps<HTMLDivElement>) => {
   const { id } = useParams<PainelParams>();
   const { city } = useInfo();
