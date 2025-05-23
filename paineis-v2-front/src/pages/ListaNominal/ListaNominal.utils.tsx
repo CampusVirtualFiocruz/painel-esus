@@ -137,7 +137,12 @@ export const columns = ({ handleClick, condicao }: any) => {
   return baseColumns;
 };
 
-export const Footer = ({ pathToReport, condicao, id }: any) => {
+export const Footer = ({ pathToReport, condicao, id, recorte }: any) => {
+  
+  let recorteQuery = '';
+  if (recorte != undefined || recorte != null) {
+    recorteQuery=`?recorte=${recorte}`;
+  }
   return (
     <div className="legend">
       <div>
@@ -150,7 +155,7 @@ export const Footer = ({ pathToReport, condicao, id }: any) => {
         </p>
         <p
           onClick={async () => {
-            let path = `${pathToReport?.[condicao]}/get-nominal-list/download/${id}`;
+            let path = `${pathToReport?.[condicao]}/get-nominal-list/download/${id}${recorteQuery}`;
             const response: any = await Api.get(path, {
               headers: {
                 "Content-Type":

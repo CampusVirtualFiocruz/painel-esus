@@ -1,6 +1,8 @@
 # pylint: disable=W0613
 # pylint: disable=E0401,C0301,W0612,W0611
-from flask import Blueprint, jsonify, request
+import io
+
+from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.oral_health_compose import (
@@ -11,6 +13,7 @@ from src.main.composers.oral_health_compose import (
     oral_health_get_extraction,
     oral_health_get_first_appointment,
     oral_health_get_nominal_list,
+    oral_health_get_nominal_list_download_composer,
     oral_health_get_prevention_procedures,
     oral_health_get_supervised_brushing,
     oral_health_get_total,
@@ -33,6 +36,7 @@ class OralHealthPath:
         "get_atraumatic_treatment": "/get-atraumatic-treatment",
         "get_nominal_list": "/get-nominal-list",
         "get_total": "/get-total",
+        "get_nominal_list_download": "/get-nominal-list/download",
     }
 
 
@@ -50,7 +54,7 @@ urls = oral_path.urls
     methods=["GET"],
     endpoint="get_extraction_id",
 )
-#@cache.cached()
+# @cache.cached()
 def oral_health_get_extraction_fn(cnes=None):
     http_response = None
     response = None
@@ -72,7 +76,7 @@ def oral_health_get_extraction_fn(cnes=None):
     methods=["GET"],
     endpoint="get_cares_by_gender_id",
 )
-#@cache.cached(query_string=True)
+# @cache.cached(query_string=True)
 def oral_health_get_cares_by_gender_fn(cnes=None):
     http_response = None
     response = None
@@ -94,7 +98,7 @@ def oral_health_get_cares_by_gender_fn(cnes=None):
     methods=["GET"],
     endpoint="get_group_by_race_id",
 )
-#@cache.cached(query_string=True)
+# @cache.cached(query_string=True)
 def oral_health_get_cares_by_race_fn(cnes=None):
     http_response = None
     response = None
@@ -118,7 +122,7 @@ def oral_health_get_cares_by_race_fn(cnes=None):
     methods=["GET"],
     endpoint="get_first_appointment_id",
 )
-#@cache.cached(query_string=True)
+# @cache.cached(query_string=True)
 def oral_health_get_first_appointment_fn(cnes=None):
     http_response = None
     response = None
@@ -142,7 +146,7 @@ def oral_health_get_first_appointment_fn(cnes=None):
     methods=["GET"],
     endpoint="get_conclued_treatment_id",
 )
-#@cache.cached(query_string=True)
+# @cache.cached(query_string=True)
 def oral_health_get_conclued_treatment_fn(cnes=None):
     http_response = None
     response = None
@@ -164,7 +168,7 @@ def oral_health_get_conclued_treatment_fn(cnes=None):
     methods=["GET"],
     endpoint="get_prevention_procedures_id",
 )
-#@cache.cached(query_string=True)
+# @cache.cached(query_string=True)
 def oral_health_get_prevention_procedures_fn(cnes=None):
     http_response = None
     response = None
@@ -191,7 +195,7 @@ def oral_health_get_prevention_procedures_fn(cnes=None):
     methods=["GET"],
     endpoint="get_supervised_brushing_id",
 )
-#@cache.cached(query_string=True)
+# @cache.cached(query_string=True)
 def oral_health_get_supervised_brushing_fn(cnes=None):
     http_response = None
     response = None
@@ -216,7 +220,7 @@ def oral_health_get_supervised_brushing_fn(cnes=None):
     methods=["GET"],
     endpoint="get_atraumatic_treatment_id",
 )
-#@cache.cached(query_string=True)
+# @cache.cached(query_string=True)
 def oral_health_get_atraumatic_treatment_fn(cnes=None):
     http_response = None
     response = None
@@ -240,7 +244,7 @@ def oral_health_get_atraumatic_treatment_fn(cnes=None):
     methods=["GET"],
     endpoint="get_nominal_list_id",
 )
-#@cache.cached(query_string=True)
+# @cache.cached(query_string=True)
 def oral_health_get_nominal_list_fn(cnes=None):
     http_response = None
     response = None
@@ -277,3 +281,44 @@ def oral_health_get_total_fn(cnes=None):
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
+
+
+@oral_health_bp.route(
+    urls["get_nominal_list_download"],
+    methods=["GET"],
+    endpoint="elderly_get_nominal_list_download",
+)
+@oral_health_bp.route(
+    urls["get_nominal_list_download"] + "/<cnes>",
+    methods=["GET"],
+    endpoint="elderly_get_nominal_list_download_id",
+)
+def oral_health_get_nominal_list_download(cnes=None):
+    if cnes:
+        request.view_args["cnes"] = int(request.view_args["cnes"])
+
+    http_response = None
+    response = None
+
+    try:
+        response = request_adapter(
+            request, oral_health_get_nominal_list_download_composer()
+        )
+        buffer = io.BytesIO()
+        response.to_excel(buffer)
+
+        headers = {
+            "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
+            "Content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        }
+        return Response(
+            buffer.getvalue(),
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers=headers,
+        )
+
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, 200

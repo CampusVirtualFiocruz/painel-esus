@@ -70,3 +70,9 @@ class OralHealthDashboardUseCaseInterface(ABC):
         self, cnes: int = None, equipe: int = None
     ):
         pass
+
+    @abstractmethod
+    def donwload_nominal_list(
+        self, cnes: int = None, equipe: int = None
+    ):
+        pass

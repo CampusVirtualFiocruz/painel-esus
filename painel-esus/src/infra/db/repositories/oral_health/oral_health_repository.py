@@ -4,12 +4,15 @@ import duckdb
 from src.data.interfaces.oral_health_dashboard_repository import (
     OralHealthDashboardRepositoryInterface,
 )
+from src.env.conf import getenv
+from src.main.adapters.nominal_list_adapter import mock_word
 
 from .sqls.oral_health_queries import (
     atraumatic_treatment,
     by_gender,
     by_race,
     conclued_treatment,
+    donwload_nominal_list,
     extraction,
     first_appointment,
     get_total_card,
@@ -23,6 +26,7 @@ from .sqls.oral_health_queries import (
 class OralHealthRepository(OralHealthDashboardRepositoryInterface):
     def __init__(self,):
         self.session = duckdb.connect()
+        self.mock_data = getenv("MOCK", False, False) == "True"
 
     def total_card(self, cnes: int = None, equipe: int = None, category: str = 'atentidas'):
         sql = get_total_card(cnes, equipe, category)
@@ -190,8 +194,11 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
             "items": users,
         }
 
-    def find_all_download(self, cnes: int = None, equipe: int = None):
-        sql = nominal_download(cnes,equipe)
+    def donwload_nominal_list(
+        self, cnes: int = None, equipe: int = None, category=None
+    ):
+
+        sql = donwload_nominal_list(cnes, equipe, category)
         con = duckdb.connect()
         response = con.sql(sql).df()
         if self.mock_data:
@@ -207,6 +214,6 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
                 x['bairro'] = mock_word(x['bairro'], 2)
                 x['nome_unidade_saude'] = mock_word(x['nome_unidade_saude'], 2)
                 x['nome_equipe'] = mock_word(x['nome_equipe'], 2)
-                return x            
+                return x
             response=response.apply(parse, axis=1)
         return response

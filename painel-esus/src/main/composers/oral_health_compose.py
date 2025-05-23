@@ -14,6 +14,7 @@ from src.presentations.controllers import (
     OralHealthGetPreventionProceduresController,
     OralHealthGetSupervisedBrushingController,
     OralHealthNominalListController,
+    OralHealthNominalListDownloadController,
     OralHealthTotalController,
 )
 
@@ -91,4 +92,11 @@ def oral_health_get_total():
     repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthTotalController(use_case)
+    return controller.handle
+
+
+def oral_health_get_nominal_list_download_composer():
+    repository = OralHealthRepository()
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthNominalListDownloadController(use_case)
     return controller.handle

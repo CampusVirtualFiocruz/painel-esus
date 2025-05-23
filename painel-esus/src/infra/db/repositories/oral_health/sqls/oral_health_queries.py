@@ -171,3 +171,73 @@ def supervised_brushing(
 ):
 
     return base_chart(cnes, equipe, category, "agg_realizaram_exodontia")
+
+
+def donwload_nominal_list(
+    cnes: int = None,
+    equipe: int = None,
+    category: str = None,
+):
+    where_clause = gen_where_category(category)
+    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)
+    return f"""Select
+                nome,
+                cidadao_pec,
+                cpf,
+                cns,
+                sexo,
+                idade,
+                data_nascimento,
+                logradouro,
+                bairro,
+                cep,
+                municipio,
+                ine_equipe,
+                micro_area,
+                case 
+                when atendimento_odonto = 1 then 'atendidas'
+                when cadastradas_odonto = 1 then 'cadastradas'
+                end situacao,
+                cnes_equipe,
+                codigo_unidade_saude,
+                codigos_procedimentos_preventivos_atendidas,
+                codigos_procedimentos_preventivos_cadastradas,
+                codigo_equipe,
+                complemento,
+                faixa_etaria,
+                tipo_logradouro,
+                nome_equipe,
+                nome_unidade_saude,
+                numero,
+                raca_cor,
+                telefone,
+                case
+                when agg_primeira_consulta_atendidas = 0 then 'SIM'
+                when agg_primeira_consulta_atendidas != 0 then 'NÃO'
+                end alerta_primeira_consuta_programatica_pessoas_atendidas,
+                case
+                when agg_primeira_consulta_cadastradas = 0 then 'SIM'
+                when agg_primeira_consulta_cadastradas != 0 then 'NÃO'
+                end alerta_primeira_consuta_programatica_pessoas_cadastradas,
+                data_TRA_atendidas,
+                data_TRA_cadastradas,
+                data_primeira_consulta_atendidas,
+                data_primeira_consulta_cadastradas,
+                data_tratamento_concluido_atendidas,
+                data_tratamento_concluido_cadastradas,
+                data_ultima_atualizacao_cidadao,
+                data_ultima_fci,
+                data_ultimo_atendimento,
+                descricao_procedimentos_preventivos_atendidas,
+                descricao_procedimentos_preventivos_cadastradas,
+                status_registro_valido_equipe,
+                status_registro_valido_unidade_saude,
+                tipo_localizacao_domicilio,
+                total_exodontia_atendidas,
+                total_exodontia_cadastradas,
+                st_comunidade_tradicional as 'povos_de_comunidades',
+                st_gestante gestante,
+                st_paciente_necessidades_espec as 'necessidades_especiais',
+                tp_identidade_genero_cidadao as 'identidade_genero'
+            from read_parquet('./dados/output/saude_bucal.parquet')  
+            {where_clause}"""

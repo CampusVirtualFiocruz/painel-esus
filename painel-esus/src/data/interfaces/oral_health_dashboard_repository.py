@@ -71,3 +71,6 @@ class OralHealthDashboardRepositoryInterface(ABC):
 
     @abstractmethod
     def total_ubs(self, cnes: int = None, equipe: int = None) -> Dict: pass 
+
+    @abstractmethod
+    def donwload_nominal_list(self, cnes: int = None, equipe: int = None, category: str = 'atendidas') -> Dict: pass 

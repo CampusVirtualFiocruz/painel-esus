@@ -25,6 +25,9 @@ from src.presentations.controllers.oral_health.oral_health_get_supervised_brushi
 from src.presentations.controllers.oral_health.oral_health_nominal_list import (
     OralHealthNominalListController,
 )
+from src.presentations.controllers.oral_health.oral_health_nominal_list_donwload import (
+    OralHealthNominalListDownloadController,
+)
 from src.presentations.controllers.oral_health.oral_health_total import (
     OralHealthTotalController,
 )

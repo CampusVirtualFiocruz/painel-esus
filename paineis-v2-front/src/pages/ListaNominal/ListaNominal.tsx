@@ -170,7 +170,7 @@ const ListaNominal = () => {
             sort={tableParams?.sort as any}
           />
         </LocaleContext.Provider>
-        <Footer pathToReport={pathToReport} condicao={condicao} id={id} />
+        <Footer pathToReport={pathToReport} condicao={condicao} id={id} recorte={recorte} />
       </ReportWrapper>
     </div>
   );

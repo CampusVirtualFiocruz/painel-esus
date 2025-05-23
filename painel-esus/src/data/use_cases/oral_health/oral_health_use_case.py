@@ -86,7 +86,16 @@ class OralHealthDashboardUseCase(OralHealthDashboardUseCaseInterface):
             cnes, equipe, category
         )
         return response
-
+    
+    def donwload_nominal_list(
+        self, cnes=None, equipe=None, category: str = None
+    ):
+        self.__valid_cnes(cnes)
+        response = self._repository.donwload_nominal_list(
+            cnes, equipe, category
+        )
+        return response
+    
     def find_filter_nominal(
         self,
         cnes: int,
