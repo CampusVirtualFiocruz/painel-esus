@@ -99,7 +99,7 @@ def by_gender(cnes: int = None, equipe: int = None, category: str = None):
         from read_parquet('./dados/output/saude_bucal.parquet') 
         {where_clause}
         group by sexo, faixa_etaria
-        order by sexo, max(idade);
+        order by sexo, max(idade_anos_completos);
                 """
 
 

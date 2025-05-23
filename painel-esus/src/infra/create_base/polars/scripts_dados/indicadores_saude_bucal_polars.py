@@ -1612,6 +1612,7 @@ def gerar_banco():
                                 'descricao_procedimentos_preventivos_cadastradas',
                                 'faixa_etaria',
                                 'idade',
+                                'idade_anos_completos',
                                 'ine_equipe',
                                 'logradouro',
                                 'micro_area',

@@ -739,7 +739,7 @@ class OralHealtNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=self.convert_date(self.select_column( user, "data_primeira_consulta")),
-                exibir_alerta=self.select_column(user, 'agg_primeira_consulta') == 1,
+                exibir_alerta=self.select_column(user, 'agg_primeira_consulta') == 0,
                 descricao="Data da primeira consulta odontológica programática",
                 tipo_alerta="primeira_consulta",
             )
@@ -747,7 +747,7 @@ class OralHealtNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=self.convert_date(self.select_column( user, "data_tratamento_concluido")),
-                exibir_alerta=self.select_column( user, "agg_tratamento_odonto_concluido") == 1,
+                exibir_alerta=False,
                 descricao="Data de conclusão do tratamento odontológico",
                 tipo_alerta="conclusao_tratamento",
             )
@@ -755,7 +755,7 @@ class OralHealtNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=self.convert_nan(self.select_column( user, "total_exodontia")),
-                exibir_alerta=self.select_column( user, "agg_realizaram_exodontia") == 1,
+                exibir_alerta=False,
                 descricao="Quantidade de exodontias realizadas",
                 tipo_alerta="xodontia_realizadas",
             )
@@ -768,7 +768,7 @@ class OralHealtNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=alert_list,
-                exibir_alerta=self.select_column( user, "agg_procedimentos_preventivos") == 0,
+                exibir_alerta=False,
                 descricao="Procedimentos preventivos realizados:",
                 tipo_alerta="procedimentos_realizados",
             )
@@ -776,7 +776,7 @@ class OralHealtNominalListAdapter:
         self.registros.append(
             AlertRecord(
                 data=self.convert_date(self.select_column(user,'data_TRA')),
-                exibir_alerta=self.select_column( user, "agg_TRA") == 0,
+                exibir_alerta=False,
                 descricao="Data do último tratamento restaurador atraumático",
                 tipo_alerta="data_utltimo_tra",
             )
@@ -785,17 +785,21 @@ class OralHealtNominalListAdapter:
     def check_alert( self, user):
 
         if self.category == 'cadastradas':
-            return ( user["agg_TRA_cadastradas"] == 0
-                or user["agg_primeira_consulta_cadastradas"] == 0
-                or user["agg_realizaram_exodontia_cadastradas"] == 0
-                or user['agg_procedimentos_preventivos_cadastradas'] == 0
-                or user['agg_tratamento_odonto_concluido_cadastradas'] == 0 )
+            return ( 
+                # user["agg_TRA_cadastradas"] == 0
+                user["agg_primeira_consulta_cadastradas"] == 0
+                # or user["agg_realizaram_exodontia_cadastradas"] == 0
+                # or user['agg_procedimentos_preventivos_cadastradas'] == 0
+                # or user['agg_tratamento_odonto_concluido_cadastradas'] == 0 
+                )
         else:
-            return ( user["agg_TRA_atendidas"] == 0
-                or user["agg_primeira_consulta_atendidas"] == 0
-                or user["agg_procedimentos_preventivos_atendidas"] == 0
-                or user["agg_realizaram_exodontia_atendidas"] == 0
-                or user['agg_tratamento_odonto_concluido_atendidas'] == 0 )
+            return ( 
+                # user["agg_TRA_atendidas"] == 0
+                user["agg_primeira_consulta_atendidas"] == 0
+                # or user["agg_procedimentos_preventivos_atendidas"] == 0
+                # or user["agg_realizaram_exodontia_atendidas"] == 0
+                # or user['agg_tratamento_odonto_concluido_atendidas'] == 0 
+                )
             
     def extract_procedures(self, user, column):
         data = user[f'{column}_{self.category}']
