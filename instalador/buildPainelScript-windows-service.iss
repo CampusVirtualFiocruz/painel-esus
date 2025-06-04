@@ -11,7 +11,7 @@
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 #define ConfigExeName "config.exe"
 #define rootPath "D:\a\painel-esus\painel-esus"
-#define ServiceName "Painel e-SUS APS"
+#define ServiceName "PaineleSUSService"
 
 [Setup]
 AppId={{91B895F7-3F8C-4B4C-A898-AF39516ADBFC}
@@ -79,7 +79,6 @@ Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell\Reiniciar\command"
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-Name: "{autoprograms}\{#MyAppName}\Iniciar Painel como Serviço"; Filename: "{app}\nssm.exe"; Parameters: "start {#ServiceName}"; IconFilename: "{app}\icon\Icon_Painel_Blue_ICO.ico"
 
 [Run]
 Filename: "{app}\nssm.exe"; Parameters: "install {#ServiceName} ""{app}\{#MyAppExeName}"""; \

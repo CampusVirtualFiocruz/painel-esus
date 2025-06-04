@@ -200,7 +200,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: painel-esus
+          name: painel-esus-windows-service
           path: D:\a\painel-esus\painel-esus\instalador\output
       - name: Download Artifact
         uses: actions/download-artifact@v4
