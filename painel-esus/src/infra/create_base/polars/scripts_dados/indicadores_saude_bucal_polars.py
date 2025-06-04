@@ -7,9 +7,10 @@ import time
 from datetime import date, datetime
 
 import polars as pl
-from codigos_nu_cbo import *
 from dateutil.relativedelta import relativedelta
 from src.env.conf import getenv
+
+from .codigos_cbo import *
 
 
 def ler_dados_raw(nome_parquet,columns=""):
