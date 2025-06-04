@@ -2,18 +2,15 @@
 # coding: utf-8
 
 
-import polars as pl
-
-
-import time
-import pandas as pd
 import os
-from datetime import datetime,date
-from src.env.conf import getenv
+import time
+from datetime import date, datetime
+
+import pandas as pd
+import polars as pl
+from codigos_cbo import *
 from dateutil.relativedelta import relativedelta
-
-
-from codigos_nu_cbo import *
+from src.env.conf import getenv
 
 
 def ler_dados_raw(nome_parquet,columns=""):

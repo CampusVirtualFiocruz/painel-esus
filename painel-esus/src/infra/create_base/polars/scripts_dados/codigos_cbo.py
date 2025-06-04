@@ -133,7 +133,7 @@ peso_altura_codigos = '0101040024'
 puericultura = ['0301010269','0301010277','0301010080']
 
 #idoso
-vacina_influenza_codigos = "33|77"
+vacina_influenza_codigos = ["33","77"]
 
 #saude bucal
 cbos_odonto_I_II_III_V = ["223208", "223293", "223272"]
