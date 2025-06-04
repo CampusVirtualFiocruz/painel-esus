@@ -56,7 +56,7 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes
 
 ; Item principal do menu de contexto
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "MUIVerb"; ValueData: "Gerenciar Painel e-SUS APS"; Flags: uninsdeletekey
-Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\icon\Icon_Painel_Purple_ICO.ico"; Flags: uninsdeletekey
+Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Icon"; ValueData: "{app}\icon\Icon_Painel_Blue_ICO.ico"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "SubCommands"; ValueData: ""; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS"; ValueType: string; ValueName: "Position"; ValueData: "Top"; Flags: uninsdeletekey
 Root: HKCR; Subkey: "DesktopBackground\Shell\PaineleSUS\shell"; Flags: uninsdeletekey
@@ -85,8 +85,6 @@ Filename: "{app}\nssm.exe"; Parameters: "install {#ServiceName} ""{app}\{#MyAppE
     Flags: runhidden; StatusMsg: "Instalando serviço..."
 Filename: "{app}\nssm.exe"; Parameters: "set {#ServiceName} Description ""Serviço do Painel e-SUS APS"""; \
     Flags: runhidden; StatusMsg: "Configurando serviço..."
-Filename: "{app}\nssm.exe"; Parameters: "start {#ServiceName}"; \
-    Flags: runhidden; StatusMsg: "Iniciando serviço..."
 Filename: "{app}\{#ConfigExeName}"; Description: "Abrir configuração após a instalação"; \
     Flags: postinstall skipifsilent unchecked runascurrentuser; Check: ShouldRunExe
 
