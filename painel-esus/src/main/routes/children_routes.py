@@ -1,6 +1,7 @@
 import io
 
 from flask import Blueprint, Response, jsonify, request
+
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.children_composer import (
@@ -17,9 +18,8 @@ from src.main.composers.children_composer import (
 children_bp = Blueprint("children", __name__)
 
 
-
 class ChildrenPath:
-    root_path = "/v1/children"
+    root_path = "/v2/children"
     urls = {
         "root": "",
         "total": "/total",
@@ -37,7 +37,9 @@ urls = children.urls
 
 
 @children_bp.route(urls["total"], methods=["GET"], endpoint="children_total")
-@children_bp.route(urls["total"]+"/<cnes>", methods=["GET"], endpoint="children_total_id")
+@children_bp.route(
+    urls["total"] + "/<cnes>", methods=["GET"], endpoint="children_total_id"
+)
 def children_total(cnes=None):
     http_response = None
     response = None
@@ -50,13 +52,22 @@ def children_total(cnes=None):
 
     return response, http_response.status_code
 
-@children_bp.route(urls["group_by_age_location"], methods=["GET"], endpoint="group_by_age_location")
-@children_bp.route(urls["group_by_age_location"]+"/<cnes>", methods=["GET"], endpoint="group_by_age_location_id")
+
+@children_bp.route(
+    urls["group_by_age_location"], methods=["GET"], endpoint="group_by_age_location"
+)
+@children_bp.route(
+    urls["group_by_age_location"] + "/<cnes>",
+    methods=["GET"],
+    endpoint="group_by_age_location_id",
+)
 def children_grouping_by_ages_location(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, children_grouping_by_ages_location_composer())
+        http_response = request_adapter(
+            request, children_grouping_by_ages_location_composer()
+        )
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)
@@ -83,6 +94,7 @@ def children_grouping_by_race(cnes=None):
 
     return response, http_response.status_code
 
+
 @children_bp.route(urls["group_by_gender"], methods=["GET"], endpoint="group_by_gender")
 @children_bp.route(
     urls["group_by_gender"] + "/<cnes>",
@@ -102,7 +114,11 @@ def children_grouping_by_gender(cnes=None):
     return response, http_response.status_code
 
 
-@children_bp.route(urls["grouping_by_location_rate"], methods=["GET"], endpoint="grouping_by_location_rate")
+@children_bp.route(
+    urls["grouping_by_location_rate"],
+    methods=["GET"],
+    endpoint="grouping_by_location_rate",
+)
 @children_bp.route(
     urls["grouping_by_location_rate"] + "/<cnes>",
     methods=["GET"],
@@ -112,7 +128,9 @@ def children_grouping_by_location_rate(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, children_grouping_by_location_rate_composer())
+        http_response = request_adapter(
+            request, children_grouping_by_location_rate_composer()
+        )
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)
@@ -121,7 +139,11 @@ def children_grouping_by_location_rate(cnes=None):
     return response, http_response.status_code
 
 
-@children_bp.route(urls["grouping_cares_by_professionals"], methods=["GET"], endpoint="grouping_cares_by_professionals")
+@children_bp.route(
+    urls["grouping_cares_by_professionals"],
+    methods=["GET"],
+    endpoint="grouping_cares_by_professionals",
+)
 @children_bp.route(
     urls["grouping_cares_by_professionals"] + "/<cnes>",
     methods=["GET"],
@@ -131,7 +153,9 @@ def children_grouping_cares_by_professionals(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, children_grouping_cares_by_professionals_composer())
+        http_response = request_adapter(
+            request, children_grouping_cares_by_professionals_composer()
+        )
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)

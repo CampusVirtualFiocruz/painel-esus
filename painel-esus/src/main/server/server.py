@@ -1,16 +1,13 @@
 # pylint: disable=C0301, W0611
 import os
-
 # from src.main.server.decorators.check_access import check_access
 import sys
 
 import blueprint_decr
-from dotenv import dotenv_values
 from flask import Flask, send_from_directory
 from flask_cors import CORS
+
 from src.env import env as config
-from src.errors.logging import logging
-from src.main.routes.children_routes import ChildrenPath, children_bp
 from src.main.routes.city_informations_route import CityInfoPath, city_informations_bp
 from src.main.routes.demographics_info_route import (
     DemographichInfoPath,
@@ -19,10 +16,10 @@ from src.main.routes.demographics_info_route import (
 from src.main.routes.diabetes_routes import DiabetesPath, diabetes_bp
 from src.main.routes.elderly_routes import ElderlyPath, elderly_bp
 from src.main.routes.hypertension_routes import HypertensionPath, hypertension_bp
+from src.main.routes.infantil_routes import InfantilPath, infantil_bp
 from src.main.routes.login_route import login_bp
 from src.main.routes.oral_health import OralHealthPath, oral_health_bp
 from src.main.routes.records_routes import RecordsPath, records_bp
-from src.main.routes.smoking import SmokingPath, smoking_bp
 from src.main.routes.units_route import TeamsPath, UnitsPath, teams_bp, units_bp
 from src.main.server.cache import cache
 from src.main.server.decorators.token_required import token_required
@@ -32,8 +29,7 @@ app.config["JSON_SORT_KEYS"] = False
 
 import logging as logger
 
-import click
-from src.presentations import banner_message, rich_banner
+from src.presentations import rich_banner
 
 log = logger.getLogger("werkzeug")
 log.disabled = True
@@ -136,6 +132,13 @@ register_blueprint(app, (oral_health_bp, oral_path.root_path), [token_required])
 #     ],
 # )
 
+infantil = InfantilPath()
+register_blueprint(
+    app,
+    (infantil_bp, infantil.root_path),
+    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
+)
+
 elderly = ElderlyPath()
 register_blueprint(
     app,
@@ -148,8 +151,5 @@ records = RecordsPath()
 register_blueprint(
     app,
     (records_bp, records.root_path),
-    [
-        token_required,
-        cache.cached(timeout=24 * 60 * 60, query_string=True)
-    ],
+    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
 )
