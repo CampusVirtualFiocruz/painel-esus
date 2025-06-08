@@ -15,3 +15,10 @@ class InfantilController:
         adapted = self.__adapter.total_count_infantil(result)
 
         return HttpResponse(status_code=200, body={"total-cadastros": adapted})
+
+    def get_by_age(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = extract_cnes_equipe(request)
+        result = self.__use_case.infantil_by_age(cnes, equipe)
+        adapted = self.__adapter.by_age_infantil(result)
+
+        return HttpResponse(status_code=200, body={"data": adapted})

@@ -4,9 +4,14 @@ from src.presentations.controllers.infantil.infantil_controller import (
     InfantilController,
 )
 
+_repository = InfantilRepository()
+_use_case = InfantilUseCaseImpl(_repository)
+_controller = InfantilController(_use_case)
+
 
 def infantil_get_total():
-    repository = InfantilRepository()
-    use_case = InfantilUseCaseImpl(repository)
-    controller = InfantilController(use_case)
-    return controller.get_total
+    return _controller.get_total
+
+
+def infantil_by_age():
+    return _controller.get_by_age
