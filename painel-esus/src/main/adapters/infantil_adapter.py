@@ -20,3 +20,39 @@ class InfantilAdapter:
                 }
             )
         return {"data": data}
+
+    def by_race_infantil(self, response):
+        data = []
+        for row in response:
+            tag, value = row
+            data.append(
+                {
+                    "tag": tag,
+                    "value": value,
+                }
+            )
+        return {"data": data}
+
+    def first_consult_8d(self, response):
+        data = []
+        for row in response:
+            tag, value = row
+            data.append(
+                {
+                    "tag": tag,
+                    "value": value,
+                }
+            )
+        return {"data": data}
+
+    def appointments_until_2_years(self, response):
+        data = []
+        for row in response:
+            tag, value = row
+            data.append(
+                {
+                    "tag": tag,
+                    "value": value,
+                }
+            )
+        return {"data": data}

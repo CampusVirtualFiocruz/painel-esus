@@ -15,3 +15,15 @@ def infantil_get_total():
 
 def infantil_by_age():
     return _controller.get_by_age
+
+
+def infantil_by_race():
+    return _controller.get_by_race
+
+
+def infantil_first_consult_8d():
+    return _controller.get_first_consult_8d
+
+
+def infantil_appointments_until_2_years():
+    return _controller.get_appointments_until_2_years
