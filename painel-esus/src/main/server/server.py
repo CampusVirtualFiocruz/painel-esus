@@ -1,6 +1,5 @@
 # pylint: disable=C0301, W0611
 import os
-
 # from src.main.server.decorators.check_access import check_access
 import sys
 
@@ -17,7 +16,7 @@ from src.main.routes.demographics_info_route import (
 from src.main.routes.diabetes_routes import DiabetesPath, diabetes_bp
 from src.main.routes.elderly_routes import ElderlyPath, elderly_bp
 from src.main.routes.hypertension_routes import HypertensionPath, hypertension_bp
-from src.main.routes.infantil_routes import InfantilPath, infantil_bp
+from src.main.routes.infantil_routes import ChildrenPath, children_bp
 from src.main.routes.login_route import login_bp
 from src.main.routes.oral_health import OralHealthPath, oral_health_bp
 from src.main.routes.records_routes import RecordsPath, records_bp
@@ -123,20 +122,10 @@ register_blueprint(app, (oral_health_bp, oral_path.root_path), [token_required])
 #     [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
 # )
 
-# children = ChildrenPath()
-# register_blueprint(
-#     app,
-#     (children_bp, children.root_path),
-#     [
-#         token_required,
-#         cache.cached(timeout=24 * 60 * 60, query_string=True)
-#     ],
-# )
-
-infantil = InfantilPath()
+children = ChildrenPath()
 register_blueprint(
     app,
-    (infantil_bp, infantil.root_path),
+    (children_bp, children.root_path),
     [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
 )
 

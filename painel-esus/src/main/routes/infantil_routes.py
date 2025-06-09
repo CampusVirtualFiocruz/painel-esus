@@ -1,19 +1,19 @@
 from flask import Blueprint, jsonify, request
+from src.main.composers.children_compose import (
+    children_get_total,
+    children_by_age,
+    children_by_race,
+    children_first_consult_8d,
+    children_appointments_until_2_years,
+)
 
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
-from src.main.composers.infantil_compose import (
-    infantil_get_total,
-    infantil_by_age,
-    infantil_by_race,
-    infantil_first_consult_8d,
-    infantil_appointments_until_2_years,
-)
 
-infantil_bp = Blueprint("infantil", __name__)
+children_bp = Blueprint("children", __name__)
 
 
-class InfantilPath:
+class ChildrenPath:
     root_path = "/v1/children"
     urls = {
         "get_total": "/total",
@@ -24,58 +24,58 @@ class InfantilPath:
     }
 
 
-infantil_path = InfantilPath()
-urls = infantil_path.urls
+children_path = ChildrenPath()
+urls = children_path.urls
 
 
-@infantil_bp.route("/total", methods=["GET"], endpoint="get_total")
-def infantil_get_total_fn():
+@children_bp.route("/total", methods=["GET"], endpoint="get_total")
+def children_get_total_fn():
     try:
-        http_response = request_adapter(request, infantil_get_total())
+        http_response = request_adapter(request, children_get_total())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
         http_response = handle_errors(exception)
         return jsonify(http_response.body), http_response.status_code
 
 
-@infantil_bp.route("/by-age", methods=["GET"], endpoint="by_age")
-def infantil_by_age_fn():
+@children_bp.route("/by-age", methods=["GET"], endpoint="by_age")
+def children_by_age_fn():
     try:
-        http_response = request_adapter(request, infantil_by_age())
+        http_response = request_adapter(request, children_by_age())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
         http_response = handle_errors(exception)
         return jsonify(http_response.body), http_response.status_code
 
 
-@infantil_bp.route("/by-race", methods=["GET"], endpoint="by_race")
-def infantil_by_race_fn():
+@children_bp.route("/by-race", methods=["GET"], endpoint="by_race")
+def children_by_race_fn():
     try:
-        http_response = request_adapter(request, infantil_by_race())
+        http_response = request_adapter(request, children_by_race())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
         http_response = handle_errors(exception)
         return jsonify(http_response.body), http_response.status_code
 
 
-@infantil_bp.route("/first-consult-8d", methods=["GET"], endpoint="first_consult_8d")
+@children_bp.route("/first-consult-8d", methods=["GET"], endpoint="first_consult_8d")
 def first_consult_8d_fn():
     try:
-        http_response = request_adapter(request, infantil_first_consult_8d())
+        http_response = request_adapter(request, children_first_consult_8d())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
         http_response = handle_errors(exception)
         return jsonify(http_response.body), http_response.status_code
 
 
-@infantil_bp.route(
+@children_bp.route(
     "/appointments-until-2-years",
     methods=["GET"],
     endpoint="appointments_until_2_years",
 )
 def first_consult_8d_fn():
     try:
-        http_response = request_adapter(request, infantil_appointments_until_2_years())
+        http_response = request_adapter(request, children_appointments_until_2_years())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
         http_response = handle_errors(exception)
