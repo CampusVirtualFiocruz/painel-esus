@@ -772,8 +772,7 @@ def gerar_banco():
 
     procedimentos_preventivos_regex = r"\|(" + "|".join(dict_procedimentos.keys()) + r")\|"
 
-    def extrair_procedimentos(texto: str, substituir_por_descricao: bool = False) -> str | None:
-
+    def extrair_procedimentos(texto: str, substituir_por_descricao: bool = False) -> str :
         import re
         codigos = re.findall(procedimentos_preventivos_regex, texto)
 
@@ -787,10 +786,10 @@ def gerar_banco():
             codigos_unicos = set(codigos)
             return "|".join(codigos_unicos)
 
-    def extrair_codigos(texto: str) -> str | None:
+    def extrair_codigos(texto: str) -> str :
         return extrair_procedimentos(texto, substituir_por_descricao=False)
 
-    def extrair_descricoes(texto: str) -> str | None:
+    def extrair_descricoes(texto: str) -> str :
         return extrair_procedimentos(texto, substituir_por_descricao=True)
 
 
