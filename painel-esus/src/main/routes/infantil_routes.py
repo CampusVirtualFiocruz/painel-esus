@@ -25,7 +25,7 @@ class ChildrenPath:
         "appointments_until_2_years": "/appointments-until-2-years",
         "high_weight_records": "/high-weight-records",
         "milestone": "/milestone",
-        "children_evaluated_feeding": "/children-evaluated-feeding",
+        "evaluated_feeding": "/evaluated-feeding",
     }
 
 
@@ -116,9 +116,9 @@ def milestone():
 
 
 @children_bp.route(
-    "/children-evaluated-feeding",
+    "/evaluated-feeding",
     methods=["GET"],
-    endpoint="children-evaluated-feeding",
+    endpoint="evaluated_feeding",
 )
 def evaluated_feeding():
     try:
