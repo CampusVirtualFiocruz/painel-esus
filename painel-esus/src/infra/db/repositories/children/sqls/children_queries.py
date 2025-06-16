@@ -2,7 +2,6 @@ from src.utils.query_builders import gen_where_cnes_equipe
 
 PARQUET_PATH = "src/infra/db/repositories/children/sqls/dados/crianca.parquet"
 
-
 def sql_total_children(cnes: int = None, equipe: int = None):
     return f"""
             SELECT count(*) as total
@@ -83,6 +82,78 @@ def sql_appointments_until_2_years(cnes: int = None, equipe: int = None):
               WHEN agg_dashboard_puericultura_9_consultas_ate_2_anos  = 1 THEN 'sim'
               WHEN agg_dashboard_puericultura_9_consultas_ate_2_anos  = 0 THEN 'nao'
               WHEN agg_dashboard_puericultura_9_consultas_ate_2_anos  = 99 OR agg_dashboard_puericultura_9_consultas_ate_2_anos  IS NULL THEN 'nao-se-aplica'
+            END AS tag,
+            COUNT(*) AS value
+          FROM
+            read_parquet('{PARQUET_PATH}')
+          {gen_where_cnes_equipe(None, cnes, equipe)}
+          GROUP BY
+            tag
+          ORDER BY
+            tag
+      """
+
+def sql_acs_visit_until_30d(cnes: int = None, equipe: int = None):
+  return f"""
+          SELECT 
+            CASE
+                WHEN agg_dashboard_visita_acs_ate_30d == 1 THEN 'sim'
+                WHEN agg_dashboard_visita_acs_ate_30d == 0 THEN 'nao'
+                WHEN agg_dashboard_visita_acs_ate_30d == 99 OR agg_dashboard_visita_acs_ate_30d IS NULL THEN 'nao-se-aplica'
+            END AS tag,
+            COUNT(*) AS value
+          FROM
+            read_parquet('{PARQUET_PATH}')
+          {gen_where_cnes_equipe(None, cnes, equipe)}
+          GROUP BY 
+            tag
+          ORDER BY 
+            tag
+      """
+        
+def sql_acs_visit_until_6m(cnes: int = None, equipe: int = None):
+  return f""" 
+          SELECT 
+            CASE 
+                WHEN agg_dashboard_visita_acs_ate_6m == 1 THEN 'sim'
+                WHEN agg_dashboard_visita_acs_ate_6m == 0 THEN 'nao'
+                WHEN agg_dashboard_visita_acs_ate_6m == 99 OR agg_dashboard_visita_acs_ate_6m IS NULL THEN 'nao-se-aplica'
+            END AS tag,
+            COUNT(*) AS value
+        FROM 
+          read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+        GROUP BY 
+          tag
+        ORDER BY 
+          tag
+    """
+
+def sql_dental_appointments_until_12m(cnes: int = None, equipe: int = None):
+  return f"""
+          SELECT
+            CASE
+              WHEN agg_dashboard_odonto_ate_12m = 1 THEN 'sim'
+              WHEN agg_dashboard_odonto_ate_12m = 0 THEN 'nao'
+              WHEN agg_dashboard_odonto_ate_12m = 99 OR agg_dashboard_odonto_ate_12m IS NULL THEN 'nao-se-aplica'
+            END AS tag,
+            COUNT(*) AS value
+          FROM
+            read_parquet('{PARQUET_PATH}')
+          {gen_where_cnes_equipe(None, cnes, equipe)}
+          GROUP BY
+            tag
+          ORDER BY
+            tag
+      """
+
+def sql_dental_appointments_until_24m(cnes: int = None, equipe: int = None):
+  return f""" 
+          SELECT
+            CASE
+              WHEN agg_dashboard_odonto_12a24m = 1 THEN 'sim'
+              WHEN agg_dashboard_odonto_12a24m = 0 THEN 'nao'
+              WHEN agg_dashboard_odonto_12a24m = 99 OR agg_dashboard_odonto_12a24m IS NULL THEN 'nao-se-aplica'
             END AS tag,
             COUNT(*) AS value
           FROM

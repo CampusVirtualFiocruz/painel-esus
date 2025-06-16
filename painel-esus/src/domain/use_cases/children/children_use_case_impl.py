@@ -19,3 +19,17 @@ class ChildrenUseCaseImpl(ChildrenUseCase):
 
     def children_appointments_until_2_years(self, cnes=None, equipe=None):
         return self.repository.get_appointments_until_2_years(cnes, equipe)
+    
+    def children_acs_visit_until_30d(self, cnes = None, equipe = None):
+        return self.repository.get_acs_visit_until_30d(cnes, equipe)
+    
+    def children_acs_visit_until_6m(self, cnes = None, equipe = None):
+        return self.repository.get_acs_visit_until_6m(cnes, equipe)
+
+    def children_dental_appointments_until_12m(self, cnes = None, equipe = None):
+        return self.repository.get_dental_appointments_until_12m(cnes, equipe)
+    
+    def children_dental_appointments_until_24m(self, cnes = None, equipe = None):
+        return self.repository.get_dental_appointments_until_24m(cnes, equipe)
+    
+   

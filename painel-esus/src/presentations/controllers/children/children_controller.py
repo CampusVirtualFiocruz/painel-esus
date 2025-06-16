@@ -49,3 +49,41 @@ class ChildrenController:
         return HttpResponse(
             status_code=200, body={"nove-consultas-puericultura-2-anos": adapted}
         )
+    
+    def get_acs_visit_until_30d(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = extract_cnes_equipe(request)
+        result = self.__use_case.children_acs_visit_until_30d(cnes, equipe)
+        adapted = self.__adapter.acs_visit_until_30d(result)
+        
+        return HttpResponse(
+            status_code=200, body={"uma-visita-domiciliar-acs-tacs-30dias" : adapted}
+        )
+    
+    def get_acs_visit_until_6m(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = extract_cnes_equipe(request)
+        result = self.__use_case.children_acs_visit_until_6m(cnes, equipe)
+        adapted = self.__adapter.acs_visit_until_6m(result)
+        
+        return HttpResponse(
+            status_code=200, body={"uma-visita-domiciliar-acs-tacs-31dias-a-6meses" : adapted}
+        )
+    
+    def get_dental_appointments_until_12m(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = extract_cnes_equipe(request)
+        result = self.__use_case.children_dental_appointments_until_12m(cnes, equipe)
+        adapted = self.__adapter.dental_appointments_until_12m(result)
+        
+        return HttpResponse(
+            status_code=200, body={"consulta-odonto-ate-12-meses" : adapted}
+        )
+    
+    def get_dental_appointments_until_24m(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = extract_cnes_equipe(request)
+        result = self.__use_case.children_dental_appointments_until_24m(cnes, equipe)
+        adapted = self.__adapter.dental_appointments_until_24m(result)
+        
+        return HttpResponse(
+            status_code=200, body={"consulta-odonto-12-24-meses" : adapted}
+        )
+        
+  

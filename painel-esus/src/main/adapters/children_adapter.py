@@ -31,3 +31,17 @@ class ChildrenAdapter:
                 }
             )
         return {"data": data}
+    
+    def acs_visit_until_30d(self, response):
+        return self._to_tag_value_list(response)
+    
+    def acs_visit_until_6m(self, response):
+        return self._to_tag_value_list(response)
+
+    def dental_appointments_until_12m(self, response):
+        return self._to_tag_value_list(response)
+    
+    def dental_appointments_until_24m(self, response):
+        return self._to_tag_value_list(response)
+    
+   

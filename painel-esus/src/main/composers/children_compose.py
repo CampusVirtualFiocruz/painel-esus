@@ -27,3 +27,21 @@ def children_first_consult_8d():
 
 def children_appointments_until_2_years():
     return _controller.get_appointments_until_2_years
+
+
+def children_acs_visit_until_30d():
+    return _controller.get_acs_visit_until_30d
+
+
+def children_acs_visit_until_6m():
+    return _controller.get_acs_visit_until_6m 
+
+
+def children_dental_appointments_until_12m():
+    return _controller.get_dental_appointments_until_12m
+
+
+def children_dental_appointments_until_24m():
+    return _controller.get_dental_appointments_until_24m
+
+

@@ -6,6 +6,10 @@ from .sqls.children_queries import (
     sql_by_race_children,
     sql_first_consult_8d,
     sql_appointments_until_2_years,
+    sql_acs_visit_until_30d,
+    sql_acs_visit_until_6m,
+    sql_dental_appointments_until_12m,
+    sql_dental_appointments_until_24m
 )
 
 
@@ -29,3 +33,26 @@ class ChildrenRepository:
         return self.session.execute(
             sql_appointments_until_2_years(cnes, equipe)
         ).fetchall()
+    
+    def get_acs_visit_until_30d(self, cnes: int = None, equipe: int = None):
+        return self.session.execute(
+            sql_acs_visit_until_30d(cnes, equipe)
+        ).fetchall()
+    
+    def get_acs_visit_until_6m(self, cnes: int = None, equipe: int = None):
+        return self.session.execute(
+            sql_acs_visit_until_6m(cnes, equipe)
+        ).fetchall()
+    
+    def get_dental_appointments_until_12m(self, cnes: int = None, equipe: int = None):
+        return self.session.execute(
+                sql_dental_appointments_until_12m(cnes, equipe)
+            ).fetchall()
+
+    def get_dental_appointments_until_24m(self, cnes: int = None, equipe: int = None):
+        return self.session.execute(
+            sql_dental_appointments_until_24m(cnes, equipe)
+        ).fetchall()
+    
+    
+
