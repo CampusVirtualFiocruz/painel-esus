@@ -150,3 +150,85 @@ def sql_evaluated_feeding(cnes: int = None, equipe: int = None):
         ORDER BY
           tag
     """
+
+
+def sql_get_nominal_list(
+    cnes: int = None,
+    equipe: int = None,
+    page: int = 0,
+    page_size: int = 10,
+    nome: str = None,
+    cpf: str = None,
+    nome_unidade_saude: int = None,
+    sort: list[dict] = None,
+):
+
+    base_filters = []
+
+    if cnes or equipe:
+        filter_part = gen_where_cnes_equipe(None, cnes, equipe).strip()
+        if filter_part.upper().startswith("WHERE"):
+            filter_part = filter_part[6:].strip()
+        if filter_part:
+            base_filters.append(filter_part)
+
+    if nome:
+        base_filters.append(f"LOWER(nome) LIKE LOWER('%{nome}%')")
+    if cpf:
+        base_filters.append(f"cpf = '{cpf}'")
+    if nome_unidade_saude:
+        base_filters.append(f"codigo_unidade_saude = {nome_unidade_saude}")
+
+    indicators = """
+        (
+            agg_card_puericultura_ate_8_dias IN (0, 99) OR
+            agg_card_puericultura_9_consultas_ate_2_anos IN (0, 99) OR
+            agg_card_9_peso_altura IN (0, 99) OR
+            agg_card_visita_acs_ate_30d IN (0, 99) OR
+            agg_card_visita_acs_ate_6m IN (0, 99) OR
+            agg_card_odonto_ate_12m IN (0, 99) OR
+            agg_card_odonto_12a24m IN (0, 99) OR
+            agg_card_marco_desenvolvimento IN (0, 99) OR
+            agg_card_consumo_alimentar IN (0, 99)
+        )
+    """
+    base_filters.append(indicators)
+
+    where_clause = ""
+    if base_filters:
+        where_clause = "WHERE " + " AND ".join(base_filters)
+
+    fields = {
+        "nome",
+        "cpf",
+        "cnes",
+        "sexo",
+        "micro_area",
+        "idade",
+        "raca_cor",
+        "equipe",
+    }
+
+    order_by_clause = "ORDER BY nome ASC"
+    if sort:
+        sort_fields = []
+        for item in sort:
+            field = item.get("field")
+            direction = item.get("direction", "asc").upper()
+            if field in fields:
+                sort_fields.append(f"{field} {direction}")
+        if sort_fields:
+            order_by_clause = f"ORDER BY {', '.join(sort_fields)}"
+
+    limit_offset_clause = ""
+    if page_size > 0:
+        offset = page * page_size
+        limit_offset_clause = f"LIMIT {page_size} OFFSET {offset}"
+
+    return f"""
+        SELECT *
+        FROM read_parquet('{PARQUET_PATH}')
+        {where_clause}
+        {order_by_clause}
+        {limit_offset_clause}
+    """

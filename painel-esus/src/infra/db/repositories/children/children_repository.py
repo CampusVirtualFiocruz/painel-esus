@@ -6,6 +6,7 @@ from .sqls.children_queries import (
     sql_by_race_children,
     sql_evaluated_feeding,
     sql_first_consult_8d,
+    sql_get_nominal_list,
     sql_high_weight_records,
     sql_milestone,
     sql_total_children,
@@ -41,3 +42,65 @@ class ChildrenRepository:
 
     def get_evaluated_feeding(self, cnes: int = None, equipe: int = None):
         return self.session.execute(sql_evaluated_feeding(cnes, equipe)).fetchall()
+
+    def get_nominal_list(
+        self,
+        cnes: int = None,
+        equipe: int = None,
+        page: int = 0,
+        page_size: int = 10,
+        nome: str = None,
+        cpf: str = None,
+        nome_unidade_saude: int = None,
+        sort: list[dict] = None,
+    ) -> list[dict]:
+
+        try:
+            page = int(page)
+        except (TypeError, ValueError):
+            page = 0
+
+        try:
+            page_size = int(page_size)
+        except (TypeError, ValueError):
+            page_size = 10
+
+        query = sql_get_nominal_list(
+            cnes=cnes,
+            equipe=equipe,
+            page=page,
+            page_size=page_size,
+            nome=nome,
+            cpf=cpf,
+            nome_unidade_saude=nome_unidade_saude,
+            sort=sort,
+        )
+
+        result = self.session.execute(query).fetchall()
+        columns = [col[0] for col in self.session.description]
+        items = [dict(zip(columns, row)) for row in result]
+
+        count_query = (
+            sql_get_nominal_list(
+                cnes=cnes,
+                equipe=equipe,
+                page=page,
+                page_size=page_size,
+                nome=nome,
+                cpf=cpf,
+                nome_unidade_saude=nome_unidade_saude,
+                sort=sort,
+            )
+            .replace("SELECT *", "SELECT COUNT(*) as total")
+            .split("ORDER BY")[0]
+        )
+
+        total = self.session.execute(count_query).fetchone()[0]
+
+        return {
+            "items": items,
+            "itemsCount": total,
+            "itemsPerPage": page_size,
+            "page": page,
+            "pagesCount": (total + page_size - 1) // page_size,
+        }

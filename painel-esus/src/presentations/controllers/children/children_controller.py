@@ -79,3 +79,52 @@ class ChildrenController:
             status_code=200,
             body={"consumo-alimentar-avaliado": adapted},
         )
+
+    def _extract_nominal_params(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort = (
+            None,
+            None,
+            0,
+            10,
+            None,
+            None,
+            None,
+            None,
+        )
+
+        if request.path_params and "cnes" in request.path_params:
+            cnes = int(request.path_params["cnes"])
+
+        if request.query_params and "equipe" in request.query_params:
+            equipe = request.query_params["equipe"]
+
+        if request.query_params and "page" in request.query_params:
+            page = int(request.query_params["page"])
+
+        if request.query_params and "itemsPerPage" in request.query_params:
+            page_size = request.query_params["itemsPerPage"]
+
+        if request.query_params and "nome" in request.query_params:
+            nome = request.query_params["nome"]
+
+        if request.query_params and "cpf" in request.query_params:
+            cpf = request.query_params["cpf"]
+
+        if request.query_params and "nome_unidade_saude" in request.query_params:
+            nome_unidade_saude = int(request.query_params["nome_unidade_saude"])
+
+        if request.query_params and "sort[]" in request.query_params:
+            sort = request.query_params.getlist("sort[]")
+
+        return cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort
+
+    def get_nominal_list(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort = (
+            self._extract_nominal_params(request)
+        )
+
+        response = self.__use_case.children_get_nominal_list(
+            cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort
+        )
+
+        return HttpResponse(status_code=200, body=response)

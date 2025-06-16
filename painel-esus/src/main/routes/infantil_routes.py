@@ -7,6 +7,7 @@ from src.main.composers.children_compose import (
     children_by_race,
     children_evaluated_feeding,
     children_first_consult_8d,
+    children_get_nominal_list,
     children_get_total,
     children_high_weight_records,
     children_milestone,
@@ -26,6 +27,7 @@ class ChildrenPath:
         "high_weight_records": "/high-weight-records",
         "milestone": "/milestone",
         "evaluated_feeding": "/evaluated-feeding",
+        "get_nominal_list": "/get-nominal-list",
     }
 
 
@@ -123,6 +125,20 @@ def milestone():
 def evaluated_feeding():
     try:
         http_response = request_adapter(request, children_evaluated_feeding())
+        return jsonify(http_response.body), http_response.status_code
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        return jsonify(http_response.body), http_response.status_code
+
+
+@children_bp.route(
+    "/get-nominal-list",
+    methods=["GET"],
+    endpoint="get_nominal_list",
+)
+def get_nominal_list():
+    try:
+        http_response = request_adapter(request, children_get_nominal_list())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
         http_response = handle_errors(exception)

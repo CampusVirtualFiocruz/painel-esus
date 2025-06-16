@@ -39,3 +39,7 @@ def children_milestone():
 
 def children_evaluated_feeding():
     return _controller.get_evaluated_feeding
+
+
+def children_get_nominal_list():
+    return _controller.get_nominal_list

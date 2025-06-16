@@ -28,3 +28,18 @@ class ChildrenUseCaseImpl(ChildrenUseCase):
 
     def children_evaluated_feeding(self, cnes=None, equipe=None):
         return self.repository.get_evaluated_feeding(cnes, equipe)
+
+    def children_get_nominal_list(
+        self,
+        cnes=None,
+        equipe=None,
+        page=0,
+        page_size=10,
+        nome=None,
+        cpf=None,
+        nome_unidade_saude=None,
+        sort=None,
+    ):
+        return self.repository.get_nominal_list(
+            cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort
+        )
