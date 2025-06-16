@@ -43,3 +43,6 @@ class ChildrenUseCaseImpl(ChildrenUseCase):
         return self.repository.get_nominal_list(
             cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort
         )
+
+    def children_get_nominal_list_download(self, cnes=None, equipe=None):
+        return self.repository.get_nominal_list_download(cnes, equipe)

@@ -48,3 +48,7 @@ class ChildrenUseCase(ABC):
         sort: list[dict] = None,
     ):
         pass
+
+    @abstractmethod
+    def children_get_nominal_list_download(self, cnes: int = None, equipe: int = None):
+        pass

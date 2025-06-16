@@ -43,3 +43,7 @@ def children_evaluated_feeding():
 
 def children_get_nominal_list():
     return _controller.get_nominal_list
+
+
+def children_get_nominal_list_download():
+    return _controller.get_nominal_list_download

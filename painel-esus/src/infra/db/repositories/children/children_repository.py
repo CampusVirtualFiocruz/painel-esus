@@ -7,6 +7,7 @@ from .sqls.children_queries import (
     sql_evaluated_feeding,
     sql_first_consult_8d,
     sql_get_nominal_list,
+    sql_get_nominal_list_download,
     sql_high_weight_records,
     sql_milestone,
     sql_total_children,
@@ -104,3 +105,10 @@ class ChildrenRepository:
             "page": page,
             "pagesCount": (total + page_size - 1) // page_size,
         }
+
+    def get_nominal_list_download(self, cnes: int = None, equipe: int = None):
+        response = self.session.execute(
+            sql_get_nominal_list_download(cnes, equipe)
+        ).df()
+
+        return response

@@ -1,4 +1,6 @@
-from flask import Blueprint, jsonify, request
+import io
+
+from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.children_compose import (
@@ -8,6 +10,7 @@ from src.main.composers.children_compose import (
     children_evaluated_feeding,
     children_first_consult_8d,
     children_get_nominal_list,
+    children_get_nominal_list_download,
     children_get_total,
     children_high_weight_records,
     children_milestone,
@@ -28,6 +31,7 @@ class ChildrenPath:
         "milestone": "/milestone",
         "evaluated_feeding": "/evaluated-feeding",
         "get_nominal_list": "/get-nominal-list",
+        "get_nominal_list_download": "/get-nominal-list/download",
     }
 
 
@@ -140,6 +144,47 @@ def get_nominal_list():
     try:
         http_response = request_adapter(request, children_get_nominal_list())
         return jsonify(http_response.body), http_response.status_code
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        return jsonify(http_response.body), http_response.status_code
+
+
+@children_bp.route(
+    "/get-nominal-list/download",
+    methods=["GET"],
+    endpoint="get_nominal_list_download",
+)
+@children_bp.route(
+    "/get-nominal-list/download/<int:cnes>",
+    methods=["GET"],
+    endpoint="get_nominal_list_download_id",
+)
+def get_nominal_list_download(cnes=None):
+    try:
+        if cnes is None and "cnes" in request.args:
+            try:
+                cnes = int(request.args["cnes"])
+            except ValueError:
+                cnes = None
+
+        controller = children_get_nominal_list_download()
+        http_response = request_adapter(request, controller)
+
+        buffer = io.BytesIO()
+        http_response.body.to_excel(buffer, index=False)
+        buffer.seek(0)
+
+        headers = {
+            "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
+            "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        }
+
+        return Response(
+            buffer.getvalue(),
+            mimetype=headers["Content-Type"],
+            headers=headers,
+        )
+
     except Exception as exception:
         http_response = handle_errors(exception)
         return jsonify(http_response.body), http_response.status_code

@@ -232,3 +232,56 @@ def sql_get_nominal_list(
         {order_by_clause}
         {limit_offset_clause}
     """
+
+
+def sql_get_nominal_list_download(cnes: int = None, equipe: int = None):
+    return f"""
+        SELECT
+            CASE WHEN agg_card_puericultura_ate_8_dias IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_puericultura_ate_8_dias,
+            CASE WHEN agg_card_puericultura_9_consultas_ate_2_anos IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_puericultura_9_consultas_ate_2_anos,
+            CASE WHEN agg_card_9_peso_altura IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_9_peso_altura,
+            CASE WHEN agg_card_visita_acs_ate_30d IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_visita_acs_ate_30d,
+            CASE WHEN agg_card_visita_acs_ate_6m IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_visita_acs_ate_6m,
+            CASE WHEN agg_card_odonto_ate_12m IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_odonto_ate_12m,
+            CASE WHEN agg_card_odonto_12a24m IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_odonto_12a24m,
+            CASE WHEN agg_card_marco_desenvolvimento IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_marco_desenvolvimento,
+            CASE WHEN agg_card_consumo_alimentar IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_consumo_alimentar,
+            cep,
+            cnes_equipe,
+            cns,
+            codigo_unidade_saude,
+            cidadao_pec,
+            co_seq_acomp_cidadaos_vinc,
+            codigo_unico_ultima_ficha,
+            codigo_equipe,
+            complemento,
+            cpf,
+            data_nascimento,
+            num_consultas_puericultura,
+            nu_peso_recentes,
+            nu_altura_recentes,
+            total_peso_altura,
+            idade_em_dias,
+            faixa_etaria,
+            idade,
+            ine_equipe,
+            logradouro,
+            micro_area,
+            bairro,
+            nome,
+            municipio,
+            sexo,
+            tipo_logradouro,
+            nome_equipe,
+            nome_unidade_saude,
+            numero,
+            raca_cor,
+            CASE WHEN status_registro_valido_equipe IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS status_registro_valido_equipe,
+            CASE WHEN status_registro_valido_unidade_saude IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS status_registro_valido_unidade_saude,
+            telefone,
+            tipo_localizacao_domicilio,
+            CASE WHEN crianca_atendida_12_meses IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS crianca_atendida_12_meses
+        FROM read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+        ORDER BY nome ASC
+    """
