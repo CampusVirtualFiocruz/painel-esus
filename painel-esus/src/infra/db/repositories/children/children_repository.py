@@ -1,11 +1,14 @@
 import duckdb
 
 from .sqls.children_queries import (
-    sql_total_children,
+    sql_appointments_until_2_years,
     sql_by_age_children,
     sql_by_race_children,
+    sql_evaluated_feeding,
     sql_first_consult_8d,
-    sql_appointments_until_2_years,
+    sql_high_weight_records,
+    sql_milestone,
+    sql_total_children,
 )
 
 
@@ -29,3 +32,12 @@ class ChildrenRepository:
         return self.session.execute(
             sql_appointments_until_2_years(cnes, equipe)
         ).fetchall()
+
+    def get_high_weight_records(self, cnes: int = None, equipe: int = None):
+        return self.session.execute(sql_high_weight_records(cnes, equipe)).fetchall()
+
+    def get_milestone(self, cnes: int = None, equipe: int = None):
+        return self.session.execute(sql_milestone(cnes, equipe)).fetchall()
+
+    def get_evaluated_feeding(self, cnes: int = None, equipe: int = None):
+        return self.session.execute(sql_evaluated_feeding(cnes, equipe)).fetchall()

@@ -27,3 +27,15 @@ def children_first_consult_8d():
 
 def children_appointments_until_2_years():
     return _controller.get_appointments_until_2_years
+
+
+def children_high_weight_records():
+    return _controller.get_high_weight_records
+
+
+def children_milestone():
+    return _controller.get_milestone
+
+
+def children_evaluated_feeding():
+    return _controller.get_evaluated_feeding

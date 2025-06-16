@@ -19,3 +19,12 @@ class ChildrenUseCaseImpl(ChildrenUseCase):
 
     def children_appointments_until_2_years(self, cnes=None, equipe=None):
         return self.repository.get_appointments_until_2_years(cnes, equipe)
+
+    def children_high_weight_records(self, cnes=None, equipe=None):
+        return self.repository.get_high_weight_records(cnes, equipe)
+
+    def children_milestone(self, cnes=None, equipe=None):
+        return self.repository.get_milestone(cnes, equipe)
+
+    def children_evaluated_feeding(self, cnes=None, equipe=None):
+        return self.repository.get_evaluated_feeding(cnes, equipe)

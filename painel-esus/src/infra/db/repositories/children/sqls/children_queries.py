@@ -93,3 +93,60 @@ def sql_appointments_until_2_years(cnes: int = None, equipe: int = None):
           ORDER BY
             tag
       """
+
+
+def sql_high_weight_records(cnes: int = None, equipe: int = None):
+    return f"""
+        SELECT
+          CASE
+            WHEN agg_dashboard_9_peso_altura = 1 THEN 'sim'
+            WHEN agg_dashboard_9_peso_altura = 0 THEN 'nao'
+            WHEN agg_dashboard_9_peso_altura = 99 THEN 'nao-se-aplica'
+          END AS tag,
+          COUNT(*) AS value
+        FROM
+          read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+        GROUP BY
+          tag
+        ORDER BY
+          tag
+    """
+
+
+def sql_milestone(cnes: int = None, equipe: int = None):
+    return f"""
+        SELECT
+          CASE
+            WHEN agg_dashboard_marco_desenvolvimento = 1 THEN 'sim'
+            WHEN agg_dashboard_marco_desenvolvimento = 0 THEN 'nao'
+            WHEN agg_dashboard_marco_desenvolvimento = 99 THEN 'nao-se-aplica'
+          END AS tag,
+          COUNT(*) AS value
+        FROM
+          read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+        GROUP BY
+          tag
+        ORDER BY
+          tag
+    """
+
+
+def sql_evaluated_feeding(cnes: int = None, equipe: int = None):
+    return f"""
+        SELECT
+          CASE
+            WHEN agg_dashboard_consumo_alimentar = 1 THEN 'sim'
+            WHEN agg_dashboard_consumo_alimentar = 0 THEN 'nao'
+            WHEN agg_dashboard_consumo_alimentar = 99 THEN 'nao-se-aplica'
+          END AS tag,
+          COUNT(*) AS value
+        FROM
+          read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+        GROUP BY
+          tag
+        ORDER BY
+          tag
+    """

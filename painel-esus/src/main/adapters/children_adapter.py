@@ -31,3 +31,12 @@ class ChildrenAdapter:
                 }
             )
         return {"data": data}
+
+    def high_weight_records(self, response):
+        return self._to_tag_value_list(response)
+
+    def milestone(self, response):
+        return self._to_tag_value_list(response)
+
+    def evaluated_feeding(self, response):
+        return self._to_tag_value_list(response)

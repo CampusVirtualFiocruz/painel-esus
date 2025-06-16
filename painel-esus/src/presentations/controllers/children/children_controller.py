@@ -49,3 +49,33 @@ class ChildrenController:
         return HttpResponse(
             status_code=200, body={"nove-consultas-puericultura-2-anos": adapted}
         )
+
+    def get_high_weight_records(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = extract_cnes_equipe(request)
+        result = self.__use_case.children_high_weight_records(cnes, equipe)
+        adapted = self.__adapter.high_weight_records(result)
+
+        return HttpResponse(
+            status_code=200,
+            body={"registro-peso-altura-puericultura-9-consultas": adapted},
+        )
+
+    def get_milestone(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = extract_cnes_equipe(request)
+        result = self.__use_case.children_milestone(cnes, equipe)
+        adapted = self.__adapter.milestone(result)
+
+        return HttpResponse(
+            status_code=200,
+            body={"marco-desenvolvimento-avaliados": adapted},
+        )
+
+    def get_evaluated_feeding(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = extract_cnes_equipe(request)
+        result = self.__use_case.children_evaluated_feeding(cnes, equipe)
+        adapted = self.__adapter.evaluated_feeding(result)
+
+        return HttpResponse(
+            status_code=200,
+            body={"consumo-alimentar-avaliado": adapted},
+        )
