@@ -2,6 +2,7 @@ from src.utils.query_builders import gen_where_cnes_equipe
 
 PARQUET_PATH = "src/infra/db/repositories/children/sqls/dados/crianca.parquet"
 
+
 def sql_total_children(cnes: int = None, equipe: int = None):
     return f"""
             SELECT count(*) as total
@@ -93,9 +94,10 @@ def sql_appointments_until_2_years(cnes: int = None, equipe: int = None):
             tag
       """
 
+
 def sql_acs_visit_until_30d(cnes: int = None, equipe: int = None):
-  return f"""
-          SELECT 
+    return f"""
+          SELECT
             CASE
                 WHEN agg_dashboard_visita_acs_ate_30d == 1 THEN 'sim'
                 WHEN agg_dashboard_visita_acs_ate_30d == 0 THEN 'nao'
@@ -105,32 +107,34 @@ def sql_acs_visit_until_30d(cnes: int = None, equipe: int = None):
           FROM
             read_parquet('{PARQUET_PATH}')
           {gen_where_cnes_equipe(None, cnes, equipe)}
-          GROUP BY 
+          GROUP BY
             tag
-          ORDER BY 
+          ORDER BY
             tag
       """
-        
+
+
 def sql_acs_visit_until_6m(cnes: int = None, equipe: int = None):
-  return f""" 
-          SELECT 
-            CASE 
+    return f"""
+          SELECT
+            CASE
                 WHEN agg_dashboard_visita_acs_ate_6m == 1 THEN 'sim'
                 WHEN agg_dashboard_visita_acs_ate_6m == 0 THEN 'nao'
                 WHEN agg_dashboard_visita_acs_ate_6m == 99 OR agg_dashboard_visita_acs_ate_6m IS NULL THEN 'nao-se-aplica'
             END AS tag,
             COUNT(*) AS value
-        FROM 
+        FROM
           read_parquet('{PARQUET_PATH}')
         {gen_where_cnes_equipe(None, cnes, equipe)}
-        GROUP BY 
+        GROUP BY
           tag
-        ORDER BY 
+        ORDER BY
           tag
     """
 
+
 def sql_dental_appointments_until_12m(cnes: int = None, equipe: int = None):
-  return f"""
+    return f"""
           SELECT
             CASE
               WHEN agg_dashboard_odonto_ate_12m = 1 THEN 'sim'
@@ -147,8 +151,9 @@ def sql_dental_appointments_until_12m(cnes: int = None, equipe: int = None):
             tag
       """
 
+
 def sql_dental_appointments_until_24m(cnes: int = None, equipe: int = None):
-  return f""" 
+    return f"""
           SELECT
             CASE
               WHEN agg_dashboard_odonto_12a24m = 1 THEN 'sim'
@@ -164,3 +169,195 @@ def sql_dental_appointments_until_24m(cnes: int = None, equipe: int = None):
           ORDER BY
             tag
       """
+
+
+def sql_high_weight_records(cnes: int = None, equipe: int = None):
+    return f"""
+        SELECT
+          CASE
+            WHEN agg_dashboard_9_peso_altura = 1 THEN 'sim'
+            WHEN agg_dashboard_9_peso_altura = 0 THEN 'nao'
+            WHEN agg_dashboard_9_peso_altura = 99 THEN 'nao-se-aplica'
+          END AS tag,
+          COUNT(*) AS value
+        FROM
+          read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+        GROUP BY
+          tag
+        ORDER BY
+          tag
+    """
+
+
+def sql_milestone(cnes: int = None, equipe: int = None):
+    return f"""
+        SELECT
+          CASE
+            WHEN agg_dashboard_marco_desenvolvimento = 1 THEN 'sim'
+            WHEN agg_dashboard_marco_desenvolvimento = 0 THEN 'nao'
+            WHEN agg_dashboard_marco_desenvolvimento = 99 THEN 'nao-se-aplica'
+          END AS tag,
+          COUNT(*) AS value
+        FROM
+          read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+        GROUP BY
+          tag
+        ORDER BY
+          tag
+    """
+
+
+def sql_evaluated_feeding(cnes: int = None, equipe: int = None):
+    return f"""
+        SELECT
+          CASE
+            WHEN agg_dashboard_consumo_alimentar = 1 THEN 'sim'
+            WHEN agg_dashboard_consumo_alimentar = 0 THEN 'nao'
+            WHEN agg_dashboard_consumo_alimentar = 99 THEN 'nao-se-aplica'
+          END AS tag,
+          COUNT(*) AS value
+        FROM
+          read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+        GROUP BY
+          tag
+        ORDER BY
+          tag
+    """
+
+
+def sql_get_nominal_list(
+    cnes: int = None,
+    equipe: int = None,
+    page: int = 0,
+    page_size: int = 10,
+    nome: str = None,
+    cpf: str = None,
+    nome_unidade_saude: int = None,
+    sort: list[dict] = None,
+):
+
+    base_filters = []
+
+    if cnes or equipe:
+        filter_part = gen_where_cnes_equipe(None, cnes, equipe).strip()
+        if filter_part.upper().startswith("WHERE"):
+            filter_part = filter_part[6:].strip()
+        if filter_part:
+            base_filters.append(filter_part)
+
+    if nome:
+        base_filters.append(f"LOWER(nome) LIKE LOWER('%{nome}%')")
+    if cpf:
+        base_filters.append(f"cpf = '{cpf}'")
+    if nome_unidade_saude:
+        base_filters.append(f"codigo_unidade_saude = {nome_unidade_saude}")
+
+    indicators = """
+        (
+            agg_card_puericultura_ate_8_dias IN (0, 99) OR
+            agg_card_puericultura_9_consultas_ate_2_anos IN (0, 99) OR
+            agg_card_9_peso_altura IN (0, 99) OR
+            agg_card_visita_acs_ate_30d IN (0, 99) OR
+            agg_card_visita_acs_ate_6m IN (0, 99) OR
+            agg_card_odonto_ate_12m IN (0, 99) OR
+            agg_card_odonto_12a24m IN (0, 99) OR
+            agg_card_marco_desenvolvimento IN (0, 99) OR
+            agg_card_consumo_alimentar IN (0, 99)
+        )
+    """
+    base_filters.append(indicators)
+
+    where_clause = ""
+    if base_filters:
+        where_clause = "WHERE " + " AND ".join(base_filters)
+
+    fields = {
+        "nome",
+        "cpf",
+        "cnes",
+        "sexo",
+        "micro_area",
+        "idade",
+        "raca_cor",
+        "equipe",
+    }
+
+    order_by_clause = "ORDER BY nome ASC"
+    if sort:
+        sort_fields = []
+        for item in sort:
+            field = item.get("field")
+            direction = item.get("direction", "asc").upper()
+            if field in fields:
+                sort_fields.append(f"{field} {direction}")
+        if sort_fields:
+            order_by_clause = f"ORDER BY {', '.join(sort_fields)}"
+
+    limit_offset_clause = ""
+    if page_size > 0:
+        offset = page * page_size
+        limit_offset_clause = f"LIMIT {page_size} OFFSET {offset}"
+
+    return f"""
+        SELECT *
+        FROM read_parquet('{PARQUET_PATH}')
+        {where_clause}
+        {order_by_clause}
+        {limit_offset_clause}
+    """
+
+
+def sql_get_nominal_list_download(cnes: int = None, equipe: int = None):
+    return f"""
+        SELECT
+            CASE WHEN agg_card_puericultura_ate_8_dias IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_puericultura_ate_8_dias,
+            CASE WHEN agg_card_puericultura_9_consultas_ate_2_anos IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_puericultura_9_consultas_ate_2_anos,
+            CASE WHEN agg_card_9_peso_altura IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_9_peso_altura,
+            CASE WHEN agg_card_visita_acs_ate_30d IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_visita_acs_ate_30d,
+            CASE WHEN agg_card_visita_acs_ate_6m IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_visita_acs_ate_6m,
+            CASE WHEN agg_card_odonto_ate_12m IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_odonto_ate_12m,
+            CASE WHEN agg_card_odonto_12a24m IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_odonto_12a24m,
+            CASE WHEN agg_card_marco_desenvolvimento IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_marco_desenvolvimento,
+            CASE WHEN agg_card_consumo_alimentar IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS agg_card_consumo_alimentar,
+            cep,
+            cnes_equipe,
+            cns,
+            codigo_unidade_saude,
+            cidadao_pec,
+            co_seq_acomp_cidadaos_vinc,
+            codigo_unico_ultima_ficha,
+            codigo_equipe,
+            complemento,
+            cpf,
+            data_nascimento,
+            num_consultas_puericultura,
+            nu_peso_recentes,
+            nu_altura_recentes,
+            total_peso_altura,
+            idade_em_dias,
+            faixa_etaria,
+            idade,
+            ine_equipe,
+            logradouro,
+            micro_area,
+            bairro,
+            nome,
+            municipio,
+            sexo,
+            tipo_logradouro,
+            nome_equipe,
+            nome_unidade_saude,
+            numero,
+            raca_cor,
+            CASE WHEN status_registro_valido_equipe IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS status_registro_valido_equipe,
+            CASE WHEN status_registro_valido_unidade_saude IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS status_registro_valido_unidade_saude,
+            telefone,
+            tipo_localizacao_domicilio,
+            CASE WHEN crianca_atendida_12_meses IN (0, 99) THEN 'NÃO' ELSE 'SIM' END AS crianca_atendida_12_meses
+        FROM read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+        ORDER BY nome ASC
+    """

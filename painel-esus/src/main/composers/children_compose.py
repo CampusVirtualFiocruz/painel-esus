@@ -34,7 +34,7 @@ def children_acs_visit_until_30d():
 
 
 def children_acs_visit_until_6m():
-    return _controller.get_acs_visit_until_6m 
+    return _controller.get_acs_visit_until_6m
 
 
 def children_dental_appointments_until_12m():
@@ -45,3 +45,21 @@ def children_dental_appointments_until_24m():
     return _controller.get_dental_appointments_until_24m
 
 
+def children_high_weight_records():
+    return _controller.get_high_weight_records
+
+
+def children_milestone():
+    return _controller.get_milestone
+
+
+def children_evaluated_feeding():
+    return _controller.get_evaluated_feeding
+
+
+def children_get_nominal_list():
+    return _controller.get_nominal_list
+
+
+def children_get_nominal_list_download():
+    return _controller.get_nominal_list_download

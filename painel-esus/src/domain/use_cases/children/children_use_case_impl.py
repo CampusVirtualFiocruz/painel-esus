@@ -19,17 +19,42 @@ class ChildrenUseCaseImpl(ChildrenUseCase):
 
     def children_appointments_until_2_years(self, cnes=None, equipe=None):
         return self.repository.get_appointments_until_2_years(cnes, equipe)
-    
-    def children_acs_visit_until_30d(self, cnes = None, equipe = None):
+
+    def children_acs_visit_until_30d(self, cnes=None, equipe=None):
         return self.repository.get_acs_visit_until_30d(cnes, equipe)
-    
-    def children_acs_visit_until_6m(self, cnes = None, equipe = None):
+
+    def children_acs_visit_until_6m(self, cnes=None, equipe=None):
         return self.repository.get_acs_visit_until_6m(cnes, equipe)
 
-    def children_dental_appointments_until_12m(self, cnes = None, equipe = None):
+    def children_dental_appointments_until_12m(self, cnes=None, equipe=None):
         return self.repository.get_dental_appointments_until_12m(cnes, equipe)
-    
-    def children_dental_appointments_until_24m(self, cnes = None, equipe = None):
+
+    def children_dental_appointments_until_24m(self, cnes=None, equipe=None):
         return self.repository.get_dental_appointments_until_24m(cnes, equipe)
-    
-   
+
+    def children_high_weight_records(self, cnes=None, equipe=None):
+        return self.repository.get_high_weight_records(cnes, equipe)
+
+    def children_milestone(self, cnes=None, equipe=None):
+        return self.repository.get_milestone(cnes, equipe)
+
+    def children_evaluated_feeding(self, cnes=None, equipe=None):
+        return self.repository.get_evaluated_feeding(cnes, equipe)
+
+    def children_get_nominal_list(
+        self,
+        cnes=None,
+        equipe=None,
+        page=0,
+        page_size=10,
+        nome=None,
+        cpf=None,
+        nome_unidade_saude=None,
+        sort=None,
+    ):
+        return self.repository.get_nominal_list(
+            cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort
+        )
+
+    def children_get_nominal_list_download(self, cnes=None, equipe=None):
+        return self.repository.get_nominal_list_download(cnes, equipe)
