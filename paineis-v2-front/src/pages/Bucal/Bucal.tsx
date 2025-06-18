@@ -55,7 +55,7 @@ const RenderChartGroup = ({
           className="is-row"
           style={{
             gap: "60px",
-            justifyContent: isSecondRow ? "center" : "initial",
+            justifyContent: isSecondRow ? "space-evenly" : "initial",
           }}
         >
           <RenderChartGroup

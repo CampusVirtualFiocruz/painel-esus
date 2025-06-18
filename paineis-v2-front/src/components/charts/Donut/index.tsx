@@ -22,44 +22,13 @@ const ClassificationFooter = ({ data, rangedLegend }: any) => {
     const total = mainValue + data?.[0]?.value;
     percentage = (mainValue / total) * 100;
   }
-/* 
+
   return (
-    <div>
+    <div className="donut-footer">
       {removeDuplicatesByKey<typeof rangedLegend, string>(
         rangedLegend,
         "title"
-      ).map(({ color, title, text, window }: any) => {
-        const shouldHighlight = Boolean(window.find(({ min, max }: { min: number, max: number }) => percentage >= min && percentage < max));
-
-        return (
-          <div
-            style={{
-              padding: "3px",
-              border: shouldHighlight ? "1px gray solid" : "",
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                width: "20px",
-                backgroundColor: color,
-              }}
-            >
-              &nbsp;
-            </span>{" "}
-            {title}: {text}
-          </div>
-        );
-      })}
-    </div>
-  ); */
-
-  return (
-    <div>
-      {removeDuplicatesByKey<typeof rangedLegend, string>(
-        rangedLegend,
-        "title"
-      ).map(({ color, title, text, window }: any) => {
+      ).map(({ color, title, text, window }: any, index: number) => {
         const shouldHighlight = Boolean(window.find(({ min, max }: { min: number, max: number }) => percentage >= min && percentage < max));
 
         if(!shouldHighlight){
@@ -67,39 +36,25 @@ const ClassificationFooter = ({ data, rangedLegend }: any) => {
         }
 
         return (
-          <div
-            style={{
-              padding: "3px",
-            }}
-          >
+          <div key={index} className="legend-item">
             <span
+              className="legend-color"
               style={{
-                display: "inline-block",
-                width: "20px",
                 backgroundColor: color,
               }}
-            >
-              &nbsp;
-            </span>{" "}
-            Realizado
+            />
+            <span className="legend-text">Realizado</span>
           </div>
         );
       })}
-      <div
-        style={{
-          padding: "3px",
-        }}
-      >
+      <div className="legend-item">
         <span
+          className="legend-color"
           style={{
-            display: "inline-block",
-            width: "20px",
             backgroundColor: "#d6d6d6",
           }}
-        >
-          &nbsp;
-        </span>{" "}
-        Não Realizado
+        />
+        <span className="legend-text">Não Realizado</span>
       </div>
     </div>
   );
@@ -220,13 +175,14 @@ export function Donut(props: DonutChart) {
   }
 
   return (
-    <>
+    <div className="donut-chart-container">
       <ReactECharts
         option={options}
         style={{
-          width: "100%",
+          width: "316px",
           minWidth: "316px",
           height: "316px",
+          maxWidth: "100%",
           ...(props?.config?.componentStyle || {}),
         }}
         opts={{ renderer: "svg" }}
@@ -237,6 +193,6 @@ export function Donut(props: DonutChart) {
           rangedLegend={props?.config.rangedLegend}
         />
       )}
-    </>
+    </div>
   );
 }
