@@ -31,7 +31,7 @@ export const columns = ({ handleClick, condicao }: any) => {
     {
       name: "gestante",
       header: <div className="iconHeader iconGestante ms-2"></div>,
-      sortable: false,
+      sortable: true,
       render: (item: any) => {
         if (String(item.gestante).toUpperCase() === "SIM"){
           return (
@@ -45,7 +45,7 @@ export const columns = ({ handleClick, condicao }: any) => {
     {
       name: "alert",
       header: <div className="iconHeader iconAlerta ms-2"></div>,
-      sortable: false,
+      sortable: true,
       render: (item: any) => {
         if (item.possuiAlertas) {
           return (
@@ -164,8 +164,14 @@ export const Footer = ({ pathToReport, condicao, id, recorte }: any) => {
       </div>
       <div className="legend-icons">
         <p>
+          <span className="iconCircle iconGestante" title="Alertas">
+            G
+          </span>
+          Gestantes/Idade Gestacional
+        </p>
+        <p>
           <span className="iconCircle iconAlerta ms-2">!</span>
-          Alertas
+          Pendências/Alertas
         </p>
         <p
           onClick={async () => {
