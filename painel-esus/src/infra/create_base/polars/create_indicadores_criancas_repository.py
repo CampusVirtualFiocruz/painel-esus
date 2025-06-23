@@ -10,7 +10,7 @@ from src.infra.create_base.polars.scripts_dados.indicadores_crianca_polars impor
 
 
 class CreateIndicadoresCriancasRepository():
-
+    _base = 'indicadores_crianca'
     def __init__(self):
         ...
 
