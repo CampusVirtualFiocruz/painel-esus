@@ -12,6 +12,9 @@ class CreateVisistaDomiciliarBaseRepository(AbstractGenerateBase):
                 "co_dim_cbo",
                 "co_dim_tempo",
                 "co_fat_cidadao_pec",
+                "nu_peso",
+                "nu_altura"
+
             ]
         self._sql = "SELECT {} FROM tb_fat_visita_domiciliar order by co_seq_fat_visita_domiciliar".format(", ".join(lista_vars))
         
@@ -20,6 +23,8 @@ class CreateVisistaDomiciliarBaseRepository(AbstractGenerateBase):
             "co_dim_cbo": pd.Int64Dtype(),
             "co_dim_tempo": pd.Int64Dtype(),
             "co_fat_cidadao_pec": pd.Int64Dtype(),
+            "nu_peso": pd.Float64Dtype(),
+            "nu_altura": pd.Float64Dtype()
         }
         super().__init__( DBConnectionHandler(), self._sql, dtype)
 
