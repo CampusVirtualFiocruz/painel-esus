@@ -21,54 +21,58 @@ from .sqls.children_queries import (
 
 class ChildrenRepository:
     def __init__(self):
-        self.session = duckdb.connect()
+        ...
+    def _run_query(self, sql):
+        con = duckdb.connect()
+        resp = con.execute(sql).fetchall()
+        return resp
 
     def total_card(self, cnes: int = None, equipe: int = None, category: str = 'atentidas'):
         sql = get_total_card(cnes, equipe)
-        return self.session.execute(sql).fetchall()
-    
+        return self._run_query(sql)
+
     def get_total_children(self, cnes: int = None, equipe: int = None):
-        
-        return self.session.execute(sql_total_children(cnes, equipe)).fetchall()
+
+        return self._run_query(sql_total_children(cnes, equipe))
 
     def get_by_age(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(sql_by_age_children(cnes, equipe)).fetchall()
+        return self._run_query(sql_by_age_children(cnes, equipe))
 
     def get_by_race(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(sql_by_race_children(cnes, equipe)).fetchall()
+        return self._run_query(sql_by_race_children(cnes, equipe))
 
     def get_first_consult_8d(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(sql_first_consult_8d(cnes, equipe)).fetchall()
+        return self._run_query(sql_first_consult_8d(cnes, equipe))
 
     def get_appointments_until_2_years(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(
+        return self._run_query(
             sql_appointments_until_2_years(cnes, equipe)
-        ).fetchall()
+        )
 
     def get_acs_visit_until_30d(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(sql_acs_visit_until_30d(cnes, equipe)).fetchall()
+        return self._run_query(sql_acs_visit_until_30d(cnes, equipe))
 
     def get_acs_visit_until_6m(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(sql_acs_visit_until_6m(cnes, equipe)).fetchall()
+        return self._run_query(sql_acs_visit_until_6m(cnes, equipe))
 
     def get_dental_appointments_until_12m(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(
+        return self._run_query(
             sql_dental_appointments_until_12m(cnes, equipe)
-        ).fetchall()
+        )
 
     def get_dental_appointments_until_24m(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(
+        return self._run_query(
             sql_dental_appointments_until_24m(cnes, equipe)
-        ).fetchall()
+        )
 
     def get_high_weight_records(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(sql_high_weight_records(cnes, equipe)).fetchall()
+        return self._run_query(sql_high_weight_records(cnes, equipe))
 
     def get_milestone(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(sql_milestone(cnes, equipe)).fetchall()
+        return self._run_query(sql_milestone(cnes, equipe))
 
     def get_evaluated_feeding(self, cnes: int = None, equipe: int = None):
-        return self.session.execute(sql_evaluated_feeding(cnes, equipe)).fetchall()
+        return self._run_query(sql_evaluated_feeding(cnes, equipe))
 
     def get_nominal_list(
         self,
@@ -103,7 +107,7 @@ class ChildrenRepository:
             sort=sort,
         )
 
-        result = self.session.execute(query).fetchall()
+        result = self._run_query(query)
         columns = [col[0] for col in self.session.description]
         items = [dict(zip(columns, row)) for row in result]
 
@@ -122,7 +126,7 @@ class ChildrenRepository:
             .split("ORDER BY")[0]
         )
 
-        total = self.session.execute(count_query).fetchone()[0]
+        total = self._run_query(count_query).fetchone()
 
         return {
             "items": items,
@@ -133,8 +137,7 @@ class ChildrenRepository:
         }
 
     def get_nominal_list_download(self, cnes: int = None, equipe: int = None):
-        response = self.session.execute(
-            sql_get_nominal_list_download(cnes, equipe)
-        ).df()
+        con = duckdb.connect()
+        response = con.execute(sql_get_nominal_list_download(cnes, equipe)).df()
 
         return response
