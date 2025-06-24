@@ -51,17 +51,62 @@ const useReportDataInfantil = ({ ubsId, equipe }: reportBasicInfo) => {
             },
           }
         ),
-
-        /* 
-/v1/children/
-/v1/children/
-/v1/children/acs-visit-until-30days
-/v1/children/acs-visit-until-6month
-/v1/children/dental-appointment-until-12month
-/v1/children/dental-appointment-until-24months
-/v1/children/high-weight-records
-/v1/children/milestone
-/v1/children/evaluated-feeding */
+        "infantil-uma-visita-30-dias": Api.get(
+          `/children/acs-visit-until-30days${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+            },
+          }
+        ),
+        "infantil-uma-visita-31-dia-6-meses": Api.get(
+          `/children/acs-visit-until-6month${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+            },
+          }
+        ),
+        "infantil-uma-consulta-12-meses": Api.get(
+          `/children/dental-appointment-until-12month${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+            },
+          }
+        ),
+        "infantil-uma-consulta-12-24-meses": Api.get(
+          `/children/dental-appointment-until-24months${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+            },
+          }
+        ),
+        "infantil-registro-peso-altura": Api.get(
+          `/children/high-weight-records${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+            },
+          }
+        ),
+        "infantil-marcos-desenvolvimento-avaliados": Api.get(
+          `/children/milestone${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+            },
+          }
+        ),
+        "infantil-consumo-alimentar-avaliado": Api.get(
+          `/children/evaluated-feeding${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+            },
+          }
+        ),
       };
 
       const results = await Promise.all(Object.values(requests));
