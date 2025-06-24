@@ -409,50 +409,32 @@ export function Painel() {
           </div>
           <div className="container">
             <div className="row container-cards-condicoes">
-              <div
-                className="card-condicao p-2"
-                onClick={() => handleToThemedReport("diabetes")}
-              >
-                <span className="nome-condicao">Diabetes</span>
-                <h4>{somaIndicador(dadosPainel?.indicators?.diabetes)}</h4>
-                <div className="d-flex align-items-center">
-                  <img src={diabetes} alt="Diabetes" className="mx-2" />
-                  <Condicao data={dadosPainel?.indicators?.diabetes} />
-                </div>
-              </div>
-              <div
-                className="card-condicao p-2"
-                onClick={() => handleToThemedReport("hipertensao")}
-              >
-                <span className="nome-condicao">Hipertensão</span>
-                <h4>{somaIndicador(dadosPainel?.indicators?.hipertensao)}</h4>
-                <div className="d-flex align-items-center">
-                  <img src={hipertensao} alt="Hipertensão" className="mx-2" />
-                  <Condicao data={dadosPainel?.indicators?.hipertensao} />
-                </div>
-              </div>
-              {/* {Boolean(dadosPainel?.indicators?.crianca) && (
-                <div className="card-condicao p-2" onClick={handleToInfantil}>
-                  <span className="nome-condicao">
-                    Desenvolvimento Infantil
-                  </span>
-                  <h4>{somaIndicador(dadosPainel?.indicators?.crianca)}</h4>
+              {Boolean(dadosPainel?.indicators?.diabetes) && (
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("diabetes")}
+                >
+                  <span className="nome-condicao">Diabetes</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.diabetes)}</h4>
                   <div className="d-flex align-items-center">
-                    <img
-                      width={"30%"}
-                      src={children}
-                      alt="Desenvolvimento Infantil"
-                      className="mx-2"
-                    />
-                    <Condicao data={dadosPainel?.indicators?.crianca} />
+                    <img src={diabetes} alt="Diabetes" className="mx-2" />
+                    <Condicao data={dadosPainel?.indicators?.diabetes} />
                   </div>
                 </div>
-              )} */}
-            </div>
-            <div
-              className="row container-cards-condicoes"
-              style={{ marginTop: "20px" }}
-            >
+              )}
+              {Boolean(dadosPainel?.indicators?.hipertensao) && (
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("hipertensao")}
+                >
+                  <span className="nome-condicao">Hipertensão</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.hipertensao)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img src={hipertensao} alt="Hipertensão" className="mx-2" />
+                    <Condicao data={dadosPainel?.indicators?.hipertensao} />
+                  </div>
+                </div>
+              )}
               {Boolean(dadosPainel?.indicators?.qualidade) && (
                 <div
                   className="card-condicao p-2"
@@ -466,6 +448,11 @@ export function Painel() {
                   </div>
                 </div>
               )}
+            </div>
+            <div
+              className="row container-cards-condicoes"
+              style={{ marginTop: "20px" }}
+            >
               {Boolean(dadosPainel?.indicators?.idosa) && (
                 <div
                   className="card-condicao p-2"
@@ -499,6 +486,26 @@ export function Painel() {
                       className="mx-2"
                     />
                     <Condicao data={dadosPainel?.indicators?.saude_bucal} />
+                  </div>
+                </div>
+              )}
+              {Boolean(dadosPainel?.indicators?.crianca) && (
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("infantil")}
+                >
+                  <span className="nome-condicao">
+                    Desenvolvimento Infantil
+                  </span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.crianca)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img
+                      width={"30%"}
+                      src={children}
+                      alt="Desenvolvimento Infantil"
+                      className="mx-2"
+                    />
+                    <Condicao data={dadosPainel?.indicators?.crianca} />
                   </div>
                 </div>
               )}

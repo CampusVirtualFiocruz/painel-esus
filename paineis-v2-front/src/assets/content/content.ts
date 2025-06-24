@@ -133,20 +133,6 @@ export const content: any = {
   pec: "Módulo Cidadão\n(PEC)",
   recusa: "Recusa de\nCadastro (FCI)",
 
-  // relatorio desenvolvimento infantil
-  "total-criancas-cadastradas-2-anos":
-    "Total de crianças até 2 anos cadastradas",
-  "total-criancas-atendidas-2-anos": "Total de crianças até 2 anos atendidas",
-  "total-cadastros-criancas-raca-cor":
-    "Total de cadastros de crianças por raça e cor",
-  "total-extratificacao-por-profissional":
-    "Extratificação de atendimentos por profissional",
-  "distribuicao-criancas-sexo": "Distribuição de crianças por sexo",
-  "distribuicao-criancas-faixa-etaria":
-    "Distribuição de crianças por faixa etária",
-  "distribuicao-criancas-local":
-    "Distribuição de crianças por local de moradia",
-
   //idosas
   "total-idosas-ubs": "Total de pessoas idosas",
   "pessoas-por-sexo": "Pessoas idosas por faixa etária/sexo",
@@ -188,4 +174,23 @@ export const content: any = {
     "realizou-preventivo-odonto": "Pessoas que realizaram procedimentos preventivos",
     "realizou-tra-odonto": "Pessoas que realizaram tratamento restaurador atraumático (TRA)",
     "realizou-escovacao-supervisionada": "Pessoas que realizaram escovação supervisionada",
-};
+
+    //infantil
+    "infantil-criancas-faixa-etaria-sexo": "Crianças por faixa etária/sexo",
+    "infantil-total-criancas-cadastradas": "Total de crianças cadastradas",
+    "infantil-distribuicao-criancas-raca-cor": "Distribuição de crianças por raça/cor",
+
+    "infantil-primeira-consulta-8-dia": "Primeira consulta até o 8° dia de vida",
+    "infantil-nove-consultas-2-anos": "Nove consultas de puericultura até 2 anos de vida",
+    "infantil-registro-peso-altura": "Registro de peso e altura nas 9 consultas de puericultura",
+
+    "infantil-uma-visita-30-dias": "Uma visita domiciliar do ACS/TACS até 30 dias de vida",
+    "infantil-uma-visita-31-dia-6-meses": "Uma visita domiciliar do ACS/TACS dos 31 dias até os 6 meses de vida",
+    "infantil-uma-consulta-12-meses": "Uma consulta odontológica até 12 meses de vida",
+    "infantil-uma-consulta-12-24-meses": "Uma consulta odontológica entre 12 e 24 meses de vida",
+
+    "infantil-marcos-desenvolvimento-avaliados": "Marcos do desenvolvimento avaliados",
+    "infantil-consumo-alimentar-avaliado": "Consumo alimentar avaliado*",
+    "infantil-nota-consumo-alimentar-avaliado": "*na data das consultas de puericultura",
+
+  };

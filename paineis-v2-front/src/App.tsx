@@ -230,22 +230,6 @@ function App() {
                 }
               />
               <Route
-                path="/infantilV2"
-                element={
-                  <ProtectedLayout>
-                    <Idosa />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/infantilV2/:id"
-                element={
-                  <ProtectedLayout>
-                    <Idosa />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
                 path="/idosa"
                 element={
                   <ProtectedLayout>
