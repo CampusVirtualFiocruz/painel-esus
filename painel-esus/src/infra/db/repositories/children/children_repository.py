@@ -23,9 +23,9 @@ class ChildrenRepository:
     def __init__(self):
         ...
     def _run_query(self, sql):
-        con = duckdb.connect()
-        resp = con.execute(sql).fetchall()
-        return resp
+        with duckdb.connect() as conn:
+            resp = conn.execute(sql).fetchall()
+            return resp
 
     def total_card(self, cnes: int = None, equipe: int = None, category: str = 'atentidas'):
         sql = get_total_card(cnes, equipe)
