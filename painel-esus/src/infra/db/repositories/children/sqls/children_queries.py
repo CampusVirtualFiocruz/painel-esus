@@ -1,7 +1,20 @@
 from src.utils.query_builders import gen_where_cnes_equipe
 
-PARQUET_PATH = "src/infra/db/repositories/children/sqls/dados/crianca.parquet"
+PARQUET_PATH = "./dados/output/crianca.parquet"
 
+
+def get_total_card(
+    cnes: int = None,
+    equipe: int = None,
+    category: str = "atendidas",
+):
+    where_clause = ""
+    where_clause = gen_where_cnes_equipe(where_clause, cnes, equipe)
+    return f"""
+            SELECT tipo_localizacao_domicilio, count(*) as total
+            FROM read_parquet('{PARQUET_PATH}')
+            {where_clause}
+            group by tipo_localizacao_domicilio """
 
 def sql_total_children(cnes: int = None, equipe: int = None):
     return f"""

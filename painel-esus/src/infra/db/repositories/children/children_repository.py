@@ -1,6 +1,7 @@
 import duckdb
 
 from .sqls.children_queries import (
+    get_total_card,
     sql_acs_visit_until_6m,
     sql_acs_visit_until_30d,
     sql_appointments_until_2_years,
@@ -22,7 +23,12 @@ class ChildrenRepository:
     def __init__(self):
         self.session = duckdb.connect()
 
+    def total_card(self, cnes: int = None, equipe: int = None, category: str = 'atentidas'):
+        sql = get_total_card(cnes, equipe)
+        return self.session.execute(sql).fetchall()
+    
     def get_total_children(self, cnes: int = None, equipe: int = None):
+        
         return self.session.execute(sql_total_children(cnes, equipe)).fetchall()
 
     def get_by_age(self, cnes: int = None, equipe: int = None):
