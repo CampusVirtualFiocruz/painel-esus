@@ -8,7 +8,7 @@ type reportBasicInfo = {
 
 const useReportDataIdosas = ({ ubsId, squadId }: reportBasicInfo) => {
   return useQuery(
-    ["relatorio-infantil", ubsId, squadId],
+    ["relatorio-idosos", ubsId, squadId],
     async () => {
       const ubsParam = ubsId ? `/${ubsId}` : "";
 
@@ -26,7 +26,9 @@ const useReportDataIdosas = ({ ubsId, squadId }: reportBasicInfo) => {
         "total-proporcao-atendimento-odonto": Api.get(
           `/elderly/group-by-odonto-rate${ubsParam}`
         ),
-        "pessoas-por-faixa-etaria": Api.get(`/elderly/group-by-age-location${ubsParam}`),
+        "pessoas-por-faixa-etaria": Api.get(
+          `/elderly/group-by-age-location${ubsParam}`
+        ),
         "pessoas-por-sexo": Api.get(`/elderly/group-by-gender${ubsParam}`, {
           params: {
             equipe: squadId,

@@ -6,13 +6,13 @@ import Medkit from "../../assets/images/medkit.png";
 import { ReportFooter } from "../../components/ui/ReportFooter";
 import ReportWrapper from "../../components/ui/ReportWrapper";
 import { content } from "../../assets/content/content";
-import useReportDataBucal from "../../hooks/sections/bucal/useReportDataBucal";
 import { PainelParams } from "../Hipertensao";
 import { reportCharts, reportSections } from "./Infantil.utils";
 import { formataNumero } from "../../utils";
 import { getChartDescription } from "../../utils/chartTitleUtils";
 import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
 import "../../styles/idosa.scss";
+import useReportDataInfantil from "../../hooks/sections/infantil/useReportDataInfantil";
 
 const RenderChartGroup = ({
   report,
@@ -130,7 +130,7 @@ const Infantil = () => {
   const equipe = params.get("equipe") as any;
 
   const { id } = useParams<PainelParams>();
-  const reportData: any = useReportDataBucal({ ubsId: id, equipe });
+  const reportData: any = useReportDataInfantil({ ubsId: id, equipe });
 
   const reportViewType = !!equipe
     ? ReportViewTypeEnum.EQUIPE
@@ -145,10 +145,13 @@ const Infantil = () => {
   }
 
   const footerNote = (
-      <>
-        1 Crianças que ainda não atingiram idade mínima para inclusão no critério correspondente às diretrizes preconizadas pelo Ministério da Saúde
-      </>
-    );
+    <>
+      1 Crianças que ainda não atingiram idade mínima para inclusão no critério
+      correspondente às diretrizes preconizadas pelo Ministério da Saúde
+    </>
+  );
+
+  console.log({ report });
 
   return (
     <>
@@ -179,8 +182,8 @@ const Infantil = () => {
                 flex: 1,
                 padding: "20px",
                 backgroundColor: "",
-                border:  "1px solid black",
-                color:  "black",
+                border: "1px solid black",
+                color: "black",
                 textAlign: "center",
               }}
             >
@@ -191,7 +194,7 @@ const Infantil = () => {
                   marginBottom: "8px",
                 }}
               >
-                Total de crianças 
+                Total de crianças
                 <br />
                 {getChartDescription("", reportViewType, [])}
               </span>
@@ -205,7 +208,7 @@ const Infantil = () => {
                 }}
               />
               <span style={{ fontSize: "26px" }}>
-                {formataNumero(report?.total?.data?.atendidas)}
+                {formataNumero(report?.total?.data?.["total-cadastros"])}
               </span>
             </div>
             <span>&nbsp;</span>
@@ -219,9 +222,9 @@ const Infantil = () => {
               style={{
                 flex: 1,
                 padding: "20px",
-                backgroundColor:  "" ,
-                border:  "1px solid black",
-                color:  "black",
+                backgroundColor: "",
+                border: "1px solid black",
+                color: "black",
                 textAlign: "center",
               }}
             >
@@ -244,7 +247,7 @@ const Infantil = () => {
                 }}
               />
               <span style={{ fontSize: "26px" }}>
-                {formataNumero(report?.total?.data?.cadastradas)}
+                {formataNumero(report?.total?.data)}
               </span>
             </div>
           </div>
@@ -258,14 +261,12 @@ const Infantil = () => {
         ))}
         <center style={{ marginTop: "60px", marginBottom: "30px" }}>
           <h2>
-            <b>
-            Proporção de crianças com:
-            </b>
+            <b>Proporção de crianças com:</b>
           </h2>
         </center>
-        {/* {reportCharts.map((chartList: any) => (
+        {reportCharts.map((chartList: any) => (
           <RenderChartGroup report={report} chartList={chartList} />
-        ))} */}
+        ))}
       </ReportWrapper>
     </>
   );

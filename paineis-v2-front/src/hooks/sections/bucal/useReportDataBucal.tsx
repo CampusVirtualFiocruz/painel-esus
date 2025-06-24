@@ -7,31 +7,79 @@ type reportBasicInfo = {
   recorte?: string | undefined;
 };
 
-const useReportDataBucal = ({ ubsId, equipe }: reportBasicInfo) => {
+const useReportDataBucal = ({ ubsId, equipe, recorte }: reportBasicInfo) => {
   return useQuery(
-    ["relatorio-infantil", ubsId, equipe],
+    ["relatorio-bucal", ubsId, equipe, recorte],
     async () => {
       const ubsParam = ubsId ? `/${ubsId}` : "";
 
       const requests = {
-        total: Api.get(`/children/total${ubsParam}`, {
+        total: Api.get(`/oral-health/get-total${ubsParam}`, {
           params: {
             equipe: equipe,
+            recorte: recorte,
           },
         }),
-        "infantil-criancas-faixa-etaria-sexo": Api.get(
-          `/children/by-age${ubsParam}`,
+        "pessoas-por-sexo": Api.get(
+          `/oral-health/get-cares-by-gender${ubsParam}`,
           {
             params: {
               equipe: equipe,
+              recorte: recorte,
             },
           }
         ),
-        "infantil-distribuicao-criancas-raca-cor": Api.get(
-          `/children/by-race${ubsParam}`,
+        "distribuicao-pessoas-raca-cor": Api.get(
+          `/oral-health/get-group-by-race${ubsParam}`,
           {
             params: {
               equipe: equipe,
+              recorte: recorte,
+            },
+          }
+        ),
+        "primeira-consulta-odonto": Api.get(
+          `/oral-health/get-first-appointment${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+              recorte: recorte,
+            },
+          }
+        ),
+        "realizou-exodontia": Api.get(
+          `/oral-health/get-extraction${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+              recorte: recorte,
+            },
+          }
+        ),
+        "realizou-preventivo-odonto": Api.get(
+          `/oral-health/get-prevention-procedures${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+              recorte: recorte,
+            },
+          }
+        ),
+        "concluido-tratamento": Api.get(
+          `/oral-health/get-conclued-treatment${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+              recorte: recorte,
+            },
+          }
+        ),
+        "realizou-tra-odonto": Api.get(
+          `/oral-health/get-atraumatic-treatment${ubsParam}`,
+          {
+            params: {
+              equipe: equipe,
+              recorte: recorte,
             },
           }
         ),

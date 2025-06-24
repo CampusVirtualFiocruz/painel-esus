@@ -3,69 +3,90 @@ import { Api } from "../../../services/api";
 
 type reportBasicInfo = {
   ubsId?: string | undefined;
-  squadId?: string | undefined;
+  equipe?: string | undefined;
+  recorte?: string | undefined;
 };
 
-const useReportDataInfantil = ({ ubsId, squadId }: reportBasicInfo) => {
+const useReportDataInfantil = ({ ubsId, equipe }: reportBasicInfo) => {
   return useQuery(
-    ["relatorio-infantil", ubsId, squadId],
+    ["relatorio-infantil", ubsId, equipe],
     async () => {
       const ubsParam = ubsId ? `/${ubsId}` : "";
 
       const requests = {
-        indicadores: Api.get(`/children/total${ubsParam}`),
-        "total-cadastros-criancas-raca-cor": Api.get(
-          `/children/group-by-race${ubsParam}`,
+        total: Api.get(`/children/total${ubsParam}`, {
+          params: {
+            equipe: equipe,
+          },
+        }),
+        "infantil-criancas-faixa-etaria-sexo": Api.get(
+          `/children/by-age${ubsParam}`,
           {
             params: {
-              equipe: squadId,
+              equipe: equipe,
             },
           }
         ),
-        "distribuicao-criancas-faixa-etaria": Api.get(
-          `/children/group-by-age-location${ubsParam}`
-        ),
-        "distribuicao-criancas-sexo": Api.get(
-          `/children/group-by-gender${ubsParam}`,
+        "infantil-distribuicao-criancas-raca-cor": Api.get(
+          `/children/by-race${ubsParam}`,
           {
             params: {
-              equipe: squadId,
+              equipe: equipe,
             },
           }
         ),
-        "distribuicao-criancas-local": Api.get(
-          `/children/group-by-location-rate${ubsParam}`,
+        "infantil-primeira-consulta-8-dia": Api.get(
+          `/children/first-consult-8d${ubsParam}`,
           {
             params: {
-              equipe: squadId,
+              equipe: equipe,
             },
           }
         ),
-        "total-extratificacao-por-profissional": Api.get(
-          `/children/group-cares-by-professionals${ubsParam}`,
+        "infantil-nove-consultas-2-anos": Api.get(
+          `/children/appointments-until-2-years${ubsParam}`,
           {
             params: {
-              equipe: squadId,
+              equipe: equipe,
             },
           }
         ),
+
+        /* 
+/v1/children/
+/v1/children/
+/v1/children/acs-visit-until-30days
+/v1/children/acs-visit-until-6month
+/v1/children/dental-appointment-until-12month
+/v1/children/dental-appointment-until-24months
+/v1/children/high-weight-records
+/v1/children/milestone
+/v1/children/evaluated-feeding */
       };
 
       const results = await Promise.all(Object.values(requests));
 
-      const reducedData:any = results.reduce(
+      const reducedData: any = results.reduce(
         (prev, curr, currIndex) => ({
           ...prev,
           [Object.keys(requests)?.[currIndex]]: {
-            ["data"]: curr?.data?.data || curr.data,
+            data:
+              curr.data?.["total-cadastros"]?.data ||
+              curr.data?.["criancas-por-sexo"]?.data ||
+              curr.data?.["distribuicao-criancas-raca-cor"]?.data ||
+              curr.data?.["primeira-consulta-ate-8-dia"]?.data ||
+              curr.data?.["nove-consultas-puericultura-2-anos"]?.data ||
+              curr?.data?.data ||
+              curr.data,
           },
         }),
         {}
       );
 
+      console.log({ reducedData });
+
       return {
         ...reducedData,
-        ...reducedData?.indicadores?.data
       };
     },
     {
