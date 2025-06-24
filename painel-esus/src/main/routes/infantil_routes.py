@@ -48,7 +48,8 @@ urls = children_path.urls
 
 
 @children_bp.route("/total", methods=["GET"], endpoint="get_total")
-def children_get_total_fn():
+@children_bp.route("/total/<int:cnes>", methods=["GET"], endpoint="get_total_id")
+def children_get_total_fn(cnes=None):
     try:
         http_response = request_adapter(request, children_get_total())
         return jsonify(http_response.body), http_response.status_code
@@ -58,7 +59,8 @@ def children_get_total_fn():
 
 
 @children_bp.route("/by-age", methods=["GET"], endpoint="by_age")
-def children_by_age_fn():
+@children_bp.route("/by-age/<int:cnes>", methods=["GET"], endpoint="by_age_id")
+def children_by_age_fn(cnes=None):
     try:
         http_response = request_adapter(request, children_by_age())
         return jsonify(http_response.body), http_response.status_code
@@ -68,7 +70,8 @@ def children_by_age_fn():
 
 
 @children_bp.route("/by-race", methods=["GET"], endpoint="by_race")
-def children_by_race_fn():
+@children_bp.route("/by-race/<int:cnes>", methods=["GET"], endpoint="by_race_id")
+def children_by_race_fn(cnes=None):
     try:
         http_response = request_adapter(request, children_by_race())
         return jsonify(http_response.body), http_response.status_code
@@ -78,7 +81,10 @@ def children_by_race_fn():
 
 
 @children_bp.route("/first-consult-8d", methods=["GET"], endpoint="first_consult_8d")
-def first_consult_8d_fn():
+@children_bp.route(
+    "/first-consult-8d/<int:cnes>", methods=["GET"], endpoint="first_consult_8d_id"
+)
+def first_consult_8d_fn(cnes=None):
     try:
         http_response = request_adapter(request, children_first_consult_8d())
         return jsonify(http_response.body), http_response.status_code
@@ -92,7 +98,12 @@ def first_consult_8d_fn():
     methods=["GET"],
     endpoint="appointments_until_2_years",
 )
-def appointments_until_2_years():
+@children_bp.route(
+    "/appointments-until-2-years/<int:cnes>",
+    methods=["GET"],
+    endpoint="appointments_until_2_years_id",
+)
+def appointments_until_2_years(cnes=None):
     try:
         http_response = request_adapter(request, children_appointments_until_2_years())
         return jsonify(http_response.body), http_response.status_code
@@ -104,7 +115,12 @@ def appointments_until_2_years():
 @children_bp.route(
     "/acs-visit-until-30days", methods=["GET"], endpoint="acs_visit_until_30days"
 )
-def acs_visit_until_30d_fn():
+@children_bp.route(
+    "/acs-visit-until-30days/<int:cnes>",
+    methods=["GET"],
+    endpoint="acs_visit_until_30days_id",
+)
+def acs_visit_until_30d_fn(cnes=None):
     try:
         http_response = request_adapter(request, children_acs_visit_until_30d())
         return jsonify(http_response.body), http_response.status_code
@@ -116,7 +132,12 @@ def acs_visit_until_30d_fn():
 @children_bp.route(
     "/acs-visit-until-6month", methods=["GET"], endpoint="acs_visit_until_6month"
 )
-def acs_visit_until_6m_fn():
+@children_bp.route(
+    "/acs-visit-until-6month/<int:cnes>",
+    methods=["GET"],
+    endpoint="acs_visit_until_6month_id",
+)
+def acs_visit_until_6m_fn(cnes=None):
     try:
         http_response = request_adapter(request, children_acs_visit_until_6m())
         return jsonify(http_response.body), http_response.status_code
@@ -130,7 +151,12 @@ def acs_visit_until_6m_fn():
     methods=["GET"],
     endpoint="dental_appointment_until_12month",
 )
-def dental_appointment_until_12month_fn():
+@children_bp.route(
+    "/dental-appointment-until-12month/<int:cnes>",
+    methods=["GET"],
+    endpoint="dental_appointment_until_12month_id",
+)
+def dental_appointment_until_12month_fn(cnes=None):
     try:
         http_response = request_adapter(
             request, children_dental_appointments_until_12m()
@@ -146,7 +172,12 @@ def dental_appointment_until_12month_fn():
     methods=["GET"],
     endpoint="dental_appointment_until_24months",
 )
-def dental_appointment_until_24months_fn():
+@children_bp.route(
+    "/dental-appointment-until-24months/<int:cnes>",
+    methods=["GET"],
+    endpoint="dental_appointment_until_24months_id",
+)
+def dental_appointment_until_24months_fn(cnes=None):
     try:
         http_response = request_adapter(
             request, children_dental_appointments_until_24m()
@@ -162,7 +193,12 @@ def dental_appointment_until_24months_fn():
     methods=["GET"],
     endpoint="high_weight_records",
 )
-def high_weight_records():
+@children_bp.route(
+    "/high-weight-records/<int:cnes>",
+    methods=["GET"],
+    endpoint="high_weight_records_id",
+)
+def high_weight_records(cnes=None):
     try:
         http_response = request_adapter(request, children_high_weight_records())
         return jsonify(http_response.body), http_response.status_code
@@ -176,7 +212,12 @@ def high_weight_records():
     methods=["GET"],
     endpoint="milestone",
 )
-def milestone():
+@children_bp.route(
+    "/milestone/<int:cnes>",
+    methods=["GET"],
+    endpoint="milestone_id",
+)
+def milestone(cnes=None):
     try:
         http_response = request_adapter(request, children_milestone())
         return jsonify(http_response.body), http_response.status_code
@@ -190,7 +231,12 @@ def milestone():
     methods=["GET"],
     endpoint="evaluated_feeding",
 )
-def evaluated_feeding():
+@children_bp.route(
+    "/evaluated-feeding/<int:cnes>",
+    methods=["GET"],
+    endpoint="evaluated_feeding_id",
+)
+def evaluated_feeding(cnes=None):
     try:
         http_response = request_adapter(request, children_evaluated_feeding())
         return jsonify(http_response.body), http_response.status_code
@@ -204,7 +250,12 @@ def evaluated_feeding():
     methods=["GET"],
     endpoint="get_nominal_list",
 )
-def get_nominal_list():
+@children_bp.route(
+    "/get-nominal-list/<int:cnes>",
+    methods=["GET"],
+    endpoint="get_nominal_list_id",
+)
+def get_nominal_list(cnes=None):
     try:
         http_response = request_adapter(request, children_get_nominal_list())
         return jsonify(http_response.body), http_response.status_code
