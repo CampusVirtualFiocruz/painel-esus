@@ -55,14 +55,14 @@ const RenderChartGroup = ({
           className="is-row"
           style={{
             gap: "60px",
-            justifyContent: isSecondRow ? "space-evenly" : "initial",
+            justifyContent: "center",
           }}
         >
           <RenderChartGroup
             report={report}
             chartList={chartList?.[chartKey]}
             renderSmall
-            alignMiddle={isSecondRow}
+            alignMiddle={true}
             reportViewType={reportViewType}
           />
         </div>
@@ -72,25 +72,27 @@ const RenderChartGroup = ({
     const containerStyle: CSSProperties = {
       position: "relative",
       marginBottom: "40px",
+      textAlign: "center",
     };
 
-    if (alignMiddle) {
-      containerStyle.maxWidth = "400px";
-    }
+    containerStyle.maxWidth = "400px";
 
     return (
       <div style={containerStyle}>
-        <h5
-          style={{
-            fontWeight: "bold",
-            textAlign: "center",
-            paddingTop: renderSmall ? "30px" : "initial",
-          }}
-        >
-          {content?.[chartConfigs?.overrideTitle] ||
-            content?.[chartKey] ||
-            chartKey}
-        </h5>
+        <center>
+          <h5
+            style={{
+              fontWeight: "bold",
+              textAlign: "center",
+              paddingTop: renderSmall ? "30px" : "initial",
+              maxWidth: "336px",
+            }}
+          >
+            {content?.[chartConfigs?.overrideTitle] ||
+              content?.[chartKey] ||
+              chartKey}
+          </h5>
+        </center>
         {Boolean(chartList?.[chartKey]?.subtitle) && (
           <p
             style={{
@@ -145,13 +147,11 @@ const Infantil = () => {
   }
 
   const footerNote = (
-    <>
-      1 Crianças que ainda não atingiram idade mínima para inclusão no critério
+    <div>
+      ¹ Crianças que ainda não atingiram idade mínima para inclusão no critério
       correspondente às diretrizes preconizadas pelo Ministério da Saúde
-    </>
+    </div>
   );
-
-  console.log({ report });
 
   return (
     <>
@@ -208,7 +208,7 @@ const Infantil = () => {
                 }}
               />
               <span style={{ fontSize: "26px" }}>
-                {formataNumero(report?.total?.data?.["total-cadastros"])}
+                {formataNumero(report?.total?.data)}
               </span>
             </div>
             <span>&nbsp;</span>
@@ -247,7 +247,11 @@ const Infantil = () => {
                 }}
               />
               <span style={{ fontSize: "26px" }}>
-                {formataNumero(report?.total?.data)}
+                {formataNumero(
+                  (
+                    report?.["infantil-uma-consulta-12-meses"]?.data ?? []
+                  )?.find(({ tag }: any) => tag === "sim")?.value
+                )}
               </span>
             </div>
           </div>

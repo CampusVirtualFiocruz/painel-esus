@@ -10,6 +10,8 @@ export const reportSections: any = () => [
           colors: ["#84aaff", "#0069d0", "#e4e4e4", "#5c7ea0"],
           componentStyle: {
             height: "500px",
+            width: "600px",
+            marginLeft: "-200px",
           },
           yAxis: {
             name: content?.["infantil-total-criancas-cadastradas"],
@@ -41,7 +43,7 @@ export const reportSections: any = () => [
 export const reportCharts: any = [
   {
     firstRow: {
-      /* "infantil-primeira-consulta-8-dia": {
+      "infantil-primeira-consulta-8-dia": {
         Chart: Donut,
         config: {
           formatterKind: "perc",
@@ -50,12 +52,12 @@ export const reportCharts: any = [
           componentStyle: {
             height: "250px",
           },
-          //colors: ["to-be-defined", "#E4E4E4"],
+          colors: ["#0069d1", "#e5e5e5", "#818181"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
         },
-      }, */
+      },
       "infantil-nove-consultas-2-anos": {
         Chart: Donut,
         config: {
@@ -65,13 +67,13 @@ export const reportCharts: any = [
             height: "250px",
           },
           sort: ["Realizado", "Não Realizado"],
-          //  colors: ["to-be-defined", "#E4E4E4"],
+          colors: ["#023e6a", "#e5e5e5", "#818181"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
         },
       },
-      /*  "infantil-registro-peso-altura": {
+      "infantil-registro-peso-altura": {
         Chart: Donut,
         config: {
           formatterKind: "perc",
@@ -80,50 +82,24 @@ export const reportCharts: any = [
           componentStyle: {
             height: "250px",
           },
-          colors: ["to-be-defined", "#E4E4E4"],
+          colors: ["#47e9dc", "#e5e5e5", "#818181"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
         },
-      }, */
+      },
     },
-    /* secondRow: {
+    secondRow: {
       "infantil-uma-visita-30-dias": {
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [0, 60],
+          radius: [30, 60],
+          colors: ["#6596ff", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
-          rangedLegend: [
-            {
-              color: "#49E8DB",
-              title: "Ótimo",
-              text: "≥ 50,0%",
-              window: [{ min: 50, max: 9999 }],
-            },
-            {
-              color: "#84aaff",
-              title: "Bom",
-              text: "≥ 37,5% e < 50%",
-              window: [{ min: 37.5, max: 50 }],
-            },
-            {
-              color: "#0069D0",
-              title: "Suficiente",
-              text: "≥ 25% e < 37,5%",
-              window: [{ min: 25, max: 37.5 }],
-            },
-            {
-              color: "#0A406A",
-              title: "Regular",
-              text: "< 25%",
-              window: [{ min: -1, max: 25 }],
-            },
-          ],
           componentStyle: {
             height: "250px",
           },
-          colors: ["to-be-defined", "#E4E4E4"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
@@ -133,79 +109,29 @@ export const reportCharts: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [0, 60],
+          radius: [30, 60],
+          colors: ["#023e6a", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
-          rangedLegend: [
-            {
-              color: "#49E8DB",
-              title: "Ótimo",
-              text: "≥ 50,0%",
-              window: [{ min: 50, max: 9999 }],
-            },
-            {
-              color: "#84aaff",
-              title: "Bom",
-              text: "≥ 37,5% e < 50%",
-              window: [{ min: 37.5, max: 50 }],
-            },
-            {
-              color: "#0069D0",
-              title: "Suficiente",
-              text: "≥ 25% e < 37,5%",
-              window: [{ min: 25, max: 37.5 }],
-            },
-            {
-              color: "#0A406A",
-              title: "Regular",
-              text: "< 25%",
-              window: [{ min: -1, max: 25 }],
-            },
-          ],
           componentStyle: {
             height: "250px",
           },
-          colors: ["to-be-defined", "#E4E4E4"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
         },
       },
+    },
+    thirdRow: {
       "infantil-uma-consulta-12-meses": {
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [0, 60],
+          radius: [30, 60],
           sort: ["Realizado", "Não Realizado"],
-          rangedLegend: [
-            {
-              color: "#49E8DB",
-              title: "Ótimo",
-              text: "≥ 50,0%",
-              window: [{ min: 50, max: 9999 }],
-            },
-            {
-              color: "#84aaff",
-              title: "Bom",
-              text: "≥ 37,5% e < 50%",
-              window: [{ min: 37.5, max: 50 }],
-            },
-            {
-              color: "#0069D0",
-              title: "Suficiente",
-              text: "≥ 25% e < 37,5%",
-              window: [{ min: 25, max: 37.5 }],
-            },
-            {
-              color: "#0A406A",
-              title: "Regular",
-              text: "< 25%",
-              window: [{ min: -1, max: 25 }],
-            },
-          ],
+          colors: ["#47e9dc", "#e5e5e5", "#818181"],
           componentStyle: {
             height: "250px",
           },
-          colors: ["to-be-defined", "#E4E4E4"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
@@ -215,79 +141,30 @@ export const reportCharts: any = [
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [0, 60],
+          radius: [30, 60],
+          colors: ["#0069d1", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
-          rangedLegend: [
-            {
-              color: "#49E8DB",
-              title: "Ótimo",
-              text: "≥ 50,0%",
-              window: [{ min: 50, max: 9999 }],
-            },
-            {
-              color: "#84aaff",
-              title: "Bom",
-              text: "≥ 37,5% e < 50%",
-              window: [{ min: 37.5, max: 50 }],
-            },
-            {
-              color: "#0069D0",
-              title: "Suficiente",
-              text: "≥ 25% e < 37,5%",
-              window: [{ min: 25, max: 37.5 }],
-            },
-            {
-              color: "#0A406A",
-              title: "Regular",
-              text: "< 25%",
-              window: [{ min: -1, max: 25 }],
-            },
-          ],
           componentStyle: {
             height: "250px",
           },
-          colors: ["to-be-defined", "#E4E4E4"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
         },
       },
+    },
+    fourthRow: {
       "infantil-marcos-desenvolvimento-avaliados": {
         Chart: Donut,
         config: {
           formatterKind: "perc",
-          radius: [0, 60],
+          halfDonut: true,
+          radius: [30, 60],
+          colors: ["#6596ff", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
-          rangedLegend: [
-            {
-              color: "#49E8DB",
-              title: "Ótimo",
-              text: "≥ 50,0%",
-              window: [{ min: 50, max: 9999 }],
-            },
-            {
-              color: "#84aaff",
-              title: "Bom",
-              text: "≥ 37,5% e < 50%",
-              window: [{ min: 37.5, max: 50 }],
-            },
-            {
-              color: "#0069D0",
-              title: "Suficiente",
-              text: "≥ 25% e < 37,5%",
-              window: [{ min: 25, max: 37.5 }],
-            },
-            {
-              color: "#0A406A",
-              title: "Regular",
-              text: "< 25%",
-              window: [{ min: -1, max: 25 }],
-            },
-          ],
           componentStyle: {
-            height: "250px",
+            marginBottom: "-120px",
           },
-          colors: ["to-be-defined", "#E4E4E4"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
@@ -298,85 +175,17 @@ export const reportCharts: any = [
         config: {
           halfDonut: true,
           formatterKind: "perc",
-          radius: [0, 60],
+          radius: [30, 60],
+          colors: ["#023e6a", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
-          rangedLegend: [
-            {
-              color: "#49E8DB",
-              title: "Ótimo",
-              text: "≥ 50,0%",
-              window: [{ min: 50, max: 9999 }],
-            },
-            {
-              color: "#84aaff",
-              title: "Bom",
-              text: "≥ 37,5% e < 50%",
-              window: [{ min: 37.5, max: 50 }],
-            },
-            {
-              color: "#0069D0",
-              title: "Suficiente",
-              text: "≥ 25% e < 37,5%",
-              window: [{ min: 25, max: 37.5 }],
-            },
-            {
-              color: "#0A406A",
-              title: "Regular",
-              text: "< 25%",
-              window: [{ min: -1, max: 25 }],
-            },
-          ],
           componentStyle: {
-            height: "250px",
+            marginBottom: "-120px",
           },
-          colors: ["to-be-defined", "#E4E4E4"],
           yAxis: {
             name: content?.["total-cadastros"],
           },
         },
       },
-      "infantil-nota-consumo-alimentar-avaliado": {
-        Chart: Donut,
-        config: {
-          halfDonut: true,
-          formatterKind: "perc",
-          radius: [0, 60],
-          sort: ["Realizado", "Não Realizado"],
-          rangedLegend: [
-            {
-              color: "#49E8DB",
-              title: "Ótimo",
-              text: "≥ 50,0%",
-              window: [{ min: 50, max: 9999 }],
-            },
-            {
-              color: "#84aaff",
-              title: "Bom",
-              text: "≥ 37,5% e < 50%",
-              window: [{ min: 37.5, max: 50 }],
-            },
-            {
-              color: "#0069D0",
-              title: "Suficiente",
-              text: "≥ 25% e < 37,5%",
-              window: [{ min: 25, max: 37.5 }],
-            },
-            {
-              color: "#0A406A",
-              title: "Regular",
-              text: "< 25%",
-              window: [{ min: -1, max: 25 }],
-            },
-          ],
-          componentStyle: {
-            height: "250px",
-          },
-          colors: ["to-be-defined", "#E4E4E4"],
-          yAxis: {
-            name: content?.["total-cadastros"],
-          },
-        },
-      },
-    }, */
+    },
   },
 ];

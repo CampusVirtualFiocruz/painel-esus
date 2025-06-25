@@ -87,7 +87,8 @@ const ListaNominal = () => {
     preconizadas pelo Ministério da Saúde
   `;
 
-  const alertBeforeDetails = condicao === "Bucal" ? "DADOS REFERENTES AOS ÚLTIMOS 30 MESES" : "";
+  const alertBeforeDetails =
+    condicao === "Bucal" ? "DADOS REFERENTES AOS ÚLTIMOS 30 MESES" : "";
 
   return (
     <div id="page-painel">
@@ -107,6 +108,8 @@ const ListaNominal = () => {
             ? "Qualidade de Cadastro"
             : condicao === "Idosa"
             ? "Cuidado da Pessoa Idosa"
+            : condicao === "Infantil"
+            ? "Desenvolvimento Infantil"
             : condicao)
         }
         subtitle=""
@@ -170,7 +173,12 @@ const ListaNominal = () => {
             sort={tableParams?.sort as any}
           />
         </LocaleContext.Provider>
-        <Footer pathToReport={pathToReport} condicao={condicao} id={id} recorte={recorte} />
+        <Footer
+          pathToReport={pathToReport}
+          condicao={condicao}
+          id={id}
+          recorte={recorte}
+        />
       </ReportWrapper>
     </div>
   );

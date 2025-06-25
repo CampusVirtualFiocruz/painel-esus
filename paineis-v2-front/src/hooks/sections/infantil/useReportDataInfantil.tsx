@@ -121,14 +121,21 @@ const useReportDataInfantil = ({ ubsId, equipe }: reportBasicInfo) => {
               curr.data?.["distribuicao-criancas-raca-cor"]?.data ||
               curr.data?.["primeira-consulta-ate-8-dia"]?.data ||
               curr.data?.["nove-consultas-puericultura-2-anos"]?.data ||
+              curr.data?.["uma-visita-domiciliar-acs-tacs-30dias"]?.data ||
+              curr.data?.["consulta-odonto-ate-12-meses"]?.data ||
+              curr.data?.["consulta-odonto-12-24-meses"]?.data ||
+              curr.data?.["marco-desenvolvimento-avaliados"]?.data ||
+              curr.data?.["consumo-alimentar-avaliado"]?.data ||
+              curr.data?.["uma-visita-domiciliar-acs-tacs-31dias-a-6meses"]
+                ?.data ||
+              curr.data?.["registro-peso-altura-puericultura-9-consultas"]
+                ?.data ||
               curr?.data?.data ||
               curr.data,
           },
         }),
         {}
       );
-
-      console.log({ reducedData });
 
       return {
         ...reducedData,

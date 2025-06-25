@@ -27,17 +27,17 @@ export const content: any = {
   "12-meses": "12 meses",
   "24-meses": "24 meses",
 
-  'menos-1-ano': "Menos 1 ano",
-  '1-4-anos': "1 a 4 anos",
-  '5-9-anos': "5 a 9 anos",
-  '10-14-anos': "10 a 14 anos",
-  '15-19-anos': "15 a 19 anos",
-  '20-29-anos': "20 a 29 anos",
-  '30-39-anos': "30 a 39 anos",
-  '40-49-anos': "40 a 49 anos",
-  '50-59-anos': "50 a 59 anos",
-  '60a69': "60 a 69 anos",
-  '70a79': "70 a 79 anos",
+  "menos-1-ano": "Menos 1 ano",
+  "1-4-anos": "1 a 4 anos",
+  "5-9-anos": "5 a 9 anos",
+  "10-14-anos": "10 a 14 anos",
+  "15-19-anos": "15 a 19 anos",
+  "20-29-anos": "20 a 29 anos",
+  "30-39-anos": "30 a 39 anos",
+  "40-49-anos": "40 a 49 anos",
+  "50-59-anos": "50 a 59 anos",
+  "60a69": "60 a 69 anos",
+  "70a79": "70 a 79 anos",
   "60-64-anos": "60 a 64 anos",
   "60-69-anos": "60 a 69 anos",
   "65-69-anos": "65 a 69 anos",
@@ -58,8 +58,8 @@ export const content: any = {
   "85-a-89-anos": "85 a 89 anos",
   "90-a-94-anos": "90 a 94 anos",
   "95-a-99-anos": "95 a 99 anos",
-  
-  '80mais': "80+ anos",
+
+  "80mais": "80+ anos",
   "100-ou-mais": "100+ anos",
   "100mais": "100+ anos",
 
@@ -79,6 +79,9 @@ export const content: any = {
 
   atendidas: "Atendidas",
   "nao-atendidas": "Sem\natendimento",
+
+  avaliados: "Avaliados",
+  "nao-avaliados": "Não\nAvaliados",
 
   hipertensao: "Hipertensão",
   diabetes: "Diabetes",
@@ -138,7 +141,8 @@ export const content: any = {
   "pessoas-por-sexo": "Pessoas idosas por faixa etária/sexo",
   "distribuicao-pessoas-raca-cor":
     "Distribuição de pessoas idosas por raça/cor",
-  "total-idosas-atendidas": "Total de pessoas idosas atendidas nos últimos 12 meses",
+  "total-idosas-atendidas":
+    "Total de pessoas idosas atendidas nos últimos 12 meses",
   "duas-consultas-medicas-enfermagem":
     "Duas consultas médicas e/ou de enfermagem",
   "uma-nenhuma-consulta": "Com duas ou\nmais consultas",
@@ -160,37 +164,53 @@ export const content: any = {
   "ivcf-20":
     "Aplicação do Índice de Vulnerabilidade Clínico-Funcional (IVCF-20)",
 
-    //saude bucal
-    "total-atendidas": "Total de pessoas atendidas",
-    "total-cadastradas": "Total de pessoas cadastradas",
-    "total-faixa-atendidas": "Pessoas atendidas por faixa etária/sexo",
-    "total-faixa-cadastradas": "Pessoas cadastradas por faixa etária/sexo",
-    "distribuicao-cadastradas": "Distribuição de pessoas cadastradas por raça/cor",
-    "distribuicao-atendidas": "Distribuição de pessoas atendidas por raça/cor",
-    "concluido-tratamento": "Pessoas que concluíram o tratamento odontológico",
-    "primeira-consulta-odonto": "Pessoas que realizaram a primeira consulta odontológica",
-    "concluiu-tratamento-odonto": "Pessoas que concluíram o tratamento odontológico",
-    "realizou-exodontia": "Pessoas que realizaram exodontia",
-    "realizou-preventivo-odonto": "Pessoas que realizaram procedimentos preventivos",
-    "realizou-tra-odonto": "Pessoas que realizaram tratamento restaurador atraumático (TRA)",
-    "realizou-escovacao-supervisionada": "Pessoas que realizaram escovação supervisionada",
+  //saude bucal
+  "total-atendidas": "Total de pessoas atendidas",
+  "total-cadastradas": "Total de pessoas cadastradas",
+  "total-faixa-atendidas": "Pessoas atendidas por faixa etária/sexo",
+  "total-faixa-cadastradas": "Pessoas cadastradas por faixa etária/sexo",
+  "distribuicao-cadastradas":
+    "Distribuição de pessoas cadastradas por raça/cor",
+  "distribuicao-atendidas": "Distribuição de pessoas atendidas por raça/cor",
+  "concluido-tratamento": "Pessoas que concluíram o tratamento odontológico",
+  "primeira-consulta-odonto":
+    "Pessoas que realizaram a primeira consulta odontológica",
+  "concluiu-tratamento-odonto":
+    "Pessoas que concluíram o tratamento odontológico",
+  "realizou-exodontia": "Pessoas que realizaram exodontia",
+  "realizou-preventivo-odonto":
+    "Pessoas que realizaram procedimentos preventivos",
+  "realizou-tra-odonto":
+    "Pessoas que realizaram tratamento restaurador atraumático (TRA)",
+  "realizou-escovacao-supervisionada":
+    "Pessoas que realizaram escovação supervisionada",
 
-    //infantil
-    "infantil-criancas-faixa-etaria-sexo": "Crianças por faixa etária/sexo",
-    "infantil-total-criancas-cadastradas": "Total de crianças cadastradas",
-    "infantil-distribuicao-criancas-raca-cor": "Distribuição de crianças por raça/cor",
+  //infantil
+  "nao-se-aplica-infantil": "Não se aplica¹",
 
-    "infantil-primeira-consulta-8-dia": "Primeira consulta até o 8° dia de vida",
-    "infantil-nove-consultas-2-anos": "Nove consultas de puericultura até 2 anos de vida",
-    "infantil-registro-peso-altura": "Registro de peso e altura nas 9 consultas de puericultura",
+  "infantil-criancas-faixa-etaria-sexo": "Crianças por faixa etária/sexo",
+  "infantil-total-criancas-cadastradas": "Total de crianças cadastradas",
+  "infantil-distribuicao-criancas-raca-cor":
+    "Distribuição de crianças por raça/cor",
 
-    "infantil-uma-visita-30-dias": "Uma visita domiciliar do ACS/TACS até 30 dias de vida",
-    "infantil-uma-visita-31-dia-6-meses": "Uma visita domiciliar do ACS/TACS dos 31 dias até os 6 meses de vida",
-    "infantil-uma-consulta-12-meses": "Uma consulta odontológica até 12 meses de vida",
-    "infantil-uma-consulta-12-24-meses": "Uma consulta odontológica entre 12 e 24 meses de vida",
+  "infantil-primeira-consulta-8-dia": "Primeira consulta até o 8° dia de vida",
+  "infantil-nove-consultas-2-anos":
+    "Nove consultas de puericultura até 2 anos de vida",
+  "infantil-registro-peso-altura":
+    "Registro de peso e altura nas 9 consultas de puericultura",
 
-    "infantil-marcos-desenvolvimento-avaliados": "Marcos do desenvolvimento avaliados",
-    "infantil-consumo-alimentar-avaliado": "Consumo alimentar avaliado*",
-    "infantil-nota-consumo-alimentar-avaliado": "*na data das consultas de puericultura",
+  "infantil-uma-visita-30-dias":
+    "Uma visita domiciliar do ACS/TACS até 30 dias de vida",
+  "infantil-uma-visita-31-dia-6-meses":
+    "Uma visita domiciliar do ACS/TACS dos 31 dias até os 6 meses de vida",
+  "infantil-uma-consulta-12-meses":
+    "Uma consulta odontológica até 12 meses de vida",
+  "infantil-uma-consulta-12-24-meses":
+    "Uma consulta odontológica entre 12 e 24 meses de vida",
 
-  };
+  "infantil-marcos-desenvolvimento-avaliados":
+    "Marcos do desenvolvimento avaliados",
+  "infantil-consumo-alimentar-avaliado": "Consumo alimentar avaliado*",
+  "infantil-nota-consumo-alimentar-avaliado":
+    "*na data das consultas de puericultura",
+};
