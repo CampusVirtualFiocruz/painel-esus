@@ -62,6 +62,9 @@ class ChildrenAdapter:
                     },
                 }
             )
+
+        data.sort(key=lambda d: int(d["tag"].split(" ")[0]))
+
         return {"data": data}
 
     def acs_visit_until_30d(self, response):
