@@ -105,7 +105,7 @@ class ChildrenRepository:
         )
 
         result = self.session.fetchall(query)
-        columns = [col[0] for col in self.session.description]
+        columns = [col[0] for col in self.session.get_description()]
         items = [dict(zip(columns, row)) for row in result]
 
         count_query = (
@@ -123,7 +123,7 @@ class ChildrenRepository:
             .split("ORDER BY")[0]
         )
 
-        total = self.session.fetchall(count_query).fetchone()
+        total = self.session.fetchone(count_query)
 
         return {
             "items": items,
