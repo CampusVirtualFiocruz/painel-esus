@@ -163,19 +163,22 @@ class ChildrenController:
             except ValueError:
                 pass
 
+        if  "q" in query_params:
+            q = query_params["q"]
+        
         sort = (
             query_params.getlist("sort[]") if hasattr(query_params, "getlist") else None
         )
 
-        return cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort
+        return cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort, q
 
     def get_nominal_list(self, request: HttpRequest) -> HttpResponse:
-        cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort = (
+        cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort, q = (
             self._extract_nominal_params(request)
         )
 
         response = self.__use_case.children_get_nominal_list(
-            cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort
+            cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude,   q, sort
         )
 
         return HttpResponse(status_code=200, body=response)

@@ -1,5 +1,6 @@
 import json
 
+from duckdb import query_df
 from src.utils.query_builders import gen_where_cnes_equipe
 
 PARQUET_PATH = "./dados/output/crianca.parquet"
@@ -251,11 +252,12 @@ def sql_get_nominal_list(
     nome: str = None,
     cpf: str = None,
     nome_unidade_saude: int = None,
+    q: str = None,
     sort: list[dict] = None,
 ):
 
     base_filters = []
-
+    or_conditions = []
     if cnes or equipe:
         filter_part = gen_where_cnes_equipe(None, cnes, equipe).strip()
         if filter_part.upper().startswith("WHERE"):
@@ -270,6 +272,12 @@ def sql_get_nominal_list(
     if nome_unidade_saude:
         base_filters.append(f"codigo_unidade_saude = {nome_unidade_saude}")
 
+    if q is not None and q:
+        or_conditions += [
+            f"cpf ilike '%{q}%'",
+            f"nome ilike '%{q}%'",
+            f"cns ilike  '%{q}%'",
+        ]
     indicators = """
         (
             agg_card_puericultura_ate_8_dias IN (0, 99) OR
@@ -288,6 +296,8 @@ def sql_get_nominal_list(
     where_clause = ""
     if base_filters:
         where_clause = "WHERE " + " AND ".join(base_filters)
+    if or_conditions:
+        where_clause = f'{where_clause} AND ('+ " OR ".join(or_conditions) + ') '
 
     fields = {
         "nome",
@@ -314,9 +324,8 @@ def sql_get_nominal_list(
 
     limit_offset_clause = ""
     if page_size > 0:
-        offset = page * page_size
+        offset = (page-1) * page_size
         limit_offset_clause = f"LIMIT {page_size} OFFSET {offset}"
-
     return f"""
         SELECT *
         FROM read_parquet('{PARQUET_PATH}')
