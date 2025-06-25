@@ -50,10 +50,11 @@ class ChildrenUseCaseImpl(ChildrenUseCase):
         nome=None,
         cpf=None,
         nome_unidade_saude=None,
+        q: str= None,
         sort=None,
     ):
         return self.repository.get_nominal_list(
-            cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, sort
+            cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, q, sort
         )
 
     def children_get_nominal_list_download(self, cnes=None, equipe=None):

@@ -64,6 +64,7 @@ class ChildrenUseCase(ABC):
         nome: str = None,
         cpf: str = None,
         nome_unidade_saude: int = None,
+        q: str = None,
         sort: list[dict] = None,
     ):
         pass
