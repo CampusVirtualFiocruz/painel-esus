@@ -25,6 +25,7 @@ class ChildrenAdapter:
             "indigena": init_object("indigena"),
             "nao-informado": init_object("nao-informado"),
         }
+
     def total_count_children(self, response):
         total = response[0][0] if response else 0
         return {"data": total}

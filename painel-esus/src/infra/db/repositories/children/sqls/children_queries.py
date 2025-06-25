@@ -1,3 +1,5 @@
+import json
+
 from src.utils.query_builders import gen_where_cnes_equipe
 
 PARQUET_PATH = "./dados/output/crianca.parquet"
@@ -302,6 +304,7 @@ def sql_get_nominal_list(
     if sort:
         sort_fields = []
         for item in sort:
+            item = json.loads(item)
             field = item.get("field")
             direction = item.get("direction", "asc").upper()
             if field in fields:
