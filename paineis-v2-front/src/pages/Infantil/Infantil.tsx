@@ -247,11 +247,7 @@ const Infantil = () => {
                 }}
               />
               <span style={{ fontSize: "26px" }}>
-                {formataNumero(
-                  (
-                    report?.["infantil-uma-consulta-12-meses"]?.data ?? []
-                  )?.find(({ tag }: any) => tag === "sim")?.value
-                )}
+                {formataNumero(report?.["total-atendimentos"]?.data ?? [])}
               </span>
             </div>
           </div>

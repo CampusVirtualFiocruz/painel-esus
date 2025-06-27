@@ -19,6 +19,11 @@ const useReportDataInfantil = ({ ubsId, equipe }: reportBasicInfo) => {
             equipe: equipe,
           },
         }),
+        "total-atendimentos": Api.get(`/children/total-medical-cares${ubsParam}`, {
+          params: {
+            equipe: equipe,
+          },
+        }),
         "infantil-criancas-faixa-etaria-sexo": Api.get(
           `/children/by-age${ubsParam}`,
           {
