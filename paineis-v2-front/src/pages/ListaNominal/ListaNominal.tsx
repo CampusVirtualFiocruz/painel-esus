@@ -90,13 +90,18 @@ const ListaNominal = () => {
   const alertBeforeDetails =
     condicao === "Bucal" ? "DADOS REFERENTES AOS ÚLTIMOS 30 MESES" : "";
 
+  const footerInfo =
+    condicao === "Infantil"
+      ? "¹ Crianças que ainda não atingiram idade mínima para inclusão no critério correspondente às diretrizes preconizadas pelo Ministério da Saúde"
+      : undefined;
+
   return (
     <div id="page-painel">
       {showModal && (
         <Modal
           data={data}
           setShowModal={setShowModal}
-          config={{ alertMessage, alertBeforeDetails }}
+          config={{ alertMessage, alertBeforeDetails, footerInfo }}
         />
       )}
       <ReportWrapper

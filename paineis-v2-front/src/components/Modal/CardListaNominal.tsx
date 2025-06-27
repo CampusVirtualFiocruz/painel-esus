@@ -33,7 +33,11 @@ export const CardListaNominal = ({
   config,
 }: {
   item: any;
-  config?: { alertMessage?: string; alertBeforeDetails?: string };
+  config?: {
+    alertMessage?: string;
+    alertBeforeDetails?: string;
+    footerInfo?: string;
+  };
 }) => {
   return (
     <div className="d-flex flex-column mb-4">
@@ -47,10 +51,11 @@ export const CardListaNominal = ({
             marginBottom: "10px",
           }}
         >
-          {String(item.gestante).toUpperCase() === "SIM" && <span className="iconCircle iconGestante" title="Alertas">
+          {String(item.gestante).toUpperCase() === "SIM" && (
+            <span className="iconCircle iconGestante" title="Alertas">
               G
             </span>
-          }
+          )}
           <h1 style={{ padding: "0px", margin: "0px" }}>
             {capitalizeName(
               item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
@@ -192,6 +197,20 @@ export const CardListaNominal = ({
               </>
             );
           })}
+        {Boolean(config?.footerInfo) && (
+          <div
+            style={{
+              maxWidth: "600px",
+              margin: "0 auto",
+              marginTop: "10px",
+              padding: "20px",
+              backgroundColor: "#ECF3F9",
+              borderRadius: "8px"
+            }}
+          >
+            {config?.footerInfo}
+          </div>
+        )}
       </div>
     </div>
   );
