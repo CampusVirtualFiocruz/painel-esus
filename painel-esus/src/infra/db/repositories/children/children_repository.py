@@ -4,6 +4,7 @@ from src.infra.db.settings.connection_duckdb import DuckDbHandler
 from .sqls.children_queries import (
     get_medical_cares,
     get_total_card,
+    get_total_ubs,
     sql_acs_visit_until_6m,
     sql_acs_visit_until_30d,
     sql_appointments_until_2_years,
@@ -31,7 +32,7 @@ class ChildrenRepository:
 
     def get_total_children(self, cnes: int = None, equipe: int = None):
 
-        return self.session.fetchall(sql_total_children(cnes, equipe))
+        return self.session.fetchall(get_total_ubs(cnes, equipe))
 
     def get_by_age(self, cnes: int = None, equipe: int = None):
         return self.session.fetchall(sql_by_age_children(cnes, equipe))
