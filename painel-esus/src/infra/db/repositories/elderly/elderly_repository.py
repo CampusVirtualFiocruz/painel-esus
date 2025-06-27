@@ -1,12 +1,27 @@
-import pandas as pd
-import duckdb
 import json
-from src.infra.db.repositories.elderly.sqls import (
-    get_total_ubs,get_medical_cares, get_total_card, by_gender, by_race, medical_appointments, height_records, acs_visits,
-    ivcf_20,creatinine,dentist_appointment,influenza_vaccines, get_elderly_base,nominal_download)
-from src.infra.db.settings.connection_local import DBConnectionHandler
+
+import duckdb
+import pandas as pd
 from src.env.conf import getenv
+from src.infra.db.repositories.elderly.sqls import (
+    acs_visits,
+    by_gender,
+    by_race,
+    creatinine,
+    dentist_appointment,
+    get_elderly_base,
+    get_medical_cares,
+    get_total_card,
+    get_total_ubs,
+    height_records,
+    influenza_vaccines,
+    ivcf_20,
+    medical_appointments,
+    nominal_download,
+)
+from src.infra.db.settings.connection_local import DBConnectionHandler
 from src.main.adapters.nominal_list_adapter import mock_word
+
 
 class ElderlyRepository:
     def __init__(self):

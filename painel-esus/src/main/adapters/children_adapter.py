@@ -25,7 +25,7 @@ class ChildrenAdapter:
             "indigena": init_object("indigena"),
             "nao-informado": init_object("nao-informado"),
         }
-
+    
     def total_count_children(self, response):
         total = response[0][0] if response else 0
         return {"data": total}
@@ -33,6 +33,15 @@ class ChildrenAdapter:
     def _to_tag_value_list(self, response):
         return {"data": [{"tag": tag, "value": value} for tag, value in response]}
 
+    def total_medical_cares(self, response):
+        total= 0 
+        if response is not None and len(response) > 0:
+            total = response[0][0]
+        
+        return {
+                'data': total,
+            }
+    
     def _to_tag_value_from_dict(self, response, dict_label):
         data = dict_label
         for tag, value in response:

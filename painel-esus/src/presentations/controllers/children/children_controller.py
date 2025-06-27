@@ -1,14 +1,26 @@
 from src.domain.use_cases.children.children_use_case import ChildrenUseCase
+from src.infra.db.repositories.children.children_repository import ChildrenRepository
 from src.main.adapters.children_adapter import ChildrenAdapter
 from src.presentations.http_types import HttpRequest, HttpResponse
 from src.utils.request_params_helper import extract_cnes_equipe
 
 
 class ChildrenController:
-    def __init__(self, use_case: ChildrenUseCase):
+    def __init__(self, use_case: ChildrenUseCase, repository: ChildrenRepository):
         self.__use_case = use_case
         self.__adapter = ChildrenAdapter()
+        self.__repository = repository
 
+
+    def parse_request(self, request: HttpRequest):
+        cnes, equipe = None, None
+        if request.path_params and "cnes" in request.path_params:
+            cnes = int(request.path_params["cnes"])
+        if request.query_params and "equipe" in request.query_params:
+            equipe = int(request.query_params["equipe"])
+        
+        return cnes, equipe
+    
     def get_total(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = extract_cnes_equipe(request)
         result = self.__use_case.children_total(cnes, equipe)
@@ -23,6 +35,12 @@ class ChildrenController:
 
         return HttpResponse(status_code=200, body={"criancas-por-sexo": adapted})
 
+    def total_medical_cares(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = self.parse_request(request)
+        response = self.__repository.total_medical_cares(cnes, equipe)
+        result = self._adapter.total_medical_cares(response)
+        return HttpResponse(status_code=200, body=result)
+    
     def get_by_race(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = extract_cnes_equipe(request)
         result = self.__use_case.children_by_race(cnes, equipe)

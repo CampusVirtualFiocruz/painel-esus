@@ -18,6 +18,7 @@ from src.main.composers.children_compose import (
     children_get_total,
     children_high_weight_records,
     children_milestone,
+    children_total_medical_cares_composer,
 )
 
 children_bp = Blueprint("children", __name__)
@@ -29,6 +30,7 @@ class ChildrenPath:
         "get_total": "/total",
         "by_age": "/by-age",
         "by_race": "/by-race",
+        'total_medical_cares': '/total-medical-cares',
         "first_consult_8d": "/first-consult-8d",
         "appointments_until_2_years": "/appointments-until-2-years",
         "acs_visit_until_30days": "/acs-visit-until-30days",
@@ -79,6 +81,21 @@ def children_by_race_fn(cnes=None):
         http_response = handle_errors(exception)
         return jsonify(http_response.body), http_response.status_code
 
+@children_bp.route(urls['total_medical_cares'], methods=['GET'], endpoint='total_medical_cares')
+@children_bp.route(
+    urls['total_medical_cares'] + '/<cnes>', methods=['GET'], endpoint='total_medical_cares_id'
+)
+def children_total_cares(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, children_total_medical_cares_composer())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
 
 @children_bp.route("/first-consult-8d", methods=["GET"], endpoint="first_consult_8d")
 @children_bp.route(

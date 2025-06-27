@@ -26,6 +26,18 @@ def sql_total_children(cnes: int = None, equipe: int = None):
             {gen_where_cnes_equipe(None, cnes, equipe)}"""
 
 
+def get_medical_cares(cnes: int = None, equipe: int = None):
+    where_clause = " "
+    if cnes is not None and cnes:
+        where_clause += f" where codigo_unidade_saude  = {cnes} "
+        if equipe is not None and equipe:
+            where_clause += f" and codigo_equipe  = {equipe} "
+    return f"""
+    SELECT sum(pessoa_atendida_12_meses) total 
+    FROM read_parquet('./dados/output/crianca.parquet') 
+    {where_clause}
+    """
+
 def sql_by_age_children(cnes: int = None, equipe: int = None):
     base_where = gen_where_cnes_equipe(None, cnes, equipe).strip()
     faixa_where = """faixa_etaria IN (

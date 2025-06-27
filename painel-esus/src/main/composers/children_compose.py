@@ -6,7 +6,7 @@ from src.presentations.controllers.children.children_controller import (
 
 _repository = ChildrenRepository()
 _use_case = ChildrenUseCaseImpl(_repository)
-_controller = ChildrenController(_use_case)
+_controller = ChildrenController(_use_case, _repository)
 
 
 def children_get_total():
@@ -20,6 +20,8 @@ def children_by_age():
 def children_by_race():
     return _controller.get_by_race
 
+def children_total_medical_cares_composer():
+    return _controller.total_medical_cares
 
 def children_first_consult_8d():
     return _controller.get_first_consult_8d

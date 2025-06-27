@@ -2,6 +2,7 @@ import duckdb
 from src.infra.db.settings.connection_duckdb import DuckDbHandler
 
 from .sqls.children_queries import (
+    get_medical_cares,
     get_total_card,
     sql_acs_visit_until_6m,
     sql_acs_visit_until_30d,
@@ -38,6 +39,12 @@ class ChildrenRepository:
     def get_by_race(self, cnes: int = None, equipe: int = None):
         return self.session.fetchall(sql_by_race_children(cnes, equipe))
 
+    def total_medical_cares(self, cnes: int = None, equipe: int = None):
+        sql = get_medical_cares(cnes,equipe)
+        con = duckdb.connect()
+        result = con.sql(sql).fetchall()
+        return result
+    
     def get_first_consult_8d(self, cnes: int = None, equipe: int = None):
         return self.session.fetchall(sql_first_consult_8d(cnes, equipe))
 
