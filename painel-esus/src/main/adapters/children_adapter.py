@@ -30,6 +30,15 @@ class ChildrenAdapter:
         total = response[0][0] if response else 0
         return {"data": total}
 
+    def total_ubs(self, response):
+        total= 0 
+        if response is not None and len(response) > 0:
+            total = response[0][0]
+        
+        return {
+                'data': total,
+            }
+    
     def _to_tag_value_list(self, response):
         return {"data": [{"tag": tag, "value": value} for tag, value in response]}
 

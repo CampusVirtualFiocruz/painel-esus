@@ -31,7 +31,6 @@ class ChildrenRepository:
         return self.session.fetchall(sql)
 
     def get_total_children(self, cnes: int = None, equipe: int = None):
-
         return self.session.fetchall(get_total_ubs(cnes, equipe))
 
     def get_by_age(self, cnes: int = None, equipe: int = None):

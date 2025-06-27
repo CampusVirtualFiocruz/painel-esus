@@ -11,7 +11,6 @@ class ChildrenController:
         self.__adapter = ChildrenAdapter()
         self.__repository = repository
 
-
     def parse_request(self, request: HttpRequest):
         cnes, equipe = None, None
         if request.path_params and "cnes" in request.path_params:
@@ -22,9 +21,9 @@ class ChildrenController:
         return cnes, equipe
     
     def get_total(self, request: HttpRequest) -> HttpResponse:
-        cnes, equipe = extract_cnes_equipe(request)
+        cnes, equipe = self.parse_request(request)
         result = self.__use_case.children_total(cnes, equipe)
-        adapted = self.__adapter.total_count_children(result)
+        adapted = self.__adapter.total_ubs(result)
 
         return HttpResponse(status_code=200, body={"total-cadastros": adapted})
 
