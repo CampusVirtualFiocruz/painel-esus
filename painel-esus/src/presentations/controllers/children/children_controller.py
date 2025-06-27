@@ -38,7 +38,7 @@ class ChildrenController:
     def total_medical_cares(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
         response = self.__repository.total_medical_cares(cnes, equipe)
-        result = self._adapter.total_medical_cares(response)
+        result = self.__adapter.total_medical_cares(response)
         return HttpResponse(status_code=200, body=result)
     
     def get_by_race(self, request: HttpRequest) -> HttpResponse:
