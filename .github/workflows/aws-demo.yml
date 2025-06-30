@@ -154,3 +154,5 @@ jobs:
       - name: Notify Slack
         run: |
           curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }}  -H 'Content-type: application/json' --data '{"text": "*Deploy Finalizado* :rocket:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'
+
+          
