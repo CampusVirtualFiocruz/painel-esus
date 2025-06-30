@@ -96,7 +96,7 @@ jobs:
               version: "3.3"
               services:
                 painel_esus:
-                  image: "painelsaudefiocruz/demo:${{ env.RELEASE_VERSION }}"
+                  image: "painelsaudefiocruz/painel-esus:${{ env.RELEASE_VERSION }}"
                   environment:
                     RELOAD_BASE_SCHELDULE: '4:00'
                     DB_USER: '${{ secrets.DATABASE_USER }}'
