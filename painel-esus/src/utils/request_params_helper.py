@@ -1,8 +1,8 @@
 def extract_cnes_equipe(request):
-    cnes_param = request.query_params.get("cnes")
-    cnes = int(cnes_param) if cnes_param and cnes_param.isdigit() else None
-
-    equipe_param = request.query_params.get("equipe")
-    equipe = int(equipe_param) if equipe_param and equipe_param.isdigit() else None
-
+    cnes, equipe = None, None
+    if request.path_params and "cnes" in request.path_params:
+        cnes = int(request.path_params["cnes"])
+    if request.query_params and "equipe" in request.query_params:
+        equipe = int(request.query_params["equipe"])
+    
     return cnes, equipe
