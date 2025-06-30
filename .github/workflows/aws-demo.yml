@@ -96,7 +96,7 @@ jobs:
               version: "3.3"
               services:
                 painel_esus:
-                  image: "painelsaudefiocruz/demo:backend-${{ env.RELEASE_VERSION }}"
+                  image: "painelsaudefiocruz/demo:${{ env.RELEASE_VERSION }}"
                   environment:
                     RELOAD_BASE_SCHELDULE: '4:00'
                     DB_USER: '${{ secrets.DATABASE_USER }}'
@@ -155,4 +155,3 @@ jobs:
         run: |
           curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }}  -H 'Content-type: application/json' --data '{"text": "*Deploy Finalizado* :rocket:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'
 
-          
