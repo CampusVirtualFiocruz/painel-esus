@@ -8,6 +8,9 @@ class ChildrenUseCaseImpl(ChildrenUseCase):
     def children_total(self, cnes=None, equipe=None):
         return self.repository.get_total_children(cnes, equipe)
 
+    def children_total_twelve_months(self, cnes=None, equipe=None):
+        return self.repository.get_total_twelve_months_children(cnes, equipe)
+
     def children_by_age(self, cnes=None, equipe=None):
         return self.repository.get_by_age(cnes, equipe)
 
@@ -50,7 +53,7 @@ class ChildrenUseCaseImpl(ChildrenUseCase):
         nome=None,
         cpf=None,
         nome_unidade_saude=None,
-        q: str= None,
+        q: str = None,
         sort=None,
     ):
         return self.repository.get_nominal_list(

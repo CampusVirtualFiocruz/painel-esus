@@ -1,6 +1,6 @@
 import duckdb
-from src.infra.db.settings.connection_duckdb import DuckDbHandler
 
+from src.infra.db.settings.connection_duckdb import DuckDbHandler
 from .sqls.children_queries import (
     get_medical_cares,
     get_total_card,
@@ -18,7 +18,7 @@ from .sqls.children_queries import (
     sql_get_nominal_list_download,
     sql_high_weight_records,
     sql_milestone,
-    sql_total_children,
+    sql_total_and_last_12_months,
 )
 
 
@@ -26,12 +26,17 @@ class ChildrenRepository:
     def __init__(self):
         self.session = DuckDbHandler()
 
-    def total_card(self, cnes: int = None, equipe: int = None, category: str = 'atentidas'):
+    def total_card(
+        self, cnes: int = None, equipe: int = None, category: str = "atentidas"
+    ):
         sql = get_total_card(cnes, equipe)
         return self.session.fetchall(sql)
 
     def get_total_children(self, cnes: int = None, equipe: int = None):
         return self.session.fetchall(get_total_ubs(cnes, equipe))
+
+    def get_total_twelve_months_children(self, cnes: int = None, equipe: int = None):
+        return self.session.fetchall(sql_total_and_last_12_months(cnes, equipe))
 
     def get_by_age(self, cnes: int = None, equipe: int = None):
         return self.session.fetchall(sql_by_age_children(cnes, equipe))
@@ -40,18 +45,16 @@ class ChildrenRepository:
         return self.session.fetchall(sql_by_race_children(cnes, equipe))
 
     def total_medical_cares(self, cnes: int = None, equipe: int = None):
-        sql = get_medical_cares(cnes,equipe)
+        sql = get_medical_cares(cnes, equipe)
         con = duckdb.connect()
         result = con.sql(sql).fetchall()
         return result
-    
+
     def get_first_consult_8d(self, cnes: int = None, equipe: int = None):
         return self.session.fetchall(sql_first_consult_8d(cnes, equipe))
 
     def get_appointments_until_2_years(self, cnes: int = None, equipe: int = None):
-        return self.session.fetchall(
-            sql_appointments_until_2_years(cnes, equipe)
-        )
+        return self.session.fetchall(sql_appointments_until_2_years(cnes, equipe))
 
     def get_acs_visit_until_30d(self, cnes: int = None, equipe: int = None):
         return self.session.fetchall(sql_acs_visit_until_30d(cnes, equipe))
@@ -60,14 +63,10 @@ class ChildrenRepository:
         return self.session.fetchall(sql_acs_visit_until_6m(cnes, equipe))
 
     def get_dental_appointments_until_12m(self, cnes: int = None, equipe: int = None):
-        return self.session.fetchall(
-            sql_dental_appointments_until_12m(cnes, equipe)
-        )
+        return self.session.fetchall(sql_dental_appointments_until_12m(cnes, equipe))
 
     def get_dental_appointments_until_24m(self, cnes: int = None, equipe: int = None):
-        return self.session.fetchall(
-            sql_dental_appointments_until_24m(cnes, equipe)
-        )
+        return self.session.fetchall(sql_dental_appointments_until_24m(cnes, equipe))
 
     def get_high_weight_records(self, cnes: int = None, equipe: int = None):
         return self.session.fetchall(sql_high_weight_records(cnes, equipe))

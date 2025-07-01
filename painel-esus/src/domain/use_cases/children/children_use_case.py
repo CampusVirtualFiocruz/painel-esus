@@ -8,6 +8,10 @@ class ChildrenUseCase(ABC):
         pass
 
     @abstractmethod
+    def children_total_twelve_months(self, cnes: int = None, equipe: int = None):
+        pass
+
+    @abstractmethod
     def children_by_age(self, cnes: int = None, equipe: int = None):
         pass
 

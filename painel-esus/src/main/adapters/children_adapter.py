@@ -2,7 +2,7 @@ class ChildrenAdapter:
 
     def __init__(self):
         def init_object(tag):
-            return { 
+            return {
                 "tag": tag,
                 "value": 0,
             }
@@ -25,32 +25,40 @@ class ChildrenAdapter:
             "indigena": init_object("indigena"),
             "nao-informado": init_object("nao-informado"),
         }
-    
+
     def total_count_children(self, response):
         total = response[0][0] if response else 0
         return {"data": total}
 
+    def total_and_12_months_adapter(self, response):
+        total = response[0][0] if response else 0
+        total_12_meses = response[0][1] if response else 0
+        return {
+            "total-cadastros": {"data": total},
+            "total-atendidas-12-meses": {"data": total_12_meses},
+        }
+
     def total_ubs(self, response):
-        total= 0 
+        total = 0
         if response is not None and len(response) > 0:
             total = response[0][0]
-        
+
         return {
-                'data': total,
-            }
-    
+            "data": total,
+        }
+
     def _to_tag_value_list(self, response):
         return {"data": [{"tag": tag, "value": value} for tag, value in response]}
 
     def total_medical_cares(self, response):
-        total= 0 
+        total = 0
         if response is not None and len(response) > 0:
             total = response[0][0]
-        
+
         return {
-                'data': total,
-            }
-    
+            "data": total,
+        }
+
     def _to_tag_value_from_dict(self, response, dict_label):
         data = dict_label
         for tag, value in response:
@@ -64,7 +72,7 @@ class ChildrenAdapter:
         return self._to_tag_value_from_dict(response, self.sim_nao_labels)
 
     def appointments_until_2_years(self, response):
-        return self._to_tag_value_from_dict(response,self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
 
     def by_age_children(self, response):
         data = []
@@ -87,19 +95,19 @@ class ChildrenAdapter:
         return {"data": data}
 
     def acs_visit_until_30d(self, response):
-        return self._to_tag_value_from_dict(response,self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
 
     def acs_visit_until_6m(self, response):
-        return self._to_tag_value_from_dict(response,self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
 
     def dental_appointments_until_12m(self, response):
-        return self._to_tag_value_from_dict(response,self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
 
     def dental_appointments_until_24m(self, response):
-        return self._to_tag_value_from_dict(response,self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
 
     def high_weight_records(self, response):
-        return self._to_tag_value_from_dict(response,self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
 
     def milestone(self, response):
         return self._to_tag_value_from_dict(response, self.milestone_label)

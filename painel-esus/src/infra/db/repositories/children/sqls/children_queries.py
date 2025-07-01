@@ -1,9 +1,8 @@
 import json
 
-from duckdb import query_df
 from src.utils.query_builders import gen_where_cnes_equipe
 
-PARQUET_PATH = "./dados/output/crianca.parquet"
+PARQUET_PATH = "/home/allanbontempo/programacao/fiocruz/painel-esus/painel-esus/src/infra/db/repositories/children/sqls/dados/crianca.parquet"
 
 
 def get_total_card(
@@ -19,11 +18,13 @@ def get_total_card(
             {where_clause}
             group by tipo_localizacao_domicilio """
 
+
 def sql_total_children(cnes: int = None, equipe: int = None):
     return f"""
             SELECT count(*) as total
             FROM read_parquet('{PARQUET_PATH}')
             {gen_where_cnes_equipe(None, cnes, equipe)}"""
+
 
 def get_total_ubs(cnes: int = None, equipe: int = None):
     where_clause = " "
@@ -33,9 +34,21 @@ def get_total_ubs(cnes: int = None, equipe: int = None):
             where_clause += f" and codigo_equipe  = {equipe} "
     return f"""
     SELECT count(*) total 
-    FROM read_parquet('./dados/output/crianca.parquet') 
+    FROM read_parquet('{PARQUET_PATH}') 
     {where_clause}
     """
+
+
+def sql_total_and_last_12_months(cnes: int = None, equipe: int = None):
+    return f"""
+        SELECT
+            COUNT(*) AS total,
+            COUNT_IF(crianca_atendida_12_meses = 1) AS total_atendidas_12_meses
+        FROM read_parquet('{PARQUET_PATH}')
+        {gen_where_cnes_equipe(None, cnes, equipe)}
+    """
+
+
 def get_medical_cares(cnes: int = None, equipe: int = None):
     where_clause = " "
     if cnes is not None and cnes:
@@ -44,9 +57,10 @@ def get_medical_cares(cnes: int = None, equipe: int = None):
             where_clause += f" and codigo_equipe  = {equipe} "
     return f"""
     SELECT sum(crianca_atendida_12_meses) total 
-    FROM read_parquet('./dados/output/crianca.parquet') 
+    FROM read_parquet('{PARQUET_PATH}') 
     {where_clause}
     """
+
 
 def sql_by_age_children(cnes: int = None, equipe: int = None):
     base_where = gen_where_cnes_equipe(None, cnes, equipe).strip()
@@ -319,7 +333,7 @@ def sql_get_nominal_list(
     if base_filters:
         where_clause = "WHERE " + " AND ".join(base_filters)
     if or_conditions:
-        where_clause = f'{where_clause} AND ('+ " OR ".join(or_conditions) + ') '
+        where_clause = f"{where_clause} AND (" + " OR ".join(or_conditions) + ") "
 
     fields = {
         "nome",
@@ -346,7 +360,7 @@ def sql_get_nominal_list(
 
     limit_offset_clause = ""
     if page_size > 0:
-        offset = (page-1) * page_size
+        offset = (page - 1) * page_size
         limit_offset_clause = f"LIMIT {page_size} OFFSET {offset}"
     return f"""
         SELECT *

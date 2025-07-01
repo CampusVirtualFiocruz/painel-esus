@@ -13,6 +13,10 @@ def children_get_total():
     return _controller.get_total
 
 
+def children_get_total_twelve_months():
+    return _controller.get_total_twelve_months
+
+
 def children_by_age():
     return _controller.get_by_age
 
@@ -20,8 +24,10 @@ def children_by_age():
 def children_by_race():
     return _controller.get_by_race
 
+
 def children_total_medical_cares_composer():
     return _controller.total_medical_cares
+
 
 def children_first_consult_8d():
     return _controller.get_first_consult_8d

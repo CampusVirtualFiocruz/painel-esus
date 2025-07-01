@@ -17,15 +17,22 @@ class ChildrenController:
             cnes = int(request.path_params["cnes"])
         if request.query_params and "equipe" in request.query_params:
             equipe = int(request.query_params["equipe"])
-        
+
         return cnes, equipe
-    
+
     def get_total(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = self.parse_request(request)
         result = self.__use_case.children_total(cnes, equipe)
         adapted = self.__adapter.total_ubs(result)
 
         return HttpResponse(status_code=200, body={"total-cadastros": adapted})
+
+    def get_total_twelve_months(self, request: HttpRequest) -> HttpResponse:
+        cnes, equipe = self.parse_request(request)
+        result = self.__use_case.children_total_twelve_months(cnes, equipe)
+        adapted = self.__adapter.total_and_12_months_adapter(result)
+
+        return HttpResponse(status_code=200, body=adapted)
 
     def get_by_age(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = extract_cnes_equipe(request)
@@ -39,7 +46,7 @@ class ChildrenController:
         response = self.__repository.total_medical_cares(cnes, equipe)
         result = self.__adapter.total_medical_cares(response)
         return HttpResponse(status_code=200, body=result)
-    
+
     def get_by_race(self, request: HttpRequest) -> HttpResponse:
         cnes, equipe = extract_cnes_equipe(request)
         result = self.__use_case.children_by_race(cnes, equipe)
@@ -180,9 +187,9 @@ class ChildrenController:
             except ValueError:
                 pass
 
-        if  "q" in query_params:
+        if "q" in query_params:
             q = query_params["q"]
-        
+
         sort = (
             query_params.getlist("sort[]") if hasattr(query_params, "getlist") else None
         )
@@ -195,7 +202,7 @@ class ChildrenController:
         )
 
         response = self.__use_case.children_get_nominal_list(
-            cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude,   q, sort
+            cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, q, sort
         )
 
         return HttpResponse(status_code=200, body=response)

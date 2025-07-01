@@ -1,6 +1,7 @@
 import io
 
 from flask import Blueprint, Response, jsonify, request
+
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.children_compose import (
@@ -19,6 +20,7 @@ from src.main.composers.children_compose import (
     children_high_weight_records,
     children_milestone,
     children_total_medical_cares_composer,
+    children_get_total_twelve_months,
 )
 
 children_bp = Blueprint("children", __name__)
@@ -28,9 +30,10 @@ class ChildrenPath:
     root_path = "/v1/children"
     urls = {
         "get_total": "/total",
+        "get_total_twelve_months": "/total-twelve-months",
         "by_age": "/by-age",
         "by_race": "/by-race",
-        'total_medical_cares': '/total-medical-cares',
+        "total_medical_cares": "/total-medical-cares",
         "first_consult_8d": "/first-consult-8d",
         "appointments_until_2_years": "/appointments-until-2-years",
         "acs_visit_until_30days": "/acs-visit-until-30days",
@@ -60,6 +63,23 @@ def children_get_total_fn(cnes=None):
         return jsonify(http_response.body), http_response.status_code
 
 
+@children_bp.route(
+    "/total-twelve-months", methods=["GET"], endpoint="get_total_twelve_months"
+)
+@children_bp.route(
+    "/total-twelve-months/<int:cnes>",
+    methods=["GET"],
+    endpoint="get_total_twelve_months_id",
+)
+def children_get_total_twelve_months_fn(cnes=None):
+    try:
+        http_response = request_adapter(request, children_get_total_twelve_months())
+        return jsonify(http_response.body), http_response.status_code
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        return jsonify(http_response.body), http_response.status_code
+
+
 @children_bp.route("/by-age", methods=["GET"], endpoint="by_age")
 @children_bp.route("/by-age/<int:cnes>", methods=["GET"], endpoint="by_age_id")
 def children_by_age_fn(cnes=None):
@@ -81,21 +101,29 @@ def children_by_race_fn(cnes=None):
         http_response = handle_errors(exception)
         return jsonify(http_response.body), http_response.status_code
 
-@children_bp.route(urls['total_medical_cares'], methods=['GET'], endpoint='total_medical_cares')
+
 @children_bp.route(
-    urls['total_medical_cares'] + '/<cnes>', methods=['GET'], endpoint='total_medical_cares_id'
+    urls["total_medical_cares"], methods=["GET"], endpoint="total_medical_cares"
+)
+@children_bp.route(
+    urls["total_medical_cares"] + "/<cnes>",
+    methods=["GET"],
+    endpoint="total_medical_cares_id",
 )
 def children_total_cares(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, children_total_medical_cares_composer())
+        http_response = request_adapter(
+            request, children_total_medical_cares_composer()
+        )
         response = jsonify(http_response.body)
     except Exception as exception:
         http_response = handle_errors(exception)
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
+
 
 @children_bp.route("/first-consult-8d", methods=["GET"], endpoint="first_consult_8d")
 @children_bp.route(
