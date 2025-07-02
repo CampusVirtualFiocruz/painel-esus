@@ -10,8 +10,8 @@ export const reportSections: any = () => [
           colors: ["#84aaff", "#0069d0", "#e4e4e4", "#5c7ea0"],
           componentStyle: {
             height: "500px",
-            width: "600px",
-            marginLeft: "-200px",
+           width: "600px",
+           margin: "0 auto"
           },
           yAxis: {
             name: content?.["infantil-total-criancas-cadastradas"],
@@ -50,6 +50,8 @@ export const reportCharts: any = [
           radius: [0, 60],
           sort: ["Realizado", "Não Realizado"],
           componentStyle: {
+            width: "400px",
+            minWidth: "400px",
             height: "250px",
           },
           colors: ["#0069d1", "#e5e5e5", "#818181"],
@@ -64,6 +66,8 @@ export const reportCharts: any = [
           formatterKind: "perc",
           radius: [0, 60],
           componentStyle: {
+            width: "400px",
+            minWidth: "400px",
             height: "250px",
           },
           sort: ["Realizado", "Não Realizado"],
@@ -80,6 +84,8 @@ export const reportCharts: any = [
           radius: [0, 60],
           sort: ["Realizado", "Não Realizado"],
           componentStyle: {
+            width: "400px",
+            minWidth: "400px",
             height: "250px",
           },
           colors: ["#47e9dc", "#e5e5e5", "#818181"],
@@ -98,6 +104,8 @@ export const reportCharts: any = [
           colors: ["#6596ff", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
           componentStyle: {
+            width: "400px",
+            minWidth: "400px",
             height: "250px",
           },
           yAxis: {
@@ -113,6 +121,8 @@ export const reportCharts: any = [
           colors: ["#023e6a", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
           componentStyle: {
+            width: "400px",
+            minWidth: "400px",
             height: "250px",
           },
           yAxis: {
@@ -130,6 +140,8 @@ export const reportCharts: any = [
           sort: ["Realizado", "Não Realizado"],
           colors: ["#47e9dc", "#e5e5e5", "#818181"],
           componentStyle: {
+            width: "400px",
+            minWidth: "400px",
             height: "250px",
           },
           yAxis: {
@@ -145,6 +157,8 @@ export const reportCharts: any = [
           colors: ["#0069d1", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
           componentStyle: {
+            width: "400px",
+            minWidth: "400px",
             height: "250px",
           },
           yAxis: {
@@ -163,6 +177,8 @@ export const reportCharts: any = [
           colors: ["#6596ff", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
           componentStyle: {
+            width: "400px",
+            minWidth: "400px",
             marginBottom: "-120px",
           },
           yAxis: {
@@ -179,6 +195,8 @@ export const reportCharts: any = [
           colors: ["#023e6a", "#e5e5e5", "#818181"],
           sort: ["Realizado", "Não Realizado"],
           componentStyle: {
+            width: "400px",
+            minWidth: "400px",
             marginBottom: "-120px",
           },
           yAxis: {

@@ -54,7 +54,7 @@ const RenderChartGroup = ({
         <div
           className="is-row"
           style={{
-            gap: "60px",
+            gap: "10px",
             justifyContent: "center",
           }}
         >
@@ -75,7 +75,7 @@ const RenderChartGroup = ({
       textAlign: "center",
     };
 
-    containerStyle.maxWidth = "400px";
+   // containerStyle.maxWidth = "400px";
 
     return (
       <div style={containerStyle}>

@@ -15,7 +15,11 @@ interface IModal {
   setShowModal: (status: boolean) => void;
   setProfile?: (profile: string) => void;
   initialProfile?: string;
-  config?: { alertMessage?: string; alertBeforeDetails?: string };
+  config?: {
+    alertMessage?: string;
+    alertBeforeDetails?: string;
+    footerInfo?: string;
+  };
 }
 
 export function parseText(text: string | number): number | string {
@@ -170,7 +174,6 @@ export function bodyBoasPraticasCuidadoPessoasHipertensao() {
   );
 }
 
-
 export function bodyPerfil(
   selectedValue: string,
   onChange: (value: string) => void
@@ -241,7 +244,9 @@ export const Modal = ({
         {data &&
           data.loaded === 6 &&
           bodyBoasPraticasCuidadoPessoasHipertensao()}
-        {data && data.loaded === 7 && <CardListaNominal item={data} config={config} />}
+        {data && data.loaded === 7 && (
+          <CardListaNominal item={data} config={config} />
+        )}
         {data &&
           data.loaded === 8 &&
           bodyPerfil(selectedValue, handleProfileChange)}
