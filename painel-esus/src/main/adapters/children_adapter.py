@@ -1,31 +1,36 @@
 from src.main.adapters.nominal_list_adapter import CriancaNominalListAdapter
+
+
 class ChildrenAdapter:
 
-    def __init__(self):
-        def init_object(tag):
-            return {
-                "tag": tag,
-                "value": 0,
-            }
+    def _init_object(self,tag):
+        return {
+            "tag": tag,
+            "value": 0,
+        }
+    def _sim_nao_labels(self):
+        return {
+            "sim": self._init_object("sim"),
+            "nao": self._init_object("nao"),
+            "nao-se-aplica": self._init_object("nao-se-aplica-infantil"),
+        }
 
-        self.milestone_label = {
-            "sim": init_object("avaliados"),
-            "nao": init_object("nao-avaliados"),
-            "nao-se-aplica": init_object("nao-se-aplica-infantil"),
+    def _milestone_label(self):
+        return {
+            "sim": self._init_object("avaliados"),
+            "nao": self._init_object("nao-avaliados"),
+            "nao-se-aplica": self._init_object("nao-se-aplica-infantil"),
         }
-        self.sim_nao_labels = {
-            "sim": init_object("sim"),
-            "nao": init_object("nao"),
-            "nao-se-aplica": init_object("nao-se-aplica-infantil"),
-        }
-        self.race_labels = {
-            "branca": init_object("branca"),
-            "preta": init_object("preta"),
-            "parda": init_object("parda"),
-            "amarela": init_object("amarela"),
-            "indigena": init_object("indigena"),
-            "nao-informado": init_object("nao-informado"),
-        }
+
+    def _race_labels(self):
+        return {
+        "branca": self._init_object("branca"),
+        "preta": self._init_object("preta"),
+        "parda": self._init_object("parda"),
+        "amarela": self._init_object("amarela"),
+        "indigena": self._init_object("indigena"),
+        "nao-informado": self._init_object("nao-informado"),
+    }
 
     def total_count_children(self, response):
         total = response[0][0] if response else 0
@@ -61,19 +66,19 @@ class ChildrenAdapter:
         }
 
     def _to_tag_value_from_dict(self, response, dict_label):
-        data = dict_label
+        data = dict(dict_label)
         for tag, value in response:
             data[tag]["value"] = value
         return {"data": list(data.values())}
 
     def by_race_children(self, response):
-        return self._to_tag_value_from_dict(response, self.race_labels)
+        return self._to_tag_value_from_dict(response, self._race_labels())
 
     def first_consult_8d(self, response):
-        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self._sim_nao_labels())
 
     def appointments_until_2_years(self, response):
-        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self._sim_nao_labels())
 
     def by_age_children(self, response):
         data = []
@@ -96,25 +101,25 @@ class ChildrenAdapter:
         return {"data": data}
 
     def acs_visit_until_30d(self, response):
-        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self._sim_nao_labels())
 
     def acs_visit_until_6m(self, response):
-        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self._sim_nao_labels())
 
     def dental_appointments_until_12m(self, response):
-        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self._sim_nao_labels())
 
     def dental_appointments_until_24m(self, response):
-        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self._sim_nao_labels())
 
     def high_weight_records(self, response):
-        return self._to_tag_value_from_dict(response, self.sim_nao_labels)
+        return self._to_tag_value_from_dict(response, self._sim_nao_labels())
 
     def milestone(self, response):
-        return self._to_tag_value_from_dict(response, self.milestone_label)
+        return self._to_tag_value_from_dict(response, self._milestone_label())
 
     def evaluated_feeding(self, response):
-        return self._to_tag_value_from_dict(response, self.milestone_label)
+        return self._to_tag_value_from_dict(response, self._milestone_label())
 
     def nominal_list(self, response):
         return CriancaNominalListAdapter(response)
