@@ -2,8 +2,7 @@ import json
 
 from src.utils.query_builders import gen_where_cnes_equipe
 
-PARQUET_PATH = "/home/allanbontempo/programacao/fiocruz/painel-esus/painel-esus/src/infra/db/repositories/children/sqls/dados/crianca.parquet"
-
+PARQUET_PATH = "./dados/output/crianca.parquet"
 
 def get_total_card(
     cnes: int = None,
