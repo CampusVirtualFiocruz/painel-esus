@@ -4,6 +4,7 @@ from src.utils.query_builders import gen_where_cnes_equipe
 
 PARQUET_PATH = "./dados/output/crianca.parquet"
 
+
 def get_total_card(
     cnes: int = None,
     equipe: int = None,
@@ -315,17 +316,17 @@ def sql_get_nominal_list(
         ]
     indicators = """
         (
-            agg_card_puericultura_ate_8_dias IN (0, 99) OR
-            agg_card_puericultura_9_consultas_ate_2_anos IN (0, 99) OR
-            agg_card_9_peso_altura IN (0, 99) OR
-            agg_card_visita_acs_ate_30d IN (0, 99) OR
-            agg_card_visita_acs_ate_6m IN (0, 99) OR
-            agg_card_odonto_ate_12m IN (0, 99) OR
-            agg_card_odonto_12a24m IN (0, 99) OR
-            agg_card_marco_desenvolvimento IN (0, 99) OR
-            agg_card_consumo_alimentar IN (0, 99)
-        )
-    """
+            agg_card_puericultura_ate_8_dias IN (0,1, 99) OR
+            agg_card_puericultura_9_consultas_ate_2_anos IN (0,1, 99) OR
+            agg_card_9_peso_altura IN (0,1, 99) OR
+            agg_card_visita_acs_ate_30d IN (0,1, 99) OR
+            agg_card_visita_acs_ate_6m IN (0,1, 99) OR
+            agg_card_odonto_ate_12m IN (0,1, 99) OR
+            agg_card_odonto_12a24m IN (0,1, 99) OR
+            agg_card_marco_desenvolvimento IN (0,1, 99) OR
+            agg_card_consumo_alimentar IN (0,1, 99) OR
+            agg_card_9_peso_altura IN (0,1,99)
+        )  """
     base_filters.append(indicators)
 
     where_clause = ""
@@ -361,6 +362,7 @@ def sql_get_nominal_list(
     if page_size > 0:
         offset = (page - 1) * page_size
         limit_offset_clause = f"LIMIT {page_size} OFFSET {offset}"
+
     return f"""
         SELECT *
         FROM read_parquet('{PARQUET_PATH}')

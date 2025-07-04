@@ -348,7 +348,7 @@ class CriancaNominalListAdapter:
     def __init__(self, user: Crianca):
         self.nome = user["nome"]
         self.nome_social = "-"
-        self.tipo_localidade = user["tipo_localidade"]
+        self.tipo_localidade = user["tipo_localizacao_domicilio"]
         self.cpf = user["cpf"]
         self.cns = user["cns"]
         self.data_nascimento = user["data_nascimento"]
@@ -356,79 +356,138 @@ class CriancaNominalListAdapter:
         self.sexo = user["sexo"]
         self.equipe = user["nome_equipe"]
         self.microarea = user["micro_area"]
-        self.endereco = f"""{user["endereco"]} {user["numero"]}, {user["bairro"]}"""
-        self.tipo_logradouro = user["tipo_endereco"]
+        self.endereco = f"""{user["logradouro"]} {user["numero"]}, {user["bairro"]}"""
+        self.tipo_logradouro = user["tipo_logradouro"]
         self.complemento = user["complemento"]
         self.cep = user["cep"]
         self.telefone = user["telefone"]
-        self.possui_alertas = (
-            user["indicador_atendimentos_medicos_enfermeiros"] != 1
-            or user["indicador_atendimentos_medicos_enfermeiros_puericultura"] != 1
-            or user["indicador_medicoes_peso_altura_ate2anos"] != 1
-            or user["indicador_visitas_domiciliares_acs"] != 1
-            or user["indicador_teste_pezinho"] != 1
-            or user["indicador_atendimentos_odontologicos"] != 1
-            or user["indicador_vacinas_penta_polio_triplici"] != 1
-        )
+        self.possui_alertas = self.check_card_alert(user)
         self.registros = []
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_atendimento_medico_enfermeiro"],
-                exibir_alerta=user["indicador_atendimentos_medicos_enfermeiros"] != 1,
-                descricao="Data do último atendimento Médico/Enfermeiro",
-                tipo_alerta="data_ultimo_atendimento_medico_enfermeiro",
+                data=self.get_yes_no_data(user, "agg_card_puericultura_ate_8_dias"),
+                exibir_alerta=self.check_alert(
+                    user, "agg_card_puericultura_ate_8_dias"
+                ),
+                descricao="Houve 1ª consulta de puericultura até o 8º dia de vida?",
+                tipo_alerta="puericultura_ate_8_dias",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_atendimento_medicos_enfermeiros_puericultura"],
-                exibir_alerta=user[
-                    "indicador_atendimentos_medicos_enfermeiros_puericultura"
-                ]
-                != 1,
-                descricao="Data do último atendimento Médico/Enfermeiro de Puericultura",
-                tipo_alerta="indicador_atendimentos_medicos_enfermeiros_puericultura",
+                data=self.get_numeric_data(user, "num_consultas_puericultura"),
+                exibir_alerta=self.check_alert(
+                    user, "agg_card_puericultura_9_consultas_ate_2_anos"
+                ),
+                descricao="Número de consultas de puericultura até 2 anos de vida:",
+                tipo_alerta="puericultura_9_consultas_ate_2_anos",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultima_medicao_peso_altura_ate2anos"],
-                exibir_alerta=user["indicador_medicoes_peso_altura_ate2anos"] != 1,
-                descricao="Data da última medição de peso/altura até dois anos",
-                tipo_alerta="data_ultima_medicao_peso_altura_ate2anos",
+                data=self.get_yes_no_data(user, "agg_card_visita_acs_ate_30d"),
+                exibir_alerta=self.check_alert(user, "agg_card_visita_acs_ate_30d"),
+                descricao="Houve visita domiciliar até os primeiros 30 dias de vida?",
+                tipo_alerta="visita_acs_ate_30d",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultima_visita_domiciliar_acs"],
-                exibir_alerta=user["indicador_visitas_domiciliares_acs"] != 1,
-                descricao="Data da última visita do ACS ",
-                tipo_alerta="data_ultima_visita_domiciliar_acs",
+                data=self.get_yes_no_data(user, "agg_card_visita_acs_ate_6m"),
+                exibir_alerta=self.check_alert(user, "agg_card_visita_acs_ate_6m"),
+                descricao="Houve visita domiciliar dos 31 dias até os 6 meses de vida?",
+                tipo_alerta="visita_acs_ate_6m",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_teste_pezinho"],
-                exibir_alerta=user["indicador_teste_pezinho"] != 1,
-                descricao="Data do último Teste do pezinho ",
-                tipo_alerta="data_ultimo_teste_pezinho",
+                data=self.get_yes_no_data(user, "agg_card_odonto_ate_12m"),
+                exibir_alerta=self.check_alert(user, "agg_card_odonto_ate_12m"),
+                descricao="Houve 1ª consulta odontológica até os primeiros 12 meses de vida?",
+                tipo_alerta="odonto_ate_12m",
+            )
+        )
+        # self.registros.append(
+        #     AlertRecord(
+        #         data=self.get_yes_no_data(user, 'agg_card_odonto_12a24m'),
+        #         exibir_alerta=self.check_alert(user, 'agg_card_odonto_12a24m'),
+        #         descricao="Número de consultas odontológicas até os primeiros 24 meses de vida:",
+        #         tipo_alerta="odonto_12a24m",
+        #     )
+        # )
+        self.registros.append(
+            AlertRecord(
+                data=self.get_numeric_data(user, "total_peso_altura"),
+                exibir_alerta=self.check_alert(user, "agg_card_9_peso_altura"),
+                descricao="Número de registros simultâneos de peso e altura realizados na data das consultas de puericultura:",
+                tipo_alerta="peso_altura",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultimo_atendimento_odontologico"],
-                exibir_alerta=user["indicador_atendimentos_odontologicos"] != 1,
-                descricao="Data do último atendimento Odontológico ",
-                tipo_alerta="data_ultimo_atendimento_odontologico",
+                data=self.get_last_height_weight_measure(user),
+                exibir_alerta=False,
+                descricao="Último registro de peso e altura na data das consultas de puericultura",
+                tipo_alerta="ultimo_peso_altura",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=user["data_ultima_vacina_triplici"],
-                exibir_alerta=user["indicador_vacinas_penta_polio_triplici"] != 1,
-                descricao="Data do último registro de vacina Penta/Polio/Triplici ",
-                tipo_alerta="data_ultima_vacina_triplici",
+                data=self.get_yes_no_data(user, "agg_card_marco_desenvolvimento"),
+                exibir_alerta=self.check_alert(user, "agg_card_marco_desenvolvimento"),
+                descricao="Houve avaliação dos marcos do desenvolvimento?",
+                tipo_alerta="marco_desenvolvimento",
             )
+        )
+        self.registros.append(
+            AlertRecord(
+                data=self.get_yes_no_data(user, "agg_card_consumo_alimentar"),
+                exibir_alerta=self.check_alert(user, "agg_card_consumo_alimentar"),
+                descricao="Houve avaliação do consumo alimentar na data das consultas de puericultura?",
+                tipo_alerta="consumo_alimentar",
+            )
+        )
+
+    def get_last_height_weight_measure(self, user):
+        if (
+            self.select_column(user, "nu_peso_recentes") is None
+            and self.select_column(user, "nu_altura_recentes") is None
+        ):
+            return "Não se aplica"
+
+    def convert_nan(self, dt):
+        if math.isnan(dt):
+            return 0
+        return dt
+
+    def select_column(self, user, column):
+        return user[f"{column}"]
+
+    def get_numeric_data(self, user, column):
+        return self.convert_nan(self.select_column(user, column))
+
+    def check_alert(self, user, column):
+        return self.get_numeric_data(user, column) == 0
+
+    def get_yes_no_data(self, user, column):
+        condition = {
+            "0": "Não",
+            "1": "Sim",
+            "99": "Não se aplica",
+        }
+        return condition[str(self.get_numeric_data(user, column))]
+
+    def check_card_alert(self, user):
+        return (
+            user["agg_card_puericultura_ate_8_dias"] == 0
+            or user["agg_card_puericultura_9_consultas_ate_2_anos"] == 0
+            or user["agg_card_lista_nominal_9_peso_altura"] == 0
+            or user["agg_card_visita_acs_ate_30d"] == 0
+            or user["agg_card_visita_acs_ate_6m"] == 0
+            or user["agg_card_odonto_ate_12m"] == 0
+            or user["agg_card_odonto_12a24m"] == 0
+            or user["agg_card_marco_desenvolvimento"] == 0
+            or user["agg_card_consumo_alimentar"] == 0
         )
 
     def to_dict(self):
@@ -712,7 +771,7 @@ class RecordNominalListAdapter:
 
 class OralHealtNominalListAdapter:
 
-    def __init__(self, user, category: str = 'atendidas'):
+    def __init__(self, user, category: str = "atendidas"):
         self.category = category
         self.nome = user["nome"]
         self.nome_social = "-"
@@ -730,24 +789,28 @@ class OralHealtNominalListAdapter:
         self.cep = user["cep"]
         self.raca_cor = user["raca_cor"]
         self.telefone = user["telefone"]
-        self.identidadeGenero = user['tp_identidade_genero_cidadao'] 
-        self.necessidadesEspeciais = user['st_paciente_necessidades_espec']
-        self.povosComunidades = user['st_comunidade_tradicional']
+        self.identidadeGenero = user["tp_identidade_genero_cidadao"]
+        self.necessidadesEspeciais = user["st_paciente_necessidades_espec"]
+        self.povosComunidades = user["st_comunidade_tradicional"]
         self.gestante = user["st_gestante"]
 
         self.possui_alertas = self.check_alert(user)
         self.registros = []
         self.registros.append(
             AlertRecord(
-                data=self.convert_date(self.select_column( user, "data_primeira_consulta")),
-                exibir_alerta=self.select_column(user, 'agg_primeira_consulta') == 0,
+                data=self.convert_date(
+                    self.select_column(user, "data_primeira_consulta")
+                ),
+                exibir_alerta=self.select_column(user, "agg_primeira_consulta") == 0,
                 descricao="Data da primeira consulta odontológica programática",
                 tipo_alerta="primeira_consulta",
             )
         )
         self.registros.append(
             AlertRecord(
-                data=self.convert_date(self.select_column( user, "data_tratamento_concluido")),
+                data=self.convert_date(
+                    self.select_column(user, "data_tratamento_concluido")
+                ),
                 exibir_alerta=False,
                 descricao="Data de conclusão do tratamento odontológico",
                 tipo_alerta="conclusao_tratamento",
@@ -755,17 +818,23 @@ class OralHealtNominalListAdapter:
         )
         self.registros.append(
             AlertRecord(
-                data=self.convert_nan(self.select_column( user, "total_exodontia")),
+                data=self.convert_nan(self.select_column(user, "total_exodontia")),
                 exibir_alerta=False,
                 descricao="Quantidade de exodontias realizadas",
                 tipo_alerta="xodontia_realizadas",
             )
         )
 
-        prevent_codes = self.extract_procedures(user, 'codigos_procedimentos_preventivos')
-        description_codes = self.extract_procedures(user, 'descricao_procedimentos_preventivos')
+        prevent_codes = self.extract_procedures(
+            user, "codigos_procedimentos_preventivos"
+        )
+        description_codes = self.extract_procedures(
+            user, "descricao_procedimentos_preventivos"
+        )
         label_alert = list(zip(prevent_codes, description_codes))
-        alert_list = [ f'{item[0]} - {item[1]}' if len(item[1])>1 else '' for item in label_alert ]
+        alert_list = [
+            f"{item[0]} - {item[1]}" if len(item[1]) > 1 else "" for item in label_alert
+        ]
         self.registros.append(
             AlertRecord(
                 data=alert_list,
@@ -776,38 +845,40 @@ class OralHealtNominalListAdapter:
         )
         self.registros.append(
             AlertRecord(
-                data=self.convert_date(self.select_column(user,'data_TRA')),
+                data=self.convert_date(self.select_column(user, "data_TRA")),
                 exibir_alerta=False,
                 descricao="Data do último tratamento restaurador atraumático",
                 tipo_alerta="data_utltimo_tra",
             )
         )
 
-    def check_alert( self, user):
+    def check_alert(self, user):
 
-        if self.category == 'cadastradas':
-            return ( 
+        if self.category == "cadastradas":
+            return (
                 # user["agg_TRA_cadastradas"] == 0
-                user["agg_primeira_consulta_cadastradas"] == 0
+                user["agg_primeira_consulta_cadastradas"]
+                == 0
                 # or user["agg_realizaram_exodontia_cadastradas"] == 0
                 # or user['agg_procedimentos_preventivos_cadastradas'] == 0
-                # or user['agg_tratamento_odonto_concluido_cadastradas'] == 0 
-                )
+                # or user['agg_tratamento_odonto_concluido_cadastradas'] == 0
+            )
         else:
-            return ( 
+            return (
                 # user["agg_TRA_atendidas"] == 0
-                user["agg_primeira_consulta_atendidas"] == 0
+                user["agg_primeira_consulta_atendidas"]
+                == 0
                 # or user["agg_procedimentos_preventivos_atendidas"] == 0
                 # or user["agg_realizaram_exodontia_atendidas"] == 0
-                # or user['agg_tratamento_odonto_concluido_atendidas'] == 0 
-                )
+                # or user['agg_tratamento_odonto_concluido_atendidas'] == 0
+            )
 
     def extract_procedures(self, user, column):
-        data = user[f'{column}_{self.category}']
-        return data.split('|') if data is not None else []
+        data = user[f"{column}_{self.category}"]
+        return data.split("|") if data is not None else []
 
     def select_column(self, user, column):
-        return user[f'{column}_{self.category}']
+        return user[f"{column}_{self.category}"]
 
     def convert_date(self, dt):
         if issubclass(type(dt), type(pd.NaT)):

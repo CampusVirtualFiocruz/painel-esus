@@ -204,7 +204,10 @@ class ChildrenController:
         response = self.__use_case.children_get_nominal_list(
             cnes, equipe, page, page_size, nome, cpf, nome_unidade_saude, q, sort
         )
-
+        response["items"] = [
+            self.__adapter.nominal_list(r).to_dict()
+            for r in response["items"]
+        ]
         return HttpResponse(status_code=200, body=response)
 
     def get_nominal_list_download(self, request: HttpRequest) -> HttpResponse:

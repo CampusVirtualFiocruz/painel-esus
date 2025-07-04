@@ -1,3 +1,4 @@
+from src.main.adapters.nominal_list_adapter import CriancaNominalListAdapter
 class ChildrenAdapter:
 
     def __init__(self):
@@ -114,3 +115,6 @@ class ChildrenAdapter:
 
     def evaluated_feeding(self, response):
         return self._to_tag_value_from_dict(response, self.milestone_label)
+
+    def nominal_list(self, response):
+        return CriancaNominalListAdapter(response)
