@@ -65,6 +65,8 @@ def get_medical_cares(cnes: int = None, equipe: int = None):
 def sql_by_age_children(cnes: int = None, equipe: int = None):
     base_where = gen_where_cnes_equipe(None, cnes, equipe).strip()
     faixa_where = """faixa_etaria IN (
+        '0 a 8 dias',
+        '9 a 30 dias',
         '1 a 2 meses',
         '2 a 4 meses',
         '4 a 6 meses',

@@ -19,7 +19,7 @@ class ChildrenAdapter:
         return {
             "sim": self._init_object("avaliados"),
             "nao": self._init_object("nao-avaliados"),
-            "nao-se-aplica": self._init_object("nao-se-aplica-infantil"),
+            
         }
 
     def _race_labels(self):
@@ -81,10 +81,33 @@ class ChildrenAdapter:
         return self._to_tag_value_from_dict(response, self._sim_nao_labels())
 
     def by_age_children(self, response):
-        data = []
+        data = {}
+        def _init(i):
+            return {
+                "tag": i,
+                "value": {
+                    "feminino": 0,
+                    "masculino": 0,
+                    "indeterminado": 0,
+                    "nao-informado": 0,
+                },
+            }
+        categories = ['0 a 8 dias',
+        '9 a 30 dias',
+        '1 a 2 meses',
+        '2 a 4 meses',
+        '4 a 6 meses',
+        '6 a 9 meses',
+        '9 a 12 meses',
+        '12 a 18 meses',
+        '18 a 24 meses',
+        '24 a 36 meses']
+        for i in categories:
+            data[i] = _init(i)
+
         for row in response:
             tag, feminino, masculino, indeterminado, nao_informado = row
-            data.append(
+            data[tag]= (
                 {
                     "tag": tag,
                     "value": {
@@ -95,10 +118,10 @@ class ChildrenAdapter:
                     },
                 }
             )
+        data2 = list(data.values())
+        # data2.sort(key=lambda d: int(d["tag"].split(" ")[0]))
 
-        data.sort(key=lambda d: int(d["tag"].split(" ")[0]))
-
-        return {"data": data}
+        return {"data": data2}
 
     def acs_visit_until_30d(self, response):
         return self._to_tag_value_from_dict(response, self._sim_nao_labels())
