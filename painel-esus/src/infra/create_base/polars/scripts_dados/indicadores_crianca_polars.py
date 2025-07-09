@@ -18,7 +18,7 @@ from src.infra.create_base.polars.scripts_dados.utils_crianca import (
 from .codigos_cbo import *
 
 
-# from utils import ler_dados_raw,escrever_dados_raw
+
 def ler_dados_raw(nome_parquet, columns=""):
 
     try:
@@ -1297,7 +1297,6 @@ def gerar_banco():
     )
 
 
-    # In[31]:
 
     classificacao_nutricional = (
         registros_com_peso_altura
@@ -1329,7 +1328,7 @@ def gerar_banco():
         )
     )
 
-    # In[32]:
+
 
     classificacao_final = processar_dados_nutricionais(classificacao_nutricional)
     classificacao_final = classificacao_final.select(
@@ -1344,7 +1343,6 @@ def gerar_banco():
     #        "descricao_classificacao"
     #    ]))
 
-    # ## Passo 9. Criar tabela pessoa final com todas as variáveis necessárias para próximas etapas de desenvolvimento do Painel
 
     # In[33]:
 
@@ -1463,7 +1461,8 @@ def gerar_banco():
 
     # In[35]:
 
-    tabela_crianca_final_v2 = tabela_crianca_final.with_columns(
+    tabela_crianca_final = tabela_crianca_final.with_columns(
+
         # ate 8 dias
         pl.when(pl.col("agg_dashboard_puericultura_ate_8_dias").is_null())
         .then(pl.when(pl.col("idade_em_dias") <= 8).then(99).otherwise(0))
