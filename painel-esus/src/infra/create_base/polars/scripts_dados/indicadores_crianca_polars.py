@@ -18,7 +18,6 @@ from src.infra.create_base.polars.scripts_dados.utils_crianca import (
 from .codigos_cbo import *
 
 
-# from utils import ler_dados_raw,escrever_dados_raw
 def ler_dados_raw(nome_parquet, columns=""):
 
     try:
@@ -1296,6 +1295,8 @@ def gerar_banco():
         )
     )
 
+    # In[30]:
+
 
     # In[31]:
 
@@ -1463,7 +1464,7 @@ def gerar_banco():
 
     # In[35]:
 
-    tabela_crianca_final_v2 = tabela_crianca_final.with_columns(
+    tabela_crianca_final = tabela_crianca_final.with_columns(
         # ate 8 dias
         pl.when(pl.col("agg_dashboard_puericultura_ate_8_dias").is_null())
         .then(pl.when(pl.col("idade_em_dias") <= 8).then(99).otherwise(0))
