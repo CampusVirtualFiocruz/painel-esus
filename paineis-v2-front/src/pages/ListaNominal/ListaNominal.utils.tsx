@@ -121,6 +121,10 @@ export const columns = ({ handleClick, condicao }: any) => {
     });
   }
 
+  if (condicao === "Infantil") {
+    baseColumns.splice(1, 1);
+  }
+
   if (condicao === "Bucal") {
     baseColumns.push({
       name: "identidadeGenero",
@@ -152,7 +156,6 @@ export const columns = ({ handleClick, condicao }: any) => {
 };
 
 export const Footer = ({ pathToReport, condicao, id, recorte }: any) => {
-  
   let recorteQuery = '';
   if (recorte != undefined || recorte != null) {
     recorteQuery=`?recorte=${recorte}`;
@@ -163,12 +166,14 @@ export const Footer = ({ pathToReport, condicao, id, recorte }: any) => {
         <p>* Nome Social</p>
       </div>
       <div className="legend-icons">
-        <p>
-          <span className="iconCircle iconGestante" title="Alertas">
-            G
-          </span>
-          Gestantes/Idade Gestacional
-        </p>
+        {condicao !== "Infantil" && (
+          <p>
+            <span className="iconCircle iconGestante" title="Alertas">
+              G
+            </span>
+            Gestantes/Idade Gestacional
+          </p>
+        )}
         <p>
           <span className="iconCircle iconAlerta ms-2">!</span>
           Pendências/Alertas

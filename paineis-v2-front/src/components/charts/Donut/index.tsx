@@ -193,6 +193,11 @@ export function Donut(props: DonutChart) {
           rangedLegend={props?.config.rangedLegend}
         />
       )}
+      {props?.config?.subtitle && (
+        <div className="subtitle">
+          <span>{props?.config?.subtitle}</span>
+        </div>
+      )}
     </div>
   );
 }

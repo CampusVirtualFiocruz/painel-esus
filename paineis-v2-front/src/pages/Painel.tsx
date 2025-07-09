@@ -228,6 +228,7 @@ export function Painel() {
                     <h4 className="text-center">Cidadãos Cadastrados</h4>
                     <span>{formataNumero(dadosPainel?.total)}</span>
                   </div>
+                  <div className="mx-2" style={{ height: '100px', width: '1px', backgroundColor: '#FFFFFF' }} />
                   <div className="w-50 d-flex flex-column align-items-center justify-content-center">
                     <Tooltip>
                       <TooltipContent className="Tooltip">
@@ -345,7 +346,7 @@ export function Painel() {
                     />
                     <span>{formataNumero(dadosPainel?.gender.masculino)}</span>
                   </div>
-
+                  <div className="mx-2" style={{ height: '100px', width: '1px', backgroundColor: '#FFFFFF' }} />          
                   <div className="d-flex flex-column align-items-center ms-4 me-2">
                     <img
                       className="my-2 force-white"
@@ -527,7 +528,7 @@ export function Painel() {
           </div>
           <div className="my-5">
             {id ? (
-              <Button onClick={handleToPainelMunicipio}>
+              <Button kind="primary" onClick={handleToPainelMunicipio}>
                 Visualizar dados do painel do Município
               </Button>
             ) : (

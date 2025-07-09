@@ -189,6 +189,7 @@ export const reportCharts: any = [
       "infantil-consumo-alimentar-avaliado": {
         Chart: Donut,
         config: {
+          subtitle: content?.["infantil-nota-consumo-alimentar-avaliado"],
           halfDonut: true,
           formatterKind: "perc",
           radius: [30, 60],
