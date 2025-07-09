@@ -352,7 +352,15 @@ class CriancaNominalListAdapter:
         self.cpf = user["cpf"]
         self.cns = user["cns"]
         self.data_nascimento = user["data_nascimento"]
-        self.idade = user["idade"]
+        def calc_idade(user):
+            idade_em_dias = int(user["idade_em_dias"])
+            idade = int(user['idade'])
+            if idade_em_dias <= 30:
+                return f'{idade_em_dias} dia(s)'
+            if idade_em_dias > 30 and idade_em_dias < 365:
+                return f'{idade_em_dias//30} mes(es)'
+            return idade
+        self.idade = calc_idade(user)
         self.sexo = user["sexo"]
         self.equipe = user["nome_equipe"]
         self.microarea = user["micro_area"]
@@ -361,6 +369,7 @@ class CriancaNominalListAdapter:
         self.complemento = user["complemento"]
         self.cep = user["cep"]
         self.telefone = user["telefone"]
+        self.raca_cor = user["raca_cor"]
         self.possui_alertas = self.check_card_alert(user)
         self.registros = []
         self.registros.append(
@@ -510,6 +519,7 @@ class CriancaNominalListAdapter:
                 "tipoLogradouro": self.tipo_logradouro,
                 "cep": self.cep,
                 "telefone": self.telefone,
+                'racaCor': self.raca_cor,
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [
@@ -642,6 +652,7 @@ class IdosoNominalListAdapter:
     def to_dict(self):
         return dict(
             {
+                "racaCor": self.raca_cor,
                 "nome": self.nome,
                 "nomeSocialSelecionado": self.nome_social,
                 "zonaUrbana": self.tipo_localidade == "Urbana",
@@ -659,7 +670,6 @@ class IdosoNominalListAdapter:
                 "tipoLogradouro": self.tipo_logradouro,
                 "cep": self.cep,
                 "telefone": self.telefone,
-                "racaCor": self.raca_cor,
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [
