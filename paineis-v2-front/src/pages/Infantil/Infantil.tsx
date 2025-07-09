@@ -157,7 +157,7 @@ const Infantil = () => {
     <>
       <ReportWrapper
         title={"Desenvolvimento Infantil"}
-        subtitle="Crianças de até 36 meses"
+        subtitle="Crianças até 36 meses"
         footer={<ReportFooter chaveListaNominal="Infantil" equipe={equipe} />}
         footerNote={footerNote}
       >

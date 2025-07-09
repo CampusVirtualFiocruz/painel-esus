@@ -92,7 +92,7 @@ const ListaNominal = () => {
 
   const footerInfo =
     condicao === "Infantil"
-      ? "¹ Crianças que ainda não atingiram idade mínima para inclusão no critério correspondente às diretrizes preconizadas pelo Ministério da Saúde"
+      ? "Não se aplica: Crianças que ainda não atingiram idade mínima para inclusão no critério correspondente às diretrizes preconizadas pelo Ministério da Saúde"
       : undefined;
 
   return (
