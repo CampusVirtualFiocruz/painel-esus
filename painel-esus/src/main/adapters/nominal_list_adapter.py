@@ -407,14 +407,14 @@ class CriancaNominalListAdapter:
                 tipo_alerta="odonto_ate_12m",
             )
         )
-        # self.registros.append(
-        #     AlertRecord(
-        #         data=self.get_yes_no_data(user, 'agg_card_odonto_12a24m'),
-        #         exibir_alerta=self.check_alert(user, 'agg_card_odonto_12a24m'),
-        #         descricao="Número de consultas odontológicas até os primeiros 24 meses de vida:",
-        #         tipo_alerta="odonto_12a24m",
-        #     )
-        # )
+        self.registros.append(
+            AlertRecord(
+                data=self.convert_nan(user["num_odonto_ate24m"]),
+                exibir_alerta=self.check_alert(user, "agg_card_odonto_12a24m"),
+                descricao="Número de consultas odontológicas até os primeiros 24 meses de vida:",
+                tipo_alerta="odonto_12a24m",
+            )
+        )
         self.registros.append(
             AlertRecord(
                 data=self.get_numeric_data(user, "total_peso_altura"),
@@ -456,7 +456,7 @@ class CriancaNominalListAdapter:
             return "Não se aplica"
 
     def convert_nan(self, dt):
-        if math.isnan(dt):
+        if dt is None or math.isnan(dt):
             return 0
         return dt
 
@@ -481,7 +481,7 @@ class CriancaNominalListAdapter:
         return (
             user["agg_card_puericultura_ate_8_dias"] == 0
             or user["agg_card_puericultura_9_consultas_ate_2_anos"] == 0
-            or user["agg_card_lista_nominal_9_peso_altura"] == 0
+            or user["agg_card_9_peso_altura"] == 0
             or user["agg_card_visita_acs_ate_30d"] == 0
             or user["agg_card_visita_acs_ate_6m"] == 0
             or user["agg_card_odonto_ate_12m"] == 0

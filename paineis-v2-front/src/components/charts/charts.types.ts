@@ -87,6 +87,7 @@ export type PieChart = PercentualChart;
 export type ProgressListChart = PercentualChart;
 export type DonutChart = PercentualChart & {
   config?: generalConfigs & {
+    subtitle?: string;
     radius?: number | string;
     radiusStart?: number | string;
     halfDonut?: boolean;
