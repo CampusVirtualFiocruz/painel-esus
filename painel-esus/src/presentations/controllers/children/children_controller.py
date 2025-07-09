@@ -150,7 +150,7 @@ class ChildrenController:
         cpf = None
         nome_unidade_saude = None
         sort = None
-        q: str = None
+        q = None
         path_params = getattr(request, "path_params", {})
         query_params = getattr(request, "query_params", {})
 
