@@ -11,9 +11,11 @@ from datetime import date, datetime
 import polars as pl
 from dateutil.relativedelta import relativedelta
 from src.env.conf import getenv
+from src.infra.create_base.polars.scripts_dados.utils_crianca import (
+    processar_dados_nutricionais,
+)
 
 from .codigos_cbo import *
-from .utils_crianca import processar_dados_nutricionais
 
 
 # from utils import ler_dados_raw,escrever_dados_raw
@@ -1294,9 +1296,6 @@ def gerar_banco():
         )
     )
 
-    # In[30]:
-
-    from utils_crianca import processar_dados_nutricionais
 
     # In[31]:
 
