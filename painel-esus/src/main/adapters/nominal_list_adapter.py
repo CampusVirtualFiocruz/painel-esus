@@ -459,7 +459,8 @@ class CriancaNominalListAdapter:
         ):
             return "Não se aplica"
         else:
-            return f'{self.select_column(user, "nu_peso_recentes")} kg/{self.select_column(user, "nu_altura_recentes")} cm'
+            descricao = self.select_column(user, "descricao_classificacao")
+            return f'{self.select_column(user, "nu_peso_recentes")} kg/{self.select_column(user, "nu_altura_recentes")} cm ({descricao})'
 
     def convert_nan(self, dt):
         if dt is None or math.isnan(dt):
