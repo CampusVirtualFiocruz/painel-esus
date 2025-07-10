@@ -353,13 +353,8 @@ class CriancaNominalListAdapter:
         self.cns = user["cns"]
         self.data_nascimento = user["data_nascimento"]
         def calc_idade(user):
-            idade_em_dias = int(user["idade_em_dias"])
-            idade = int(user['idade'])
-            if idade_em_dias <= 30:
-                return f'{idade_em_dias} dia(s)'
-            if idade_em_dias > 30 and idade_em_dias < 365:
-                return f'{idade_em_dias//30} mes(es)'
-            return idade
+            return user['idade_mes_ano']
+
         self.idade = calc_idade(user)
         self.sexo = user["sexo"]
         self.equipe = user["nome_equipe"]
@@ -463,6 +458,8 @@ class CriancaNominalListAdapter:
             and self.select_column(user, "nu_altura_recentes") is None
         ):
             return "Não se aplica"
+        else:
+            return f'{self.select_column(user, "nu_peso_recentes")} kg/{self.select_column(user, "nu_altura_recentes")} cm'
 
     def convert_nan(self, dt):
         if dt is None or math.isnan(dt):
