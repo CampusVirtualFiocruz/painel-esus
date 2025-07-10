@@ -93,8 +93,18 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           script: |
             cd livramento-hml
+            echo "PARANDO SERVICOS DO SWARM"
+            docker stack rm painel-esus-network
+
+            echo "PARANDO CONTAINERS"
+            docker stop $(docker ps -a -q)
+
+            echo "REMOVENDO CONTAINERS"
+            docker rm $(docker ps -a -q)
+
             echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
             sudo rm docker-compose.yml || true
+            
             cat <<EOF > docker-compose.yml
               version: "3.3"
               services:
@@ -130,14 +140,13 @@ jobs:
                   external:
                     name: painel-esus-network                      
             EOF
-            cat docker-compose.yml
+            
             export DOCKER_IMAGE='painelsaudefiocruz/painel-esus:${{ env.RELEASE_VERSION }}'
-            docker stop $(docker ps -a -q)
-            docker rm $(docker ps -a -q)
-            docker images -q | xargs docker rmi
-            docker pull painelsaudefiocruz/painel-esus:${{ env.RELEASE_VERSION }}
+            
             echo 'DOCKER PULL'
-            echo 'LIMPOU IMAGENS OBSOLETAS'
+            docker pull painelsaudefiocruz/painel-esus:${{ env.RELEASE_VERSION }}
+            
+            echo 'INICIANDO DEPLOY'
             docker stack deploy -c docker-compose.yml --resolve-image changed painel-esus-network
             echo 'DEPLOY SWARM'
 
