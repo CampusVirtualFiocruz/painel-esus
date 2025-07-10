@@ -66,30 +66,32 @@ export const CardListaNominal = ({
         </div>
         <div className="address">
           <p>
+            <>
+              {" "}
+              <strong>Idade:</strong> {item?.idade} | DN:{" "}
+              {item?.dataNascimento
+                ? moment.utc(item.dataNascimento).format("DD/MM/YYYY")
+                : ""}
+              <br />
+            </>
             <strong>CPF:</strong> {item?.cpf} <br />
-            <strong>CNS:</strong> {item?.cns} <br />
-            <strong>Data de nascimento:</strong>{" "}
-            {item?.dataNascimento
-              ? moment.utc(item.dataNascimento).format("DD/MM/YYYY")
-              : "-"}
-            <br />
-            {item?.tipoLogradouro && (
+            {item?.cns && (
               <>
-                <strong>Tipo Logradouro: </strong>
-                {item.tipoLogradouro}
-                <br />
+                {" "}
+                <strong>CNS:</strong> {item?.cns} <br />
               </>
             )}
-            <strong>Endereço:</strong>{" "}
+            <strong>Endereço:</strong> {item.tipoLogradouro} &nbsp;
             {item?.endereco && item.endereco !== "None None"
               ? capitalizeName(item.endereco).replace("S/n", "S/N")
               : "-"}{" "}
+            | CEP: {item?.cep ? item?.cep : "-"}
             <br />
             <strong>Complemento:</strong>{" "}
             {item?.complemento ? capitalizeName(item?.complemento) : "-"} <br />
-            <strong>CEP:</strong> {item?.cep ? item?.cep : "-"} <br />
             <strong>Telefone de contato:</strong>{" "}
-            {item?.telefone ? item?.telefone : "-"}{" "}
+            {item?.telefone ? item?.telefone : "-"} <br />
+            <br />
           </p>
         </div>
         {Boolean(config?.alertBeforeDetails) ? (
@@ -205,7 +207,7 @@ export const CardListaNominal = ({
               marginTop: "10px",
               padding: "20px",
               backgroundColor: "#ECF3F9",
-              borderRadius: "8px"
+              borderRadius: "8px",
             }}
           >
             {config?.footerInfo}
