@@ -83,7 +83,7 @@ const ListaNominal = () => {
   const alertMessage = `
     Os sinais de alertas correspondem à não
     conformidade com as orientações de boas
-    práticas, dentro de um período de ${condicao === "Bucal" ? 24 : 12} meses,
+    práticas, dentro de um período de ${condicao === "Infantil" ? 36 : condicao === "Bucal" ? 24 : 12} meses,
     preconizadas pelo Ministério da Saúde
   `;
 
