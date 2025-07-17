@@ -25,14 +25,14 @@ jobs:
         id: extract_version
         run: |
           if [[ "${GITHUB_REF}" == refs/heads/release/* ]]; then
-            TAG_SUFFIX="hml"
-            RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
-          else
-            TAG_SUFFIX="beta"
-            RELEASE_VERSION="${GITHUB_REF#refs/heads/beta/}"
-          fi
-          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
-          echo "DOCKER_TAG=painelsaudefiocruz/painel-esus:${RELEASE_VERSION}-${TAG_SUFFIX}" >> $GITHUB_ENV
+                TAG_SUFFIX="hml"
+                RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
+              else
+                TAG_SUFFIX="beta"
+                RELEASE_VERSION="${GITHUB_REF#refs/heads/demo/}"
+              fi
+              echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+              echo "DOCKER_TAG=painelsaudefiocruz/painel-esus:${RELEASE_VERSION}-${TAG_SUFFIX}" >> $GITHUB_ENV
  
       - name: Build React project
         working-directory: ./paineis-v2-front
