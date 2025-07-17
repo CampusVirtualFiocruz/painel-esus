@@ -121,7 +121,8 @@ jobs:
             fi          
 
             cd ${DIRECTORY}
-
+            pwd 
+            ls -la
             echo "PORTA DEFINIDA: $APP_PORT"
             echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
             sudo rm docker-compose.yml || true
