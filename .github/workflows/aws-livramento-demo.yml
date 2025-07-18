@@ -95,13 +95,25 @@ jobs:
           if [[ "${GITHUB_REF}" == refs/heads/release/* ]]; then
                 TAG_SUFFIX="hml"
                 RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
+                APP_PORT=5003
+                DIRECTORY=livramento-hml
+                MOCK='False'
+                DOCKER_STACK=painel-esus-hml
               else
                 TAG_SUFFIX="demo"
                 RELEASE_VERSION="${GITHUB_REF#refs/heads/demo/}"
+                APP_PORT=5004
+                DIRECTORY=livramento-demo
+                MOCK='True'
+                DOCKER_STACK=painel-esus-demo
               fi
               echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
               echo "DOCKER_TAG=painelsaudefiocruz/painel-esus:${RELEASE_VERSION}-${TAG_SUFFIX}" >> $GITHUB_ENV
               echo "TAG_SUFFIX=$TAG_SUFFIX" >> $GITHUB_ENV
+              echo "APP_PORT=$APP_PORT" >> $GITHUB_ENV
+              echo "DIRECTORY=$DIRECTORY" >> $GITHUB_ENV
+              echo "MOCK=$MOCK" >> $GITHUB_ENV
+              echo "DOCKER_STACK=$DOCKER_STACK" >> $GITHUB_ENV
          
       - name: Deploy Docker Swarm
         uses: appleboy/ssh-action@master
@@ -110,23 +122,10 @@ jobs:
           key: ${{secrets.AWS_KEY}}
           username: ${{ secrets.AWS_USERNAME }}
           script: |
-            echo 'DEFININDO PORTA COM BASE NA BRANCH'
-            if [[ "${GITHUB_REF}" == refs/heads/release/* ]]; then
-              APP_PORT=5003
-              DIRECTORY=livramento-hml
-              MOCK='False'
-              DOCKER_STACK=painel-esus-hml
-            else
-              APP_PORT=5004
-              DIRECTORY=livramento-demo
-              MOCK='True'
-              DOCKER_STACK=painel-esus-demo
-            fi          
-
-            cd ${DIRECTORY}
+            cd ${{ env.DIRECTORY }}
             pwd 
             ls -la
-            echo "PORTA DEFINIDA: $APP_PORT"
+            echo "PORTA DEFINIDA: ${{ env.APP_PORT }}"
             echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
             sudo rm docker-compose.yml || true
 
@@ -157,9 +156,9 @@ jobs:
                   RELOAD_BASE_SCHELDULE_WEEKLY: 'True'
                   LOG_API: https://painel-logs.painelsaude.info
                   APPLICATION_VERSION: ${{ env.RELEASE_VERSION }}
-                  MOCK: '${MOCK}'
+                  MOCK: '${{ env.MOCK }}'
                 ports:
-                  - ${APP_PORT}:5001
+                  - ${{ env.APP_PORT }}:5001
             networks:
               default:
                 external:
@@ -167,15 +166,15 @@ jobs:
             EOF
             cat docker-compose.yml
             export DOCKER_IMAGE='${{ env.DOCKER_TAG }}'
-            docker stack rm ${DOCKER_STACK}
+            docker stack rm ${{ env.DOCKER_STACK }}
 
             docker images -q | xargs docker rmi
 
-            echo "IMAGEM DOCKER: $DOCKER_TAG"
+            echo "IMAGEM DOCKER: ${{ env.DOCKER_TAG }}"
             docker pull ${{ env.DOCKER_TAG }}
             echo 'DOCKER PULL'
             echo 'LIMPOU IMAGENS OBSOLETAS'
-            docker stack deploy -c docker-compose.yml --resolve-image changed ${DOCKER_STACK}
+            docker stack deploy -c docker-compose.yml --resolve-image changed ${{ env.DOCKER_STACK }}
             echo 'DEPLOY SWARM'
 
 
