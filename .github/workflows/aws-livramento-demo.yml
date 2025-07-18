@@ -114,10 +114,12 @@ jobs:
               APP_PORT=5003
               DIRECTORY=livramento-hml
               MOCK='False'
+              DOCKER_STACK=painel-esus-network
             else
               APP_PORT=5004
               DIRECTORY=livramento-demo
               MOCK='True'
+              DOCKER_STACK=painel-esus-demo
             fi          
 
             cd ${DIRECTORY}
@@ -130,7 +132,7 @@ jobs:
             cat <<EOF > docker-compose.yml
             version: "3.3"
             services:
-              painel_esus:
+              painel-esus-${TAG_SUFFIX}:
                 image: "${{ env.DOCKER_TAG }}"
                 environment:
                   RELOAD_BASE_SCHELDULE: '4:00'
@@ -154,7 +156,7 @@ jobs:
                   RELOAD_BASE_SCHELDULE_WEEKLY: 'True'
                   LOG_API: https://painel-logs.painelsaude.info
                   APPLICATION_VERSION: ${{ env.RELEASE_VERSION }}
-                  MOCK: ${MOCK}
+                  MOCK: '${MOCK}'
                 ports:
                   - ${APP_PORT}:5001
             networks:
@@ -162,9 +164,16 @@ jobs:
                 external:
                   name: painel-esus-network
             EOF
-
-                  echo "docker-compose.yml:"
-                  cat docker-compose.yml
+            cat docker-compose.yml
+            export DOCKER_IMAGE='${{ env.DOCKER_TAG }}'
+            docker stop $(docker ps -a -q)
+            docker rm $(docker ps -a -q)
+            docker images -q | xargs docker rmi
+            docker pull ${{ env.DOCKER_TAG }}
+            echo 'DOCKER PULL'
+            echo 'LIMPOU IMAGENS OBSOLETAS'
+            docker stack deploy -c docker-compose.yml --resolve-image changed ${DOCKER_STACK}
+            echo 'DEPLOY SWARM'
 
 
       # Stop VPN connection using stored client ID (always run, even on failure)
