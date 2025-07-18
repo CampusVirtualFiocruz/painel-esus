@@ -2,7 +2,7 @@ name: Build and Deploy to Private Docker Hub
 
 on:
   push:
-    branches: [release/*]
+    branches: [release/*, demo/*]
 
 jobs:
   build:
@@ -23,8 +23,17 @@ jobs:
 
       - name: Extract version from branch name
         id: extract_version
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
-        
+        run: |
+          if [[ "${GITHUB_REF}" == refs/heads/release/* ]]; then
+            TAG_SUFFIX="hml"
+            RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
+          else
+            TAG_SUFFIX="beta"
+            RELEASE_VERSION="${GITHUB_REF#refs/heads/}"
+          fi
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+          echo "DOCKER_TAG=painelsaudefiocruz/painel-esus:${RELEASE_VERSION}-${TAG_SUFFIX}" >> $GITHUB_ENV
+ 
       - name: Build React project
         working-directory: ./paineis-v2-front
         run: |
@@ -43,14 +52,15 @@ jobs:
           ${{ vars.ENV_BACK }}
           EOF
 
+
       - name: Build Docker image
-        run: docker build -t painelsaudefiocruz/painel-esus:${{ env.RELEASE_VERSION }} .
+        run: docker build -t ${{ env.DOCKER_TAG }} .
 
       - name: Log in to Docker Hub
         run: echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Push Docker image to Docker Hub
-        run: docker push painelsaudefiocruz/painel-esus:${{ env.RELEASE_VERSION }}
+        run: docker push ${{ env.DOCKER_TAG }}
 
   conncet-vpn-ssh-aws:
     needs: build
@@ -85,31 +95,33 @@ jobs:
         run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
       - name: Deploy Docker Swarm
-
         uses: appleboy/ssh-action@master
         with:
           host: ${{secrets.AWS_HOST}}
           key: ${{secrets.AWS_KEY}}
           username: ${{ secrets.AWS_USERNAME }}
           script: |
-            cd livramento-hml
-            echo "PARANDO SERVICOS DO SWARM"
-            docker stack rm painel-esus-network
+            echo 'DEFININDO PORTA COM BASE NA BRANCH'
+            if [[ "${GITHUB_REF}" == refs/heads/release/* ]]; then
+              APP_PORT=5003
+              DIRECTORY=livramento-hml
+              MOCK='False'
+            else
+              APP_PORT=5004
+              DIRECTORY=livramento-demo
+              MOCK='True'
+            fi          
+            cd \${DIRECTORY}
 
-            echo "PARANDO CONTAINERS"
-            docker stop $(docker ps -a -q)
-
-            echo "REMOVENDO CONTAINERS"
-            docker rm $(docker ps -a -q)
-
+            echo "PORTA DEFINIDA: $APP_PORT"
             echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
             sudo rm docker-compose.yml || true
-            
+
             cat <<EOF > docker-compose.yml
               version: "3.3"
               services:
                 painel_esus:
-                  image: "painelsaudefiocruz/painel-esus:${{ env.RELEASE_VERSION }}"
+                  image: "${{ env.DOCKER_TAG }}"
                   environment:
                     RELOAD_BASE_SCHELDULE: '4:00'
                     DB_USER: '${{ secrets.DATABASE_USER }}'
@@ -132,23 +144,17 @@ jobs:
                     RELOAD_BASE_SCHELDULE_WEEKLY: 'True'
                     LOG_API: https://painel-logs.painelsaude.info
                     APPLICATION_VERSION: ${{ env.RELEASE_VERSION }}
-                    MOCK: 'False'
+                    MOCK: \${MOCK}
                   ports:
-                    - 5003:5001
+                    - \${APP_PORT}:5001
               networks:
                 default:
                   external:
-                    name: painel-esus-network                      
+                    name: painel-esus-network
             EOF
-            
-            export DOCKER_IMAGE='painelsaudefiocruz/painel-esus:${{ env.RELEASE_VERSION }}'
-            
-            echo 'DOCKER PULL'
-            docker pull painelsaudefiocruz/painel-esus:${{ env.RELEASE_VERSION }}
-            
-            echo 'INICIANDO DEPLOY'
-            docker stack deploy -c docker-compose.yml --resolve-image changed painel-esus-network
-            echo 'DEPLOY SWARM'
+
+            echo "docker-compose.yml:"
+            cat docker-compose.yml
 
       # Stop VPN connection using stored client ID (always run, even on failure)
       - name: Stop VPN Connection Manually
