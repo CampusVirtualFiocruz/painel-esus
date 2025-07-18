@@ -54,5 +54,5 @@ def anonymize_data_frame( data):
     ]
     for col in columns:
         if col in data:
-            data[col] = anonymize_data(data[col])
+            data[col] = anonymize_data(str(data[col]))
     return data

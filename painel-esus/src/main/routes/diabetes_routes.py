@@ -226,7 +226,7 @@ def get_nominal_list_download(cnes=None):
     response = None
 
     try:
-        _validation(request.args.to_dict(), schema)
+        # _validation(request.args.to_dict(), schema)
         response = request_adapter(
             request, diabetes_dashboard_get_nominal_list_download()
         )

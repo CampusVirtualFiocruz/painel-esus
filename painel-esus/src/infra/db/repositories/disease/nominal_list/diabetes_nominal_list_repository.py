@@ -46,7 +46,7 @@ class DiabetesNominalListRepository:
         pessoas_sql = get_diabetes_base_export(cnes, equipe)
 
         result= con.sql(pessoas_sql).df()
-        response = response.apply(anonymize_data_frame, axis=1)
+        result = result.apply(anonymize_data_frame, axis=1)
         return result
 
     def find_by_nome(self, nome: str):
