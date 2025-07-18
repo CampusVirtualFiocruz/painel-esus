@@ -5,6 +5,7 @@ from src.domain.entities.user_payload import UserPayload
 from src.errors.logging import logging
 from src.infra.bridge_provider.login_bridge import LoginBridgeRepository
 from src.infra.db.repositories.login_adm_repository import LoginAdmRepository
+from src.infra.db.repositories.login_demo_repository import LoginDemoRepository
 from src.infra.db.repositories.login_repository import (
     LoginRepository as LoginUserRepository,
 )
@@ -14,6 +15,7 @@ from src.presentations.http_types import HttpRequest, HttpResponse
 
 def login_composer(request: HttpRequest):
     providers_repositories = [
+        LoginDemoRepository(),
         LoginAdmRepository(),
         LoginBridgeRepository(),
         LoginUserRepository(),

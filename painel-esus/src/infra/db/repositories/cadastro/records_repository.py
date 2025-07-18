@@ -1,8 +1,10 @@
 # pylint: disable=R0913,W0611
-import duckdb
 import json
+
+import duckdb
 import pandas as pd
 from sqlalchemy import and_, or_
+from src.env.conf import getenv
 from src.infra.db.entities.equipes import Equipes
 from src.infra.db.entities.pessoas import Pessoas
 from src.infra.db.repositories.cadastro.sqls import (
@@ -18,41 +20,8 @@ from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import (
     get_pessoas,
     get_pessoas_sql,
 )
-from src.infra.db.settings.connection_local import DBConnectionHandler
-from src.env.conf import getenv
-from src.main.adapters.nominal_list_adapter import mock_word
+from src.infra.db.repositories.utils.str_utils import anonymize_data_frame
 
-columns = [
-    Pessoas.co_cidadao,
-    Pessoas.raca_cor,
-    Pessoas.cpf,
-    Pessoas.cns,
-    Pessoas.nome,
-    Pessoas.nome_social,
-    Pessoas.data_nascimento,
-    Pessoas.idade,
-    Pessoas.sexo,
-    Pessoas.identidade_genero,
-    Pessoas.telefone,
-    Pessoas.ultima_atualizacao_cidadao,
-    Pessoas.diferenca_ultima_atualizacao_cidadao,
-    Pessoas.ultima_atualizacao_fcd,
-    Pessoas.diferenca_ultima_atualizacao_fcd,
-    Pessoas.tipo_endereco,
-    Pessoas.endereco,
-    Pessoas.complemento,
-    Pessoas.numero,
-    Pessoas.bairro,
-    Pessoas.cep,
-    Pessoas.tipo_localidade,
-    Pessoas.acompanhamento,
-    Pessoas.status_cadastro,
-    Pessoas.alerta_status_cadastro,
-    Pessoas.alerta,
-    Equipes.nome_unidade_saude,
-    Equipes.nome_equipe,
-    Equipes.micro_area,
-]
 
 class RecordsRepository:
     def __init__(self):
@@ -119,13 +88,13 @@ class RecordsRepository:
     ):
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
-        
+
         con = duckdb.connect()
         pessoas_sql = get_pessoas_sql()
 
         conditions = []
         or_conditions = []
-        
+
         order = ''
         order_list = []
         mapped_columns = {
@@ -171,7 +140,7 @@ class RecordsRepository:
             for s in sort:
                 filter = json.loads(s)
                 if filter["field"] not in mapped_columns: continue
-                
+
                 direction = filter['direction'] if 'direction' in filter else'asc'
                 columns = mapped_columns[filter["field"]]
                 order_list.append( f'{columns} {direction}')
@@ -180,7 +149,7 @@ class RecordsRepository:
         if len(order_list)>0:
             order = 'order by '
             order += ", ".join(order_list)
-            
+
         users = con.sql(
             pessoas_sql + sql_where + f"  {order} LIMIT {limit} OFFSET {offset} "
         ).df()
@@ -241,19 +210,5 @@ class RecordsRepository:
 
         con = duckdb.connect()
         response = con.sql(sql).df()
-        if self.mock_data:
-            def parse(x):
-                x['cpf'] = mock_word(x['cpf'], 2)
-                x['cns'] = mock_word(x['cns'], 2)
-                x['nome'] = mock_word(x['nome'], 3, True)
-                x['telefone'] = mock_word(x['telefone'], 2)
-                x['endereco'] = mock_word(x['endereco'], 2)
-                x['numero'] = mock_word(x['numero'], 2)
-                x['cep'] = mock_word(x['cep'], 2)
-                x['complemento'] = mock_word(x['complemento'], 2)
-                x['bairro'] = mock_word(x['bairro'], 2)
-                x['nome_unidade_saude'] = mock_word(x['nome_unidade_saude'], 2)
-                x['nome_equipe'] = mock_word(x['nome_equipe'], 2)
-                return x            
-            response=response.apply(parse, axis=1)
+        response = response.apply(anonymize_data_frame, axis=1)
         return response
