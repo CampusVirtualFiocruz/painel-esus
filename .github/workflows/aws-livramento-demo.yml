@@ -166,9 +166,11 @@ jobs:
             EOF
             cat docker-compose.yml
             export DOCKER_IMAGE='${{ env.DOCKER_TAG }}'
-            docker stop $(docker ps -a -q)
-            docker rm $(docker ps -a -q)
+            docker stack rm ${DOCKER_STACK}
+
             docker images -q | xargs docker rmi
+
+            echo "IMAGEM DOCKER: $DOCKER_TAG"
             docker pull ${{ env.DOCKER_TAG }}
             echo 'DOCKER PULL'
             echo 'LIMPOU IMAGENS OBSOLETAS'
