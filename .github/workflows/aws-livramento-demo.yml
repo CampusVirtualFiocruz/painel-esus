@@ -25,14 +25,14 @@ jobs:
         id: extract_version
         run: |
           if [[ "${GITHUB_REF}" == refs/heads/release/* ]]; then
-            TAG_SUFFIX="hml"
-            RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
-          else
-            TAG_SUFFIX="beta"
-            RELEASE_VERSION="${GITHUB_REF#refs/heads/}"
-          fi
-          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
-          echo "DOCKER_TAG=painelsaudefiocruz/painel-esus:${RELEASE_VERSION}-${TAG_SUFFIX}" >> $GITHUB_ENV
+                TAG_SUFFIX="hml"
+                RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
+              else
+                TAG_SUFFIX="demo"
+                RELEASE_VERSION="${GITHUB_REF#refs/heads/demo/}"
+              fi
+              echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+              echo "DOCKER_TAG=painelsaudefiocruz/painel-esus:${RELEASE_VERSION}-${TAG_SUFFIX}" >> $GITHUB_ENV
  
       - name: Build React project
         working-directory: ./paineis-v2-front
@@ -89,11 +89,20 @@ jobs:
         run: |
           pritunl-client list -j | jq 'sort_by(.name) | .[0] | { "Profile Name": .name, "Client Address": .client_address }'
           # Show the profile name and client address
-
       - name: Extract version from branch name
         id: extract_version
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
-
+        run: |
+          if [[ "${GITHUB_REF}" == refs/heads/release/* ]]; then
+                TAG_SUFFIX="hml"
+                RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
+              else
+                TAG_SUFFIX="demo"
+                RELEASE_VERSION="${GITHUB_REF#refs/heads/demo/}"
+              fi
+              echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+              echo "DOCKER_TAG=painelsaudefiocruz/painel-esus:${RELEASE_VERSION}-${TAG_SUFFIX}" >> $GITHUB_ENV
+              echo "TAG_SUFFIX=$TAG_SUFFIX" >> $GITHUB_ENV
+         
       - name: Deploy Docker Swarm
         uses: appleboy/ssh-action@master
         with:
@@ -106,55 +115,69 @@ jobs:
               APP_PORT=5003
               DIRECTORY=livramento-hml
               MOCK='False'
+              DOCKER_STACK=painel-esus-hml
             else
               APP_PORT=5004
               DIRECTORY=livramento-demo
               MOCK='True'
+              DOCKER_STACK=painel-esus-demo
             fi          
-            cd \${DIRECTORY}
 
+            cd ${DIRECTORY}
+            pwd 
+            ls -la
             echo "PORTA DEFINIDA: $APP_PORT"
             echo 'REMOVENDO ANTIGO DOCKER COMPOSE: '
             sudo rm docker-compose.yml || true
 
             cat <<EOF > docker-compose.yml
-              version: "3.3"
-              services:
-                painel_esus:
-                  image: "${{ env.DOCKER_TAG }}"
-                  environment:
-                    RELOAD_BASE_SCHELDULE: '4:00'
-                    DB_USER: '${{ secrets.DATABASE_USER }}'
-                    DB_PASSWORD: '${{ secrets.DATABASE_PASSWORD }}'
-                    DB_HOST: '${{ secrets.DATABASE_HOST  }}'
-                    DB_PORT: '${{ secrets.DATABASE_PORT }}'
-                    DB_DATABASE: '${{ secrets.DATABASE_NAME }}'
-                    CIDADE_IBGE: 2508505
-                    ESTADO: 'FC'
-                    ADMIN_USERNAME: '${{ secrets.ADMIN_USERNAME }}'
-                    ADMIN_PASSWORD: '${{ secrets.ADMIN_PASSWORD }}'
-                    POPULATION: 20000
-                    SECRET_TOKEN: 111111111111111111111
-                    PASSWORD_SALT: 'painel'
-                    BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
-                    ENV: linux
-                    GENERATE_BASE: 'True'
-                    CHUNK_SIZE: 100000
-                    POLARS_SKIP_CPU_CHECK: 'True'
-                    RELOAD_BASE_SCHELDULE_WEEKLY: 'True'
-                    LOG_API: https://painel-logs.painelsaude.info
-                    APPLICATION_VERSION: ${{ env.RELEASE_VERSION }}
-                    MOCK: \${MOCK}
-                  ports:
-                    - \${APP_PORT}:5001
-              networks:
-                default:
-                  external:
-                    name: painel-esus-network
+            version: "3.3"
+            services:
+              painel-esus-${{ env.TAG_SUFFIX }}:
+                image: "${{ env.DOCKER_TAG }}"
+                environment:
+                  RELOAD_BASE_SCHELDULE: '4:00'
+                  DB_USER: '${{ secrets.DATABASE_USER }}'
+                  DB_PASSWORD: '${{ secrets.DATABASE_PASSWORD }}'
+                  DB_HOST: '${{ secrets.DATABASE_HOST  }}'
+                  DB_PORT: '${{ secrets.DATABASE_PORT }}'
+                  DB_DATABASE: '${{ secrets.DATABASE_NAME }}'
+                  CIDADE_IBGE: 2508505
+                  ESTADO: 'FC'
+                  ADMIN_USERNAME: '${{ secrets.ADMIN_USERNAME }}'
+                  ADMIN_PASSWORD: '${{ secrets.ADMIN_PASSWORD }}'
+                  POPULATION: 20000
+                  SECRET_TOKEN: 111111111111111111111
+                  PASSWORD_SALT: 'painel'
+                  BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
+                  ENV: linux
+                  GENERATE_BASE: 'True'
+                  CHUNK_SIZE: 100000
+                  POLARS_SKIP_CPU_CHECK: 'True'
+                  RELOAD_BASE_SCHELDULE_WEEKLY: 'True'
+                  LOG_API: https://painel-logs.painelsaude.info
+                  APPLICATION_VERSION: ${{ env.RELEASE_VERSION }}
+                  MOCK: '${MOCK}'
+                ports:
+                  - ${APP_PORT}:5001
+            networks:
+              default:
+                external:
+                  name: painel-esus-network
             EOF
-
-            echo "docker-compose.yml:"
             cat docker-compose.yml
+            export DOCKER_IMAGE='${{ env.DOCKER_TAG }}'
+            docker stack rm ${DOCKER_STACK}
+
+            docker images -q | xargs docker rmi
+
+            echo "IMAGEM DOCKER: $DOCKER_TAG"
+            docker pull ${{ env.DOCKER_TAG }}
+            echo 'DOCKER PULL'
+            echo 'LIMPOU IMAGENS OBSOLETAS'
+            docker stack deploy -c docker-compose.yml --resolve-image changed ${DOCKER_STACK}
+            echo 'DEPLOY SWARM'
+
 
       # Stop VPN connection using stored client ID (always run, even on failure)
       - name: Stop VPN Connection Manually
