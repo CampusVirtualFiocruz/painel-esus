@@ -2,7 +2,7 @@ name: Build and Deploy Windows Service
 
 on:
   push:
-    branches: [isntalador/*]
+    branches: [instalador/*]
 
 jobs:
   build-frontend:
