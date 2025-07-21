@@ -8,17 +8,18 @@ import duckdb
 import pandas as pd
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from src.data.interfaces.city_information_repository import CityInformationRepository
+from src.env.conf import getenv
 from src.infra.db.entities.equipes import Equipes
 from src.infra.db.repositories.sqls import (
     CITY_INFORMATION,
-    UNITS_LIST,
     UNIT_LIST_WITH_PATIENTS,
+    UNITS_LIST,
 )
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
 )
-from src.env.conf import getenv
+
 
 class AlchemyEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -63,7 +64,7 @@ class CityInformationsRepository(CityInformationRepository):
         res = con.sql(UNITS_LIST).df()
         if self.mock_data:
             def parse(x):
-                x['no_unidade_saude'] = "Unidade de saude {}".format(x['co_seq_dim_unidade_saude'])
+                x['no_unidade_saude'] = "Unidade de saúde {}".format(x['co_seq_dim_unidade_saude'])
                 return x            
             res=res.apply(parse, axis=1)
         
@@ -74,7 +75,7 @@ class CityInformationsRepository(CityInformationRepository):
         res = con.sql(UNIT_LIST_WITH_PATIENTS).df()
         if self.mock_data:
             def parse(x):
-                x['no_unidade_saude'] = "Unidade de saude {}".format(x['co_seq_dim_unidade_saude'])
+                x['no_unidade_saude'] = "Unidade de saúde {}".format(x['co_seq_dim_unidade_saude'])
                 return x            
             res=res.apply(parse, axis=1)
         return res
@@ -99,7 +100,7 @@ class CityInformationsRepository(CityInformationRepository):
         result = con.sql(sql).df()
         if self.mock_data:
             def parse(x):
-                x['nome_unidade_saude'] = "Unidade de saude {}".format(x['codigo_unidade_saude'])
+                x['nome_unidade_saude'] = "Unidade de saúde {}".format(x['codigo_unidade_saude'])
                 x['nome_equipe'] = "Equipe {}".format(x['codigo_equipe'])
                 return x            
             result=result.apply(parse, axis=1)
