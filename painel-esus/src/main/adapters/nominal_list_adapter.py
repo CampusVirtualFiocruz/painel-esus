@@ -12,7 +12,15 @@ from src.infra.db.entities.crianca import Crianca
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.hipertensao_nominal import HipertensaoNominal
 from src.infra.db.entities.pessoas import Pessoas
-from src.infra.db.repositories.utils.str_utils import anonymize_data
+from src.infra.db.repositories.utils.str_utils import (
+    anonymize_data,
+    anonymize_data_address,
+    anonymize_data_cep,
+    anonymize_data_doc,
+    anonymize_data_equipe,
+    anonymize_data_name,
+    anonymize_data_nascimento,
+)
 
 
 def is_sequence(obj):
@@ -164,23 +172,23 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
     def to_dict(self):
         return dict(
             {
-                "nome": anonymize_data(self.nome),
-                "nomeSocialSelecionado": anonymize_data(self.nome_social),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": anonymize_data(self.cpf),
-                "cns": anonymize_data(self.cns),
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "diagnostico": self.diagnostico,
                 "sexo": self.sexo,
-                "equipe": anonymize_data(self.equipe),
+                "equipe": anonymize_data_equipe(self.equipe),
                 "microarea": anonymize_data(self.microarea),
-                "endereco": anonymize_data(self.endereco),
+                "endereco": anonymize_data_address(self.endereco),
                 "complemento": anonymize_data(self.complemento),
                 "tipoLogradouro": self.tipo_logradouro,
-                "cep": anonymize_data(self.cep),
+                "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
                 "detalhesCondicaoSaude": [
                     {
@@ -292,23 +300,23 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
     def to_dict(self):
         return dict(
             {
-                "nome": anonymize_data(self.nome),
-                "nomeSocialSelecionado": anonymize_data(self.nome_social),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": anonymize_data(self.cpf),
-                "cns": anonymize_data(self.cns),
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "diagnostico": self.diagnostico,
                 "sexo": self.sexo,
-                "equipe": anonymize_data(self.equipe),
+                "equipe": anonymize_data_equipe(self.equipe),
                 "microarea": anonymize_data(self.microarea),
-                "endereco": anonymize_data(self.endereco),
+                "endereco": anonymize_data_address(self.endereco),
                 "complemento": anonymize_data(self.complemento),
                 "tipoLogradouro": self.tipo_logradouro,
-                "cep": anonymize_data(self.cep),
+                "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
                 "detalhesCondicaoSaude": [
                     {
@@ -480,24 +488,24 @@ class CriancaNominalListAdapter:
     def to_dict(self):
         return dict(
             {
-                "nome": anonymize_data(self.nome),
-                "nomeSocialSelecionado": anonymize_data(self.nome_social),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": anonymize_data(self.cpf),
-                "cns": anonymize_data(self.cns),
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "sexo": self.sexo,
-                "equipe": anonymize_data(self.equipe),
+                "equipe": anonymize_data_equipe(self.equipe),
                 "microarea": anonymize_data(self.microarea),
-                "endereco": anonymize_data(self.endereco),
+                "endereco": anonymize_data_address(self.endereco),
                 "complemento": anonymize_data(self.complemento),
                 "tipoLogradouro": anonymize_data(self.tipo_logradouro),
-                "cep": anonymize_data(self.cep),
+                "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
-                'racaCor': anonymize_data(self.raca_cor),
+                "racaCor": anonymize_data(self.raca_cor),
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [
@@ -631,22 +639,22 @@ class IdosoNominalListAdapter:
         return dict(
             {
                 "racaCor": anonymize_data(self.raca_cor),
-                "nome": anonymize_data(self.nome),
-                "nomeSocialSelecionado": anonymize_data(self.nome_social),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": anonymize_data(self.cpf),
-                "cns": anonymize_data(self.cns),
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "sexo": self.sexo,
-                "equipe": anonymize_data(self.equipe),
+                "equipe": anonymize_data_equipe(self.equipe),
                 "microarea": anonymize_data(self.microarea),
-                "endereco": anonymize_data(self.endereco),
+                "endereco": anonymize_data_address(self.endereco),
                 "complemento": anonymize_data(self.complemento),
                 "tipoLogradouro": anonymize_data(self.tipo_logradouro),
-                "cep": anonymize_data(self.cep),
+                "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
                 "detalhesCondicaoSaude": [
                     {
@@ -729,22 +737,22 @@ class RecordNominalListAdapter:
     def to_dict(self):
         return dict(
             {
-                "nome": anonymize_data(self.nome),
-                "nomeSocialSelecionado": anonymize_data(self.nome_social),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": False,
                 "zonaRural": False,
                 "possuiAlertas": self.alerta,
-                "cpf": anonymize_data(self.cpf),
-                "cns": anonymize_data(self.cns),
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "sexo": self.sexo,
-                "equipe": anonymize_data(self.equipe),
+                "equipe": anonymize_data_equipe(self.equipe),
                 "microarea": anonymize_data(self.microarea),
-                "endereco": anonymize_data(self.endereco),
+                "endereco": anonymize_data_address(self.endereco),
                 "complemento": anonymize_data(self.complemento),
                 "tipoLogradouro": anonymize_data(self.tipo_logradouro),
-                "cep": anonymize_data(self.cep),
+                "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
                 "detalhesCondicaoSaude": [
                     {
@@ -881,22 +889,22 @@ class OralHealtNominalListAdapter:
     def to_dict(self):
         return dict(
             {
-                "nome": anonymize_data(self.nome),
-                "nomeSocialSelecionado": anonymize_data(self.nome_social),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": anonymize_data(self.cpf),
-                "cns": anonymize_data(self.cns),
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "sexo": self.sexo,
-                "equipe": anonymize_data(self.equipe),
+                "equipe": anonymize_data_equipe(self.equipe),
                 "microarea": anonymize_data(self.microarea),
-                "endereco": anonymize_data(self.endereco),
+                "endereco": anonymize_data_address(self.endereco),
                 "complemento": anonymize_data(self.complemento),
                 "tipoLogradouro": anonymize_data(self.tipo_logradouro),
-                "cep": anonymize_data(self.cep),
+                "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
                 "racaCor": anonymize_data(self.raca_cor),
                 "identidadeGenero": self.identidadeGenero,

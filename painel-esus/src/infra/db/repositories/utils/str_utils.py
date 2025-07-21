@@ -1,3 +1,5 @@
+import re
+
 from src.env.conf import getenv
 
 
@@ -25,7 +27,15 @@ def anonymize_data( data:str ) ->str:
     mock = getenv("MOCK", False, False) == "True"
     if not mock:
         return data
-    return mock_word( data, 3, True)
+    return mock_word( data, 4, True)
+
+
+def anonymize_data_name(data: str) -> str:
+    mock = getenv("MOCK", False, False) == "True"
+    if not mock:
+        return data
+    return mock_word(data, 0, True)
+
 
 def anonymize_data_frame( data):
     mock = getenv("MOCK", False, False) == "True"
@@ -33,26 +43,51 @@ def anonymize_data_frame( data):
         return data
 
     columns = [
-        "cpf",
-        "cns",
-        "nome",
-        "telefone",
-        "endereco",
-        "numero",
-        "cep",
-        "complemento",
-        "bairro",
-        "nome_unidade_saude",
-        "nome_equipe",
-        "logradouro",
-        "municipio",
-        "cnes_equipe",
-        "telefone",
-        "micro_area",
-        "ine_equipe",
-        "data_nascimento",
+        ("cpf", anonymize_data_doc),
+        ("cns", anonymize_data_doc),
+        ("nome", anonymize_data_name),
+        ("telefone", anonymize_data),
+        ("endereco", anonymize_data_address),
+        ("numero", anonymize_data),
+        ("cep", anonymize_data_cep),
+        ("complemento", anonymize_data),
+        ("bairro", anonymize_data),
+        ("nome_unidade_saude", anonymize_data_equipe),
+        ("nome_equipe", anonymize_data_equipe),
+        ("logradouro", anonymize_data),
+        ("municipio", anonymize_data),
+        ("cnes_equipe", anonymize_data_equipe),
+        ("telefone", anonymize_data),
+        ("micro_area", anonymize_data),
+        ("ine_equipe", anonymize_data_equipe),
+        ("data_nascimento", anonymize_data_nascimento),
     ]
     for col in columns:
-        if col in data:
-            data[col] = anonymize_data(str(data[col]))
+        if col[0] in data:
+            data[col[0]] = col[1](str(data[col[0]]))
     return data
+
+def anonymize_data_nascimento(data):
+    data = str(data).split(" ")[0]
+    sep = "/" if "/" in data else "-"
+    input_data = data.split(sep)
+    response = []
+    for data in input_data:
+        if len(data) == 2:
+            response.append('**')
+        else:
+            response.append(data)
+    return sep.join(response)
+
+def anonymize_data_equipe(data):
+    return mock_word(data, 0, False)
+
+def anonymize_data_address(data):
+    return mock_word(data, 0, False)
+
+def anonymize_data_cep(data):
+    return f"****{str(data)[4:]}"
+
+
+def anonymize_data_doc(data):
+    return re.sub(r'[0-9+]','*', str(data))
