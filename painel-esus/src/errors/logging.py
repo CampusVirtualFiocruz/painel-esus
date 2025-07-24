@@ -1,1 +1,1 @@
-from src.errors.log.config import logger as logging
+from src.errors.config import logger as logging
