@@ -4,10 +4,12 @@ import datetime
 import aiohttp
 import jwt
 import pandas as pd
+from exceptiongroup import catch
 from src.env.conf import getenv
-from src.errors import HttpCredentialsFailError
+from src.errors import HttpBadTokenError, HttpCredentialsFailError
 from src.errors.logging import logging
 from src.infra.db.repositories.login_repository import LoginRepository
+from src.main.server.decorators.token_required import check_token_str
 
 SECRET_KEY = "y)wjkIaV;2~1_xn38_X5Xs*/@=4yX3"
 
@@ -67,18 +69,18 @@ class ApiLog:
                 **cidade,
                 **user,
             }
+
             headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {token}",
             }
-            print(payload)
             asyncio.run(self._send_request(api_url, payload, headers))
 
         except Exception as e:
             logging.exception(f"Erro na tarefa assíncrona: {e}")
             raise HttpCredentialsFailError("Credentials fail.")
 
-    def send_exception_logs(self, error):
+    def send_exception_logs(self, error, token):
         try:
             logging.error(f"Enviando erro para o log: {error}")
             cod_ibge = getenv("CIDADE_IBGE", "n/a", False)
@@ -86,14 +88,23 @@ class ApiLog:
             version = getenv("APPLICATION_VERSION", "n/a", False)
             base_url = getenv("LOG_API", "", False)
             api_url = f"{base_url}/exception-log"
+            username = None
+            if token is not None:
+                try:
+                    token_parsed = check_token_str(token)
+                    username = token_parsed["username"]
+                except HttpBadTokenError as e:
+                    username = None
 
+            cidade = self._get_ibge_data(cod_ibge)
             payload = {
                 "codigoIbge": cod_ibge,
-                "estado": estado,
                 "version": version,
                 "exception": error,
+                "username": username,
+                "municipio": cidade["cidade"],
+                "estado": cidade["estado"]
             }
-            # token = gerar_token(codIbge)
             token = self._gerar_jwt(cod_ibge, version, estado)
 
             headers = {

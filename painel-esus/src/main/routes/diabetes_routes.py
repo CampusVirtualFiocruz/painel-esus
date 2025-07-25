@@ -17,7 +17,7 @@ from src.main.composers.diabetes_dashboard_composer import (
     diabetes_dashboard_get_total,
 )
 from src.main.server.cache import cache
-from src.presentations.validators.base_validation import _validation
+from src.main.server.decorators.token_required import extract_token
 from src.presentations.validators.schema.nominal_list import schema
 
 diabetes_bp = Blueprint("diabetes", __name__)
@@ -55,7 +55,7 @@ def get_total(cnes=None):
             request, diabetes_dashboard_get_total())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -73,7 +73,7 @@ def get_age_group_gender(cnes=None):
             request, diabetes_dashboard_get_age_group_gender())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -91,7 +91,7 @@ def get_age_group_location(cnes=None):
             request, diabetes_dashboard_get_age_groups_location())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -111,7 +111,7 @@ def get_imc(cnes=None):
             request, diabetes_dashboard_get_imc())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -129,7 +129,7 @@ def get_complications(cnes=None):
             request, diabetes_dashboard_get_complications())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -147,7 +147,7 @@ def get_exams(cnes=None):
             request, diabetes_dashboard_get_exams_count())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -165,7 +165,7 @@ def get_professionals(cnes=None):
             request, diabetes_dashboard_get_professionals_count())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -186,7 +186,7 @@ def get_diabetes_list(cnes=None):
             request, diabetes_dashboard_get_individual_exams_count())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -210,7 +210,7 @@ def get_nominal_list(cnes=None):
         response = jsonify(http_response.body)
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, 200
@@ -240,7 +240,7 @@ def get_nominal_list_download(cnes=None):
         return Response(buffer.getvalue(), mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', headers=headers,)
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception,extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, 200

@@ -52,4 +52,4 @@ class LoginRepository(LoginRepositoryInterface):
                     "nome_unidade_saude": db_response[5],
                 }
             except StopIteration:
-                return None
+                return {}

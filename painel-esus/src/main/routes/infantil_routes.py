@@ -1,7 +1,6 @@
 import io
 
 from flask import Blueprint, Response, jsonify, request
-
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.children_compose import (
@@ -17,11 +16,12 @@ from src.main.composers.children_compose import (
     children_get_nominal_list,
     children_get_nominal_list_download,
     children_get_total,
+    children_get_total_twelve_months,
     children_high_weight_records,
     children_milestone,
     children_total_medical_cares_composer,
-    children_get_total_twelve_months,
 )
+from src.main.server.decorators.token_required import extract_token
 
 children_bp = Blueprint("children", __name__)
 
@@ -59,7 +59,7 @@ def children_get_total_fn(cnes=None):
         http_response = request_adapter(request, children_get_total())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -76,7 +76,7 @@ def children_get_total_twelve_months_fn(cnes=None):
         http_response = request_adapter(request, children_get_total_twelve_months())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -87,7 +87,7 @@ def children_by_age_fn(cnes=None):
         http_response = request_adapter(request, children_by_age())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -98,7 +98,7 @@ def children_by_race_fn(cnes=None):
         http_response = request_adapter(request, children_by_race())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -119,7 +119,7 @@ def children_total_cares(cnes=None):
         )
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -134,7 +134,7 @@ def first_consult_8d_fn(cnes=None):
         http_response = request_adapter(request, children_first_consult_8d())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -153,7 +153,7 @@ def appointments_until_2_years(cnes=None):
         http_response = request_adapter(request, children_appointments_until_2_years())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -170,7 +170,7 @@ def acs_visit_until_30d_fn(cnes=None):
         http_response = request_adapter(request, children_acs_visit_until_30d())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -187,7 +187,7 @@ def acs_visit_until_6m_fn(cnes=None):
         http_response = request_adapter(request, children_acs_visit_until_6m())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -208,7 +208,7 @@ def dental_appointment_until_12month_fn(cnes=None):
         )
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -229,7 +229,7 @@ def dental_appointment_until_24months_fn(cnes=None):
         )
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -248,7 +248,7 @@ def high_weight_records(cnes=None):
         http_response = request_adapter(request, children_high_weight_records())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -267,7 +267,7 @@ def milestone(cnes=None):
         http_response = request_adapter(request, children_milestone())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -286,7 +286,7 @@ def evaluated_feeding(cnes=None):
         http_response = request_adapter(request, children_evaluated_feeding())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -305,7 +305,7 @@ def get_nominal_list(cnes=None):
         http_response = request_adapter(request, children_get_nominal_list())
         return jsonify(http_response.body), http_response.status_code
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code
 
 
@@ -346,5 +346,5 @@ def get_nominal_list_download(cnes=None):
         )
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         return jsonify(http_response.body), http_response.status_code

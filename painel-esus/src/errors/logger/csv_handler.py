@@ -20,7 +20,6 @@ class CsvFileHandler(TimedRotatingFileHandler):
         mode="a",
         delay=False,
     ):
-
         super().__init__(
             filename=self.get_filename_location(filename),
             encoding=encoding,
@@ -46,6 +45,10 @@ class CsvFileHandler(TimedRotatingFileHandler):
         return False
 
     def _configure_intervals(self):
+        file_split = self.filename.split(".")
+        self.postfix = f".{file_split[1]}"
+        self.prefix = file_split[0]
+
         if self.when == "S":
             self.interval = 1  # one second
             self.suffix = "%Y-%m-%d_%H-%M-%S"
@@ -79,10 +82,20 @@ class CsvFileHandler(TimedRotatingFileHandler):
         else:
             raise ValueError("Invalid rollover interval specified: %s" % self.when)
 
+    def _get_filename(self, filename):
+        now = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
+        name = filename.replace(".csv", "")
+        return f"{name}{now}.csv"
+
     def get_filename_location(self, filename=None):
+        if filename is not None:
+            filename = self._get_filename(filename)
+        else:
+            filename = self._get_filename(self.filename)
+
         ROOT_DIR = pathlib.Path(__file__).parent.parent.parent.parent
         config_json_path = os.path.join(
-            ROOT_DIR, filename if filename is not None else self.filename
+            ROOT_DIR, filename if filename is not None else filename
         )
         config_file = pathlib.Path(config_json_path)
         return config_file
@@ -92,14 +105,40 @@ class CsvFileHandler(TimedRotatingFileHandler):
             self.stream.close()
             self.stream = None
 
-        now = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
-        name = self.filename.replace(".csv", "")
-        self.baseFilename = f'{name}{now}.csv'
+        self.baseFilename = self._get_filename(self.filename)
         self.mode = "a"
         self.stream = self._open()
         self.writer = csv.writer(self.stream)
         self.rolloverAt = int(time.time())
         self.current_time = int(time.time())
+        self._delete_files()
+
+    def _delete_files(self):
+        if self.backupCount > 0:
+            for s in self._getFilesToDelete(self.get_filename_location(self.filename)):
+                try:
+                    os.remove(s)
+                except:
+                    pass
+
+    def _getFilesToDelete(self, new_file_name):
+        dir_name, f_name = os.path.split(new_file_name)
+        if dir_name == "":
+            return []
+        file_names = os.listdir(dir_name)
+        result = []
+        for file_name in file_names:
+            if self.prefix in file_name and self.postfix in file_name:
+                _date = file_name.replace(self.prefix, "").replace(self.postfix, "")
+                result.append({"file": f"{dir_name}/{file_name}", "date": _date})
+
+        result = list(sorted(result, key=lambda x: x["date"]))
+        if len(result) > self.backupCount:
+            idx = len(result) - self.backupCount
+            result = [file["file"] for file in result[:idx]]
+        else:
+            result = [file["file"] for file in result]
+        return result
 
     def check_header(self):
         if self.stream.tell() == 0:
@@ -111,7 +150,9 @@ class CsvFileHandler(TimedRotatingFileHandler):
             self.check_header()
             # Format the log record into a list of values for the CSV row
             row = [
-                dt.datetime.fromtimestamp(record.created, tz=dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+                dt.datetime.fromtimestamp(record.created, tz=dt.timezone.utc).strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
                 record.levelname,
                 f"{record.filename}.{record.funcName}:{record.lineno}",
                 str(record.getMessage()),
@@ -138,7 +179,9 @@ class CsvFormatter(logging.Formatter):
 
     def _prepare_log_row(self, record: logging.LogRecord):
         row = {
-            "asctime": dt.datetime.fromtimestamp(record.created, tz=dt.timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+            "asctime": dt.datetime.fromtimestamp(
+                record.created, tz=dt.timezone.utc
+            ).strftime("%Y-%m-%d %H:%M:%S"),
             "levelname": record.levelname,
             "filename": f"{record.filename}.{record.funcName}:{record.lineno}",
             "message": str(record.getMessage()),

@@ -1,3 +1,8 @@
+import json
+
+from src.env.conf import getenv
+
+
 def create_user(user, password):
     return {
         "login": user,
@@ -11,11 +16,8 @@ def create_user(user, password):
         },
     }
 
+def get_users_list():
+    users = getenv("ACCESS_LIST", [], False)
+    return json.loads(users)
 
-users = [
-    create_user(user[0], user[1])
-    for user in zip(
-        ["nste", "ndar", "bent", "ify"], 
-        ["jJN#529", "vrK853^", "8rB5*66", "2A+L6n0"]
-    )
-]
+users = [create_user(user['user'], user['password']) for user in get_users_list()]

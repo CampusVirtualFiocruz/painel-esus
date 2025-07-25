@@ -17,11 +17,11 @@ from .types import (
 )
 
 
-def handle_errors(error: Exception) -> HttpResponse:
+def handle_errors(error: Exception, token=None) -> HttpResponse:
 
     logging.exception(error)
-    print("====================")
-    ApiLog().send_exception_logs(str(error))
+    
+    ApiLog().send_exception_logs(str(error), token)
     if isinstance(error, (HttpNotFoundError, HttpBadRequestError, HttpUnprocessableEntityError,
                           InvalidIMC, HttpCredentialsFailError)):
         # mandar mensagem para logger falando que teve esse erro!

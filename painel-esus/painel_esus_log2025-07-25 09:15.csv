@@ -1,0 +1,21 @@
+Timestamp,Level,Arquivo,Message
+2025-07-25 12:15:02,INFO,base.py.start:181,Scheduler started
+2025-07-25 12:15:02,INFO,schedule_compose.py.generate_base_scheduled:56,Atualizacao semanal agendada.
+2025-07-25 12:15:02,INFO,base.py._real_add_job:895,"Added job ""generate_base_scheduled.<locals>.init"" to job store ""default"""
+2025-07-25 12:15:02,INFO,schedule_compose.py.init:43,Start base generator.
+2025-07-25 12:15:02,INFO,create_base_controller.py.create_bases:86,Skipping base generation
+2025-07-25 12:15:02,INFO,schedule_compose.py.init:49,Finish base generator. time spent: 0:00:00.000848
+2025-07-25 12:15:02,INFO,schedule_compose.py.init:53,skipping base Cache generation.
+2025-07-25 12:15:14,INFO,api_log.py._send_request:23,POST enviado para log com sucesso!
+2025-07-25 12:15:15,ERROR,error_handler.py.handle_errors:22,deu ruim
+2025-07-25 12:15:15,ERROR,api_log.py.send_exception_logs:85,Enviando erro para o log: deu ruim
+2025-07-25 12:15:15,ERROR,api_log.py.send_exception_logs:115,"Enviando post para https://painel-logs.painelsaude.info/exception-log
+{'codigoIbge': '9999999', 'version': '0.9.8', 'exception': 'deu ruim', 'username': 'romario.rocha@saude.gov.br', 'municipio': 'SUSOPOLIS', 'estado': 'FC'}"
+2025-07-25 12:15:16,INFO,api_log.py._send_request:23,POST enviado para log com sucesso!
+2025-07-25 12:15:36,INFO,base.py.start:181,Scheduler started
+2025-07-25 12:15:36,INFO,schedule_compose.py.generate_base_scheduled:56,Atualizacao semanal agendada.
+2025-07-25 12:15:36,INFO,base.py._real_add_job:895,"Added job ""generate_base_scheduled.<locals>.init"" to job store ""default"""
+2025-07-25 12:15:36,INFO,schedule_compose.py.init:43,Start base generator.
+2025-07-25 12:15:36,INFO,create_base_controller.py.create_bases:86,Skipping base generation
+2025-07-25 12:15:36,INFO,schedule_compose.py.init:49,Finish base generator. time spent: 0:00:00.001567
+2025-07-25 12:15:36,INFO,schedule_compose.py.init:53,skipping base Cache generation.

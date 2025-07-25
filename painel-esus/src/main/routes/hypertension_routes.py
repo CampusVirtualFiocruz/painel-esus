@@ -19,6 +19,8 @@ from src.main.composers.hypertension_dashboard_composer import (
 from src.main.server.cache import cache
 from src.presentations.validators.base_validation import _validation
 from src.presentations.validators.schema.nominal_list import schema
+from src.main.server.decorators.token_required import extract_token
+
 
 hypertension_bp = Blueprint("hypertension", __name__)
 
@@ -55,7 +57,7 @@ def get_total(cnes=None):
             request, hypertension_dashboard_get_total())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -73,7 +75,7 @@ def get_age_group_gender(cnes=None):
             request, hypertension_dashboard_get_age_group_gender())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -91,7 +93,7 @@ def get_age_group_location(cnes=None):
             request, hypertension_dashboard_get_age_groups_location())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -111,7 +113,7 @@ def get_imc(cnes=None):
             request, hypertension_dashboard_get_imc())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -129,7 +131,7 @@ def get_complications(cnes=None):
             request, hypertension_dashboard_get_complications())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -147,7 +149,7 @@ def get_exams(cnes=None):
             request, hypertension_dashboard_get_exams_count())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -165,7 +167,7 @@ def get_professionals(cnes=None):
             request, hypertension_dashboard_get_professionals_count())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -186,7 +188,7 @@ def get_hypertenses_list(cnes=None):
             request, hypertension_dashboard_get_individual_exams_count())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -208,7 +210,7 @@ def get_nominal_list(cnes=None):
         response = jsonify(http_response.body)
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.body
@@ -239,7 +241,7 @@ def get_nominal_list_download(cnes=None):
         return Response(buffer.getvalue(), mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', headers=headers,)
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, 200
