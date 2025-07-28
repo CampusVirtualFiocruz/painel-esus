@@ -95,9 +95,10 @@ jobs:
         run: |
           ls -la
           version="${{ github.head_ref || github.ref_name }}"
-          clean_version=$(echo "$version" | sed 's/^v//')
-          tar -czf painel-esus-setup$clean_version.tar.gz \
+          clean_version=$(basename "$version" | sed 's/^v//')
+          tar -czf painel-esus-setup-$clean_version.tar.gz \
             -C $(pwd)/painel-esus ibge.csv \
+            --transform='s,^,interface/,' -C $(pwd)/painel-esus/interface icon \
             -C $(pwd)/paineis-v2-front static-files \
             -C $(pwd)/painel-esus/dist/ config \
             -C $(pwd)/painel-esus/dist/ painel-esus
