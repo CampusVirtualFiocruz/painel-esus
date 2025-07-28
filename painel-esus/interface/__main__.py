@@ -1,4 +1,5 @@
 # pylint: disable=R0913, R0915, C0121, W1514, W0622, C0103, W0212, W0612, W0404
+import json
 import logging
 import os.path
 import threading
@@ -436,6 +437,22 @@ def success_frame():
     )
     create_new_env_button.pack(pady=12, padx=10)
 
+
+def validar_ibge_codigo(codigo, status_label):
+    try:
+        with open("ibge.json", "r", encoding="utf-8") as file:
+            dados = json.load(file)
+
+        encontrado = any(str(obj.get("IBGE")) == str(codigo) for obj in dados)
+        if encontrado:
+            status_label.configure(text="Código IBGE válido!", text_color="green")
+        else:
+            status_label.configure(text="Código IBGE inválido!", text_color="red")
+
+    except Exception as e:
+        status_label.configure(text=f"Erro ao validar: {e}", text_color="red")
+
+
 def testar_conexao_com_loading(frame, user, password, host, port, database, button, loading_label):
     def tarefa():
         try:
@@ -592,14 +609,59 @@ def tabs():
     )
     image_label_painel.pack(pady=10)
 
+    # input_cidade = ctk.CTkEntry(
+    #     master=frame_painel,
+    #     placeholder_text="Código IBGE da Cidade:",
+    #     width=600,
+    #     height=25,
+    #     corner_radius=10,
+    # )
+    # input_cidade.pack(pady=10)
+# Container para o input e botão lado a lado
+    cidade_container = ctk.CTkFrame(master=frame_painel, fg_color="transparent")
+    cidade_container.pack(pady=10)
+
     input_cidade = ctk.CTkEntry(
-        master=frame_painel,
+        master=cidade_container,
         placeholder_text="Código IBGE da Cidade:",
-        width=600,
+        width=400,
         height=25,
         corner_radius=10,
     )
-    input_cidade.pack(pady=10)
+    input_cidade.pack(side="left", padx=(0, 10))
+
+    def on_cidade_change(*args):
+        if input_cidade.get().strip():
+            validate_button.configure(state="normal")
+        else:
+            validate_button.configure(state="disabled")
+
+    input_cidade.bind("<KeyRelease>", lambda event: on_cidade_change())
+
+    validate_button = ctk.CTkButton(
+        master=cidade_container,
+        text="Validar",
+        state="disabled",  # começa desabilitado
+        command=lambda: validar_ibge_codigo(input_cidade.get(), validate_status_label),
+    )
+    validate_button.pack(side="left")
+
+    validate_status_label = ctk.CTkLabel(
+        master=frame_painel,
+        text="",
+        font=("Arial", 14),
+        text_color="gray"
+    )
+    validate_status_label.pack()
+
+
+
+
+
+
+
+
+
 
     input_user_admin = ctk.CTkEntry(
         master=frame_painel,
