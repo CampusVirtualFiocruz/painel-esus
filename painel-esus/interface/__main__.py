@@ -32,7 +32,7 @@ root = ctk.CTk()
 if os.name != "posix":
     root.iconbitmap("icon/Icon_Painel_Purple_ICO.ico")
 root.title("Configurar")
-root.geometry(center_window_to_display(root, 800, 600, root._get_window_scaling()))
+root.geometry(center_window_to_display(root, 800, 750, root._get_window_scaling()))
 
 
 def start_progress_bar(window):
@@ -248,13 +248,7 @@ def exists_env(root):
             loading_label,
         ),
     )
-    # test_connection_button = ctk.CTkButton(
-    #     master=frame,
-    #     text="Testar conexão2",
-    #     command=lambda: startTopLevelViewConnection(
-    #         frame, None, None, None, None, None
-    #     ),
-    # )
+
     test_connection_button.pack(pady=12, padx=10)
 
     def close():
@@ -438,19 +432,29 @@ def success_frame():
     create_new_env_button.pack(pady=12, padx=10)
 
 
-def validar_ibge_codigo(codigo, status_label):
-    try:
-        with open("ibge.json", "r", encoding="utf-8") as file:
-            dados = json.load(file)
+def validar_ibge_codigo(codigo, label_status):
+    # Exibe mensagem de verificação imediatamente
+    label_status.configure(text="Verificando...", text_color="orange")
+    label_status.pack(pady=(4, 10))
 
-        encontrado = any(str(obj.get("IBGE")) == str(codigo) for obj in dados)
-        if encontrado:
-            status_label.configure(text="Código IBGE válido!", text_color="green")
-        else:
-            status_label.configure(text="Código IBGE inválido!", text_color="red")
+    # Função interna que executa a validação real
+    def executar_validacao():
+        try:
+            with open("ibge.json", "r", encoding="utf-8") as f:
+                cidades = json.load(f)
+            exists = any(str(c["IBGE"]) == codigo.zfill(5) for c in cidades)
+            if exists:
+                label_status.configure(text="Código IBGE válido ✅\n", text_color="#66BB6A")
+            else:
+                label_status.configure(text="Código IBGE inválido ❌\n", text_color="#E57373")
+            label_status.pack(pady=(4, 10))
+        except Exception as e:
+            label_status.configure(text=f"Erro ao validar código: {e}", text_color="#E57373")
+        finally:
+            check_all_inputs_filled()  # Atualiza botão "Finalizar"
 
-    except Exception as e:
-        status_label.configure(text=f"Erro ao validar: {e}", text_color="red")
+    # Executa a validação após 1 segundo (1000 ms)
+    label_status.after(1000, executar_validacao)
 
 
 def testar_conexao_com_loading(frame, user, password, host, port, database, button, loading_label):
@@ -462,10 +466,10 @@ def testar_conexao_com_loading(frame, user, password, host, port, database, butt
                 res = pd.read_sql_query("select * from information_schema.tables", con=engine)
             # Se chegou aqui sem erro:
             resultado = "Conexão bem-sucedida!"
-            cor = "green"
+            cor = "#66BB6A"
         except Exception as e:
             resultado = f"Erro: {str(e)}"
-            cor = "red"
+            cor = "#E57373"
 
         # Atualiza UI na thread principal
         def atualiza_ui():
@@ -474,13 +478,75 @@ def testar_conexao_com_loading(frame, user, password, host, port, database, butt
 
         frame.after(0, atualiza_ui)
 
-    loading_label.configure(text="Conectando...", text_color="gray")
+    loading_label.configure(text="Conectando...", text_color="orange")
     button.configure(state="disabled")
 
     threading.Thread(target=tarefa).start()
 
+def create_labeled_input(parent, row, label_text, placeholder, is_password=False):
+    label = ctk.CTkLabel(parent, text=label_text, font=("Arial", 14))
+    label.grid(row=row, column=0, sticky="w", pady=(0, 2))
+
+    entry = ctk.CTkEntry(
+        parent,
+        placeholder_text=placeholder,
+        show="*" if is_password else "",
+        width=600,
+        height=25,
+        corner_radius=10,
+    )
+    entry.grid(row=row + 1, column=0, pady=(0, 10))
+
+    return entry  # retorna o CTkEntry para uso posterior
+
+def is_filled(entry):
+    return entry.get().strip() != ""
+
+def check_db_inputs_filled(*args):
+    all_filled = all([
+        is_filled(input_host),
+        is_filled(input_database),
+        is_filled(input_user),
+        is_filled(input_password),
+        is_filled(input_port),
+    ])
+    test_connection_button.configure(state="normal" if all_filled else "disabled")
+    check_all_inputs_filled()
+
+def check_all_inputs_filled(*args):
+    all_filled = all([
+        is_filled(input_host),
+        is_filled(input_database),
+        is_filled(input_user),
+        is_filled(input_password),
+        is_filled(input_port),
+        is_filled(input_cidade),
+        is_filled(input_user_admin),
+        is_filled(input_password_admin),
+        is_filled(input_bridge_login_url),
+    ])
+
+    is_ibge_valid = validate_status_label.cget("text") == "Código IBGE válido ✅\n"
+
+    print('ALL FILLED: ', all_filled)
+    print('IS VALID IBGE: ', is_ibge_valid)
+    create_new_env_button.configure(state="normal" if all_filled and is_ibge_valid else "disabled")
+
+def excecute_validators(validate_button, test_connection_button):
+    print('CODIGO IBGE: ', input_cidade.get())
+    if input_cidade.get():
+        validar_ibge_codigo(input_cidade.get(), validate_status_label)
+        validate_button.configure(state="normal")
+
+    if input_user.get() and input_password.get() and input_host.get() and input_port.get() and input_database.get():
+        test_connection_button.configure(state="normal")
+
 
 def tabs():
+    global input_host, input_database, input_user, input_password, input_port
+    global input_cidade, input_user_admin, input_password_admin, input_bridge_login_url
+    global test_connection_button, create_new_env_button, validate_status_label
+
     tabview = ctk.CTkTabview(root, width=780, height=580)
     tabview.pack()
     tabview.add("Banco de dados")
@@ -519,48 +585,18 @@ def tabs():
     )
     image_label.pack(pady=10)
 
-    input_host = ctk.CTkEntry(
-        master=frame, placeholder_text="Host:", width=600, height=25, corner_radius=10
-    )
-    input_host.pack(pady=10, padx=10)
 
-    input_database = ctk.CTkEntry(
-        master=frame,
-        placeholder_text="Base de dados:",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_database.pack(pady=10, padx=10)
+    # FORM INPUTS
+    form_frame = ctk.CTkFrame(master=frame, fg_color="transparent")
+    form_frame.pack(pady=10, padx=10)
 
-    input_user = ctk.CTkEntry(
-        master=frame,
-        placeholder_text="Usuário do banco de dados:",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_user.pack(pady=10, padx=10)
+    input_host = create_labeled_input(form_frame, 0, "Endereço do banco de dados", "Host:")
+    input_database = create_labeled_input(form_frame, 2, "Nome da base de dados", "Base de dados:")
+    input_user = create_labeled_input(form_frame, 4, "Usuário do banco de dados", "Usuário:")
+    input_password = create_labeled_input(form_frame, 6, "Senha do banco de dados", "Senha:", is_password=True)
+    input_port = create_labeled_input(form_frame, 8, "Porta do banco de dados", "Porta:")
 
-    input_password = ctk.CTkEntry(
-        master=frame,
-        placeholder_text="Senha do banco de dados:",
-        show="*",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_password.pack(pady=10, padx=10)
 
-    input_port = ctk.CTkEntry(
-        master=frame,
-        placeholder_text="Porta do banco de dados:",
-        width=600,
-        height=25,
-        corner_radius=10,
-    )
-    input_port.pack(pady=10, padx=10)
-    
     loading_label = ctk.CTkLabel(master=frame, text="", font=("Arial", 14))
     loading_label.pack()
 
@@ -609,20 +645,24 @@ def tabs():
     )
     image_label_painel.pack(pady=10)
 
-    # input_cidade = ctk.CTkEntry(
-    #     master=frame_painel,
-    #     placeholder_text="Código IBGE da Cidade:",
-    #     width=600,
-    #     height=25,
-    #     corner_radius=10,
-    # )
-    # input_cidade.pack(pady=10)
-# Container para o input e botão lado a lado
-    cidade_container = ctk.CTkFrame(master=frame_painel, fg_color="transparent")
-    cidade_container.pack(pady=10)
+    # Container para o input e botão lado a lado
+    # Container para o input e botão lado a lado
+    cod_ibge_container = ctk.CTkFrame(master=frame_painel, fg_color="transparent")
+    cod_ibge_container.pack(pady=10)
 
+    # ✅ Adiciona o título "Código IBGE" acima do input
+    ibge_label = ctk.CTkLabel(
+        master=cod_ibge_container,
+        text="Código IBGE",
+        font=("Arial", 14),
+        anchor="w",  # Alinha à esquerda
+        justify="left"
+    )
+    ibge_label.pack(anchor="w", padx=(0, 0), pady=(0, 4))  # Alinhamento e espaçamento inferior
+
+    # Input para o código da cidade
     input_cidade = ctk.CTkEntry(
-        master=cidade_container,
+        master=cod_ibge_container,
         placeholder_text="Código IBGE da Cidade:",
         width=400,
         height=25,
@@ -630,6 +670,7 @@ def tabs():
     )
     input_cidade.pack(side="left", padx=(0, 10))
 
+    # Ação para ativar/desativar botão
     def on_cidade_change(*args):
         if input_cidade.get().strip():
             validate_button.configure(state="normal")
@@ -638,58 +679,41 @@ def tabs():
 
     input_cidade.bind("<KeyRelease>", lambda event: on_cidade_change())
 
+    # Botão de validação
     validate_button = ctk.CTkButton(
-        master=cidade_container,
+        master=cod_ibge_container,
         text="Validar",
-        state="disabled",  # começa desabilitado
+        state="disabled",
         command=lambda: validar_ibge_codigo(input_cidade.get(), validate_status_label),
     )
     validate_button.pack(side="left")
 
+    # Label de status da validação
     validate_status_label = ctk.CTkLabel(
         master=frame_painel,
         text="",
         font=("Arial", 14),
-        text_color="gray"
+        text_color="gray",
+        height=30
     )
-    validate_status_label.pack()
+    validate_status_label.pack(pady=(4, 10))
+    
 
+    form_frame_painel = ctk.CTkFrame(master=frame_painel, fg_color="transparent")
+    form_frame_painel.pack(pady=10, padx=10)
 
-
-
-
-
-
-
-
-
-    input_user_admin = ctk.CTkEntry(
-        master=frame_painel,
-        placeholder_text="Usuário de acesso ao painel-esus:",
-        width=600,
-        height=25,
-        corner_radius=10,
+    input_user_admin = create_labeled_input(
+        form_frame_painel, 2, "Usuário de acesso ao painel-esus", "Usuário do painel:"
     )
-    input_user_admin.pack(pady=10, padx=10)
 
-    input_password_admin = ctk.CTkEntry(
-        master=frame_painel,
-        placeholder_text="Senha de acesso ao painel-esus:",
-        show="*",
-        width=600,
-        height=25,
-        corner_radius=10,
+    input_password_admin = create_labeled_input(
+        form_frame_painel, 4, "Senha de acesso ao painel-esus", "Senha do painel:", is_password=True
     )
-    input_password_admin.pack(pady=10, padx=10)
 
-    input_bridge_login_url = ctk.CTkEntry(
-        master=frame_painel,
-        placeholder_text="Url de login:",
-        width=600,
-        height=25,
-        corner_radius=10,
+    input_bridge_login_url = create_labeled_input(
+        form_frame_painel, 6, "URL de login da ponte de autenticação", "Url de login:"
     )
-    input_bridge_login_url.pack(pady=10, padx=10)
+
 
     fill_input_fields(
         [
@@ -704,6 +728,7 @@ def tabs():
             input_bridge_login_url,
         ]
     )
+
 
     def close():
         create_env(
@@ -723,10 +748,21 @@ def tabs():
         frame_painel.update()
         success_frame()
 
+
     create_new_env_button = ctk.CTkButton(
         master=frame_painel, text="Finalizar configuração", command=close
     )
     create_new_env_button.pack(pady=12, padx=10)
+
+    test_connection_button.configure(state="disabled")
+    create_new_env_button.configure(state="disabled")
+    excecute_validators(validate_button, test_connection_button)
+
+    for input_field in [input_host, input_database, input_user, input_password, input_port]:
+        input_field.bind("<KeyRelease>", check_db_inputs_filled)
+
+    for input_field in [input_cidade, input_user_admin, input_password_admin, input_bridge_login_url]:
+        input_field.bind("<KeyRelease>", check_all_inputs_filled)
 
 
 def start_interface():
