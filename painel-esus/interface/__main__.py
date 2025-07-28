@@ -248,7 +248,6 @@ def exists_env(root):
             loading_label,
         ),
     )
-
     test_connection_button.pack(pady=12, padx=10)
 
     def close():
@@ -430,6 +429,32 @@ def success_frame():
         master=frame, text="Fechar", command=root.destroy
     )
     create_new_env_button.pack(pady=12, padx=10)
+
+def testar_conexao_com_loading(frame, user, password, host, port, database, button, loading_label):
+    def tarefa():
+        try:
+            # Aqui faz o teste real, dentro da thread
+            with DBConnectionHandler(user, password, host, port, database) as db_con:
+                engine = db_con.get_engine()
+                res = pd.read_sql_query("select * from information_schema.tables", con=engine)
+            # Se chegou aqui sem erro:
+            resultado = "Conexão bem-sucedida!"
+            cor = "green"
+        except Exception as e:
+            resultado = f"Erro: {str(e)}"
+            cor = "red"
+
+        # Atualiza UI na thread principal
+        def atualiza_ui():
+            loading_label.configure(text=resultado, text_color=cor)
+            button.configure(state="normal")
+
+        frame.after(0, atualiza_ui)
+
+    loading_label.configure(text="Conectando...", text_color="gray")
+    button.configure(state="disabled")
+
+    threading.Thread(target=tarefa).start()
 
 
 def validar_ibge_codigo(codigo, label_status):
