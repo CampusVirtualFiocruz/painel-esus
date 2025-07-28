@@ -1,12 +1,14 @@
 # pylint: disable=R0913, R0915, C0121, W1514, W0622, C0103, W0212, W0612, W0404
 import logging
 import os.path
+import threading
 import time
 
 import customtkinter as ctk
 import pandas as pd
 from customtkinter import CTkProgressBar, IntVar
 from PIL import Image
+
 # from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
 
@@ -56,7 +58,7 @@ def connect_db(new_window):
         res = pd.read_sql_query("select * from information_schema.tables", con=engine)
 
         image_path = os.getcwd()
-        image_path = os.path.join(image_path, "icon/success.png")
+        image_path = os.path.join(image_path, "interface/icon/success.png")
 
         my_image = ctk.CTkImage(
             light_image=Image.open(image_path),
@@ -87,7 +89,7 @@ def connect_db_with_params(
         # print("CONECTOU", res.shape)
 
         image_path = os.getcwd()
-        image_path = os.path.join(image_path, "icon/success.png")
+        image_path = os.path.join(image_path, "interface/icon/success.png")
 
         my_image = ctk.CTkImage(
             light_image=Image.open(image_path),
@@ -110,7 +112,7 @@ def connect_db_with_params(
 def connection_error_db(new_window):
     # print("ERRO DE CONEXÃO")
     image_path = os.getcwd()
-    image_path = os.path.join(image_path, "icon/error.png")
+    image_path = os.path.join(image_path, "interface/icon/error.png")
 
     my_image = ctk.CTkImage(
         light_image=Image.open(image_path),
@@ -196,7 +198,7 @@ def exists_env(root):
     label.pack(pady=12, padx=10)
 
     image_path = os.getcwd()
-    image_path = os.path.join(image_path, "icon/env.png")
+    image_path = os.path.join(image_path, "interface/icon/env.png")
 
     my_image = ctk.CTkImage(
         light_image=Image.open(image_path),
@@ -232,13 +234,26 @@ def exists_env(root):
     )
     choose_option.pack(pady=10, padx=10)
 
+    loading_label = ctk.CTkLabel(master=frame, text="", font=("Arial", 14))
+    loading_label.pack()
+
     test_connection_button = ctk.CTkButton(
         master=frame,
         text="Testar conexão",
-        command=lambda: startTopLevelViewConnection(
-            frame, None, None, None, None, None
+        command=lambda: testar_conexao_com_loading(
+            frame,
+            None, None, None, None, None,
+            test_connection_button,
+            loading_label,
         ),
     )
+    # test_connection_button = ctk.CTkButton(
+    #     master=frame,
+    #     text="Testar conexão2",
+    #     command=lambda: startTopLevelViewConnection(
+    #         frame, None, None, None, None, None
+    #     ),
+    # )
     test_connection_button.pack(pady=12, padx=10)
 
     def close():
@@ -369,7 +384,7 @@ def success_frame():
     label.pack(pady=12, padx=10)
 
     image_path = os.getcwd()
-    image_path = os.path.join(image_path, "icon/success.png")
+    image_path = os.path.join(image_path, "interface/icon/success.png")
 
     my_image = ctk.CTkImage(
         light_image=Image.open(image_path),
@@ -421,6 +436,32 @@ def success_frame():
     )
     create_new_env_button.pack(pady=12, padx=10)
 
+def testar_conexao_com_loading(frame, user, password, host, port, database, button, loading_label):
+    def tarefa():
+        try:
+            # Aqui faz o teste real, dentro da thread
+            with DBConnectionHandler(user, password, host, port, database) as db_con:
+                engine = db_con.get_engine()
+                res = pd.read_sql_query("select * from information_schema.tables", con=engine)
+            # Se chegou aqui sem erro:
+            resultado = "Conexão bem-sucedida!"
+            cor = "green"
+        except Exception as e:
+            resultado = f"Erro: {str(e)}"
+            cor = "red"
+
+        # Atualiza UI na thread principal
+        def atualiza_ui():
+            loading_label.configure(text=resultado, text_color=cor)
+            button.configure(state="normal")
+
+        frame.after(0, atualiza_ui)
+
+    loading_label.configure(text="Conectando...", text_color="gray")
+    button.configure(state="disabled")
+
+    threading.Thread(target=tarefa).start()
+
 
 def tabs():
     tabview = ctk.CTkTabview(root, width=780, height=580)
@@ -450,7 +491,7 @@ def tabs():
     label_info.pack(pady=12, padx=10)
 
     image_path = os.getcwd()
-    image_path = os.path.join(image_path, "icon/database.png")
+    image_path = os.path.join(image_path, "interface/icon/database.png")
     my_image = ctk.CTkImage(
         light_image=Image.open(image_path),
         dark_image=Image.open(image_path),
@@ -502,17 +543,22 @@ def tabs():
         corner_radius=10,
     )
     input_port.pack(pady=10, padx=10)
+    
+    loading_label = ctk.CTkLabel(master=frame, text="", font=("Arial", 14))
+    loading_label.pack()
 
     test_connection_button = ctk.CTkButton(
         master=frame,
         text="Testar conexão",
-        command=lambda: startTopLevelViewConnection(
+        command=lambda: testar_conexao_com_loading(
             frame,
             input_user.get().strip(),
             input_password.get().strip(),
             input_host.get().strip(),
             input_port.get().strip(),
             input_database.get().strip(),
+            test_connection_button,
+            loading_label,
         ),
     )
     test_connection_button.pack(pady=12, padx=10)
@@ -522,7 +568,7 @@ def tabs():
     frame_painel.pack(fill="both", expand=True)
 
     image_path_painel = os.getcwd()
-    image_path_painel = os.path.join(image_path_painel, "icon/painel.png")
+    image_path_painel = os.path.join(image_path_painel, "interface/icon/painel.png")
     painel_image = ctk.CTkImage(
         light_image=Image.open(image_path_painel),
         dark_image=Image.open(image_path_painel),
