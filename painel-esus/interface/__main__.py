@@ -32,7 +32,7 @@ root = ctk.CTk()
 if os.name != "posix":
     root.iconbitmap("icon/Icon_Painel_Purple_ICO.ico")
 root.title("Configurar")
-root.geometry(center_window_to_display(root, 800, 750, root._get_window_scaling()))
+root.geometry(center_window_to_display(root, 825, 750, root._get_window_scaling()))
 
 
 def start_progress_bar(window):
@@ -575,11 +575,11 @@ def tabs():
     tabview = ctk.CTkTabview(root, width=780, height=580)
     tabview.pack()
     tabview.add("Banco de dados")
-    tabview.add("Painel E-sus")
+    tabview.add("Painel e-SUS")
     # tabview.add("Responsável")
 
     tabview.tab("Banco de dados").grid_columnconfigure(0, weight=1)
-    tabview.tab("Painel E-sus").grid_columnconfigure(0, weight=1)
+    tabview.tab("Painel e-SUS").grid_columnconfigure(0, weight=1)
     # tabview.tab("Responsável").grid_columnconfigure(0, weight=1)
 
     # --------------------------------CONFIGURAÇÃO BANCO DE DADOS--------------------------------
@@ -593,7 +593,7 @@ def tabs():
 
     label_info = ctk.CTkLabel(
         master=frame,
-        text="Por favor, siga todos os passos das abas apresentadas para configurar o Painel esus. \n Preencha todos os campos abaixo solicitados para a configuração da base de dados do município.",
+        text="Por favor, siga todos os passos das abas apresentadas para configurar o Painel e-SUS APS. \n Preencha todos os campos abaixo solicitados para a configuração da base de dados do município.",
         font=("arial bold", 15),
     )
     label_info.pack(pady=12, padx=10)
@@ -642,7 +642,7 @@ def tabs():
     test_connection_button.pack(pady=12, padx=10)
 
     # --------------------------------CONFIGURAÇÃO PAINEL--------------------------------
-    frame_painel = ctk.CTkFrame(tabview.tab("Painel E-sus"), height=780, width=580)
+    frame_painel = ctk.CTkFrame(tabview.tab("Painel e-SUS"), height=780, width=580)
     frame_painel.pack(fill="both", expand=True)
 
     image_path_painel = os.getcwd()
@@ -654,13 +654,13 @@ def tabs():
     )
 
     label_config_painel = ctk.CTkLabel(
-        master=frame_painel, text="Configuração do painel:", font=("arial bold", 25)
+        master=frame_painel, text="Configuração do Painel e-SUS APS:", font=("arial bold", 25)
     )
     label_config_painel.pack(pady=12, padx=10)
 
     label_info_painel = ctk.CTkLabel(
         master=frame_painel,
-        text="Preencha todos os campos abaixo solicitados para a configuração dos dados de acesso ao painel-esus. \n Os campos 'Usuário' e 'Senha' aqui apresentados serão utilizados para fazer login na plataforma.",
+        text="Preencha todos os campos abaixo solicitados para a configuração dos dados de acesso ao Painel e-SUS APS. \n Os campos 'Usuário' e 'Senha' aqui apresentados serão utilizados para fazer login na plataforma.",
         font=("arial bold", 15),
     )
     label_info_painel.pack(pady=12, padx=10)
@@ -728,15 +728,15 @@ def tabs():
     form_frame_painel.pack(pady=10, padx=10)
 
     input_user_admin = create_labeled_input(
-        form_frame_painel, 2, "Usuário de acesso ao painel-esus", "Usuário do painel:"
+        form_frame_painel, 2, "Usuário de acesso ao Painel", "Usuário do painel:"
     )
 
     input_password_admin = create_labeled_input(
-        form_frame_painel, 4, "Senha de acesso ao painel-esus", "Senha do painel:", is_password=True
+        form_frame_painel, 4, "Senha de acesso ao Painel", "Senha do painel:", is_password=True
     )
 
     input_bridge_login_url = create_labeled_input(
-        form_frame_painel, 6, "URL de login da ponte de autenticação", "Url de login:"
+        form_frame_painel, 6, "URL do PEC e-SUS APS", "Url de login:"
     )
 
 
