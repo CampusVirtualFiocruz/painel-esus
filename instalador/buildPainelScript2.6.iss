@@ -44,6 +44,7 @@ Source: "{#rootPath}\painel-esus\interface\icon\*"; DestDir: "{app}\interface\ic
 Source: "{#rootPath}\painel-esus\interface\dist\config.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\interface\dist\painel-esus.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#rootPath}\painel-esus\ibge.csv"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#rootPath}\painel-esus\ibge.json"; DestDir: "{app}"; Flags: ignoreversion
 
 [Registry]
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
