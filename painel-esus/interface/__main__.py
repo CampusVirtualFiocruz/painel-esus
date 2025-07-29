@@ -30,7 +30,7 @@ def center_window_to_display(
 
 root = ctk.CTk()
 if os.name != "posix":
-    root.iconbitmap("icon/Icon_Painel_Purple_ICO.ico")
+    root.iconbitmap("interface/icon/Icon_Painel_Purple_ICO.ico")
 root.title("Configurar")
 root.geometry(center_window_to_display(root, 825, 750, root._get_window_scaling()))
 
