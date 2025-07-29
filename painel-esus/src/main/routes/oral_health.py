@@ -4,6 +4,7 @@ import io
 
 from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
+from src.infra.requests.factory import send_download_request
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.oral_health_compose import (
     oral_health_get_atraumatic_treatment,
@@ -312,6 +313,11 @@ def oral_health_get_nominal_list_download(cnes=None):
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
             "Content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         }
+        send_download_request(
+            "Baixando lista nominal de sapude bucal.",
+            "lista_nominal_saude_bucal",
+            request,
+        )
         return Response(
             buffer.getvalue(),
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

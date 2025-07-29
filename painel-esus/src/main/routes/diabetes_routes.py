@@ -3,6 +3,7 @@ import io
 
 from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
+from src.infra.requests.factory import send_download_request
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.diabetes_dashboard_composer import (
     diabetes_dashboard_get_age_group_gender,
@@ -237,6 +238,11 @@ def get_nominal_list_download(cnes=None):
             'Content-Disposition': 'attachment; filename=lista_nominal.xlsx',
             'Content-type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         }
+        send_download_request(
+            "Baixando lista nominal de Diabetes.",
+            "lista_nominal_diabetes",
+            request,
+        )
         return Response(buffer.getvalue(), mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', headers=headers,)
 
     except Exception as exception:

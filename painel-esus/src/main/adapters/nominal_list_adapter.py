@@ -57,8 +57,6 @@ class AlertRecord:
 class BaseNominalAdapter:
     def __init__(self, user):
         if "alerta_afericao_pa" not in user:
-            print("---------->")
-            print(user)
             return
         endereco = self.get(user, "endereco")
         endereco += " " + self.get(user, "numero")

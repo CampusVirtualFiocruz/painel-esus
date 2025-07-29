@@ -2,6 +2,7 @@ import io
 
 from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
+from src.infra.requests.factory import send_download_request
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.children_compose import (
     children_acs_visit_until_6m,
@@ -338,7 +339,11 @@ def get_nominal_list_download(cnes=None):
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
             "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         }
-
+        send_download_request(
+            "Baixando lista nominal de desenvolvimento infantil.", 
+            'lista_nominal_infantil'
+            ,request
+        )
         return Response(
             buffer.getvalue(),
             mimetype=headers["Content-Type"],

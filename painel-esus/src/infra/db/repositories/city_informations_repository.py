@@ -82,14 +82,13 @@ class CityInformationsRepository(CityInformationRepository):
 
     def get_teams(self, cnes: int = None):
         sql = f""" select 
-                    distinct on (co_cidadao, codigo_equipe) 
+                    distinct on (codigo_equipe) 
                     co_fat_cidadao_pec cidadao_pec,
                     co_cidadao co_cidadao,
                     co_dim_unidade_saude codigo_unidade_saude,
                     nome_unidade_saude nome_unidade_saude,
                     codigo_equipe,
                     nome_equipe,
-                    nu_ine_vinc_equipe ine,
                     nu_micro_area micro_area
                 from 
                 read_parquet('./dados/output/cadastro_db.parquet') """

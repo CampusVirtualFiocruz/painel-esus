@@ -20,6 +20,7 @@ class CsvFileHandler(TimedRotatingFileHandler):
         mode="a",
         delay=False,
     ):
+        self.when = when.upper()
         super().__init__(
             filename=self.get_filename_location(filename),
             encoding=encoding,
@@ -29,7 +30,7 @@ class CsvFileHandler(TimedRotatingFileHandler):
             backupCount=backupCount,
         )
         self.filename = filename
-        self.when = when.upper()
+
         self.interval = interval
         self.backupCount = backupCount
         self.writer = csv.writer(self.stream)
@@ -39,7 +40,6 @@ class CsvFileHandler(TimedRotatingFileHandler):
     def _rotate_needed(self):
         current_time = int(time.time())
         diff = current_time - self.current_time
-
         if diff > self.interval:
             return True
         return False
@@ -61,7 +61,7 @@ class CsvFileHandler(TimedRotatingFileHandler):
             self.interval = 60 * 60  # one hour
             self.suffix = "%Y-%m-%d_%H"
             self.extMatch = r"^\d{4}-\d{2}-\d{2}_\d{2}$"
-        elif self.when == "D" or self.when == "MIDNIGHT":
+        elif self.when == "D" or self.when.upper() == "MIDNIGHT":
             self.interval = 60 * 60 * 24  # one day
             self.suffix = "%Y-%m-%d"
             self.extMatch = r"^\d{4}-\d{2}-\d{2}$"
@@ -83,7 +83,13 @@ class CsvFileHandler(TimedRotatingFileHandler):
             raise ValueError("Invalid rollover interval specified: %s" % self.when)
 
     def _get_filename(self, filename):
+
         now = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
+        if self.when.upper() == "MIDNIGHT" or self.when.upper() == "D":
+            now = dt.datetime.now().strftime("%Y-%m-%d")
+        if self.when.upper() == "S":
+            now = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
         name = filename.replace(".csv", "")
         return f"{name}{now}.csv"
 

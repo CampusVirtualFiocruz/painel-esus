@@ -53,7 +53,6 @@ def escrever_dados_raw(df,nome_parquet):
 
     output_path = os.path.join(working_directory, "dados", "output")  
     if lazy_on == 1:
-         print(output_path + os.sep + nome_parquet)
          df.collect().write_parquet(output_path + os.sep +nome_parquet)
 
     else:
@@ -1956,7 +1955,6 @@ def gerar_banco():
     end_time = time.time()
     execution_time = end_time - start_time
 
-    print(f"Tempo total de execução: {execution_time:.2f} segundos")
 
 
 

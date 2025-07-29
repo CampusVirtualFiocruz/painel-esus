@@ -26,11 +26,11 @@
       "formatter": "simple",
       "stream": "ext://sys.stdout"
     },
-    "file": {
+    "json": {
       "class": "src.errors.logger.json_handler.JSONFileHandler",
       "filename": "painel_esus_log.jsonl",
       "formatter": "json",
-      "when": "M",
+      "when": "midnight",
       "interval": 1,
       "backupCount": 5,
       "encoding": "utf-8",
@@ -40,7 +40,7 @@
       "class": "src.errors.logger.csv_handler.CsvFileHandler",
       "formatter": "simple",
       "filename": "painel_esus_log.csv",
-      "when": "M",
+      "when": "midnight",
       "interval": 1,
       "backupCount": 2
     }
@@ -51,6 +51,6 @@
     }
   },
   "root": {
-    "handlers": ["stdout","csv"]
+    "handlers": ["stdout","csv","json"]
   }
 }

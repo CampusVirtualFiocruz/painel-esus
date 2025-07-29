@@ -15,7 +15,6 @@ config_file = pathlib.Path(config_json_path)
 with open(config_file, "r", encoding="utf-8") as f_in:
     config = json.load(f_in)
 logging.config.dictConfig(config)
-print("Configuração de log carregada com sucesso!")
 
 logger = logging.getLogger("test")
 logger.handlers.clear()

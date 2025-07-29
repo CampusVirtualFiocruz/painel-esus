@@ -50,7 +50,7 @@ def escrever_dados_raw(df,nome_parquet):
     output_path = os.path.join(working_directory, "dados", "output")  
     if lazy_on == 1:
          #tb_pessoa = pl.scan_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet")
-         print(output_path + os.sep + nome_parquet)
+         #print(output_path + os.sep + nome_parquet)
          #df.collect().sink_parquet(output_path + os.sep + nome_parquet,compression='snappy',lazy=True)
          df.collect().write_parquet(output_path + os.sep +nome_parquet)
 
