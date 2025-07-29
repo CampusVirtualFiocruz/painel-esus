@@ -157,6 +157,7 @@ jobs:
                   LOG_API: https://painel-logs.painelsaude.info
                   APPLICATION_VERSION: ${{ env.RELEASE_VERSION }}
                   MOCK: '${{ env.MOCK }}'
+                  ACCESS_LIST: '${{ secrets.ACCESS_LIST }}'
                 ports:
                   - ${{ env.APP_PORT }}:5001
             networks:
