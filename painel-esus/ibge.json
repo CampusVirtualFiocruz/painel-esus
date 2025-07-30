@@ -44558,5 +44558,13 @@
     "IBGE": 5300108,
     "NOME DO MUNICIPIO": "Brasília",
     "POPULACAO": 2817381
+  },
+  {
+    "UF": "FC",
+    "COD_UF": 99,
+    "COD_MUNIC": "99999",
+    "IBGE": 9999999,
+    "NOME DO MUNICIPIO": "SUSOPOLIS",
+    "POPULACAO": 20000
   }
 ]
