@@ -32,25 +32,7 @@ root = ctk.CTk()
 if os.name != "posix":
     root.iconbitmap("interface/icon/Icon_Painel_Purple_ICO.ico")
 root.title("Configurar")
-root.geometry(center_window_to_display(root, 825, 750, root._get_window_scaling()))
-
-
-def start_progress_bar(window):
-    my_val_c = IntVar()
-    progress_bar = CTkProgressBar(window, width=1000, variable=my_val_c)
-
-    progress_bar.grid(column=0, row=1, padx=100, pady=100)
-
-    steps = 25
-    progress_bar.set(0)
-    progress_bar_val = 1 / steps
-    step_val = 0
-    for i in range(steps):
-        time.sleep(0.25)
-        step_val += progress_bar_val
-        progress_bar.set(step_val)
-        progress_bar.update_idletasks()
-    progress_bar.destroy()
+root.geometry(center_window_to_display(root, 790, 700, root._get_window_scaling()))
 
 
 def connect_db(new_window):
@@ -430,32 +412,6 @@ def success_frame():
     )
     create_new_env_button.pack(pady=12, padx=10)
 
-def testar_conexao_com_loading(frame, user, password, host, port, database, button, loading_label):
-    def tarefa():
-        try:
-            # Aqui faz o teste real, dentro da thread
-            with DBConnectionHandler(user, password, host, port, database) as db_con:
-                engine = db_con.get_engine()
-                res = pd.read_sql_query("select * from information_schema.tables", con=engine)
-            # Se chegou aqui sem erro:
-            resultado = "Conexão bem-sucedida!"
-            cor = "green"
-        except Exception as e:
-            resultado = f"Erro: {str(e)}"
-            cor = "red"
-
-        # Atualiza UI na thread principal
-        def atualiza_ui():
-            loading_label.configure(text=resultado, text_color=cor)
-            button.configure(state="normal")
-
-        frame.after(0, atualiza_ui)
-
-    loading_label.configure(text="Conectando...", text_color="gray")
-    button.configure(state="disabled")
-
-    threading.Thread(target=tarefa).start()
-
 
 def validar_ibge_codigo(codigo, label_status):
     # Exibe mensagem de verificação imediatamente
@@ -552,13 +508,9 @@ def check_all_inputs_filled(*args):
     ])
 
     is_ibge_valid = validate_status_label.cget("text") == "Código IBGE válido ✅\n"
-
-    print('ALL FILLED: ', all_filled)
-    print('IS VALID IBGE: ', is_ibge_valid)
     create_new_env_button.configure(state="normal" if all_filled and is_ibge_valid else "disabled")
 
 def excecute_validators(validate_button, test_connection_button):
-    print('CODIGO IBGE: ', input_cidade.get())
     if input_cidade.get():
         validar_ibge_codigo(input_cidade.get(), validate_status_label)
         validate_button.configure(state="normal")
@@ -603,7 +555,7 @@ def tabs():
     my_image = ctk.CTkImage(
         light_image=Image.open(image_path),
         dark_image=Image.open(image_path),
-        size=(100, 100),
+        size=(80, 80),
     )
     image_label = ctk.CTkLabel(
         master=frame, text="", font=("arial bold", 20), image=my_image
@@ -660,7 +612,7 @@ def tabs():
 
     label_info_painel = ctk.CTkLabel(
         master=frame_painel,
-        text="Preencha todos os campos abaixo solicitados para a configuração dos dados de acesso ao Painel e-SUS APS. \n Os campos 'Usuário' e 'Senha' aqui apresentados serão utilizados para fazer login na plataforma.",
+        text="Preencha todos os campos solicitados para a configuração dos dados de acesso ao Painel e-SUS APS. \n Os campos 'Usuário' e 'Senha' aqui configurados serão utilizados para fazer login na plataforma.",
         font=("arial bold", 15),
     )
     label_info_painel.pack(pady=12, padx=10)
