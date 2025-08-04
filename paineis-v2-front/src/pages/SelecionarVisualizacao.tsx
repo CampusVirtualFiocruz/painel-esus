@@ -1,26 +1,22 @@
+import { CSSProperties, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "reactstrap";
 import { useQuery } from "react-query";
-
-import { CSSProperties, useEffect, useState } from "react";
 import Select, { StylesConfig } from "react-select";
+import { Button } from "bold-ui";
 
 import { Api } from "../services/api";
-
 import { Header } from "../components/Header";
-// import { Header } from "../components/HeaderV2";
 import { Footer } from "../components/Footer";
-
-import "../styles/selecionarubs.scss";
-import "../styles/selecionarvisualizacao.scss";
 import variables from "../styles/_exports.module.scss";
-import { Button } from "bold-ui";
-import { getUBS, userCanSelectUBS } from "../App";
-
 import iconeEquipe from "../assets/images/visualizacao/Icone_Equipe.svg";
 import iconeMunicipio from "../assets/images/visualizacao/Icone_Municipio.svg";
 import iconeUbs from "../assets/images/visualizacao/Icone_UBS.svg";
 import { useAuth } from "../context/AuthProvider/useAuth";
+import { navigateHome } from "../utils";
+
+import "../styles/selecionarubs.scss";
+import "../styles/selecionarvisualizacao.scss";
 
 type Lista = {
   co_seq_dim_unidade_saude: number;
@@ -47,7 +43,7 @@ const customControlStyles: CSSProperties = {
 type IsMulti = false;
 
 const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
-  control: (provided, state) => {
+  control: (provided) => {
     return {
       marginTop: "10px",
       ...provided,
@@ -120,19 +116,15 @@ export function SelecionarVisualizacao() {
     }
   );
 
-  const handleToPainel = () => {
-    navigate("/painelx");
-  };
-
   const teamSuggestion = currentTeam || currentProfile?.currentTeam;
   const ubsSuggestion = currentUbs || currentProfile?.currentUbs;
 
   const handleToPainelWithTeam = () => {
-    navigate(`/painel/${ubsSuggestion}?equipe=${teamSuggestion}`);
+    navigateHome(navigate, `/${ubsSuggestion}?equipe=${teamSuggestion}`);
   };
 
   const handleToPainelWithUbs = () => {
-    navigate(`/painel/${ubsSuggestion}`);
+    navigateHome(navigate, `/${ubsSuggestion}`);
   };
 
   const onChangeSelection = (e: any) => {
@@ -159,7 +151,7 @@ export function SelecionarVisualizacao() {
                 alt="Ícone de Município"
               />
               <Button
-                onClick={handleToPainel}
+                onClick={() => navigateHome(navigate)}
                 type="button"
                 kind="primary"
                 style={{ marginTop: "10px" }}
@@ -168,7 +160,6 @@ export function SelecionarVisualizacao() {
               </Button>
             </div>
           </div>
-
           <div className="container-combo-ubs ms-md-4">
             <div className="container-icone">
               <img className="icone-ubs" src={iconeUbs} alt="Ícone de UBS" />
@@ -206,8 +197,7 @@ export function SelecionarVisualizacao() {
               )}
             </div>
           </div>
-
-          {currentProfile?.info != "not-configured" && (
+          {String(currentProfile?.info) !== "not-configured" && (
             <div
               className="container-combo-ubs ms-md-4"
               style={{

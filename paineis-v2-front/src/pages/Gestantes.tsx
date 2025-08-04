@@ -201,14 +201,6 @@ export function Gestantes() {
     }
   );
 
-  function handleToPainelUbs() {
-    navigate(`/painel/${id}`);
-  }
-
-  function handleToPainelMunicipio() {
-    navigate("/painelx");
-  }
-
   function handleToGestantesList() {
     if (id !== undefined) {
       navigate(`/gestantes/list/${id}`);
@@ -557,7 +549,6 @@ export function Gestantes() {
               </div>
             </div>
           </div>
-
           <div className="row my-5 text-center">
             <div className="col-12">
               <button
@@ -570,20 +561,7 @@ export function Gestantes() {
             </div>
           </div>
         </div>
-
-        {/*  <div className="d-flex flex-column align-items-center mt-5 gap-3">
-          {id && (
-            <Button onClick={handleToPainelUbs}>
-              Voltar para o Painel da UBS
-            </Button>
-          )}
-
-          <Button onClick={handleToPainelMunicipio}>
-            Visualizar dados do painel do Município
-          </Button>
-        </div> */}
       </div>
-
       <Footer />
     </div>
   );

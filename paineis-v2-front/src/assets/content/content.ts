@@ -3,6 +3,7 @@ export const content: any = {
 
   //comum
   urbana: "Zona Urbana",
+  urbano: "Zona Urbana",
   rural: "Zona Rural",
   periurbana: "Zona Periurbana",
   sim: "Sim",

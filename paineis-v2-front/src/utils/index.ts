@@ -253,3 +253,7 @@ export const groupBy = (input: any, key: string) => {
     }, {})
   ).map(([title, content]) => ({ title, content }));
 };
+
+export const navigateHome = (navigate: any, route: string = "") => {
+  navigate("/home"+(route));
+}

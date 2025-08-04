@@ -8,7 +8,7 @@ import { MdInfoOutline } from "react-icons/md";
 
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
-import { formataNumero, getNomeUbs, somaIndicador } from "../utils";
+import { formataNumero, getNomeUbs, navigateHome, somaIndicador } from "../utils";
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
 import { Zonas } from "../charts/Zonas";
@@ -173,12 +173,12 @@ export function Painel() {
 
   function handleToPainelMunicipio() {
     setLoading(true);
-    navigate("/painelx");
+    navigateHome(navigate);
   }
 
   const onChangeSelection = (e: any) => {
     setLoading(true);
-    navigate(`/painel/${e.value}`);
+    navigateHome(navigate, `/${e.value}`);
   };
 
   type availableRoutesToThemedReport =

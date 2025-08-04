@@ -25,6 +25,7 @@ import Qualidade from "./pages/Qualidade";
 import Infantil from "./pages/Infantil";
 import Idosa from "./pages/Idosa";
 import IdosaV2 from "./pages/IdosaV2";
+import NovoPainel from "./pages/NovoPainel";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -134,7 +135,7 @@ function App() {
                 }
               />
               <Route
-                path="/painelx"
+                path="/antigo-painelx"
                 element={
                   <ProtectedLayout>
                     <Painel />
@@ -142,10 +143,26 @@ function App() {
                 }
               />
               <Route
-                path="/painel/:id"
+                path="/antigo-painel/:id"
                 element={
                   <ProtectedLayout>
                     <Painel />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedLayout>
+                    <NovoPainel />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/home/:id"
+                element={
+                  <ProtectedLayout>
+                    <NovoPainel />
                   </ProtectedLayout>
                 }
               />
