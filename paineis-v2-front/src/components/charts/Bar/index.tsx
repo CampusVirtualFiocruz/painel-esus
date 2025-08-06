@@ -1,8 +1,8 @@
 import ReactECharts from "echarts-for-react";
-import { BarChart } from "../charts.types";
 import { content } from "../../../assets/content/content";
-import "./style.scss";
 import { getChartDescription } from "../../../utils/chartTitleUtils";
+import { BarChart } from "../charts.types";
+import "./style.scss";
 
 export function Bar(props: BarChart) {
   const series = new Set<string>();

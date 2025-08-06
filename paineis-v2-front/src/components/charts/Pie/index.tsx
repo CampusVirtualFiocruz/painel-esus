@@ -1,7 +1,7 @@
 import ReactECharts from "echarts-for-react";
-import "./style.scss";
 import { content } from "../../../assets/content/content";
 import { PieChart } from "../charts.types";
+import "./style.scss";
 
 export function Pie(props: PieChart) {
   const options = {

@@ -1,7 +1,7 @@
 import ReactECharts from "echarts-for-react";
-import "./style.scss";
 import { content } from "../../../assets/content/content";
 import { DonutChart } from "../charts.types";
+import "./style.scss";
 
 const formatters = {
   full: ["{a|{b}}", "{b|{@2012}}", "{b|({d}%)}"].join("\n"),
