@@ -95,10 +95,10 @@ jobs:
         run: |
           ls -la
           version="${{ github.head_ref || github.ref_name }}"
-          clean_version=$(echo "$version" | sed 's/^v//')
-          tar -czf painel-esus-setup$clean_version.tar.gz \
+          clean_version=$(basename "$version" | sed 's/^v//')
+          tar -czf painel-esus-setup-$clean_version.tar.gz \
             -C $(pwd)/painel-esus ibge.csv \
-            -C $(pwd)/painel-esus/interface icon \
+            --transform='s,^,interface/,' -C $(pwd)/painel-esus/interface icon \
             -C $(pwd)/paineis-v2-front static-files \
             -C $(pwd)/painel-esus/dist/ config \
             -C $(pwd)/painel-esus/dist/ painel-esus
@@ -111,15 +111,15 @@ jobs:
           AWS_REGION: "us-east-1"
         run: |
           version="${{ github.head_ref || github.ref_name }}"
-          clean_version=$(echo "$version" | sed 's/^v//')
-          aws s3 cp painel-esus-setup$clean_version.tar.gz \
+          clean_version=$(basename "$version" | sed 's/^v//')
+          aws s3 cp painel-esus-setup-$clean_version.tar.gz \
           "s3://painel-esus-public/instalador/"
         shell: bash
       - name: Validate files and compress
         run: |
           version="${{ github.head_ref || github.ref_name }}"
-          clean_version=$(echo "$version" | sed 's/^v//')
-          mv painel-esus-setup$clean_version.tar.gz painel-esus-setup-linux.tar.gz
+          clean_version=$(basename "$version" | sed 's/^v//')
+          mv painel-esus-setup-$clean_version.tar.gz painel-esus-setup-linux.tar.gz
 
   create-exe-files:
     needs: [build-backend]
