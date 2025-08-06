@@ -141,7 +141,7 @@ jobs:
                   DB_HOST: '${{ secrets.DATABASE_HOST  }}'
                   DB_PORT: '${{ secrets.DATABASE_PORT }}'
                   DB_DATABASE: '${{ secrets.DATABASE_NAME }}'
-                  CIDADE_IBGE: 2508505
+                  CIDADE_IBGE: 9999999
                   ESTADO: 'FC'
                   ADMIN_USERNAME: '${{ secrets.ADMIN_USERNAME }}'
                   ADMIN_PASSWORD: '${{ secrets.ADMIN_PASSWORD }}'
