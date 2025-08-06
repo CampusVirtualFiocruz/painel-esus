@@ -1,9 +1,9 @@
 import { Waffle as Nivo } from "@nivo/waffle";
 import { memo } from "react";
-import { DonutChart } from "../charts.types";
-import { content } from "../../../assets/content/content";
 import { FaUser } from "react-icons/fa";
+import { content } from "../../../assets/content/content";
 import { formatAsPercent } from "../../../utils";
+import { DonutChart } from "../charts.types";
 
 const colors = [
    "#0B5B98",

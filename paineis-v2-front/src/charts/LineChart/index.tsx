@@ -1,5 +1,4 @@
 import ReactECharts from "echarts-for-react";
-import { formatAsPercent } from "../../utils";
 import "./style.scss";
 
 type ResultType = {
