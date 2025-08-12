@@ -132,7 +132,7 @@ class ChildrenRepository:
             .split("ORDER BY")[0]
         )
 
-        total = self.session.fetchone(count_query)
+        total = self.session.fetchone(count_query)[0]
 
         return {
             "items": items,

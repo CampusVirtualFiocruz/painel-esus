@@ -1,0 +1,66 @@
+# @name login
+POST http://localhost:5001/v1/auth
+Content-Type: application/json
+
+{"username": "admin", "password": "FCadmin23"}
+
+###
+
+@token = {{login.response.body.$.data}}
+
+###
+GET http://localhost:5001/v1/arterial-hypertension/total
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/arterial-hypertension/by-gender
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/arterial-hypertension/by-race
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/arterial-hypertension/imc
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/arterial-hypertension/copmlications
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/arterial-hypertension/exams
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/arterial-hypertension/get-nominal-list/25
+Authorization: Bearer {{token}}
+
+###
+###
+GET http://localhost:5001/v1/diabetes/total
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/diabetes/by-gender
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/diabetes/by-race
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/diabetes/imc
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/diabetes/copmlications
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/diabetes/exams
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:5001/v1/diabetes/get-nominal-list/25?itemsPerPage=2
+Authorization: Bearer {{token}}

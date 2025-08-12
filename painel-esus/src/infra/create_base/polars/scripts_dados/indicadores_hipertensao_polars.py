@@ -7,15 +7,62 @@ from datetime import date, datetime
 
 import polars as pl
 from dateutil.relativedelta import relativedelta
-
-from .codigos_cbo import *
+from src.env.conf import getenv
 from src.errors.logging import logging
 
+from .codigos_cbo import *
+
+
+def ler_dados_raw(nome_parquet,columns=""):
+
+    os.getenv("ENV")
+    lazy_on = getenv("LAZY_ON", False) # se lazy_on true ler e escrever dados lazy, se lazy_on false, ler os dados da forma normal
+    working_directory  = os.getcwd()
+
+    input_path = os.path.join(working_directory, "dados", "input") 
+
+    output_path = os.path.join(working_directory, "dados", "output")  
+
+    if lazy_on == 1:
+         #tb_pessoa = pl.scan_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet")
+         df = pl.scan_parquet(input_path + os.sep +nome_parquet)
+         return df
+    else:
+        df = pl.read_parquet(input_path+os.sep+nome_parquet)
+        return df
+        
+
+def escrever_dados_raw(df,nome_parquet):
+
+    os.getenv("ENV")
+    
+    lazy_on = getenv("LAZY_ON", False) # se lazy_on true ler e escrever dados lazy, se lazy_on false, ler os dados da forma normal
+
+    working_directory  = os.getcwd()
+
+    input_path = os.path.join(working_directory, "dados", "input") 
+
+    output_path = os.path.join(working_directory, "dados", "output")  
+    print(pl.__version__)
+    if lazy_on == 1:
+         #tb_pessoa = pl.scan_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet")
+         print(output_path + os.sep + nome_parquet)
+         #df.collect().sink_parquet(output_path + os.sep + nome_parquet,compression='snappy',lazy=True)
+         df.collect().write_parquet(output_path + os.sep +nome_parquet)
+
+    else:
+        df.write_parquet(output_path + os.sep +nome_parquet)
+
+
+
 def gerar_banco():
+    print(os.getcwd())
     start_time = time.time()
     working_directory  = os.getcwd()
     input_path = os.path.join(working_directory, "dados", "input") 
     output_path = os.path.join(working_directory, "dados", "output")  
+
+    
 
     coluns_acv_geral = ['co_seq_acomp_cidadaos_vinc','co_unico_ultima_ficha','dt_nascimento_cidadao','no_sexo_cidadao','nu_cpf_cidadao',
                 'nu_cns_cidadao','nu_telefone_celular','nu_telefone_contato','no_cidadao'
@@ -44,33 +91,55 @@ def gerar_banco():
 
     columns_proced = ['co_seq_fat_proced_atend','co_fat_cidadao_pec','co_dim_tempo','ds_filtro_procedimento','co_dim_cbo','nu_peso','nu_altura']
 
-    #ler dados
-    tb_pessoa = pl.read_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet",columns=coluns_acv)
 
-    fci = pl.read_parquet(input_path + os.sep +"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
+    #ler dados
+
+
+    tb_pessoa = ler_dados_raw("tb_acomp_cidadaos_vinculados.parquet",coluns_acv)
+
+
+
+
+   # fci = pl.read_parquet(input_path + os.sep +"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
+    fci = ler_dados_raw("tb_fat_cad_individual.parquet",selected_columns_fci)
+
 
     fci = fci.rename({"nu_micro_area" : "nu_micro_area_fci"})
 
-    fai = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet",columns=selected_columns_atd_ind)
+    #fai = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet",columns=selected_columns_atd_ind)
+    fai = ler_dados_raw("tb_fat_atendimento_individual.parquet", selected_columns_atd_ind)
 
-    fao = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet",columns =fao_vars)
+  
 
-    fai_cods = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
+    #fao = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet",columns =fao_vars)
+    fao = ler_dados_raw("tb_fat_atendimento_odonto.parquet", fao_vars)
 
+   # fai_cods = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
+    fai_cods = ler_dados_raw("fat_atd_ind_cod.parquet")
 
-    fat_vis_dom = pl.read_parquet(input_path + os.sep +"tb_fat_visita_domiciliar.parquet", columns=vis_dom_vars)
-
-    proced_atend = pl.read_parquet(input_path + os.sep +"tb_fat_proced_atend.parquet",columns=columns_proced)
-
-
-    tb_dim_equipe = pl.read_parquet(input_path + os.sep +"tb_dim_equipe.parquet")
-
-    tb_dim_und_saude = pl.read_parquet(input_path + os.sep +"tb_dim_unidade_saude.parquet")
-
-    tb_atv_coletv_part= pl.read_parquet(input_path + os.sep +"tb_fat_atvdd_coletiva_part.parquet")
+    #fat_vis_dom = pl.read_parquet(input_path + os.sep +"tb_fat_visita_domiciliar.parquet", columns=vis_dom_vars)
+    fat_vis_dom = ler_dados_raw("tb_fat_visita_domiciliar.parquet", vis_dom_vars)
 
 
-    dim_raca_cor = pl.read_parquet(input_path + os.sep +"tb_dim_raca_cor.parquet")
+
+    #proced_atend = pl.read_parquet(input_path + os.sep +"tb_fat_proced_atend.parquet",columns=columns_proced)
+    proced_atend = ler_dados_raw("tb_fat_proced_atend.parquet", columns_proced)
+
+
+    #tb_dim_equipe = pl.read_parquet(input_path + os.sep +"tb_dim_equipe.parquet")
+    tb_dim_equipe = ler_dados_raw("tb_dim_equipe.parquet")
+
+    tb_dim_und_saude = ler_dados_raw("tb_dim_unidade_saude.parquet")
+
+    tb_atv_coletv_part = ler_dados_raw("tb_fat_atvdd_coletiva_part.parquet")
+
+    #tb_dim_und_saude = pl.read_parquet(input_path + os.sep +"tb_dim_unidade_saude.parquet")
+
+    #tb_atv_coletv_part= pl.read_parquet(input_path + os.sep +"tb_fat_atvdd_coletiva_part.parquet")
+
+
+    #dim_raca_cor = pl.read_parquet(input_path + os.sep +"tb_dim_raca_cor.parquet")
+    dim_raca_cor = ler_dados_raw("tb_dim_raca_cor.parquet")
     dim_raca_cor = dim_raca_cor.rename({"co_seq_dim_raca_cor" : "co_dim_raca_cor"}).select("co_dim_raca_cor","ds_raca_cor")
 
 
@@ -79,7 +148,8 @@ def gerar_banco():
 
 
     coluns_cbo = ['nu_cbo','co_seq_dim_cbo']
-    dim_cbo = pl.read_parquet(input_path + os.sep +"tb_dim_cbo.parquet",columns=coluns_cbo)
+   # dim_cbo = pl.read_parquet(input_path + os.sep +"tb_dim_cbo.parquet",columns=coluns_cbo)
+    dim_cbo = ler_dados_raw("tb_dim_cbo.parquet", coluns_cbo)
 
 
     dim_cbo = dim_cbo.with_columns(pl.col("co_seq_dim_cbo").cast(pl.Int64))
@@ -172,13 +242,13 @@ def gerar_banco():
 
 
 
+
     dt_12meses = datetime.today() - relativedelta(months=12)
     dt_6meses = datetime.today() - relativedelta(months=6)
 
 
     def calcular_data(meses: int):
         return datetime.today() - relativedelta(months=meses)
-
 
 
 
@@ -211,7 +281,6 @@ def gerar_banco():
 
 
 
-
     # selecionando variáveis de interesse e juntando ACV e FCI agrupada por cidadão
 
     fci_v2 = fci.select("co_fat_cidadao_pec","nu_uuid_ficha",'nu_micro_area_fci')
@@ -232,7 +301,7 @@ def gerar_banco():
         fci_v2,
         left_on="co_unico_ultima_ficha",
         right_on="nu_uuid_ficha",
-        how="left"
+        how="inner"
     ).join(
         cad_grouped,
         on="co_fat_cidadao_pec",
@@ -243,7 +312,6 @@ def gerar_banco():
 
 
 
-
     tb_pessoa_v2 = tb_pessoa_v2.sort(
         by=["co_fat_cidadao_pec", "dt_ultima_atualizacao_cidadao", "co_seq_acomp_cidadaos_vinc"],  # Prioriza chave, depois data, depois variável inteira
         descending=[False, True, True]             # Ordena data e variável inteira em ordem decrescente
@@ -251,7 +319,6 @@ def gerar_banco():
         subset="co_fat_cidadao_pec",                            # Remove duplicatas pela chave
         keep="first"                               # Mantém a primeira ocorrência após a ordenação
     )
-
 
     # ### criando coluna para indicar se contém hipertensão
 
@@ -300,10 +367,8 @@ def gerar_banco():
 
 
 
-
     # Filter rows where `isContained_HIPERTENSAO == 1`
     faip_cods_hiper = faip_cods_hiper.filter(pl.col("isContained_HIPERTENSAO") == 1)
-
 
 
 
@@ -325,7 +390,6 @@ def gerar_banco():
 
 
 
-
     fai_v2 = (
         fai
         # Convert `co_dim_tempo` to datetime and create `dt_atendimento`
@@ -339,7 +403,6 @@ def gerar_banco():
         ))
 
     #fai_v2.height
-
 
 
 
@@ -358,7 +421,6 @@ def gerar_banco():
 
 
 
-
     #cruzamento entre atendimento e cid/ciaps de hipertensão já agrupados por atendimentos únicos
     fai_hiper_atd_unico = fai_v2.join(
         grouped_faip,
@@ -367,12 +429,6 @@ def gerar_banco():
     )
 
     #grouped_faip.height # ao cruzar isso com fai , nao deveria encontrar todos?
-
-
-
-
-
-
 
     # #### n de pessoas com hipertensão
 
@@ -395,14 +451,11 @@ def gerar_banco():
 
 
 
-
     #tb_pessoa_v2.height
 
 
 
-
     #tb_pessoa_v2["co_fat_cidadao_pec"].n_unique()
-
 
 
 
@@ -419,6 +472,33 @@ def gerar_banco():
 
     #pessoas_hiper.height 
 
+    # Pessoas com hipertensão segundo sexo 
+
+
+
+    # COUNT ACV
+    #tb_pessoa_v2['no_sexo_cidadao'].value_counts()
+    categorias_validas_sexo = ["MASCULINO", "FEMININO", "INDETERMINADO"]
+
+    pessoas_hiper = pessoas_hiper.with_columns(
+        pl.when(pl.col("no_sexo_cidadao").str.to_uppercase().is_in(categorias_validas_sexo))
+        .then(pl.col("no_sexo_cidadao").str.to_uppercase())  # Mantém e padroniza para maiúsculas
+        .otherwise(pl.lit("NÃO INFORMADO"))  # Substitui valores inválidos
+        .alias("no_sexo_cidadao")  # Atualiza a coluna original
+    )
+
+    # Pessoas com hipertensão segundo Raça/Cor
+
+
+
+    categorias_validas = ["Branca", "Preta", "Amarela", "Parda", "Indígena"]
+
+    pessoas_hiper = pessoas_hiper.with_columns(
+        pl.when(pl.col("ds_raca_cor").is_in(categorias_validas))
+            .then(pl.col("ds_raca_cor"))  # Mantém o valor original se for válido
+            .otherwise(pl.lit("NÃO INFORMADO"))  # Substitui valores inválidos
+            .alias("ds_raca_cor")  # Atualiza a coluna original
+    )
 
 
 
@@ -436,6 +516,7 @@ def gerar_banco():
             
         )
     )
+
 
 
 
@@ -478,7 +559,6 @@ def gerar_banco():
 
 
 
-
     grouped_complicacoes = (
         fai_cods
         .group_by("co_seq_fat_atd_ind")
@@ -508,9 +588,7 @@ def gerar_banco():
 
 
 
-
     #grouped_complicacoes
-
 
 
 
@@ -526,19 +604,6 @@ def gerar_banco():
             (pl.sum("n_renal") >= 1).cast(pl.Int8).alias("n_renal")
         )
     )
-
-
-
-
-
-
-
-
-
-    fai_pessoas_agravo.select(
-        pl.col("n_renal").value_counts(sort=True)  # `sort=True` ordena do mais frequente para o menos
-    )
-
 
 
 
@@ -560,7 +625,6 @@ def gerar_banco():
 
 
 
-
     fai_v3 = (
         fai_v2
         .filter(
@@ -572,7 +636,6 @@ def gerar_banco():
 
 
 
-
     exames = (
         fai_cods
         .select("co_seq_fat_atd_ind","codigo","tipo")
@@ -580,12 +643,6 @@ def gerar_banco():
             (pl.col('tipo') == "Procedimentos Avaliados") |  (pl.col('tipo') == "Procedimentos Solicitados") 
         )
     )
-
-
-
-
-
-
 
 
 
@@ -733,6 +790,7 @@ def gerar_banco():
         )
         
     )
+
 
 
 
@@ -897,7 +955,6 @@ def gerar_banco():
 
 
 
-
     #### boas praticas colesterol
 
 
@@ -944,7 +1001,6 @@ def gerar_banco():
         )
         
     )
-
 
 
 
@@ -1013,7 +1069,6 @@ def gerar_banco():
         )
         
     )
-
 
     # ### Dados estratificação profissional  
 
@@ -1103,7 +1158,6 @@ def gerar_banco():
 
 
 
-
     # dados plot estratificação por profissional agregados
 
 
@@ -1124,6 +1178,7 @@ def gerar_banco():
         pl.sum("bin_outros").alias("total_outros"),
         pl.len().alias("n_atendimentos_12_meses")
     ])
+
 
 
 
@@ -1162,7 +1217,6 @@ def gerar_banco():
     )
 
 
-    pessoas_hiper_agravo_v2.height 
 
 
 
@@ -1189,10 +1243,10 @@ def gerar_banco():
 
 
 
+
     peso_altura = pl.concat([proced_atend_select,fao_select,fai_select,fac_select  ], how="diagonal") 
 
     idade_pessoas = pessoas_hiper_agravo_v2.select("dt_nascimento_cidadao","co_fat_cidadao_pec")
-
 
 
 
@@ -1244,7 +1298,6 @@ def gerar_banco():
 
 
 
-
     imc_grouped = (
         peso_altura_imc
         .with_columns(
@@ -1252,29 +1305,18 @@ def gerar_banco():
             pl.col("co_dim_tempo").cast(pl.Utf8).str.strptime(pl.Date, "%Y%m%d").alias("dt_atendimento"),
         )
         .with_columns(
-            
-            pl.when(
-                        pl.col("dt_atendimento") >= pl.date(
-                            pl.col("dt_atendimento").dt.year(),
-                            pl.col("dt_nasc_cidadao").dt.month(),
-                            pl.col("dt_nasc_cidadao").dt.day()
-                        )
-                    )
-                    .then(pl.col("dt_atendimento").dt.year() - pl.col("dt_nasc_cidadao").dt.year())
-                    .otherwise(pl.col("dt_atendimento").dt.year() - pl.col("dt_nasc_cidadao").dt.year() - 1)
-                    .cast(pl.Float32)
-                    .alias("idade")
+            ((pl.col("dt_atendimento") - pl.col("dt_nasc_cidadao")).dt.total_days() // 365)
+            .cast(pl.Float32)
+            .alias("idade")
+        )
+        .filter(pl.col("dt_atendimento") >= dt_12meses)
+        .filter(
+            (pl.col("nu_peso").is_not_null()) & (pl.col("nu_altura").is_not_null())
         )
         .filter(
-            pl.col("dt_atendimento") >= dt_12meses
+            (pl.col("idade") >= 20) & (pl.col("idade") <= 60)
         )
-        .filter(
-            (pl.col("nu_peso").is_not_null() ) & ( pl.col("nu_altura").is_not_null() )
-        )
-        .filter(
-            (pl.col("idade") >= 20 ) & ( pl.col("idade") <= 60 )
-        )
-        .sort("dt_atendimento",descending = True)
+        .sort("dt_atendimento", descending=True)
         .group_by("co_fat_cidadao_pec")
         .agg(
             pl.col("nu_peso").first().alias("nu_peso_mais_recente_quilos"),
@@ -1284,16 +1326,20 @@ def gerar_banco():
             (pl.col("nu_altura_mais_recente") / 100).alias("nu_altura_mais_recente_metros")
         )
         .with_columns(
-            (pl.col("nu_peso_mais_recente_quilos") / (pl.col("nu_altura_mais_recente_metros") ) ** 2).round(1).alias("imc")
+            (pl.col("nu_peso_mais_recente_quilos") / (pl.col("nu_altura_mais_recente_metros")) ** 2)
+            .round(1)
+            .alias("imc")
         )
-        .with_columns(
-            pl.when(pl.col("imc") < 18.5).then(pl.lit("baixo_peso"))
-            .when((pl.col("imc") >= 18.5) & (pl.col("imc") <= 24.9)).then(pl.lit("peso_adequado"))
-            .when((pl.col("imc") >= 25) & (pl.col("imc") <= 29.9)).then(pl.lit("excesso_peso"))
-            .when((pl.col("imc") >= 30) ).then(pl.lit("obesidade"))
-            .otherwise(pl.lit("na_outros"))
-            .alias("imc_categoria") 
-        ).select("imc_categoria","co_fat_cidadao_pec")
+    .with_columns(
+        pl.when(pl.col("imc") < 18.5).then(pl.lit("baixo_peso"))
+        .when((pl.col("imc") >= 18.5) & (pl.col("imc") <= 24.9)).then(pl.lit("peso_adequado"))
+        .when((pl.col("imc") >= 25) & (pl.col("imc") <= 29.9)).then(pl.lit("excesso_peso"))
+        .when(pl.col("imc") >= 30).then(pl.lit("obesidade"))
+        .otherwise(pl.lit("na_outros"))
+        .alias("imc_categoria")
+    )
+
+        .select("imc_categoria", "co_fat_cidadao_pec")
     )
 
 
@@ -1348,6 +1394,7 @@ def gerar_banco():
             .alias("tipo_ultima_consulta"),
     )
     ).select("co_fat_cidadao_pec","agg_medicos_enfermeiros","dt_ultima_consulta_med_enferm","tipo_ultima_consulta",'total_consulta_med_enferm')
+
 
 
 
@@ -1425,7 +1472,6 @@ def gerar_banco():
 
 
 
-
     #Um registro de medição de pressão arterial nos últimos 6 meses 
 
     fao_filtrado = fao.filter(pl.col('ds_filtro_procedimentos').str.contains(r"\|0301100039\|"))
@@ -1479,7 +1525,6 @@ def gerar_banco():
 
 
 
-
     fai_exames_creatinina_grouped = (
         fai_v2
         .join(
@@ -1524,7 +1569,6 @@ def gerar_banco():
             .alias("agg_creatinina"),
         )
     ).select("co_fat_cidadao_pec","agg_creatinina","data_ultimo_creatinina")
-
 
 
 
@@ -1587,7 +1631,6 @@ def gerar_banco():
         # .cast(pl.Int32,strict=False).alias("nu_ine2")
         ]).filter(pl.col("st_registro_valido_equipe") == 1)
     )
-
 
 
 
@@ -1685,6 +1728,7 @@ def gerar_banco():
 
 
 
+
     #endereço prioridade: domilicio -> cidadao
     colunas_cidadao = [
         'no_tipo_logradouro_tb_cidadao', 
@@ -1718,25 +1762,47 @@ def gerar_banco():
 
 
 
+    pessoas_hiper_agravo_v3 = pessoas_hiper_agravo_v3.rename({
+        'co_fat_cidadao_pec': 'cidadao_pec',
+        'nu_cns_cidadao': 'cns',
+        'nu_cpf_cidadao': 'cpf',
+        'no_sexo_cidadao': 'sexo',
+        'dt_nascimento_cidadao': 'data_nascimento',
+        'no_tipo_logradouro': 'tipo_logradouro',
+        'ds_logradouro': 'logradouro',
+        'nu_numero': 'numero',
+        'no_bairro': 'bairro',
+        'ds_cep': 'cep',
+        'ds_complemento': 'complemento',
+        'no_cidadao': 'nome',
+        'nu_micro_area': 'micro_area',
+        #'imc_categoria': '',  # checar
+        'co_dim_unidade_saude': 'codigo_unidade_saude',
+        'ds_raca_cor': 'raca_cor',
+        'ds_tipo_localizacao_domicilio': 'tipo_localizacao_domicilio'
+    })
 
-    lista_vars_final = ['co_fat_cidadao_pec',
-                        'nu_cns_cidadao',
-                        'nu_cpf_cidadao',
-                        'no_sexo_cidadao',
-                        'dt_nascimento_cidadao',
-                        'no_tipo_logradouro',
-                        'ds_logradouro',
-                        'nu_numero',
-                        'no_bairro',
-                        'ds_cep',
-                        'ds_complemento',
+
+
+
+    lista_vars_final = ['cidadao_pec',
+                        'cns',
+                        'cpf',
+                        'sexo',
+                        'data_nascimento',
+                        'tipo_logradouro',
+                        'logradouro',
+                        'numero',
+                        'bairro',
+                        'cep',
+                        'complemento',
                         'hipertensao',
                         'autoreferido',
                         'idade',
                         'faixa_etaria',
                         'telefone',
-                        'no_cidadao',
-                        'nu_micro_area',
+                        'nome',
+                        'micro_area',
                         'n_infarto_agudo',
                         'n_acidente_vascular',
                         'n_coronariana',
@@ -1755,12 +1821,12 @@ def gerar_banco():
                         'total_enfermeiros',
                         'total_outros',
                         'imc_categoria',
-                        'co_dim_unidade_saude',
+                        'codigo_unidade_saude',
                         'nome_unidade_saude',
                         'codigo_equipe',
                         'nome_equipe',
-                        'ds_raca_cor',
-                        'ds_tipo_localizacao_domicilio',
+                        'raca_cor',
+                        'tipo_localizacao_domicilio',
                         'agg_afericao_pa',
                         'dt_ultima_afericao_pa',
                         'agg_visitas_domiciliares_acs',
@@ -1795,5 +1861,16 @@ def gerar_banco():
                         'n_atendimentos_12_meses'
                     ]
 
+
+
+
     pessoas_hiper_agravo_v4 = pessoas_hiper_agravo_v3.select(lista_vars_final)
-    pessoas_hiper_agravo_v4.write_parquet(output_path+os.sep+"hipertensao.parquet")
+
+
+    #pessoas_hiper_agravo_v4.write_parquet(output_path+os.sep+"hipertensao.parquet")
+    escrever_dados_raw(pessoas_hiper_agravo_v4,"hipertensao.parquet")
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+
+    print(f"Tempo total de execução: {execution_time:.2f} segundos hiper")

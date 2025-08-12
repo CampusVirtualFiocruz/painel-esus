@@ -465,3 +465,4 @@ def filter_hypertension_by_localidade(cnes: int = None, equipe: int = None):
                 condition p )
             select tipo, count(*) total  from cidadaos group by 1
     """
+    
