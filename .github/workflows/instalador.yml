@@ -151,12 +151,14 @@ jobs:
 
       - name: Extract version from branch name
         id: extract_version
+        shell: bash
         run: |
           RELEASE_VERSION="${GITHUB_REF#refs/heads/instalador/}"
           echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
            
       - name: Replace VERSION in backend config
         working-directory: ./painel-esus
+        shell: bash
         run: sed -i "s/\${VERSION}/${RELEASE_VERSION}/g" src/env/conf.py
           
       - name: Install PyInstaller
