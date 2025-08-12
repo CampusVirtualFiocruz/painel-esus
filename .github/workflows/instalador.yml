@@ -149,16 +149,19 @@ jobs:
         with:
           python-version: "3.10" # Use the Python version you need
 
+      - name: Extract version from branch name
+        id: extract_version
+        run: |
+          RELEASE_VERSION="${GITHUB_REF#refs/heads/instalador/}"
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+           
+      - name: Replace VERSION in backend config
+        working-directory: ./painel-esus
+        run: sed -i "s/\${VERSION}/${RELEASE_VERSION}/g" src/env/conf.py
+          
       - name: Install PyInstaller
         run: pip install pyinstaller
         shell: cmd
-
-      # - name: Download NSSM
-      #   run: |
-      #     curl -L -o nssm.zip https://nssm.cc/release/nssm-2.24.zip
-      #     powershell -Command "Expand-Archive -Path nssm.zip -DestinationPath ."
-      #     copy .\nssm-2.24\win64\nssm.exe .\painel-esus\nssm.exe
-      #   shell: cmd
 
       - name: Build EXE config
         working-directory: ./painel-esus/interface

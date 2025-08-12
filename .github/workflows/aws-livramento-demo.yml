@@ -52,6 +52,9 @@ jobs:
           ${{ vars.ENV_BACK }}
           EOF
 
+      - name: Replace VERSION in backend config
+        working-directory: ./painel-esus
+        run: sed -i "s/\${VERSION}/${RELEASE_VERSION}/g" src/env/conf.py          
 
       - name: Build Docker image
         run: docker build -t ${{ env.DOCKER_TAG }} .
