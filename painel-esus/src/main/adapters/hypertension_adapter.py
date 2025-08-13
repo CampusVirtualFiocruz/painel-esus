@@ -5,7 +5,7 @@ from src.main.adapters.base.base_dashboard_adapter import BaseDashboardAdapter
 
 class HypertensionAdapter(BaseDashboardAdapter):
     def __init(self, tag):
-            return ({
+        return ({
                     tag: {
                         "tag": tag,
                         "value": 0,
@@ -16,13 +16,12 @@ class HypertensionAdapter(BaseDashboardAdapter):
                             },
                             {
                                 "tag": "nao-possui",
-                                "value": 0,
+                                "value": 1,
                             },
                         ],
                     },
                 })
 
-    
     def get_total(self, response):
 
         return response
@@ -84,7 +83,6 @@ class HypertensionAdapter(BaseDashboardAdapter):
             "excesso-peso",
             "obesidade",
             "nao-informado",
-            "na-outros",
         ]:
             imc_mapped = {
                 **imc_mapped,
@@ -92,6 +90,9 @@ class HypertensionAdapter(BaseDashboardAdapter):
             }
         for res in response:
             key = res[0].replace("_", "-")
+            if key not in imc_mapped:
+                key = "nao-informado"
+                
             imc_mapped[key]['value'] = float(res[1])
             imc_mapped[key]["data"][0]["value"] = float(res[1])
             imc_mapped[key]["data"][1]["value"] = 1 - float(res[1])
@@ -112,7 +113,10 @@ class HypertensionAdapter(BaseDashboardAdapter):
 
         for idx, res in enumerate(response):
             key = columns[idx]
-            percent = round(float(res[1]) / float(res[-1]), 3)
+            percent = 0
+            if float(res[1]) > 0:
+                percent = round(float(res[1]) / float(res[-1]), 3)
+
             imc_mapped[key]["value"] = percent
             imc_mapped[key]["data"][0]["value"] = percent
             imc_mapped[key]["data"][1]["value"] = 1 - percent

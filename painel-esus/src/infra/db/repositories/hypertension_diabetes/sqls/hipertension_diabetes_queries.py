@@ -108,11 +108,11 @@ def complications(type: str, cnes: int = None, equipe: int = None):
         atendimentos as (SELECT * from read_parquet('{}') {}),
         lista as (
             select 
-                sum(n_infarto_agudo) n_infarto_agudo, 
-                sum(n_acidente_vascular) n_acidente_vascular, 
-                sum(n_renal) n_renal,
-                sum(n_coronariana) n_coronariana, 
-                sum(n_cerebrovascular) n_cerebrovascular,
+                IFNULL(sum(n_infarto_agudo), 0) n_infarto_agudo, 
+                IFNULL(sum(n_acidente_vascular), 0) n_acidente_vascular, 
+                IFNULL(sum(n_renal), 0) n_renal,
+                IFNULL(sum(n_coronariana), 0) n_coronariana, 
+                IFNULL(sum(n_cerebrovascular), 0) n_cerebrovascular,
                 (select count(*) from atendimentos) as total    
             from atendimentos
             )

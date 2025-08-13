@@ -25,7 +25,7 @@ GET http://localhost:5001/v1/arterial-hypertension/imc
 Authorization: Bearer {{token}}
 
 ###
-GET http://localhost:5001/v1/arterial-hypertension/copmlications
+GET http://localhost:5001/v1/arterial-hypertension/complications
 Authorization: Bearer {{token}}
 
 ###
@@ -46,15 +46,15 @@ GET http://localhost:5001/v1/diabetes/by-gender
 Authorization: Bearer {{token}}
 
 ###
-GET http://localhost:5001/v1/diabetes/by-race
+GET http://localhost:5001/v1/diabetes/by-race/25
 Authorization: Bearer {{token}}
 
 ###
-GET http://localhost:5001/v1/diabetes/imc
+GET http://localhost:5001/v1/diabetes/imc/25
 Authorization: Bearer {{token}}
 
 ###
-GET http://localhost:5001/v1/diabetes/copmlications
+GET http://localhost:5001/v1/diabetes/complications/8
 Authorization: Bearer {{token}}
 
 ###

@@ -104,7 +104,7 @@ def get_imc(cnes=None):
     f"{urls['complications']}", methods=["GET"], endpoint="get_complications"
 )
 @diabetes_bp.route(
-    f"{urls['complications']}/<cnes>", methods=["GET"], endpoint="get_complications_id"
+    f"{urls['complications']}/<int:cnes>", methods=["GET"], endpoint="get_complications_id"
 )
 def get_complications(cnes=None):
     http_response = None
