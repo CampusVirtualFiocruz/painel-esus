@@ -47,7 +47,7 @@ const Waffle = (props: DonutChart) => {
   const cloneWaffleInfo:any = JSON.parse(JSON.stringify(waffleData));
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+    <div style={{ maxWidth: "600px", margin: "0 auto", ...(props?.config?.componentStyle || {}) }}>
       <Nivo
         width={600}
         height={300}

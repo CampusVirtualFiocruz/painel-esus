@@ -2,15 +2,12 @@ import { Button, Link } from "bold-ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { userCanSelectUBS } from "../../App";
+import { ReportBasicParams } from "../../utils";
 
 const content = {
   buttonViewList: "Ver lista nominal",
   buttonBackToCity: "Visualizar dados do Município",
   buttonBackToUbs: "Voltar página dados da UBS",
-};
-
-export type PainelParams = {
-  id: string;
 };
 
 export const ReportFooter = ({
@@ -26,7 +23,7 @@ export const ReportFooter = ({
     | "Infantil";
   equipe?: any;
 }) => {
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const navigate = useNavigate();
 
   const handleToViewList = () =>

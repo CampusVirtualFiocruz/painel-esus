@@ -10,14 +10,10 @@ import Pagination from "../components/Pagination";
 
 import { Api } from "../services/api";
 import { getUserLocalStorage } from "../context/AuthProvider/util";
-import { getNomeUbs } from "../utils";
+import { getNomeUbs, ReportBasicParams } from "../utils";
 
 import "../styles/gestanteList.scss";
 import { useState } from "react";
-
-type PainelParams = {
-  id: string;
-};
 
 type Lista = {
   co_dim_unidade_saude: number;
@@ -84,7 +80,7 @@ export function temPendencias(tipo: boolean) {
 
 export function GestantesList() {
   let navigate = useNavigate();
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const user = getUserLocalStorage();
   let paramRoute = id ? id : "all";
   const [currentPage, setCurrentPage] = useState<any>(1);

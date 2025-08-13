@@ -8,10 +8,10 @@ import LoadingSpinner from "../components/ui/LoadingSpinner";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
 import useReportDataIdosasV2 from "../hooks/sections/idosasV2/useReportDataIdosasV2";
-import "../styles/idosa.scss";
 import { getChartDescription } from "../utils/chartTitleUtils";
 import { ReportViewTypeEnum } from "../utils/viewTypeEnum";
-import { PainelParams } from "./Hipertensao";
+import "../styles/idosa.scss";
+import { ReportBasicParams } from "../utils";
 
 const reportHeader = [
   {
@@ -306,7 +306,7 @@ const IdosaV2 = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const { data, loadings, errors, refetchAll } = useReportDataIdosasV2({ ubsId: id, squadId: equipe });
 
   const reportViewType = !!equipe

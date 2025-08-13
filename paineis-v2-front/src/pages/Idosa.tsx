@@ -5,13 +5,11 @@ import { useQuery } from "react-query";
 import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
-import { PainelParams } from "./Hipertensao";
 import useReportDataIdosas from "../hooks/sections/idosas/useReportDataIdosas";
-import { getNomeUbs } from "../utils";
 import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
 import "../styles/idosa.scss";
-import { ReportViewTypeEnum } from "../utils/viewTypeEnum";
+import { ReportBasicParams } from "../utils";
 
 const reportHeader = [
   {
@@ -120,7 +118,6 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
   return Object.keys(chartList).map((chartKey) => {
     const CustomChart = chartList?.[chartKey]?.Chart;
     const chartConfigs = chartList?.[chartKey]?.config;
-    console.log({chartConfigs})
     const data = (report as any)?.[chartKey]?.data;
     const isRow = chartKey === "row";
 
@@ -160,7 +157,7 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
 };
 
 const Idosa = () => {
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
@@ -228,7 +225,6 @@ const Idosa = () => {
                     Object.keys(chartList).map((chartKey) => {
                       const CustomChart = chartList?.[chartKey]?.Chart;
                       const chartConfigs = chartList?.[chartKey]?.config;
-                      console.log({chartConfigs})
                       // chartConfigs.reportViewType = !!equipe ? ReportViewTypeEnum.EQUIPE : !!id ? ReportViewTypeEnum.UBS : ReportViewTypeEnum.MUNICIPIO;
                       const data = (report as any)?.[chartKey]?.data;
 

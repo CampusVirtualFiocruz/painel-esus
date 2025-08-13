@@ -1,19 +1,18 @@
 import { CSSProperties, memo } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-
 import { content } from "../../assets/content/content";
-import Medkit from "../../assets/images/medkit.png";
-import People from "../../assets/images/people.svg";
 import ErrorMessage from "../../components/ui/ErrorMessage";
 import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { ReportFooter } from "../../components/ui/ReportFooter";
 import ReportWrapper from "../../components/ui/ReportWrapper";
-import useReportDataInfantil from "../../hooks/sections/infantil/useReportDataInfantil";
-import "../../styles/idosa.scss";
+import useReportDataDiabetes from "../../hooks/sections/diabetes/useReportDataDiabetes";
 import { formataNumero, ReportBasicParams } from "../../utils";
 import { getChartDescription } from "../../utils/chartTitleUtils";
 import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
-import { reportCharts, reportSections } from "./Infantil.utils";
+import { Card, RenderSingleValue } from "../../components/ui";
+import { reportLeftSections, reportRightSections } from "./Diabetes.utils";
+import "../../styles/idosa.scss";
+import "./Diabetes.scss";
 
 const RenderChartGroup = ({
   report,
@@ -75,7 +74,7 @@ const RenderChartGroup = ({
       return (
         <div
           key={chartKey}
-          className="is-row"
+          //className="is-row"
           style={{
             gap: "10px",
             justifyContent: "center",
@@ -97,11 +96,11 @@ const RenderChartGroup = ({
 
     const containerStyle: CSSProperties = {
       position: "relative",
-      marginBottom: "40px",
+      marginBottom: "60px",
       textAlign: "center",
     };
 
-   // containerStyle.maxWidth = "400px";
+    // containerStyle.maxWidth = "400px";
 
     return (
       <div key={chartKey} style={containerStyle}>
@@ -124,6 +123,7 @@ const RenderChartGroup = ({
             style={{
               textAlign: "center",
               padding: renderSmall ? "30px" : "initial",
+              paddingTop: 0,
             }}
           >
             {content?.[chartList?.[chartKey]?.subtitle] ??
@@ -153,12 +153,15 @@ const RenderChartGroup = ({
   });
 };
 
-const Infantil = () => {
+const Diabetes = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
   const { id } = useParams<ReportBasicParams>();
-  const { data, loadings, errors, refetchAll } = useReportDataInfantil({ ubsId: id, equipe });
+  const { data, loadings, errors, refetchAll } = useReportDataDiabetes({
+    ubsId: id,
+    equipe,
+  });
 
   const reportViewType = !!equipe
     ? ReportViewTypeEnum.EQUIPE
@@ -168,17 +171,21 @@ const Infantil = () => {
 
   const footerNote = (
     <div>
-      ¹ Crianças que ainda não atingiram idade mínima para inclusão no critério
-      correspondente às diretrizes preconizadas pelo Ministério da Saúde
+      ¹ O número de pessoas com diabetes equivale ao total de indivíduos que
+      tiveram atendimentos individuais com registro do código CID e/ou CIAP
+      correspondente à condiçãode saúde na Ficha de Atendimento Individual,
+      somado ao conjunto de pessoas com registro autorreferido da condição de
+      saúde na Ficha de Cadastro Individual.
     </div>
   );
 
   return (
     <>
       <ReportWrapper
-        title={"Desenvolvimento Infantil"}
-        subtitle="Crianças até 36 meses"
-        footer={<ReportFooter chaveListaNominal="Infantil" equipe={equipe} />}
+        title={"Painel Diabetes"}
+        footer={
+          <ReportFooter chaveListaNominal="Diabetes" equipe={equipe} />
+        }
         footerNote={footerNote}
       >
         <div
@@ -192,141 +199,69 @@ const Infantil = () => {
             fontWeight: "bold",
           }}
         >
-          <div
-            style={{
-              flex: 1,
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                padding: "20px",
-                backgroundColor: "",
-                border: "1px solid black",
-                color: "black",
-                textAlign: "center",
-              }}
-            >
-              {loadings.total ? (
-                <LoadingSpinner size="sm" text="Carregando total..." />
-              ) : errors.total ? (
-                <ErrorMessage
-                  error={errors.total}
-                  title="Erro ao carregar total de crianças"
-                  showRetry={true}
-                  onRetry={refetchAll}
+          <div style={{ display: "flex", flexDirection: "row", gap: "6px" }}>
+            <Card style={{ flex: 1 }}>
+              <RenderSingleValue
+                icon="medkit"
+                title="Total de atendimentos nos últimos 12 meses"
+                value={formataNumero(
+                  data?.["total"]?.["total-atendimentos-12-meses"]?.data ?? []
+                )}
+              />
+            </Card>
+            <Card style={{ flex: 2 }}>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "20px" }}
+              >
+                <RenderSingleValue
+                  icon="people"
+                  title="Nº de pessoas com diabetes (CID/CIAP)¹"
+                  value={data?.["total"]?.[
+                    "total-pessoas-cid-ciap"
+                  ]?.data?.toLocaleString("pt-BR")}
                 />
-              ) : (
-                <>
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: "16px",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    Total de crianças
-                    <br />
-                    {getChartDescription("", reportViewType, [])}
-                  </span>
-                  <img
-                    src={People}
-                    alt="Icone de pessoas"
-                    width={"30px"}
-                    style={{
-                      filter: "",
-                      transform: "translate(-10px, -5px)",
-                    }}
-                  />
-                  <span style={{ fontSize: "26px" }}>
-                    {formataNumero(data?.total?.['total-cadastros']?.data ?? 0)}
-                  </span>
-                </>
-              )}
-            </div>
-            <span>&nbsp;</span>
-          </div>
-          <div
-            style={{
-              flex: 1,
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                padding: "20px",
-                backgroundColor: "",
-                border: "1px solid black",
-                color: "black",
-                textAlign: "center",
-              }}
-            >
-              {loadings["total-atendimentos"] ? (
-                <LoadingSpinner size="sm" text="Carregando atendimentos..." />
-              ) : errors["total-atendimentos"] ? (
-                <ErrorMessage
-                  error={errors["total-atendimentos"]}
-                  title="Erro ao carregar total de atendimentos"
-                  showRetry={true}
-                  onRetry={refetchAll}
+                <RenderSingleValue
+                  icon="people"
+                  title="Nº de pessoas com diabetes (autorreferida)¹"
+                  value={data?.["total"]?.[
+                    "total-pessoas-auto"
+                  ]?.data?.toLocaleString("pt-BR")}
                 />
-              ) : (
-                <>
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: "16px",
-                      marginBottom: "8px",
-                    }}
-                  >
-                    Total de crianças atendidas nos últimos 12 meses
-                  </span>
-                  <img
-                    src={Medkit}
-                    alt="Icone de pessoas"
-                    width={"30px"}
-                    style={{
-                      filter: "",
-                      transform: "translate(-10px, -5px)",
-                    }}
-                  />
-                  <span style={{ fontSize: "26px" }}>
-                    {formataNumero(data?.["total-atendimentos"] ?? [])}
-                  </span>
-                </>
-              )}
-            </div>
+              </div>
+            </Card>
           </div>
         </div>
-        {reportSections().map((chartList: any, index: number) => (
-          <RenderChartGroup
-            key={index}
-            report={data}
-            chartList={chartList}
-            reportViewType={reportViewType}
-            loadings={loadings}
-            errors={errors}
-            refetchAll={refetchAll}
-          />
-        ))}
-        <center style={{ marginTop: "60px", marginBottom: "30px" }}>
-          <h2>
-            <b>Proporção de crianças com:</b>
-          </h2>
-        </center>
-        {reportCharts.map((chartList: any, index: number) => (
-          <RenderChartGroup
-            key={index}
-            report={data}
-            chartList={chartList}
-            loadings={loadings}
-            errors={errors}
-            refetchAll={refetchAll}
-          />
-        ))}
+        <div style={{ display: "flex", flex: "row", gap: "80px" }}>
+        <div>
+          {reportLeftSections().map((chartList: any, index: number) => (
+            <RenderChartGroup
+              key={index}
+              report={data}
+              chartList={chartList}
+              reportViewType={reportViewType}
+              loadings={loadings}
+              errors={errors}
+              refetchAll={refetchAll}
+            />
+          ))}
+          </div>
+          <div style={{ paddingTop: "0"}}>
+          {reportRightSections().map((chartList: any, index: number) => (
+            <RenderChartGroup
+              key={index}
+              report={data}
+              chartList={chartList}
+              reportViewType={reportViewType}
+              loadings={loadings}
+              errors={errors}
+              refetchAll={refetchAll}
+            />
+          ))}
+          </div>
+        </div>
       </ReportWrapper>
     </>
   );
 };
 
-export default memo(Infantil);
+export default memo(Diabetes);
