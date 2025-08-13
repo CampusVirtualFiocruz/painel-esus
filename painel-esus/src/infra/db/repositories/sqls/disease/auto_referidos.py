@@ -439,9 +439,9 @@ def filter_diabetes_by_localidade(cnes: int = None, equipe: int = None):
             select
                 p.*,
                 case 
-                    when LOWER(ds_tipo_localizacao_domicilio) is null  then 'nao_definido'
-                    when LOWER(ds_tipo_localizacao_domicilio) = 'rural' then 'rural'
-                    when LOWER(ds_tipo_localizacao_domicilio) = 'urbana' then 'urbano'
+                    when LOWER(tipo_localizacao_domicilio) is null  then 'nao_definido'
+                    when LOWER(tipo_localizacao_domicilio) = 'rural' then 'rural'
+                    when LOWER(tipo_localizacao_domicilio) = 'urbana' then 'urbano'
                 end tipo    
             from
                 condition p )
@@ -457,9 +457,9 @@ def filter_hypertension_by_localidade(cnes: int = None, equipe: int = None):
             select
                 p.*,
                 case 
-                    when LOWER(ds_tipo_localizacao_domicilio) is null  then 'nao_definido'
-                    when LOWER(ds_tipo_localizacao_domicilio) = 'rural' then 'rural'
-                    when LOWER(ds_tipo_localizacao_domicilio) = 'urbana' then 'urbano'
+                    when LOWER(tipo_localizacao_domicilio) is null  then 'nao_definido'
+                    when LOWER(tipo_localizacao_domicilio) = 'rural' then 'rural'
+                    when LOWER(tipo_localizacao_domicilio) = 'urbana' then 'urbano'
                 end tipo    
             from
                 condition p )
