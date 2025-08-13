@@ -80,14 +80,22 @@ def anonymize_data_nascimento(data):
     return sep.join(response)
 
 def anonymize_data_equipe(data):
+    if data is None:
+        return "-"
     return mock_word(data, 0, False)
 
 def anonymize_data_address(data):
+    if data is None:
+        return "-"
     return mock_word(data, 0, False)
 
 def anonymize_data_cep(data):
+    if data is None:
+        return "-"
     return f"****{str(data)[4:]}"
 
 
 def anonymize_data_doc(data):
+    if data is None:
+        return '-'
     return re.sub(r'[0-9+]','*', str(data))
