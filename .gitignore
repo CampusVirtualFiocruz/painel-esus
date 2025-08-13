@@ -55,6 +55,6 @@ docker-compose.yaml
 **/**.log.**
 **/**.spec
 
-**.jsonl
-**/**.jsonl
+**.jsonl*
+**/**.jsonl*
 **/painel_esus_log*.csv
