@@ -14,6 +14,7 @@ from .sqls.hipertension_diabetes_queries import (
     exams_table,
     get_base_sql,
     get_number_of_patients,
+    get_sql_base_export,
     get_total,
     imc,
 )
@@ -184,6 +185,7 @@ class HypertensionDiabetesRepository:
 
     def get_nominal_list_download(self, cnes: int = None, equipe: int = None) -> Dict:
         con = duckdb.connect()
+        print("------")
         pessoas_sql = get_sql_base_export(self.disease, cnes, equipe)
         result = con.sql(pessoas_sql).df()
         if self.mock_data:
