@@ -11,8 +11,6 @@ start_time = time.time()
 from src.env.conf import getenv
 
 
-
-
 def gerar_banco():
     working_directory  = os.getcwd()
     input_path = os.path.join(working_directory, "dados", "input") 
@@ -23,6 +21,7 @@ def gerar_banco():
     dt_12meses = datetime.today() - relativedelta(months=12)
 
 
+    # In[190]:
 
 
     coluns_acv_geral = ['co_seq_acomp_cidadaos_vinc','st_usar_cadastro_individual','co_unico_ultima_ficha','dt_nascimento_cidadao','no_sexo_cidadao','nu_cpf_cidadao','st_possui_fci','st_possui_fcdt','co_cidadao',''
@@ -88,12 +87,26 @@ def gerar_banco():
     fat_vis_dom = pl.scan_parquet(input_path + os.sep +"tb_fat_visita_domiciliar.parquet")
 
 
+    dt_12meses = datetime.today() - relativedelta(months=12)
+
+    today = date.today()
+
+    dt_24meses = datetime.today() - relativedelta(months=24)
+
+    # ### Passo 7. Manipular dados conforme necessidades dos Indicadores
+    # #### Manipulando dados comuns aos indicadores
+
+    # In[8]:
+
+
+    # Quem nao tem fci fica sem co fat cidadao
+    # Desconsideram-se casos duplicados de cidadãos
 
     tb_pessoa_v2 = tb_pessoa.join(
         fci,
         left_on="co_unico_ultima_ficha",
         right_on="nu_uuid_ficha",
-        how="left"
+        how="inner"
     ).with_columns(
         pl.col("dt_ultima_atualizacao_cidadao").cast(pl.Utf8).str.strptime(pl.Date, "%Y-%m-%d").alias("dt_ultima_atualizacao_cidadao")
     ).sort(
@@ -104,12 +117,24 @@ def gerar_banco():
         keep="first"                               # Mantém a primeira ocorrência após a ordenação
     )
 
+    # ### Criando variáveis para o **Dashboard**
+    # 
+    # 
+    # #### - Criar dados cidadãos por **status de cadastro** (ou situação cadastral)
+    # (completo / incompleto / identificado e não cadastrado / outro)
+    # 
+    # #### - Criar dados sobre **atualização do cadastro**
+    # (atualizado nos últimos 24 meses / não atualizado)
+    # 
+    # #### - Criar dados **cidadãos por faixa etária**
+    # (1 a 4 anos / 5 a 9 anos / 10 a 14 anos / 15 a 19 anos / 20 a 29 anos / 30 a 39 anos / 40 a 49 anos / 50 a 59 anos / 60 a 69 anos / 70 a 79 anos / 80 anos ou mais)
+    # 
+    # #### - Criar dados cidadãos por **tipo de identificação**
+    # (identificados por CPF e/ou por  CNS / sem CPF e CNS)
+    # 
 
+    # In[9]:
 
-
-    today = date.today()
-
-    dt_24meses = datetime.today() - relativedelta(months=24)
 
     tb_pessoa_v3 = (
         tb_pessoa_v2
@@ -126,7 +151,7 @@ def gerar_banco():
                 .when(  
                     ( pl.col("st_possui_fci") == 0 ) & ( pl.col("st_possui_fcdt") == 0 )
                 )
-                .then(pl.lit("pessoa_ident_nao_cadastrada")) # pessoa identificada e não cadastrada
+                .then(pl.lit("pessoa_ident_nao_cadastrada")) # pessoa 
                 .when(  
                     ( pl.col("st_possui_fci") == 0 ) & ( pl.col("st_possui_fcdt") == 1 )
                 )
@@ -192,11 +217,12 @@ def gerar_banco():
             )
     )
 
+    # ### Criar dados sobre **acompanhamento e procedimento**
+    # 
+    # #### - Cadastros de cidadãos conforme situação de acompanhamento nos últimos 12 meses
+    # (acompanhados / não acompanhados)
 
-    # ### criar dados sobre acompanhamneto
-
-    # #### procedimento
-
+    # In[10]:
 
 
 
@@ -246,8 +272,10 @@ def gerar_banco():
     )
 
 
-    # #### atendimento
 
+    # #### Criar dados sobre atendimentos registrados em diferentes fichas nos últimos 12 meses
+
+    # In[11]:
 
 
     fai_v2 = (
@@ -319,10 +347,10 @@ def gerar_banco():
     )
 
 
+    # In[12]:
 
 
     atendimento =  pl.concat([fai_v2,fao_v2,marc_cons_alim_v2,atv_colet_v2,fat_vis_dom_v2])
-
 
     atendimento_grouped = (
         atendimento
@@ -340,25 +368,9 @@ def gerar_banco():
         )
     )
 
+    # #### 7.4. Renomeando e integrando variáveis de informações pessoais e do cadastro dos cidadãos
 
-
-
-
-    tb_pessoa_v4  = (
-        tb_pessoa_v3.join(atendimento_grouped, on="co_fat_cidadao_pec", how="left")
-    )
-
-    tb_pessoa_v5  = (
-        tb_pessoa_v4.join(procedimento_grouped, on="co_fat_cidadao_pec", how="left")
-    ).with_columns(
-        # Replace missing values with 2 in `indicador_medicoes_peso_altura`
-        pl.col("n_atendimentos").fill_null(0),
-        pl.col("n_procedimentos").fill_null(0),
-        pl.col("atendimentos").fill_null(0),
-        pl.col("procedimento").fill_null(0)
-    )
-
-
+    # In[13]:
 
 
     tb_dim_und_saude_v2 = (
@@ -391,9 +403,6 @@ def gerar_banco():
 
 
 
-
-
-
     tb_dim_equipe_v2 = (
         tb_dim_equipe
         .select([
@@ -421,22 +430,7 @@ def gerar_banco():
         ]).filter(pl.col("st_registro_valido_equipe") == 1)
     )
 
-
-
-
-    tb_pessoa_v6 = tb_pessoa_v5.join(
-        tb_dim_equipe_v2,
-        left_on="nu_ine_vinc_equipe",
-        right_on= "nu_ine",
-        how="left"
-    ).join(
-        tb_dim_und_saude_v3,
-        left_on="nu_cnes_vinc_equipe",
-        right_on= "codigo_unidade_saude",
-        how="left"
-    )
-
-
+    # In[14]:
 
 
     #endereço prioridade: domilicio -> cidadao
@@ -468,9 +462,54 @@ def gerar_banco():
         .alias(nomes)  # Mantém o nome original da coluna do cidadão
         for cidadao, domicilio, nomes in zip(colunas_cidadao, colunas_domicilio,colunas_nomes)
     ]
+
+    # 
+    # #### Agrupando dados de atendimento e procedimento por cidadão
+
+    # In[15]:
+
+
+    atendimento_grouped = atendimento_grouped.lazy()  # Convert to LazyFrame
+    tb_pessoa_v4 = tb_pessoa_v3.join(atendimento_grouped, on="co_fat_cidadao_pec", how="left")
+
+    tb_pessoa_v5  = (
+        tb_pessoa_v4.join(procedimento_grouped, on="co_fat_cidadao_pec", how="left")
+    ).with_columns(
+        # Replace missing values with 2 in `indicador_medicoes_peso_altura`
+        pl.col("n_atendimentos").fill_null(0),
+        pl.col("n_procedimentos").fill_null(0),
+        pl.col("atendimentos").fill_null(0),
+        pl.col("procedimento").fill_null(0)
+    )
+
+    # In[16]:
+
+
+    tb_pessoa_v6 = tb_pessoa_v5.join(
+        tb_dim_equipe_v2,
+        left_on="nu_ine_vinc_equipe",
+        right_on= "nu_ine",
+        how="left"
+    ).join(
+        tb_dim_und_saude_v3,
+        left_on="nu_cnes_vinc_equipe",
+        right_on= "codigo_unidade_saude",
+        how="left"
+    )
+
     tb_pessoa_v6 = tb_pessoa_v6.with_columns(expressoes)
 
+    # #### - Criando dados de **situação de acompanhamento** e **alertas** da lista nominal
+    # (sim / não)
+    # 
+    # #### - Incluindo dados dos cidadãos, incluindo **raça/cor** e **tipo de localização** na tabela pessoa final
+    # (raça/cor: branca / parda / preta / amarela / indígena / sem informação)
+    # 
+    # (tipo de localização: urbana / rural / sem informação)
+    # 
+    # 
 
+    # In[17]:
 
 
 
@@ -503,8 +542,7 @@ def gerar_banco():
             pl.col("nu_micro_area_tb_cidadao"),
         ]).alias("nu_micro_area")
 
-        ).select(
-            "co_fat_cidadao_pec",
+        ).select("co_fat_cidadao_pec",
             "co_cidadao",
             "nu_cnes_vinc_equipe",
             "nu_ine_vinc_equipe",
@@ -543,7 +581,6 @@ def gerar_banco():
     )
 
 
-    tb_pessoa_v7.sink_parquet(output_path+os.sep+"cadastro_db.parquet" )
-    
+    tb_pessoa_v7.sink_parquet(output_path+os.sep+"cadastro_db.parquet", row_group_size=8192 )
 
 

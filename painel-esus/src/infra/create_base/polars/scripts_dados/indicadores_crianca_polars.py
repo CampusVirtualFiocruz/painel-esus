@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
 
 import os
 import time
@@ -53,6 +51,7 @@ def escrever_dados_raw(df,nome_parquet):
 
     output_path = os.path.join(working_directory, "dados", "output")  
     if lazy_on == 1:
+         print(output_path + os.sep + nome_parquet)
          df.collect().write_parquet(output_path + os.sep +nome_parquet)
 
     else:
@@ -136,10 +135,7 @@ def gerar_banco():
     def calcular_data(meses: int):
         return datetime.today() - relativedelta(months=meses)
 
-
     # ### Passo 7. Filtrar os códigos de profissionais, exames ou condições de saúde dos Indicadores
-
-    # In[7]:
 
 
     # AJUSTE de CBO
@@ -202,12 +198,9 @@ def gerar_banco():
         .rename({"nu_cbo": "co_dim_cbo"})
     )
 
-
     # ### Passo 8. Manipular dados conforme necessidades dos Indicadores
 
     # ### Manipulando dados comuns aos indicadores
-
-    # In[8]:
 
 
     cad_grouped = (
@@ -241,12 +234,22 @@ def gerar_banco():
         fci_v2,
         left_on="co_unico_ultima_ficha",
         right_on="nu_uuid_ficha",
-        how="left"
+        how="inner"
     ).join(
         cad_grouped,
         on="co_fat_cidadao_pec",
         how="left"
+    ).with_columns(
+        pl.col("dt_ultima_atualizacao_cidadao").cast(pl.Utf8).str.strptime(pl.Date, "%Y-%m-%d").alias("dt_ultima_atualizacao_cidadao")
+    ).sort(
+        by=["co_fat_cidadao_pec", "dt_ultima_atualizacao_cidadao", "co_seq_acomp_cidadaos_vinc"],  # Prioriza chave, depois data, depois variável inteira
+        descending=[False, True, True]             # Ordena data e variável inteira em ordem decrescente
+    ).unique(
+        subset="co_fat_cidadao_pec",                            # Remove duplicatas pela chave
+        keep="first"                               # Mantém a primeira ocorrência após a ordenação
     )
+
+
 
     # criando dt_atendimento para FAI, usada em mais de um indicador, e filtrando cidadaos não nulos
 
@@ -292,8 +295,6 @@ def gerar_banco():
 
 
     # ## Total de crianças - Dashboard
-
-    # In[9]:
 
 
     tb_pessoa_v2 = (
@@ -354,13 +355,8 @@ def gerar_banco():
     )
 
 
-    # In[ ]:
 
 
-
-
-
-    # In[10]:
 
 
     crianca = tb_pessoa_v2.filter(
@@ -368,15 +364,9 @@ def gerar_banco():
     )
 
 
-    # In[11]:
-
-
     #crianca.select("idade_em_dias","idade_mes_ano")
 
-
     # ### Total de crianças Atendidas - Dashboard
-
-    # In[12]:
 
 
     total_criancas_atd = (
@@ -396,10 +386,7 @@ def gerar_banco():
         pl.col("crianca_atendida_12_meses").fill_null(0),
     )
 
-
     # ### Crianças segundo sexo - Dashboard
-
-    # In[13]:
 
 
     # COUNT ACV
@@ -413,10 +400,7 @@ def gerar_banco():
         .alias("no_sexo_cidadao")  # Atualiza a coluna original
     )
 
-
     # ### Crianças segundo Raça/Cor - Dashboard
-
-    # In[14]:
 
 
     categorias_validas = ["Branca", "Preta", "Amarela", "Parda", "Indígena"]
@@ -428,16 +412,10 @@ def gerar_banco():
             .alias("ds_raca_cor")  # Atualiza a coluna original
     )
 
-
     # ### Crianças segundo Faixa Etária - Dashboard
-
-    # In[15]:
 
 
     #crianca['idade'].value_counts()
-
-
-    # In[16]:
 
 
     # Faixas etárias com base em dias exatos
@@ -467,21 +445,12 @@ def gerar_banco():
     )
 
 
-    # In[17]:
-
-
     #crianca['faixa_etaria_0_3_anos'].value_counts()
-
-
-    # In[18]:
 
 
     crianca_dt_nasc = crianca.select('co_fat_cidadao_pec', 'dt_nasc_cidadao')
 
-
     # ### regex puericultura
-
-    # In[19]:
 
 
     puericultura2 = ['A98','ABP004']
@@ -493,8 +462,6 @@ def gerar_banco():
     # ## **Indicador I** - Crianças com primeira consulta até o 8° dia de vida - Dashboard - (% por categoria)
     # 
     # ### Lista Nominal: (Sim / Não) - ALERTA: Não
-
-    # In[20]:
 
 
     indicadorI = (
@@ -601,8 +568,6 @@ def gerar_banco():
     # ## **Indicador II** - Crianças com 9 consultas de puericultura até 2 anos de vida - Dashboard - (% por categoria)
     # 
     # ### Lista Nominal: (Sim / Não / Não se aplica) - ALERTA: Não
-
-    # In[21]:
 
 
     indicador_II = (
@@ -738,8 +703,6 @@ def gerar_banco():
     # ### Lista Nominal: Sim / Não / Não se aplica (criança com menos de 2 anos de vida)
     # 
 
-    # In[24]:
-
 
     # Etapa 0: Identificar datas de puericultura
     fichas_puericultura = (
@@ -865,12 +828,9 @@ def gerar_banco():
         ])
     )
 
-
     # ## **Indicador IV** - Crianças com uma visita domiciliar do ACS/TACS até 30 dias de vida  - Dashboard - (% por categoria)
     # 
     # ### Lista Nominal: (Sim / Não / Não se aplica) - ALERTA: Não
-
-    # In[25]:
 
 
     indicadorIV = (
@@ -962,8 +922,6 @@ def gerar_banco():
     # ### Lista Nominal: Sim / Não / Não se aplica (crianças com menos de 6 meses de vida)
     # 
 
-    # In[26]:
-
 
     indicadorV = (
         vis_dom_v2
@@ -1051,8 +1009,6 @@ def gerar_banco():
     # 
     # ### Lista Nominal: (Sim / Não / Não se aplica) - ALERTA: Não
 
-    # In[27]:
-
 
     indicadorVI = (
         fao_v2
@@ -1139,8 +1095,6 @@ def gerar_banco():
     # 
     # ### Lista Nominal: Sim / Não / Não se aplica (crianças com menos de 12 meses de vida)
     # 
-
-    # In[28]:
 
 
     indicadorVII = (
@@ -1230,10 +1184,7 @@ def gerar_banco():
         ])
     )
 
-
     # ### numero de consultas odonto ate 24 meses de vida 
-
-    # In[29]:
 
 
     n_odonto_ate_24 = (
@@ -1293,12 +1244,9 @@ def gerar_banco():
         
     )
 
-
     # ## **Indicador VIII** - Crianças com marcos do desenvolvimento avaliados  - Dashboard - (% por categoria)
     # 
     # ### Lista Nominal: (Sim / Não) - ALERTA: Não
-
-    # In[30]:
 
 
     indicadorVIII = (
@@ -1360,8 +1308,6 @@ def gerar_banco():
     # ## **Indicador IX** - Crianças com consumo alimentar avaliado (na data das consultas de puericultura) - Dashboard
     # 
     # ### Lista Nominal: Sim / Não
-
-    # In[31]:
 
 
     # Etapa 1: Filtrar apenas puericultura em fai_v2
@@ -1462,8 +1408,6 @@ def gerar_banco():
     ))
 
 
-    # In[34]:
-
 
     classificacao_final = processar_dados_nutricionais(classificacao_nutricional)
     classificacao_final = classificacao_final.select("co_fat_cidadao_pec","descricao_classificacao")
@@ -1476,10 +1420,7 @@ def gerar_banco():
     #        "descricao_classificacao"
     #    ]))
 
-
     # ## Passo 9. Criar tabela pessoa final com todas as variáveis necessárias para próximas etapas de desenvolvimento do Painel
-
-    # In[35]:
 
 
     # arrumando variáveis de unidade de saúde e equipe
@@ -1534,9 +1475,6 @@ def gerar_banco():
             .alias("nu_ine"),
         ]).filter(pl.col("st_registro_valido_equipe") == 1)
     )
-
-
-    # In[36]:
 
 
     # adicionando informações cidadaos conforme prioridades entre tabelas
@@ -1631,8 +1569,6 @@ def gerar_banco():
     # ### tratar não se aplica para casos onde os individuos não entraram no criterio do indicador
     #  exemplo : indicador ate 8 dias de vida, apos gerar o indicador ainda podem ficar dois casos, pessoas que nao fizeram consulta e tem 9dias ou mais e pessoas que nao fizeram a consulta e tem 8 dias ou menos
     #  é preciso tratar quem vai ser zero e quem vai ser não se aplica(99)
-
-    # In[37]:
 
 
     tabela_crianca_final_v2 = (
@@ -1777,13 +1713,7 @@ def gerar_banco():
     )
 
 
-    # In[38]:
-
-
     #tabela_crianca_final.select("co_fat_cidadao_pec","agg_dashboard_puericultura_9_consultas_ate_2_anos","agg_card_puericultura_9_consultas_ate_2_anos","idade_em_dias").head(100)
-
-
-    # In[39]:
 
 
     colunas_do_schema = tabela_crianca_final.collect_schema().names()
@@ -1806,8 +1736,6 @@ def gerar_banco():
         )
     )
 
-
-    # In[40]:
 
 
     #padronizando informações de endereço
@@ -1843,9 +1771,6 @@ def gerar_banco():
     tabela_crianca_final = tabela_crianca_final.with_columns(expressoes)
 
 
-    # In[41]:
-
-
     tabela_crianca_final = tabela_crianca_final.rename({
         'nu_cnes_vinc_equipe': 'cnes_equipe',
         'nu_ine_vinc_equipe': 'ine_equipe',
@@ -1877,13 +1802,8 @@ def gerar_banco():
     })
 
 
-    # In[42]:
-
 
     #tabela_crianca_final.glimpse() #199 e 80 colunas
-
-
-    # In[43]:
 
 
     tabela_crianca_final = (tabela_crianca_final
@@ -1955,6 +1875,7 @@ def gerar_banco():
     end_time = time.time()
     execution_time = end_time - start_time
 
+    print(f"Tempo total de execução: {execution_time:.2f} segundos")
 
 
 
