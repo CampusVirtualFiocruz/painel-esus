@@ -37,23 +37,27 @@ class HypertensionDiabetesRepository:
     def get_total(self, cnes: int = None, equipe: int = None, debug=False):
         self._validate(cnes, equipe)
         total_12 = self.session.fetchone(get_total(self.disease, cnes, equipe))
-        total = self.session.fetchone(
-            get_number_of_patients(self.disease, cnes, equipe)
-        )
+        total = self.session.fetchone(get_number_of_patients(self.disease, cnes, equipe))
         total_cid_ciap, total_auto = total[0], total[1]
         result = {
-            "total-atendimentos-12-meses": {"data": total_12[0]},
-            "total-pessoas-cid-ciap": {"data": total_cid_ciap},
-            "total-pessoas-auto": {"data": total_auto},
+            "total-atendimentos-12-meses": {
+                "data": total_12[0]
+            },
+            "total-pessoas-cid-ciap": {
+                "data": total_cid_ciap
+            },            
+            "total-pessoas-auto": {
+                "data": total_auto
+            }        
         }
         return result
 
     def get_exams_count(self, cnes: int = None, equipe: int = None, debug=False):
         self._validate(cnes, equipe)
         cares_sql = exams_table(self.disease, cnes, equipe)
-        result = self.session.fetchall(cares_sql)
+        result =  self.session.fetchall(cares_sql)
         if debug:
-            print(self.session.columns)
+            print(self.session.columns)        
         return result
 
     def get_imc(self, cnes: int = None, equipe: int = None, debug=False):
