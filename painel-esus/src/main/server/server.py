@@ -9,10 +9,7 @@ from flask_cors import CORS
 
 from src.env import env as config
 from src.main.routes.city_informations_route import CityInfoPath, city_informations_bp
-from src.main.routes.demographics_info_route import (
-    DemographichInfoPath,
-    demographics_info_bp,
-)
+from src.main.routes.demographic_route import DemographicPath, demographics_bp
 from src.main.routes.diabetes_routes import DiabetesPath, diabetes_bp
 from src.main.routes.elderly_routes import ElderlyPath, elderly_bp
 from src.main.routes.hypertension_routes import HypertensionPath, hypertension_bp
@@ -90,10 +87,10 @@ teams = TeamsPath()
 app.register_blueprint(teams_bp, url_prefix=teams.root_path)
 
 
-demographics_info = DemographichInfoPath()
+demographics_info = DemographicPath()
 register_blueprint(
     app,
-    (demographics_info_bp, demographics_info.root_path),
+    (demographics_bp, demographics_info.root_path),
     [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
 )
 

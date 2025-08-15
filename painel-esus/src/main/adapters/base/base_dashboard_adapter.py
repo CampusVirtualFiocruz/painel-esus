@@ -23,7 +23,7 @@ class BaseDashboardAdapter:
                 continue
             sexo = sexo.lower()
             if sexo not in result[faixa_etaria]:
-                sexo = "indeterminado"
+                continue
             result[faixa_etaria][sexo] += total
 
         return {

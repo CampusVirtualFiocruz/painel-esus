@@ -65,14 +65,12 @@ class HypertensionAdapter(BaseDashboardAdapter):
         }
         for i in columns:
             result = { **result, **__init(i)}
-
         for idx, res in enumerate(response):
-            if idx < len(res):
-                key = columns[idx]
-                for _, i in enumerate(res):
+            for idx2, i in enumerate(res):
+                key = columns[idx2]
+                if idx2 < len(res):
                     result_key = result_map[str(i)]
                     result[key]['value'][result_key]+=1
-
         return list(result.values())
 
     def get_imc(self, response):
@@ -92,7 +90,7 @@ class HypertensionAdapter(BaseDashboardAdapter):
             key = res[0].replace("_", "-")
             if key not in imc_mapped:
                 key = "nao-informado"
-                
+
             imc_mapped[key]['value'] = float(res[1])
             imc_mapped[key]["data"][0]["value"] = float(res[1])
             imc_mapped[key]["data"][1]["value"] = 1 - float(res[1])
@@ -111,14 +109,13 @@ class HypertensionAdapter(BaseDashboardAdapter):
         for i in columns:
             imc_mapped = {**imc_mapped, **self.__init(i)}
 
-        for idx, res in enumerate(response):
-            key = columns[idx]
-            percent = 0
-            if float(res[1]) > 0:
-                percent = round(float(res[1]) / float(res[-1]), 3)
-
-            imc_mapped[key]["value"] = percent
-            imc_mapped[key]["data"][0]["value"] = percent
-            imc_mapped[key]["data"][1]["value"] = 1 - percent
+        for idx, res in enumerate(response[0]):
+            if idx < len(response[0])-1:
+                percent = 0
+                key = columns[idx]
+                percent = round(float(res) / float(response[0][-1]), 3)
+                imc_mapped[key]["value"] = percent
+                imc_mapped[key]["data"][0]["value"] = percent
+                imc_mapped[key]["data"][1]["value"] = 1 - percent
 
         return list(imc_mapped.values())
