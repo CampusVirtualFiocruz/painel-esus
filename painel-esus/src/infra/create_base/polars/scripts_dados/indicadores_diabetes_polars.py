@@ -7,8 +7,50 @@ from datetime import date, datetime
 
 import polars as pl
 from dateutil.relativedelta import relativedelta
+from src.env.conf import getenv
 
 from .codigos_cbo import *
+
+
+def ler_dados_raw(nome_parquet,columns=""):
+
+    os.getenv("ENV")
+    lazy_on = getenv("LAZY_ON", False) # se lazy_on true ler e escrever dados lazy, se lazy_on false, ler os dados da forma normal
+    working_directory  = os.getcwd()
+
+    input_path = os.path.join(working_directory, "dados", "input") 
+
+    output_path = os.path.join(working_directory, "dados", "output")  
+
+    if lazy_on == 1:
+         #tb_pessoa = pl.scan_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet")
+         df = pl.scan_parquet(input_path + os.sep +nome_parquet)
+         return df
+    else:
+        df = pl.read_parquet(input_path+os.sep+nome_parquet)
+        return df
+        
+
+def escrever_dados_raw(df,nome_parquet):
+
+    os.getenv("ENV")
+    
+    lazy_on = getenv("LAZY_ON", False) # se lazy_on true ler e escrever dados lazy, se lazy_on false, ler os dados da forma normal
+
+    working_directory  = os.getcwd()
+
+    input_path = os.path.join(working_directory, "dados", "input") 
+
+    output_path = os.path.join(working_directory, "dados", "output")  
+    print(pl.__version__)
+    if lazy_on == 1:
+         #tb_pessoa = pl.scan_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet")
+         print(output_path + os.sep + nome_parquet)
+         #df.collect().sink_parquet(output_path + os.sep + nome_parquet,compression='snappy',lazy=True)
+         df.collect().write_parquet(output_path + os.sep +nome_parquet)
+
+    else:
+        df.write_parquet(output_path + os.sep +nome_parquet)
 
 
 def gerar_banco():
@@ -17,6 +59,15 @@ def gerar_banco():
     input_path = os.path.join(working_directory, "dados", "input") 
     output_path = os.path.join(working_directory, "dados", "output")  
 
+
+#!/usr/bin/env python
+# coding: utf-8
+
+# Passo 1. Grupo temático: Diabetes
+# 
+# Local no painel: Dashboard e Lista Nominal
+
+# Passo 2. Carregar ferramentas/pacotes utilizados
 
     coluns_acv_geral = ['co_seq_acomp_cidadaos_vinc','co_unico_ultima_ficha','dt_nascimento_cidadao','no_sexo_cidadao','nu_cpf_cidadao',
                 'nu_cns_cidadao','nu_telefone_celular','nu_telefone_contato','no_cidadao'
@@ -62,45 +113,58 @@ def gerar_banco():
     coluns_cbo = ['nu_cbo','co_seq_dim_cbo']
 
 
-    tb_pessoa = pl.read_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet",columns = columns_acv)
+   # tb_pessoa = pl.read_parquet(input_path + os.sep +"tb_acomp_cidadaos_vinculados.parquet",columns = columns_acv)
+    tb_pessoa = ler_dados_raw("tb_acomp_cidadaos_vinculados.parquet",columns_acv)
 
 
-    fci = pl.read_parquet(input_path + os.sep +"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
+    #fci = pl.read_parquet(input_path + os.sep +"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
+    fci = ler_dados_raw("tb_fat_cad_individual.parquet",selected_columns_fci)
+
     fci = fci.rename({"nu_micro_area" : "nu_micro_area_fci"})
 
 
-    fai = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet",columns=selected_columns_atd_ind)
+    #fai = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_individual.parquet",columns=selected_columns_atd_ind)
+    fai = ler_dados_raw("tb_fat_atendimento_individual.parquet", selected_columns_atd_ind)
 
 
 
-    fai_cods = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
+    #fai_cods = pl.read_parquet(input_path + os.sep +"fat_atd_ind_cod.parquet")
+    fai_cods = ler_dados_raw("fat_atd_ind_cod.parquet")
 
 
-    proced_atend = pl.read_parquet(input_path + os.sep +"tb_fat_proced_atend.parquet",columns = columns_proced)
+    #proced_atend = pl.read_parquet(input_path + os.sep +"tb_fat_proced_atend.parquet",columns = columns_proced)
+    proced_atend = ler_dados_raw("tb_fat_proced_atend.parquet", columns_proced)
 
 
-    fao = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet")#,columns = columns_fao)
+    #fao = pl.read_parquet(input_path + os.sep +"tb_fat_atendimento_odonto.parquet")#,columns = columns_fao)
+    fao = ler_dados_raw("tb_fat_atendimento_odonto.parquet", columns_fao)
 
 
     #fac = pl.read_parquet(input_path + os.sep +"tb_fat_atvdd_coletiva_part.parquet")
 
-    tb_atv_coletv_part= pl.read_parquet(input_path + os.sep +"tb_fat_atvdd_coletiva_part.parquet")
+    #tb_atv_coletv_part= pl.read_parquet(input_path + os.sep +"tb_fat_atvdd_coletiva_part.parquet")
+    tb_atv_coletv_part = ler_dados_raw("tb_fat_atvdd_coletiva_part.parquet")
 
 
-    fat_vis_dom = pl.read_parquet(input_path + os.sep + "tb_fat_visita_domiciliar.parquet", columns=columns_vis_dom)
+    #fat_vis_dom = pl.read_parquet(input_path + os.sep + "tb_fat_visita_domiciliar.parquet", columns=columns_vis_dom)
+    fat_vis_dom = ler_dados_raw("tb_fat_visita_domiciliar.parquet", columns_vis_dom)
 
     # Dimensão UNIDADE DE SAUDE
-    tb_dim_und_saude = pl.read_parquet(input_path + os.sep + "tb_dim_unidade_saude.parquet")
+    #tb_dim_und_saude = pl.read_parquet(input_path + os.sep + "tb_dim_unidade_saude.parquet")
+    tb_dim_und_saude = ler_dados_raw("tb_dim_unidade_saude.parquet")
 
     # Dimensão EQUIPE
-    tb_dim_equipe = pl.read_parquet(input_path + os.sep + "tb_dim_equipe.parquet")
+    #tb_dim_equipe = pl.read_parquet(input_path + os.sep + "tb_dim_equipe.parquet")
+    tb_dim_equipe = ler_dados_raw("tb_dim_equipe.parquet")
 
     # Dimensão RAÇA/COR
-    dim_raca_cor = pl.read_parquet(input_path + os.sep +"tb_dim_raca_cor.parquet")
+    #dim_raca_cor = pl.read_parquet(input_path + os.sep +"tb_dim_raca_cor.parquet")
+    dim_raca_cor = ler_dados_raw("tb_dim_raca_cor.parquet")
     dim_raca_cor = dim_raca_cor.rename({"co_seq_dim_raca_cor" : "co_dim_raca_cor"}).select("co_dim_raca_cor","ds_raca_cor")
 
 
-    dim_cbo = pl.read_parquet(input_path + os.sep +"tb_dim_cbo.parquet",columns=coluns_cbo)
+    #dim_cbo = pl.read_parquet(input_path + os.sep +"tb_dim_cbo.parquet",columns=coluns_cbo)
+    dim_cbo = ler_dados_raw("tb_dim_cbo.parquet", coluns_cbo)
 
     #Juntando raça/cor
     fci = fci.join(dim_raca_cor,on="co_dim_raca_cor",how='left')
@@ -194,6 +258,7 @@ def gerar_banco():
     )
 
 
+
     # Passo 5. Criar variáveis de tempo de acordo com Indicador, quando aplicável
 
 
@@ -204,7 +269,6 @@ def gerar_banco():
 
     def calcular_data(meses: int):
         return datetime.today() - relativedelta(months=meses)
-
 
     # Passo 6. Filtrar os códigos de profissionais, exames ou condições de saúde dos Indicadores 5 a 8
 
@@ -239,7 +303,6 @@ def gerar_banco():
 
 
 
-
     # selecionando variáveis de interesse e juntando ACV e FCI agrupada por cidadão
 
     fci_v2 = fci.select("co_fat_cidadao_pec","nu_uuid_ficha","nu_micro_area_fci")
@@ -257,7 +320,7 @@ def gerar_banco():
         fci_v2,
         left_on="co_unico_ultima_ficha",
         right_on="nu_uuid_ficha",
-        how="left"
+        how="inner"
     ).join(
         cad_grouped,
         on="co_fat_cidadao_pec",
@@ -271,7 +334,6 @@ def gerar_banco():
 
 
 
-
     tb_pessoa_v2 = tb_pessoa_v2.sort(
         by=["co_fat_cidadao_pec", "dt_ultima_atualizacao_cidadao", "co_seq_acomp_cidadaos_vinc"],  # Prioriza chave, depois data, depois variável inteira
         descending=[False, True, True]             # Ordena data e variável inteira em ordem decrescente
@@ -280,6 +342,7 @@ def gerar_banco():
         keep="first"                               # Mantém a primeira ocorrência após a ordenação
     )
 
+    # ###  criando coluna para indicar se contém diabetes
 
 
 
@@ -319,9 +382,7 @@ def gerar_banco():
 
 
 
-
     faip_cods_diabetes = faip_cods_diabetes.filter(pl.col("isContained_DIABETES") == 1)
-
 
 
 
@@ -345,9 +406,7 @@ def gerar_banco():
 
 
 
-
     #grouped_faip  # co se fat ate ind com 2 cids 308989 - verificar lista nominal final
-
 
 
 
@@ -373,8 +432,6 @@ def gerar_banco():
         .select("co_fat_cidadao_pec","co_seq_fat_atd_ind","dt_atendimento","co_dim_cbo_1","co_dim_cbo_2")
     )
     #fai_v3.height
-
-
 
 
 
@@ -412,7 +469,6 @@ def gerar_banco():
 
 
 
-
     # filtrando pessoas da ACV com diabetes
 
     pessoas_diabetes = tb_pessoa_v2.join(
@@ -443,6 +499,33 @@ def gerar_banco():
 
     #pessoas_diabetes.height
 
+    # Pessoas com diabetes segundo sexo 
+
+
+
+    # COUNT ACV
+    #tb_pessoa_v2['no_sexo_cidadao'].value_counts()
+    categorias_validas_sexo = ["MASCULINO", "FEMININO", "INDETERMINADO"]
+
+    pessoas_diabetes = pessoas_diabetes.with_columns(
+        pl.when(pl.col("no_sexo_cidadao").str.to_uppercase().is_in(categorias_validas_sexo))
+        .then(pl.col("no_sexo_cidadao").str.to_uppercase())  # Mantém e padroniza para maiúsculas
+        .otherwise(pl.lit("NÃO INFORMADO"))  # Substitui valores inválidos
+        .alias("no_sexo_cidadao")  # Atualiza a coluna original
+    )
+
+    # Pessoas com diabetes segundo Raça/Cor
+
+
+
+    categorias_validas = ["Branca", "Preta", "Amarela", "Parda", "Indígena"]
+
+    pessoas_diabetes = pessoas_diabetes.with_columns(
+        pl.when(pl.col("ds_raca_cor").is_in(categorias_validas))
+            .then(pl.col("ds_raca_cor"))  # Mantém o valor original se for válido
+            .otherwise(pl.lit("NÃO INFORMADO"))  # Substitui valores inválidos
+            .alias("ds_raca_cor")  # Atualiza a coluna original
+    )
 
     # ### Calculo Agravos
 
@@ -511,7 +594,6 @@ def gerar_banco():
 
 
 
-
     ## agrupar os atendimentos dos agravos em pessoas
     fai_pessoas_agravo = (
         fai_agravo
@@ -524,7 +606,6 @@ def gerar_banco():
             (pl.sum("n_renal") >= 1).cast(pl.Int8).alias("n_renal")
         )
     )
-
 
 
 
@@ -544,7 +625,6 @@ def gerar_banco():
 
     #pessoas_diabetes_agravo.height
 
-
     # ### separando informações de interesse exames - sem ciaps e cids, apenas procedimentos avaliados ou solicitados
 
 
@@ -558,7 +638,6 @@ def gerar_banco():
             (pl.col('tipo') == "Procedimentos Avaliados") |  (pl.col('tipo') == "Procedimentos Solicitados")
         )
     )
-
 
     # ### Passo 7.2
     # 
@@ -609,7 +688,6 @@ def gerar_banco():
             .alias("tipo_ultima_consulta"),
     )
     ).select("co_fat_cidadao_pec","agg_medicos_enfermeiros","dt_ultima_consulta_med_enferm","tipo_ultima_consulta",'total_consulta_med_enferm')
-
 
     # ### Passo 7.3
     # 
@@ -667,7 +745,6 @@ def gerar_banco():
 
     #afericao_pa.head()
 
-
     # ### Passo 7.4.
     # 
     # 
@@ -709,7 +786,6 @@ def gerar_banco():
             .alias("agg_visitas_domiciliares_acs"),
         )
     ).select("co_fat_cidadao_pec", "agg_visitas_domiciliares_acs", "dt_ultima_visita_domiciliar_acs", "n_visitas_domiciliares_acs")
-
 
     # ### Passo 7.5
     # 
@@ -764,7 +840,6 @@ def gerar_banco():
         )
         
     )
-
 
 
 
@@ -834,7 +909,6 @@ def gerar_banco():
         
     )
 
-
     # ### Passo. 7.6
     # 
     # 
@@ -886,7 +960,6 @@ def gerar_banco():
         )
     ).select("co_fat_cidadao_pec","agg_creatinina","dt_ultimo_creatinina")
 
-
     # ### Passo 7.7
     # 
     # 
@@ -936,7 +1009,6 @@ def gerar_banco():
         )
     ).select("co_fat_cidadao_pec","agg_hemoglobina","dt_ultima_hemoglobina_avaliado")
 
-
     # ### Passo 7.8
     # 
     # 
@@ -964,7 +1036,6 @@ def gerar_banco():
                 )
 
     pa_pe = pl.concat([fai_filtrado, proced_atend_filtrado], how="diagonal")
-
 
 
 
@@ -1009,7 +1080,6 @@ def gerar_banco():
         )
     ).select("co_fat_cidadao_pec","agg_exame_pe","dt_ultimo_pe")
 
-
     # ### Passo 7.9
     # 
     # 
@@ -1028,7 +1098,6 @@ def gerar_banco():
 
     #fao_v2.height
         
-
 
 
 
@@ -1059,7 +1128,6 @@ def gerar_banco():
             pl.len().alias("n_atend_odonto")
         )
     )
-
 
     # ### dados plot exames
 
@@ -1195,6 +1263,11 @@ def gerar_banco():
         
     )
 
+
+
+
+
+    #fai_exames.filter(pl.col("co_fat_cidadao_pec") == 100)
 
 
 
@@ -1338,7 +1411,6 @@ def gerar_banco():
         
     )
 
-
     # ### dados plot profissional 
 
 
@@ -1426,6 +1498,7 @@ def gerar_banco():
 
 
 
+
     # dados plot estratificação por profissional agregados
 
 
@@ -1486,8 +1559,7 @@ def gerar_banco():
     )
 
 
-    pessoas_diabetes_agravo_v2.height 
-
+    #pessoas_diabetes_agravo_v2.height 
 
     # ### Passo 7.10
     # 
@@ -1516,7 +1588,6 @@ def gerar_banco():
         .with_columns(pl.lit("fac").alias("tb"),
                     pl.col("co_dim_cbo_1").cast(pl.Utf8).alias("co_dim_cbo_1"))
     )
-
 
 
 
@@ -1570,6 +1641,7 @@ def gerar_banco():
             .alias("agg_peso_altura"),
         )
     ).select("co_fat_cidadao_pec","dt_ultima_peso_altura","agg_peso_altura")
+
 
 
 
@@ -1693,7 +1765,6 @@ def gerar_banco():
 
 
 
-
     pessoas_diabetes_agravo_v3 = pessoas_diabetes_agravo_v2.join(
         fao_atend_odonto,
         on="co_fat_cidadao_pec",
@@ -1800,6 +1871,7 @@ def gerar_banco():
 
 
 
+
     #endereço prioridade: domilicio -> cidadao
     colunas_cidadao = [
         'no_tipo_logradouro_tb_cidadao', 
@@ -1833,29 +1905,51 @@ def gerar_banco():
 
 
 
+    pessoas_diabetes_agravo_v3 = pessoas_diabetes_agravo_v3.rename({
+        'co_fat_cidadao_pec': 'cidadao_pec',
+        'nu_cns_cidadao': 'cns',
+        'nu_cpf_cidadao': 'cpf',
+        'no_sexo_cidadao': 'sexo',
+        'dt_nascimento_cidadao': 'data_nascimento',
+        'no_tipo_logradouro': 'tipo_logradouro',
+        'ds_logradouro': 'logradouro',
+        'nu_numero': 'numero',
+        'no_bairro': 'bairro',
+        'ds_cep': 'cep',
+        'ds_complemento': 'complemento',
+        'no_cidadao': 'nome',
+        'nu_micro_area': 'micro_area',
+        #'imc_categoria': '',  # checar
+        'co_dim_unidade_saude': 'codigo_unidade_saude',
+        'ds_raca_cor': 'raca_cor',
+        'ds_tipo_localizacao_domicilio': 'tipo_localizacao_domicilio'
+    })
 
-    lista_vars_final = ['co_fat_cidadao_pec',
-                        'nu_cns_cidadao',
-                        'nu_cpf_cidadao',
-                        'no_sexo_cidadao',
-                        'dt_nasc_cidadao',
-                        'no_tipo_logradouro',
-                        'ds_logradouro',
-                        'nu_numero',
-                        'ds_cep',
-                        'ds_complemento',
-                        'no_bairro',
+
+
+
+    lista_vars_final = ['cidadao_pec',
+                        'cns',
+                        'cpf',
+                        'sexo',
+                        'data_nascimento',
+                        'tipo_logradouro',
+                        'logradouro',
+                        'numero',
+                        'cep',
+                        'complemento',
+                        'bairro',
                         'diabetes',
                         'autoreferido',
                         'telefone',
-                        'no_cidadao',
-                        'nu_micro_area',
-                        'co_dim_unidade_saude',
+                        'nome',
+                        'micro_area',
+                        'codigo_unidade_saude',
                         'nome_unidade_saude',
                         'codigo_equipe',
                         'nome_equipe',
-                        'ds_raca_cor',
-                        'ds_tipo_localizacao_domicilio',
+                        'raca_cor',
+                        'tipo_localizacao_domicilio',
                         'agg_afericao_pa',
                         'dt_ultima_afericao_pa',
                         'agg_visitas_domiciliares_acs',
@@ -1914,4 +2008,16 @@ def gerar_banco():
                         ]
 
     pessoas_diabetes_v3 = pessoas_diabetes_agravo_v3.select(lista_vars_final)
-    pessoas_diabetes_v3.write_parquet(output_path+os.sep+"diabetes.parquet")
+
+
+
+
+
+    #pessoas_diabetes_v3.write_parquet(output_path+os.sep+"diabetes.parquet")
+    escrever_dados_raw(pessoas_diabetes_v3,"diabetes.parquet")
+
+
+    end_time = time.time()
+    execution_time = end_time - start_time
+
+    print(f"Tempo total de execução: {execution_time:.2f} segundos diabetes")

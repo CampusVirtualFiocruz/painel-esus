@@ -9,9 +9,7 @@ import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import { Api } from "../../services/api2";
 import "../../styles/sindromeAguda.scss";
-type PainelParams = {
-  id: string;
-};
+import { ReportBasicParams } from "../../utils";
 
 type TResponse = {
   co_dim_tempo: string;
@@ -59,7 +57,7 @@ export function SindromesAgudas() {
   const [rangeData, setRangeData] = useState<string[]>([]);
   const [responseData, setResponseData] = useState<TResponse[]>([]);
 
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const {
     data: sindromesAgudasData,
     isLoading,

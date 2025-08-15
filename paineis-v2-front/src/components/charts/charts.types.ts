@@ -30,6 +30,8 @@ type generalConfigs = {
   colors?: Array<string>;
   formatterKind?: string;
   componentStyle?: object;
+  chartConfigOverride?: object;
+  seriesConfigOverride?: object;
   reportViewType?: ReportViewTypeEnum.EQUIPE | ReportViewTypeEnum.UBS |  ReportViewTypeEnum.MUNICIPIO;
 };
 
@@ -46,6 +48,7 @@ type LinearChart = {
 type PercentualChart = {
   data: valueInput;
   config?: generalConfigs & {
+    radius?: number | string;
     radiusStart?: number | string;
   };
 };
@@ -53,6 +56,7 @@ type PercentualChart = {
 type PercentualGroupChart = {
   data: Array<{ tag?: string; value?: number; data?: valueInput }>;
   config?: generalConfigs & {
+    radius?: number | string;
     radiusStart?: number;
     highlightTag?: string;
   };
@@ -84,6 +88,7 @@ export type BarChart = LinearChart;
 export type LineChart = LinearChart;
 
 export type PieChart = PercentualChart;
+export type PieChartGroup = { list: Array<PercentualChart>};
 export type ProgressListChart = PercentualChart;
 export type DonutChart = PercentualChart & {
   config?: generalConfigs & {

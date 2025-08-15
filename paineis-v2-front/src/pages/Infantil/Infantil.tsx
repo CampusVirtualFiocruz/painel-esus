@@ -10,10 +10,9 @@ import { ReportFooter } from "../../components/ui/ReportFooter";
 import ReportWrapper from "../../components/ui/ReportWrapper";
 import useReportDataInfantil from "../../hooks/sections/infantil/useReportDataInfantil";
 import "../../styles/idosa.scss";
-import { formataNumero } from "../../utils";
+import { formataNumero, ReportBasicParams } from "../../utils";
 import { getChartDescription } from "../../utils/chartTitleUtils";
 import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
-import { PainelParams } from "../Hipertensao";
 import { reportCharts, reportSections } from "./Infantil.utils";
 
 const RenderChartGroup = ({
@@ -158,7 +157,7 @@ const Infantil = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const { data, loadings, errors, refetchAll } = useReportDataInfantil({ ubsId: id, equipe });
 
   const reportViewType = !!equipe
@@ -173,8 +172,6 @@ const Infantil = () => {
       correspondente às diretrizes preconizadas pelo Ministério da Saúde
     </div>
   );
-
-  console.log({data})
 
   return (
     <>

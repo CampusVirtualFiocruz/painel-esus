@@ -11,7 +11,7 @@ import {
   TooltipTrigger,
 } from "../components/ui/Tooltip";
 import useReportDataQualidade from "../hooks/sections/qualidade/useReportDataQualidade";
-import { PainelParams } from "./Hipertensao";
+import { ReportBasicParams } from "../utils";
 
 let reportHeader = [
   {
@@ -82,7 +82,7 @@ const reportSections = [
 const footer = `O número de pessoas cuja Qualidade do Cadastro foi avaliada equivale ao total de indivíduos registrados por meio das Fichas de Cadastro Individual (FCI), Módulo Cidadão PEC (Prontuário Eletrônico do Cidadão) e da Recusa de Cadastro.`;
 
 const Qualidade = () => {
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 

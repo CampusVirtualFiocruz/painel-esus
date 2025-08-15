@@ -690,6 +690,7 @@ class RecordNominalListAdapter:
         self.telefone = user["telefone"]
         self.alerta_status_cadastro = user["alerta_status_cadastro"]
         self.status_cadastro = user["status_cadastro"]
+
         self.alerta = user["alerta"]
 
         ultima_atualizacao_cidadao, ultima_atualizacao_fcd = True, True
@@ -701,6 +702,18 @@ class RecordNominalListAdapter:
             ultima_atualizacao_fcd = False
 
         self.registros = []
+        acompanhamento = {
+            '1': "Em acompanhamento",
+            '0': "Não acompanhado"
+        }
+        self.registros.append(
+            AlertRecord(
+                data=acompanhamento[str(user["acompanhamento"])],
+                exibir_alerta=False,
+                descricao="Situação de acompanhamento",
+                tipo_alerta="acompanhamento",
+            )
+        )
         self.registros.append(
             AlertRecord(
                 data=user["ultima_atualizacao_fci"],

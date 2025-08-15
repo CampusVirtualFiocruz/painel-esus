@@ -8,11 +8,7 @@ import { Footer } from "../components/Footer";
 
 import { Api } from "../services/api";
 import "../styles/gestante.scss";
-import { cpfMask } from "../utils";
-
-type PainelParams = {
-    id: string;
-}
+import { cpfMask, ReportBasicParams } from "../utils";
 
 type TGestante = {
     nome: string | undefined;
@@ -34,7 +30,7 @@ type TGestante = {
 
 export function Gestante() {
     let navigate = useNavigate();
-    const { id } = useParams<PainelParams>();
+    const { id } = useParams<ReportBasicParams>();
     const txtNaoCadastrado = 'NÃO CADASTRADO'
 
     const { data, isLoading, error } = useQuery<TGestante>(['pregnants-by-id', id], async () => {

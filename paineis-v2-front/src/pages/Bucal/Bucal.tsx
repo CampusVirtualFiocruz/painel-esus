@@ -10,10 +10,9 @@ import { ReportFooter } from "../../components/ui/ReportFooter";
 import ReportWrapper from "../../components/ui/ReportWrapper";
 import useReportDataBucal from "../../hooks/sections/bucal/useReportDataBucal";
 import "../../styles/idosa.scss";
-import { formataNumero } from "../../utils";
+import { formataNumero, ReportBasicParams } from "../../utils";
 import { getChartDescription } from "../../utils/chartTitleUtils";
 import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
-import { PainelParams } from "../Hipertensao";
 import { reportCharts, reportSections } from "./Bucal.utils";
 
 const RenderChartGroup = ({
@@ -159,7 +158,7 @@ const Bucal = () => {
     "atendidas"
   );
 
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const { data, loadings, errors, refetchAll } = useReportDataBucal({ ubsId: id, equipe, recorte });
 
   const reportViewType = !!equipe

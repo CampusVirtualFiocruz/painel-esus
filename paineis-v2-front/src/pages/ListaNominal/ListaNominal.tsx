@@ -8,10 +8,7 @@ import usePaginatedList from "./usePaginatedList";
 import { columns, Footer, footerNotes } from "./ListaNominal.utils";
 import "../../styles/gestanteList.scss";
 import "../../styles/listaNominal.scss";
-
-type PainelParams = {
-  id: string;
-};
+import { ReportBasicParams } from "../../utils";
 
 interface RowType {
   nome: string;
@@ -29,7 +26,7 @@ interface RowType {
 }
 
 const ListaNominal = () => {
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<any>({ loaded: 7 });
   const [searchTerm, setSearchTerm] = useState("");

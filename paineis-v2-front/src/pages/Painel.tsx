@@ -8,7 +8,7 @@ import { MdInfoOutline } from "react-icons/md";
 
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
-import { formataNumero, getNomeUbs, somaIndicador } from "../utils";
+import { formataNumero, getNomeUbs, ReportBasicParams, somaIndicador } from "../utils";
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
 import { Zonas } from "../charts/Zonas";
@@ -34,9 +34,6 @@ import children from "../assets/images/menu/children.png";
 import old from "../assets/images/menu/old.png";
 import quality from "../assets/images/menu/quality.png";
 
-type PainelParams = {
-  id: string;
-};
 type Indicator = {
   rural: number;
   urbano: number;
@@ -115,7 +112,7 @@ type ResponseDataListUbs = {
 
 export function Painel() {
   let navigate = useNavigate();
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe");
   const { cityInformation } = useInfo();

@@ -68,6 +68,12 @@ def anonymize_data_frame( data):
     return data
 
 def anonymize_data_nascimento(data):
+    if data is None:
+        return "-"
+    mock = getenv("MOCK", False, False) == "True"
+    if not mock:
+        return data
+
     data = str(data).split(" ")[0]
     sep = "/" if "/" in data else "-"
     input_data = data.split(sep)
@@ -80,14 +86,28 @@ def anonymize_data_nascimento(data):
     return sep.join(response)
 
 def anonymize_data_equipe(data):
+    if data is None:
+        return "-"
     return mock_word(data, 0, False)
 
 def anonymize_data_address(data):
+    if data is None:
+        return "-"
     return mock_word(data, 0, False)
 
 def anonymize_data_cep(data):
+    if data is None:
+        return "-"
+    mock = getenv("MOCK", False, False) == "True"
+    if not mock:
+        return data
     return f"****{str(data)[4:]}"
 
 
 def anonymize_data_doc(data):
+    if data is None:
+        return '-'
+    mock = getenv("MOCK", False, False) == "True"
+    if not mock:
+        return data
     return re.sub(r'[0-9+]','*', str(data))
