@@ -12,11 +12,9 @@ class BaseDashboardAdapter:
         }
 
     def group_gender_age(self, response):
-        result = defaultdict(lambda: {
-            "feminino": 0,
-            "masculino": 0,
-            "indeterminado": 0
-        })
+        result = defaultdict(
+            lambda: {"feminino": 0, "masculino": 0, "indeterminado": 0}
+        )
 
         for sexo, faixa_etaria, total in response:
             if not (sexo and faixa_etaria and total is not None):
@@ -28,10 +26,7 @@ class BaseDashboardAdapter:
 
         return {
             "data": [
-                {
-                    "tag": self.__format_faixa_etaria(faixa_etaria),
-                    "value": valores
-                }
+                {"tag": self.__format_faixa_etaria(faixa_etaria), "value": valores}
                 for faixa_etaria, valores in result.items()
             ]
         }

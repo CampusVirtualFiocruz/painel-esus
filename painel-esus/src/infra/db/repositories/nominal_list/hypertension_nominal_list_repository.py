@@ -16,7 +16,8 @@ from src.infra.db.settings.connection_local import (
 
 
 class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
-    _base = 'hipertensao_nominal'
+    _base = "hipertensao_nominal"
+
     def get_query(self, sql):
         result = None
         with DBConnectionHandler() as con:
@@ -168,7 +169,9 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
             )
         )
         hypertension_list = hypertension_list.select(pl.all().exclude("diagnostico"))
-        hypertension_list = hypertension_list.with_columns(pl.col('tipo').alias('diagnostico'))
+        hypertension_list = hypertension_list.with_columns(
+            pl.col("tipo").alias("diagnostico")
+        )
 
         fai_cids = fai.join(
             hypertension_list,
@@ -178,16 +181,19 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
 
         fai_cids = (
             fai_cids.filter(
-                ((
-                    pd.to_datetime("today").normalize().to_pydatetime()
-                    - pl.col("co_dim_tempo").cast(pl.String).str.to_date("%Y%m%d")
-                ).dt.total_days()
-                <= 365 )| pl.col('tipo').str.contains('autorreferido')
+                (
+                    (
+                        pd.to_datetime("today").normalize().to_pydatetime()
+                        - pl.col("co_dim_tempo").cast(pl.String).str.to_date("%Y%m%d")
+                    ).dt.total_days()
+                    <= 365
+                )
+                | pl.col("tipo").str.contains("autorreferido")
             )
             .select("co_fat_cidadao_pec")
             .unique(subset=["co_fat_cidadao_pec"])
         )
-        fai_cids= fai_cids["co_fat_cidadao_pec"].to_list()
+        fai_cids = fai_cids["co_fat_cidadao_pec"].to_list()
 
         min_date_atendimentos = (
             fai.select(
@@ -226,14 +232,16 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
 
         visita_acs = self.visita_acs()
 
-        nominal_list = nominal_list.join(min_date_atendimentos, on='cidadao_pec', how='left')
+        nominal_list = nominal_list.join(
+            min_date_atendimentos, on="cidadao_pec", how="left"
+        )
 
         if visita_acs is not None and visita_acs.shape[0] > 0:
             nominal_list = nominal_list.join(visita_acs, on="cidadao_pec", how="left")
         else:
             nominal_list = nominal_list.with_columns(
-                pl.lit(None).alias('data_ultima_visita_acs'),
-                pl.lit(99).alias('meses_desde_ultima_visita')
+                pl.lit(None).alias("data_ultima_visita_acs"),
+                pl.lit(99).alias("meses_desde_ultima_visita"),
             )
 
         atendimentos_medicos = fai.filter(
@@ -424,37 +432,51 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
         #     ]
         # )
         nominal_list_output = nominal_list.select(
-                "co_fat_cidadao_pec",
-                "diagnostico",
-                "cids",
-                "ciaps",
-                "min_date",
-                "data_ultima_visita_acs",
-                "alerta_visita_acs",
-                "total_consulta_individual_medico",
-                "total_consulta_individual_enfermeiro",
-                "total_consulta_individual_medico_enfermeiro",
-                "ultimo_atendimento_medico",
-                "ultimo_atendimento_enfermeiro",
-                "alerta_total_de_consultas_medico",
-                "ultimo_atendimento_medico_enfermeiro",
-                "alerta_ultima_consulta_medico",
-                "ultimo_atendimento_odonto",
-                "alerta_ultima_consulta_odontologica",
-                "ultima_data_afericao_pa",
-                "alerta_afericao_pa",
-                "ultima_data_creatinina",
-                "alerta_creatinina",
-            )
+            "co_fat_cidadao_pec",
+            "diagnostico",
+            "cids",
+            "ciaps",
+            "min_date",
+            "data_ultima_visita_acs",
+            "alerta_visita_acs",
+            "total_consulta_individual_medico",
+            "total_consulta_individual_enfermeiro",
+            "total_consulta_individual_medico_enfermeiro",
+            "ultimo_atendimento_medico",
+            "ultimo_atendimento_enfermeiro",
+            "alerta_total_de_consultas_medico",
+            "ultimo_atendimento_medico_enfermeiro",
+            "alerta_ultima_consulta_medico",
+            "ultimo_atendimento_odonto",
+            "alerta_ultima_consulta_odontologica",
+            "ultima_data_afericao_pa",
+            "alerta_afericao_pa",
+            "ultima_data_creatinina",
+            "alerta_creatinina",
+        )
         nominal_list_output = nominal_list_output.with_columns(
             pl.col("min_date").cast(pl.String).str.to_datetime("%Y-%m-%d"),
-            pl.col("data_ultima_visita_acs").cast(pl.String).str.to_datetime("%Y-%m-%d"),
-            pl.col("ultimo_atendimento_medico").cast(pl.String).str.to_datetime("%Y-%m-%d"),
-            pl.col("ultimo_atendimento_enfermeiro").cast(pl.String).str.to_datetime("%Y-%m-%d"),
-            pl.col("ultimo_atendimento_medico_enfermeiro").cast(pl.String).str.to_datetime("%Y-%m-%d"),
-            pl.col("ultimo_atendimento_odonto").cast(pl.String).str.to_datetime("%Y-%m-%d"),
-            pl.col("ultima_data_afericao_pa").cast(pl.String).str.to_datetime("%Y-%m-%d"),
-            pl.col("ultima_data_creatinina").cast(pl.String).str.to_datetime("%Y-%m-%d"),
+            pl.col("data_ultima_visita_acs")
+            .cast(pl.String)
+            .str.to_datetime("%Y-%m-%d"),
+            pl.col("ultimo_atendimento_medico")
+            .cast(pl.String)
+            .str.to_datetime("%Y-%m-%d"),
+            pl.col("ultimo_atendimento_enfermeiro")
+            .cast(pl.String)
+            .str.to_datetime("%Y-%m-%d"),
+            pl.col("ultimo_atendimento_medico_enfermeiro")
+            .cast(pl.String)
+            .str.to_datetime("%Y-%m-%d"),
+            pl.col("ultimo_atendimento_odonto")
+            .cast(pl.String)
+            .str.to_datetime("%Y-%m-%d"),
+            pl.col("ultima_data_afericao_pa")
+            .cast(pl.String)
+            .str.to_datetime("%Y-%m-%d"),
+            pl.col("ultima_data_creatinina")
+            .cast(pl.String)
+            .str.to_datetime("%Y-%m-%d"),
         )
 
         with LocalDBConnectionHandler() as con:

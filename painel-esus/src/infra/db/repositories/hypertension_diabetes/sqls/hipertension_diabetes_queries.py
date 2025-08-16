@@ -199,6 +199,11 @@ def _hipertensao_query():
                 nome_unidade_saude,
                 nome_equipe,
                 ---
+                agg_afericao_pa,
+                agg_creatinina,
+                agg_medicos_enfermeiros,
+                agg_cirurgiao_dentista,
+                agg_visitas_domiciliares_acs                ,
                 coalesce( cast(dt_ultima_afericao_pa as varchar), '-')  ultima_data_afericao_pa,
                 agg_afericao_pa,
                 agg_visitas_domiciliares_acs,
