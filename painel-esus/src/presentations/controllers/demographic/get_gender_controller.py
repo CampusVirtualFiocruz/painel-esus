@@ -13,4 +13,4 @@ class GetGenderController(ControllerInterface):
 
         response = self.__use_case.get_gender(cnes, equipe)
         
-        return HttpResponse(status_code=200, body=response)
+        return HttpResponse(status_code=200, body={"data": response})

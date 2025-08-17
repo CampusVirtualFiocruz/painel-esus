@@ -6,11 +6,12 @@ from src.main.adapters.adapters import DemographicAdapter
 
 
 class GetGenderUseCase(GenderUseCaseInterface):
-    def __init__(self, _repository: GenderInterface):
+    def __init__(self, _repository: GenderInterface, _adapter=DemographicAdapter()):
         self._repository = _repository
+        self._adapter = _adapter
 
     def get_gender(
         self, cnes: Optional[int] = None, equipe: Optional[int] = None
     ) -> Dict:
         result = self._repository.get_gender(cnes=cnes, equipe=equipe)
-        return DemographicAdapter().gender_apadter(result)
+        return self._adapter.gender_apadter(result)

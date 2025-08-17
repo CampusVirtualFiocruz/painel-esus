@@ -16,6 +16,7 @@ from src.infra.db.repositories.demographic.location_area_repository import (
 from src.infra.db.repositories.demographic.total_people_repository import (
     TotalPeopleRepository,
 )
+from src.main.adapters.adapters import DemographicAdapter
 from src.presentations.controllers.demographic.get_age_groups_controller import (
     GetAgeGroupsController,
 )
@@ -33,11 +34,15 @@ from src.presentations.controllers.demographic.get_total_people_controller impor
 )
 
 
+def _location_area_use_case_factory():
+    repository = LocationAreaRepository()
+    return GetLocationAreaUseCase(repository, DemographicAdapter())
+
+
 def get_age_groups_composer():
     repository = AgeGroupsRepository()
     use_case = GetAgeGroupsUseCase(repository)
     controller = GetAgeGroupsController(use_case)
-
     return controller.handle
 
 
@@ -58,37 +63,32 @@ def get_ibge_population_composer():
 
 
 def get_location_area_composer():
-    repository = LocationAreaRepository()
-    use_case = GetLocationAreaUseCase(repository)
+    use_case = _location_area_use_case_factory()
     controller = GetLocationAreaController(use_case)
 
     return controller.get_location_area
 
 
 def get_diabetes_by_location_area_composer():
-    repo = LocationAreaRepository()
-    use_case = GetLocationAreaUseCase(repo)
+    use_case = _location_area_use_case_factory()
     controller = GetLocationAreaController(use_case)
     return controller.get_diabetes_by_location_area
 
 
 def get_hypertension_by_location_area_composer():
-    repo = LocationAreaRepository()
-    use_case = GetLocationAreaUseCase(repo)
+    use_case = _location_area_use_case_factory()
     controller = GetLocationAreaController(use_case)
     return controller.get_hypertension_by_location_area
 
 
 def get_child_by_location_area_composer():
-    repo = LocationAreaRepository()
-    use_case = GetLocationAreaUseCase(repo)
+    use_case = _location_area_use_case_factory()
     controller = GetLocationAreaController(use_case)
     return controller.get_child_by_location_area
 
 
 def get_elderly_by_location_area_composer():
-    repo = LocationAreaRepository()
-    use_case = GetLocationAreaUseCase(repo)
+    use_case = _location_area_use_case_factory()
     controller = GetLocationAreaController(use_case)
     return controller.get_elderly_by_location_area
 

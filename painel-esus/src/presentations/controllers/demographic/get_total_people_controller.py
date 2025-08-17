@@ -14,4 +14,4 @@ class GetTotalPeopleController(ControllerInterface):
         cnes, equipe = parse_request(request)
 
         response = self.__use_case.get_total_people(cnes, equipe)
-        return HttpResponse(status_code=200, body=response)
+        return HttpResponse(status_code=200, body={"data": response})

@@ -17,9 +17,6 @@ GET http://localhost:5001/v1/demographic/gender
 Authorization: Bearer {{token}}
 
 ###
-GET http://localhost:5001/v1/demographic/ibge-population
-Authorization: Bearer {{token}}
-###
 GET http://localhost:5001/v1/demographic/location-area
 Authorization: Bearer {{token}}
 ###

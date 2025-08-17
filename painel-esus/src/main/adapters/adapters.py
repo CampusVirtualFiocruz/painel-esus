@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import TypedDict
 
+from src.utils.ibge import get_ibge_total
+
 
 class TypeTotal(TypedDict):
     data: int = 0
@@ -9,7 +11,8 @@ class AbstractAdapter(ABC):
 
     def _total_hydrate(self):
         return {
-            'data': 0
+            "total": self._tag_value_hydrate("total"),
+            "ibgePopulation": self._tag_value_hydrate("ibgePopulation"),
         }
 
     def _tag_value_hydrate(self, tag: str):
@@ -38,21 +41,21 @@ class AbstractAdapter(ABC):
                 result[side] = result.get(side, {})
                 result[side][label] = result[side].get(label, {})
                 result[side][label] = self._pyramid_item_hydrate(label)
-        
+
         return result
 
     def _gender_hidrate(self):
         return {
-            "feminino": 0,
-            "masculino": 0,
-            "indeterminado": 0,
+            "feminino": self._tag_value_hydrate('feminino'),
+            "masculino": self._tag_value_hydrate('masculino'),
+            "indeterminado": self._tag_value_hydrate('indeterminado'),
         }
     def _location_type_hydrate(self):
         return {
             "urbano": self._tag_value_hydrate('urbano'),
             "rural": self._tag_value_hydrate('rural'),
-            "nao_informado": self._tag_value_hydrate('nao_informado'),
-        },
+            "nao_informado": self._tag_value_hydrate('nao_informado')
+        }
     @abstractmethod
     def total_adapter(self, response) -> TypeTotal:
         pass
@@ -65,11 +68,35 @@ class DemographicAdapter(AbstractAdapter):
             response = response[0]
 
         if response is not None :
-            result["data"] = response
+            result["total"]['value'] = response
 
-        return result
+        result["ibgePopulation"]["value"] = get_ibge_total()
+        return [ k for k in result.values() ]
 
-    def location_type_adapter(self, response): pass
+    def location_type_adapter(self, response):
+        label_map = {
+            "rural": "rural",
+            "não informado": "nao_informado",
+            "urbana": "urbano",
+            "urbano": "urbano",
+        }
+        result = self._location_type_hydrate()
+        if type(response) == dict and len(response) > 0:
+            for item in response.keys():
+                if item not in result:
+                    result["nao_informado"]["value"] = response[item]
+                else:
+                    key = label_map.get(item[0].lower(), "nao_informado")
+                    result[item]["value"] = response[item]
+        elif type(response) == list and len(response) > 0:
+            for item in response:
+                if item[0] is None:
+                    result["nao_informado"]["value"] = int(item[1])
+                else:
+                    key = label_map.get(item[0].lower(), "nao_informado")
+                    result[key]["value"] = int(item[1])
+
+        return list(result.values())
 
     def age_group_pyramid(self, response):
         result = self._pyramid_hidrate()
@@ -95,5 +122,6 @@ class DemographicAdapter(AbstractAdapter):
                 key = k
                 if k not in result:
                     key = "indeterminado"
-                result[key] += int(response[k])
-        return result
+
+                result[key]['value'] = int(response[k])
+        return [ k for k in result.values() ]
