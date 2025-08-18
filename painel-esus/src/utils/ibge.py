@@ -22,5 +22,5 @@ def get_ibge_total():
         if len(filtered) > 0:
             ibge_population = filtered[0]["POPULACAO"]
         else:
-            ibge_population = 0
+            ibge_population = 0     
     return ibge_population

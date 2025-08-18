@@ -5,8 +5,6 @@ import re
 import numpy as np
 import pandas as pd
 from sqlalchemy import true
-from src.domain.entities.diabetes import Diabetes
-from src.domain.entities.hypertension import Hypertension
 from src.env.conf import getenv
 from src.infra.db.entities.crianca import Crianca
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
