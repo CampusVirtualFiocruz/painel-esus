@@ -4,3 +4,4 @@ repo = CreateIndicadoresIdososRepository()
 
 def test_gen():
     repo.create_base()
+    

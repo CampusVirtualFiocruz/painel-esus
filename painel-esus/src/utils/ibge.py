@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 from pathlib import Path
 
@@ -10,7 +9,7 @@ def get_ibge_total():
     path = os.getcwd()
     path = Path(path)
     path = os.path.join(path, "ibge.json")
-    with open(path, "r") as file:
+    with open(path, "r", encoding='UTF-8') as file:
         ibge_json = json.load(file)
 
     ibge = int(env.get("CIDADE_IBGE", 0))

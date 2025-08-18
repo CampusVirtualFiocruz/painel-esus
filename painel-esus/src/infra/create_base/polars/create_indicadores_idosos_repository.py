@@ -26,5 +26,3 @@ class CreateIndicadoresIdososRepository(CreateBasesRepositoryInterface):
         except Exception as e:
             # Trata quaisquer outras exceções
             logging.error(f"Ocorreu um erro inesperado: {str(e)}")
-
-

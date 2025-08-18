@@ -1,4 +1,4 @@
-# pylint: disable=E0401
+# pylint: disable=E0401,W0102,R0913
 from abc import ABC, abstractmethod
 from ast import Dict
 

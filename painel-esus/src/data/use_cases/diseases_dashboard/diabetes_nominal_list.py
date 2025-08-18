@@ -1,4 +1,4 @@
-# pylint: disable=R0913
+# pylint: disable=R0913,W0102
 from src.errors import InvalidArgument
 from src.main.adapters.nominal_list_adapter import DiabetesNominalListAdapter
 

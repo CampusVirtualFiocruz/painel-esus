@@ -35,19 +35,6 @@ def test_location():
     assert next(filter(lambda x: x['tag'] == 'urbano', result))['value'] == 0
     assert next(filter(lambda x: x["tag"] == "rural", result))["value"] == 0
     assert next(filter(lambda x: x["tag"] == "nao_informado", result))["value"] == 0
-
-
-def test_gender():
-    adapter = DemographicAdapter()
-    result = adapter.gender_apadter(
-        {
-            "feminino": {"tag": "feminino", "value": 3469},
-            "indeterminado": {"tag": "indeterminado", "value": 0},
-            "masculino": {"tag": "masculino", "value": 3298},
-        }
-    )
-    print(result)
-
 # Python
 
 

@@ -1,3 +1,4 @@
+# pylint: disable=E1131,C0103,W0613,R0913,R0902,W0702
 import csv
 import datetime as dt
 import logging
@@ -125,10 +126,10 @@ class CsvFileHandler(TimedRotatingFileHandler):
                 try:
                     os.remove(s)
                 except:
-                    pass
+                    ...
 
     def _getFilesToDelete(self, new_file_name):
-        dir_name, f_name = os.path.split(new_file_name)
+        dir_name, _ = os.path.split(new_file_name)
         if dir_name == "":
             return []
         file_names = os.listdir(dir_name)

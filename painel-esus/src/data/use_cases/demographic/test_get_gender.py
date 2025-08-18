@@ -1,4 +1,3 @@
-import unittest
 from pprint import pprint
 
 import pytest

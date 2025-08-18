@@ -1,9 +1,3 @@
-import asyncio
-import datetime
-import os
-
-import aiohttp
-import jwt
 from src.errors.logging import logging
 from src.infra.requests.api_log import ApiLog
 from src.presentations.http_types import HttpResponse
@@ -43,7 +37,3 @@ def handle_errors(error: Exception, token=None) -> HttpResponse:
             }]
         }
     )
-
-
-
-

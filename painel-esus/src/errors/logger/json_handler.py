@@ -1,3 +1,4 @@
+# pylint: disable=E1131,C0103,W0613,R0913
 import datetime as dt
 import json
 import logging

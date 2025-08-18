@@ -4,3 +4,4 @@ from src.infra.create_base.polars.create_tb_cidciap_explode_atendimentos_reposit
 def test_gen_base():
     repo = CreateCidCiapExplodeAtendimentosRepository()
     repo.create_base()
+    

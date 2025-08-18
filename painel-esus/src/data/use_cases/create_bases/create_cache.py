@@ -1,4 +1,4 @@
-# pylint: disable=C0103
+# pylint: disable=C0103,W1203
 # pylint: disable=R0914
 import asyncio
 from datetime import datetime
@@ -118,10 +118,7 @@ class CreateCacheUseCase:
         for url in oral.urls.values():
             for cnes in units_list:
                 second_round.append(
-                    root_path
-                    + hypertension.root_path
-                    + url
-                    + f"/{cnes['co_seq_dim_unidade_saude']}"
+                    f"{root_path}{hypertension.root_path}{url}/{cnes['co_seq_dim_unidade_saude']}"
                 )
         asyncio.run(self._main(second_round, token))
         stop = datetime.now()

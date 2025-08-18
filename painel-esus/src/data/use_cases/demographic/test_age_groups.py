@@ -1,7 +1,5 @@
-from pprint import pprint
 from unittest.mock import patch
 
-import pytest
 from src.data.use_cases.demographic.get_age_groups import GetAgeGroupsUseCase
 from src.data.use_cases.demographic.get_gender import GetGenderUseCase
 from src.infra.db.repositories.demographic.age_groups_repository import (

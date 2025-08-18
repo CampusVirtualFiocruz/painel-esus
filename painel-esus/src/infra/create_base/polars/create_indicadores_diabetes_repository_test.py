@@ -4,3 +4,4 @@ repo = CreateIndicadoresDiabetesRepository()
 
 def test_create_base():
     repo.create_base()
+    
