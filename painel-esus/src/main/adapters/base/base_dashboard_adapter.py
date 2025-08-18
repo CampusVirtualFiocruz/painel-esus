@@ -40,6 +40,9 @@ class BaseDashboardAdapter:
             tag = str(raca).lower() if raca else "nao-informado"
             if tag in idx:
                 result["data"][idx[tag]]["value"] = total
+            else:
+                tag = "nao-informado"
+                result["data"][idx[tag]]["value"] += total
 
         return result
 
