@@ -1,15 +1,17 @@
+import { memo } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
 import { Bar, Donut, ValueCard } from "../components/charts";
+import Waffle from "../components/charts/Waffle";
+import ErrorMessage from "../components/ui/ErrorMessage";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
-import Waffle from "../components/charts/Waffle";
-import { memo, useEffect, useMemo } from "react";
 import useReportDataIdosasV2 from "../hooks/sections/idosasV2/useReportDataIdosasV2";
-import { PainelParams } from "./Hipertensao";
-import "../styles/idosa.scss";
-import { ReportViewTypeEnum } from "../utils/viewTypeEnum";
 import { getChartDescription } from "../utils/chartTitleUtils";
+import { ReportViewTypeEnum } from "../utils/viewTypeEnum";
+import "../styles/idosa.scss";
+import { ReportBasicParams } from "../utils";
 
 const reportHeader = [
   {
@@ -186,12 +188,38 @@ const reportSectionsSecond: any = [
   },
 ];
 
-const RenderChartGroup = ({ report, chartList, renderSmall, reportViewType }: any) => {
+const RenderChartGroup = ({
+  report,
+  chartList,
+  renderSmall,
+  reportViewType,
+  loadings,
+  errors,
+  refetchAll
+}: any) => {
   return Object.keys(chartList).map((chartKey) => {
     const CustomChart = chartList?.[chartKey]?.Chart;
     const chartConfigs = chartList?.[chartKey]?.config;
     const data = (report as any)?.[chartKey]?.data;
     const isRow = chartKey === "row" || chartKey.indexOf("Row") !== -1;
+
+    // Verificar loading para esta seção
+    if (loadings[chartKey as keyof typeof loadings]) {
+      return <LoadingSpinner key={chartKey} />;
+    }
+
+    // Verificar erro para esta seção
+    if (errors[chartKey as keyof typeof errors]) {
+      return (
+        <ErrorMessage
+          key={chartKey}
+          error={errors[chartKey as keyof typeof errors]}
+          title={`Erro ao carregar ${content?.[chartKey] || chartKey}`}
+          showRetry={true}
+          onRetry={refetchAll}
+        />
+      );
+    }
 
     if (chartConfigs) {
       const xAxisNames = data?.map((d: any) => content?.[d?.tag] ?? d?.tag);
@@ -215,19 +243,22 @@ const RenderChartGroup = ({ report, chartList, renderSmall, reportViewType }: an
 
     if (isRow) {
       return (
-        <div className="is-row">
+        <div key={chartKey} className="is-row">
           <RenderChartGroup
             report={report}
             chartList={chartList?.[chartKey]}
             renderSmall
             reportViewType={reportViewType}
+            loadings={loadings}
+            errors={errors}
+            refetchAll={refetchAll}
           />
         </div>
       );
     }
 
     return (
-      <div style={{ position: "relative", marginBottom: "40px" }}>
+      <div key={chartKey} style={{ position: "relative", marginBottom: "40px" }}>
         <h5
           style={{
             fontWeight: "bold",
@@ -275,19 +306,14 @@ const IdosaV2 = () => {
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
-  const { id } = useParams<PainelParams>();
-  const reportData: any = useReportDataIdosasV2({ ubsId: id, squadId: equipe });
-  const report = reportData?.data;
+  const { id } = useParams<ReportBasicParams>();
+  const { data, loadings, errors, refetchAll } = useReportDataIdosasV2({ ubsId: id, squadId: equipe });
 
   const reportViewType = !!equipe
     ? ReportViewTypeEnum.EQUIPE
     : !!id
       ? ReportViewTypeEnum.UBS
       : ReportViewTypeEnum.MUNICIPIO;
-
-  if (reportData?.isLoading) {
-    return <center>Aguarde...</center>;
-  }
 
   return (
     <ReportWrapper
@@ -320,20 +346,32 @@ const IdosaV2 = () => {
               Object.keys(chartList).map((chartKey) => {
                 const CustomChart = chartList?.[chartKey]?.Chart;
                 const chartConfigs = chartList?.[chartKey]?.config;
-                const data = (report as any)?.[chartKey]?.data;
-                chartConfigs.reportViewType = reportViewType;
+                const chartData = data?.[chartKey as keyof typeof data]?.data;
 
-                return <CustomChart data={data} config={chartConfigs} />;
+                if (loadings[chartKey as keyof typeof loadings]) {
+                  return <LoadingSpinner key={chartKey} />;
+                }
+
+                if (errors[chartKey as keyof typeof errors]) {
+                  return <ErrorMessage key={chartKey} error={errors[chartKey as keyof typeof errors]} />;
+                }
+
+                chartConfigs.reportViewType = reportViewType;
+                return <CustomChart key={chartKey} data={chartData} config={chartConfigs} />;
               })
             )}
           </div>
         </div>
       </>
-      {reportSections.map((chartList: any) => (
+      {reportSections.map((chartList: any, index: number) => (
         <RenderChartGroup
-          report={report}
+          key={index}
+          report={data}
           chartList={chartList}
           reportViewType={reportViewType}
+          loadings={loadings}
+          errors={errors}
+          refetchAll={refetchAll}
         />
       ))}
       <center style={{ marginTop: "60px", marginBottom: "30px" }}>
@@ -342,11 +380,15 @@ const IdosaV2 = () => {
         </h2>
         <p>(Referentes aos últimos 12 meses)</p>
       </center>
-      {reportSectionsSecond.map((chartList: any) => (
+      {reportSectionsSecond.map((chartList: any, index: number) => (
         <RenderChartGroup
-          report={report}
+          key={index}
+          report={data}
           chartList={chartList}
           reportViewType={reportViewType}
+          loadings={loadings}
+          errors={errors}
+          refetchAll={refetchAll}
         />
       ))}
     </ReportWrapper>

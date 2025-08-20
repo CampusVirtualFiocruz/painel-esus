@@ -1,3 +1,4 @@
+# pylint: disable=W0102,R0913
 from abc import ABC, abstractmethod
 
 

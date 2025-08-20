@@ -1,11 +1,12 @@
-from flask import Blueprint
-from flask import jsonify
-from flask import request
+from flask import Blueprint, jsonify, request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
-from src.main.composers.city_informations_composer import get_teams_composer
-from src.main.composers.city_informations_composer import get_units_composer
+from src.main.composers.city_informations_composer import (
+    get_teams_composer,
+    get_units_composer,
+)
 from src.main.server.cache import cache
+from src.main.server.decorators.token_required import extract_token
 
 units_bp = Blueprint("units", __name__)
 teams_bp = Blueprint("teams", __name__)
@@ -44,7 +45,9 @@ def units_list():
             request, get_units_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(
+            exception, extract_token(request.headers.get("Authorization"))
+        )
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -64,7 +67,7 @@ def teams_list(cnes=None):
         http_response = request_adapter(request, get_teams_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code

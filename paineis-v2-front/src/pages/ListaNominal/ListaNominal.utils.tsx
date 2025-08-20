@@ -18,10 +18,16 @@ export const columns = ({ handleClick, condicao }: any) => {
       render: (item: any) => (
         <div
           onClick={() => handleClick(item)}
-          style={{ padding: "4px 16px", cursor: "pointer", textDecoration: "underline" }}
+          style={{
+            padding: "4px 16px",
+            cursor: "pointer",
+            textDecoration: "underline",
+          }}
         >
           {capitalizeName(
-            item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
+            item?.nomeSocialSelecionado &&
+              item?.nomeSocialSelecionado !== "-" &&
+              item?.nomeSocialSelecionado.length > 2
               ? `${item?.nomeSocialSelecionado} *`
               : item?.nome
           )}
@@ -33,7 +39,7 @@ export const columns = ({ handleClick, condicao }: any) => {
       header: <div className="iconHeader iconGestante ms-2"></div>,
       sortable: true,
       render: (item: any) => {
-        if (String(item.gestante).toUpperCase() === "SIM"){
+        if (String(item.gestante).toUpperCase() === "SIM") {
           return (
             <span className="iconCircle iconGestante ms-2" title="Alertas">
               G
@@ -74,21 +80,27 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "idade",
       header: "Idade",
       sortable: true,
-      render: (item: any) => <center style={{ padding: "4px" }}>{renderString(item?.idade)}</center>,
+      render: (item: any) => (
+        <center style={{ padding: "4px" }}>{renderString(item?.idade)}</center>
+      ),
     },
     {
       name: "sexo",
       header: "Sexo",
       sortable: true,
       render: (item: any) => (
-        <center style={{ padding: "4px" }}>{item.sexo === "MASCULINO" ? "M" : "F"}</center>
+        <center style={{ padding: "4px" }}>
+          {item.sexo === "MASCULINO" ? "M" : "F"}
+        </center>
       ),
     },
     {
       name: "raca",
       header: "Raça",
       sortable: false,
-      render: (item: any) => <span style={{ padding: "4px" }}>{renderString(item?.racaCor)}</span>,
+      render: (item: any) => (
+        <span style={{ padding: "4px" }}>{renderString(item?.racaCor)}</span>
+      ),
     },
     {
       name: "equipe",
@@ -105,7 +117,9 @@ export const columns = ({ handleClick, condicao }: any) => {
       name: "micro_area",
       header: "Microárea",
       sortable: true,
-      render: (item: any) => <center style={{ padding: "4px" }}>{item.microarea}</center>,
+      render: (item: any) => (
+        <center style={{ padding: "4px" }}>{item.microarea}</center>
+      ),
     },
   ];
 

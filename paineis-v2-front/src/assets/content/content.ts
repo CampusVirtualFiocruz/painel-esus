@@ -31,6 +31,7 @@ export const content: any = {
   "menos-1-ano": "Menos 1 ano",
   "1-4-anos": "1 a 4 anos",
   "5-9-anos": "5 a 9 anos",
+  "0a19": "0 a 19 anos",
   "10-14-anos": "10 a 14 anos",
   "15-19-anos": "15 a 19 anos",
   "20-29-anos": "20 a 29 anos",
@@ -59,7 +60,8 @@ export const content: any = {
   "85-a-89-anos": "85 a 89 anos",
   "90-a-94-anos": "90 a 94 anos",
   "95-a-99-anos": "95 a 99 anos",
-
+  
+  "60mais": "60+ anos",
   "80mais": "80+ anos",
   "100-ou-mais": "100+ anos",
   "100mais": "100+ anos",
@@ -70,10 +72,17 @@ export const content: any = {
   indigena: "Indígena",
   preta: "Preta",
   indeterminado: "Indeterminado",
+  "possui": "Possui",
+  "nao-possui": "Não possui",
 
   normal: "Normal",
-  "baixo-peso": "Baixo Peso",
-  "excesso-peso": "Excesso de Peso",
+
+  "baixo-peso": "Baixo Peso\n  < 18.5" ,
+  "peso-adequado": "Peso Adequado\n  >= 18.5 e <= 24.9",
+  "excesso-peso": "Excesso de Peso\n  >= 25 e <= 29.9",
+  "obesidade": "Obesidade\n  >= 30",
+  "outros-casos": "Outros Casos",
+  "na-outros": "Não informado",
 
   vacinadas: "Vacinadas",
   "nao-vacinadas": "Não\nVacinadas",
@@ -214,4 +223,33 @@ export const content: any = {
   "infantil-consumo-alimentar-avaliado": "Consumo alimentar avaliado*",
   "infantil-nota-consumo-alimentar-avaliado":
     "*na data das consultas de puericultura",
+
+  //hipertensao & diabetes
+
+  "hipertensao-por-raca-cor": "Distribuição de pessoas cadastradas por raça/cor",
+  "hipertensao-complicacoes": "Frequência de complicações relacionadas à hipertensão",
+  "hipertensao-imc": "Adultos com hipertensão de acordo com o IMC",
+  "hipertensao-exames": "Situação dos exames nos últimos 12 meses",
+
+  "diabetes-complicacoes": "Frequência de complicações relacionadas à diabetes",
+  "diabetes-imc": "Adultos com diabetes de acordo com o IMC",
+
+  "sodio": "Sódio",
+  "glicemia": "Glicemia",
+  "potassio": "Potássio",
+  "creatinina": "Creatinina",
+  "colesterol": "Colesterol Total",
+  "eas-equ": "EAS/EQU (urina rotina)",
+  "hemograma": "Hemograma",
+  "eletro": "Eletrocardiograma",
+
+  "sem-solicitacao": "Sem solicitação",
+  "aguardando-resultado": "Aguardando resultado",
+  "resultado-registrado": "Resultado registrado",
+
+  "infarto-agudo": "Infarto Agudo do Miocárdio",
+  "acidente-vascular":" Acidente Vascular",
+  "renal":"Doença Renal",
+  "coronariana": "Doença Coronariana",
+  "cerebrovascular":"Doença Cerebrovascular",
 };

@@ -5,34 +5,20 @@ import re
 import numpy as np
 import pandas as pd
 from sqlalchemy import true
-from src.domain.entities.diabetes import Diabetes
-from src.domain.entities.hypertension import Hypertension
 from src.env.conf import getenv
 from src.infra.db.entities.crianca import Crianca
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.hipertensao_nominal import HipertensaoNominal
 from src.infra.db.entities.pessoas import Pessoas
-
-
-def mock_word(phrase, gap=2, skip_first=False):
-    mock = getenv("MOCK", False, False) == "True"
-    if not mock or phrase == "" or phrase is None:
-        return phrase
-    words = phrase.split()
-    if skip_first:
-        return " ".join(
-            [
-                words[0],
-                *[
-                    word[:gap] + "".join(["*" for n in word[gap:]])
-                    for word in words[1:]
-                ],
-            ]
-        )
-    else:
-        return " ".join(
-            [word[:gap] + "".join(["*" for n in word[gap:]]) for word in words]
-        )
+from src.infra.db.repositories.utils.str_utils import (
+    anonymize_data,
+    anonymize_data_address,
+    anonymize_data_cep,
+    anonymize_data_doc,
+    anonymize_data_equipe,
+    anonymize_data_name,
+    anonymize_data_nascimento,
+)
 
 
 def is_sequence(obj):
@@ -68,10 +54,6 @@ class AlertRecord:
 
 class BaseNominalAdapter:
     def __init__(self, user):
-        if "alerta_afericao_pa" not in user:
-            print("---------->")
-            print(user)
-            return
         endereco = self.get(user, "endereco")
         endereco += " " + self.get(user, "numero")
         endereco += " " + self.get(user, "bairro")
@@ -93,6 +75,8 @@ class BaseNominalAdapter:
         self.telefone = user["telefone"]
         self.registros = []
         self.primeiro_registro = self.get(user, "dt_primeiro_reg_condicao")
+        self.raca_cor = self.get(user, "raca_cor")
+        
 
     def get(self, item, field):
         return item[field] if field in item and item[field] is not None else ""
@@ -102,29 +86,21 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
 
     def __init__(self, user):
         super().__init__(user)
+
+
         self.diagnostico = (
             "cid/ciaps"
             if user["autoreferido"] is None or user["autoreferido"] == 0
             else "autoreferido"
         )
-
-        alertas = [
-            "alerta_afericao_pa",
-            "alerta_creatinina",
-            "alerta_ultima_consulta_medico",
-            "alerta_ultima_consulta_odontologica",
-            "alerta_visita_acs",
-        ]
-        for i in alertas:
-            user[i] = user[i] if isinstance(user[i], int) else 0
-
+        self.registros = []
+        self.registros = []
         self.possui_alertas = (
-            not user["alerta_afericao_pa"]
-            or not user["alerta_creatinina"]
-            or not user["alerta_total_de_consultas_medico"]
-            or not user["alerta_ultima_consulta_medico"]
-            or not user["alerta_ultima_consulta_odontologica"]
-            or not user["alerta_visita_acs"]
+            user["agg_afericao_pa"] == 0
+            or user["agg_creatinina"] == 0
+            or user["agg_medicos_enfermeiros"] == 0
+            or user["agg_cirurgiao_dentista"] == 0
+            or user["agg_visitas_domiciliares_acs"] == 0
         )
         self.cids = (
             user["codigos_1atend"].tolist()
@@ -134,7 +110,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultima_data_afericao_pa"],
-                exibir_alerta=not user["alerta_afericao_pa"],
+                exibir_alerta=user["agg_afericao_pa"]==0,
                 descricao="Data da última aferição de PA",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
@@ -142,7 +118,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultima_data_creatinina"],
-                exibir_alerta=(not user["alerta_creatinina"]),
+                exibir_alerta=user["agg_creatinina"]==0,
                 descricao="Data da última avaliação da Dosagem de Creatinina",
                 tipo_alerta="alerta-creatinina-maior-6-meses",
             )
@@ -150,7 +126,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["total_consulta_med_enferm"],
-                exibir_alerta=False,
+                exibir_alerta=user["agg_medicos_enfermeiros"] == 0,
                 descricao="Total de consultas Médicas ou de Enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
@@ -158,7 +134,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultimo_atendimento_medico"],
-                exibir_alerta=not user["alerta_ultima_consulta_medico"],
+                exibir_alerta=user["agg_medicos_enfermeiros"]==0,
                 descricao="Data da última consulta médica ou de Enfermagem",
                 tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
             )
@@ -166,7 +142,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=(user["ultimo_atendimento_odonto"]),
-                exibir_alerta=not user["alerta_ultima_consulta_odontologica"],
+                exibir_alerta=user["agg_cirurgiao_dentista"]==0,
                 descricao="Data da última consulta odontológica",
                 tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
             )
@@ -175,7 +151,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=(user["dt_ultima_visita_acs"]),
-                exibir_alerta=not user["alerta_visita_acs"],
+                exibir_alerta=user["agg_visitas_domiciliares_acs"]==0,
                 descricao="Data da última visita ACS",
                 tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
             )
@@ -184,24 +160,26 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
     def to_dict(self):
         return dict(
             {
-                "nome": mock_word(self.nome, 3, True),
-                "nomeSocialSelecionado": mock_word(self.nome_social, 3, True),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": mock_word(self.cpf, 4),
-                "cns": mock_word(self.cns, 4),
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "diagnostico": self.diagnostico,
                 "sexo": self.sexo,
-                "equipe": mock_word(self.equipe, 3),
-                "microarea": self.microarea,
-                "endereco": mock_word(self.endereco, 5),
-                "complemento": mock_word(self.complemento, 5),
+                "equipe": anonymize_data_equipe(self.equipe),
+                "microarea": anonymize_data(self.microarea),
+                "endereco": anonymize_data_address(self.endereco),
+                "complemento": anonymize_data(self.complemento),
                 "tipoLogradouro": self.tipo_logradouro,
-                "cep": self.cep,
-                "telefone": self.telefone,
+                "cep": anonymize_data_cep(self.cep),
+                "telefone": anonymize_data(self.telefone),
+                "racaCor": anonymize_data(self.raca_cor),
+                "racaCor": anonymize_data(self.raca_cor),
                 "detalhesCondicaoSaude": [
                     {
                         "cidCondicaoSaude": self.cids,
@@ -220,23 +198,13 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
     def __init__(self, user: DiabetesNominal):
         super().__init__(user)
 
-        alertas = [
-            "alerta_ultima_consulta_medico",
-            "alerta_ultima_consulta_odontologica",
-            "alerta_visita_acs",
-            "alerta_ultima_hemoglobina_glicada",
-        ]
-        for i in alertas:
-            user[i] = user[i] if isinstance(user[i], int) else 0
-
         self.possui_alertas = (
-            not user["alerta_afericao_pa"]
-            or not user["alerta_total_de_consultas_medico"]
-            or not user["alerta_ultima_consulta_medico"]
-            or not user["alerta_creatinina"]
-            or not user["alerta_ultima_consulta_odontologica"]
-            or not user["alerta_visita_acs"]
-            or not user["alerta_ultima_hemoglobina_glicada"]
+            not user["agg_afericao_pa"]
+            or not user["agg_creatinina"]
+            or not user["agg_medicos_enfermeiros"]
+            or not user["agg_cirurgiao_dentista"]
+            or not user["agg_visitas_domiciliares_acs"]
+            or not user["agg_hemoglobina"]
         )
         self.diagnostico = (
             "cid/ciaps"
@@ -252,7 +220,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultima_data_afericao_pa"],
-                exibir_alerta=not user["alerta_afericao_pa"],
+                exibir_alerta=not user["agg_afericao_pa"],
                 descricao="Data da última aferição de PA",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
@@ -260,7 +228,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultima_data_creatinina"],
-                exibir_alerta=(not user["alerta_creatinina"]),
+                exibir_alerta=(not user["agg_creatinina"]),
                 descricao="Data da última avaliação da Dosagem de Creatinina",
                 tipo_alerta="alerta-creatinina-maior-6-meses",
             )
@@ -269,7 +237,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["total_consulta_med_enferm"],
-                exibir_alerta=False,
+                exibir_alerta=not user['agg_medicos_enfermeiros'],
                 descricao="Total de consultas Médicas ou de Enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
@@ -277,7 +245,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultimo_atendimento_medico"],
-                exibir_alerta=(not user["alerta_ultima_consulta_medico"]),
+                exibir_alerta=(not user["agg_medicos_enfermeiros"]),
                 descricao="Data da última consulta Médica ou de Enfermagem",
                 tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
             )
@@ -286,7 +254,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultimo_atendimento_odonto"],
-                exibir_alerta=(not user["alerta_ultima_consulta_odontologica"]),
+                exibir_alerta=(not user["agg_cirurgiao_dentista"]),
                 descricao="Data da última consulta Odontológica",
                 tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
             )
@@ -295,7 +263,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["dt_ultima_visita_acs"],
-                exibir_alerta=(not user["alerta_visita_acs"]),
+                exibir_alerta=(not user["agg_visitas_domiciliares_acs"]),
                 descricao="Data da última visita ACS",
                 tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
             )
@@ -303,7 +271,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultima_data_hemoglobina_glicada"] or "-",
-                exibir_alerta=(not user["alerta_ultima_hemoglobina_glicada"]),
+                exibir_alerta=(not user["agg_hemoglobina"]),
                 descricao="Data da última avaliação da Dosagem de Hemoglobina Glicada",
                 tipo_alerta="alerta-ultima-data-hemoglobina-glicada-maior-6-meses",
             )
@@ -312,24 +280,25 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
     def to_dict(self):
         return dict(
             {
-                "nome": mock_word(self.nome, 3, True),
-                "nomeSocialSelecionado": mock_word(self.nome_social),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": mock_word(self.cpf, 4),
-                "cns": mock_word(self.cns, 4),
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "diagnostico": self.diagnostico,
                 "sexo": self.sexo,
-                "equipe": mock_word(self.equipe, 3),
-                "microarea": self.microarea,
-                "endereco": mock_word(self.endereco, 5),
-                "complemento": mock_word(self.complemento, 5),
+                "equipe": anonymize_data_equipe(self.equipe),
+                "microarea": anonymize_data(self.microarea),
+                "endereco": anonymize_data_address(self.endereco),
+                "complemento": anonymize_data(self.complemento),
                 "tipoLogradouro": self.tipo_logradouro,
-                "cep": mock_word(self.cep),
-                "telefone": mock_word(self.telefone),
+                "cep": anonymize_data_cep(self.cep),
+                "telefone": anonymize_data(self.telefone),
+                "racaCor": anonymize_data(self.raca_cor),
                 "detalhesCondicaoSaude": [
                     {
                         "cidCondicaoSaude": self.cids,
@@ -352,8 +321,9 @@ class CriancaNominalListAdapter:
         self.cpf = user["cpf"]
         self.cns = user["cns"]
         self.data_nascimento = user["data_nascimento"]
+
         def calc_idade(user):
-            return user['idade_mes_ano']
+            return user["idade_mes_ano"]
 
         self.idade = calc_idade(user)
         self.sexo = user["sexo"]
@@ -500,24 +470,24 @@ class CriancaNominalListAdapter:
     def to_dict(self):
         return dict(
             {
-                "nome": self.nome,
-                "nomeSocialSelecionado": self.nome_social,
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": self.cpf,
-                "cns": self.cns,
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "sexo": self.sexo,
-                "equipe": self.equipe,
-                "microarea": self.microarea,
-                "endereco": self.endereco,
-                "complemento": self.complemento,
-                "tipoLogradouro": self.tipo_logradouro,
-                "cep": self.cep,
-                "telefone": self.telefone,
-                'racaCor': self.raca_cor,
+                "equipe": anonymize_data_equipe(self.equipe),
+                "microarea": anonymize_data(self.microarea),
+                "endereco": anonymize_data_address(self.endereco),
+                "complemento": anonymize_data(self.complemento),
+                "tipoLogradouro": anonymize_data(self.tipo_logradouro),
+                "cep": anonymize_data_cep(self.cep),
+                "telefone": anonymize_data(self.telefone),
+                "racaCor": anonymize_data(self.raca_cor),
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [
@@ -650,24 +620,24 @@ class IdosoNominalListAdapter:
     def to_dict(self):
         return dict(
             {
-                "racaCor": self.raca_cor,
-                "nome": self.nome,
-                "nomeSocialSelecionado": self.nome_social,
+                "racaCor": anonymize_data(self.raca_cor),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": self.cpf,
-                "cns": self.cns,
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "sexo": self.sexo,
-                "equipe": self.equipe,
-                "microarea": self.microarea,
-                "endereco": self.endereco,
-                "complemento": self.complemento,
-                "tipoLogradouro": self.tipo_logradouro,
-                "cep": self.cep,
-                "telefone": self.telefone,
+                "equipe": anonymize_data_equipe(self.equipe),
+                "microarea": anonymize_data(self.microarea),
+                "endereco": anonymize_data_address(self.endereco),
+                "complemento": anonymize_data(self.complemento),
+                "tipoLogradouro": anonymize_data(self.tipo_logradouro),
+                "cep": anonymize_data_cep(self.cep),
+                "telefone": anonymize_data(self.telefone),
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [
@@ -704,6 +674,7 @@ class RecordNominalListAdapter:
         self.telefone = user["telefone"]
         self.alerta_status_cadastro = user["alerta_status_cadastro"]
         self.status_cadastro = user["status_cadastro"]
+
         self.alerta = user["alerta"]
 
         ultima_atualizacao_cidadao, ultima_atualizacao_fcd = True, True
@@ -715,6 +686,15 @@ class RecordNominalListAdapter:
             ultima_atualizacao_fcd = False
 
         self.registros = []
+        acompanhamento = {"1": "Em acompanhamento", "0": "Não acompanhado"}
+        self.registros.append(
+            AlertRecord(
+                data=acompanhamento[str(user["acompanhamento"])],
+                exibir_alerta=False,
+                descricao="Situação de acompanhamento",
+                tipo_alerta="acompanhamento",
+            )
+        )
         self.registros.append(
             AlertRecord(
                 data=user["ultima_atualizacao_fci"],
@@ -749,23 +729,23 @@ class RecordNominalListAdapter:
     def to_dict(self):
         return dict(
             {
-                "nome": mock_word(self.nome, 3, True),
-                "nomeSocialSelecionado": mock_word(self.nome_social),
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": False,
                 "zonaRural": False,
                 "possuiAlertas": self.alerta,
-                "cpf": mock_word(self.cpf, 4),
-                "cns": mock_word(self.cns, 4),
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "sexo": self.sexo,
-                "equipe": mock_word(self.equipe, 3),
-                "microarea": self.microarea,
-                "endereco": mock_word(self.endereco, 5),
-                "complemento": mock_word(self.complemento, 5),
-                "tipoLogradouro": self.tipo_logradouro,
-                "cep": mock_word(self.cep),
-                "telefone": mock_word(self.telefone),
+                "equipe": anonymize_data_equipe(self.equipe),
+                "microarea": anonymize_data(self.microarea),
+                "endereco": anonymize_data_address(self.endereco),
+                "complemento": anonymize_data(self.complemento),
+                "tipoLogradouro": anonymize_data(self.tipo_logradouro),
+                "cep": anonymize_data_cep(self.cep),
+                "telefone": anonymize_data(self.telefone),
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [
@@ -901,24 +881,24 @@ class OralHealtNominalListAdapter:
     def to_dict(self):
         return dict(
             {
-                "nome": self.nome,
-                "nomeSocialSelecionado": self.nome_social,
+                "nome": anonymize_data_name(self.nome),
+                "nomeSocialSelecionado": anonymize_data_name(self.nome_social),
                 "zonaUrbana": self.tipo_localidade == "Urbana",
                 "zonaRural": self.tipo_localidade == "Rural",
                 "possuiAlertas": self.possui_alertas,
-                "cpf": self.cpf,
-                "cns": self.cns,
-                "dataNascimento": self.data_nascimento,
+                "cpf": anonymize_data_doc(self.cpf),
+                "cns": anonymize_data_doc(self.cns),
+                "dataNascimento": anonymize_data_nascimento(self.data_nascimento),
                 "idade": self.idade,
                 "sexo": self.sexo,
-                "equipe": self.equipe,
-                "microarea": self.microarea,
-                "endereco": self.endereco,
-                "complemento": self.complemento,
-                "tipoLogradouro": self.tipo_logradouro,
-                "cep": self.cep,
-                "telefone": self.telefone,
-                "racaCor": self.raca_cor,
+                "equipe": anonymize_data_equipe(self.equipe),
+                "microarea": anonymize_data(self.microarea),
+                "endereco": anonymize_data_address(self.endereco),
+                "complemento": anonymize_data(self.complemento),
+                "tipoLogradouro": anonymize_data(self.tipo_logradouro),
+                "cep": anonymize_data_cep(self.cep),
+                "telefone": anonymize_data(self.telefone),
+                "racaCor": anonymize_data(self.raca_cor),
                 "identidadeGenero": self.identidadeGenero,
                 "necessidadesEspeciais": self.necessidadesEspeciais,
                 "povosComunidades": self.povosComunidades,

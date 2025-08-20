@@ -2,9 +2,11 @@ import logging
 
 from src.data.use_cases.login import LoginUseCase
 from src.domain.entities.user_payload import UserPayload
+from src.errors import HttpNotFoundError
 from src.errors.logging import logging
 from src.infra.bridge_provider.login_bridge import LoginBridgeRepository
 from src.infra.db.repositories.login_adm_repository import LoginAdmRepository
+from src.infra.db.repositories.login_demo_repository import LoginDemoRepository
 from src.infra.db.repositories.login_repository import (
     LoginRepository as LoginUserRepository,
 )
@@ -14,6 +16,7 @@ from src.presentations.http_types import HttpRequest, HttpResponse
 
 def login_composer(request: HttpRequest):
     providers_repositories = [
+        LoginDemoRepository(),
         LoginAdmRepository(),
         LoginBridgeRepository(),
         LoginUserRepository(),
@@ -22,6 +25,7 @@ def login_composer(request: HttpRequest):
     if request.body:
         body = request.body
 
+    error = None
     for provider in providers_repositories:
         try:
             use_case = LoginUseCase(provider)
@@ -43,7 +47,10 @@ def login_composer(request: HttpRequest):
 
                 return HttpResponse(status_code=200, body=body)
         except Exception as exc:
-            logging.exception(exc)
+            error=True
+    if error:
+        logging.info("Nenhum provider foi capaz de logar o usuário.")
+
     return HttpResponse(status_code=401, body={"data": "Username or Password invalid."})
 
 

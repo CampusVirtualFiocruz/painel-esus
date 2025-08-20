@@ -22,7 +22,7 @@ def get_hypertension_base_sql():
                 ds_complemento complemento,
                 no_bairro as bairro,
                 ds_tipo_localizacao_domicilio tipo_localidade,
-                co_dim_unidade_saude codigo_unidade_saude, 
+                codigo_unidade_saude codigo_unidade_saude, 
                 codigo_equipe,
                 hipertensao,
                 autoreferido,
@@ -99,7 +99,7 @@ def get_hypertension_base_sql_filter(cnes: int = None, equipe: int = None):
     where_clause = ""
     if cnes is not None:
         where_clause += f"""            where 
-                co_dim_unidade_saude = {cnes} """
+                codigo_unidade_saude = {cnes} """
         if equipe and equipe is not None:
             where_clause += f" and codigo_equipe = {equipe} "
     sql = get_hypertension_base_sql()
@@ -173,7 +173,7 @@ def get_diabetes_base_sql():
                 ds_complemento  complemento,
                 no_bairro  as bairro,
                 ds_tipo_localizacao_domicilio tipo_localidade,
-                co_dim_unidade_saude codigo_unidade_saude, 
+                codigo_unidade_saude codigo_unidade_saude, 
                 codigo_equipe,
                 diabetes,
                 autoreferido,
@@ -238,7 +238,7 @@ def get_diabetes_base_sql_filter(cnes: int = None, equipe: int = None):
     where_clause = ""
     if cnes is not None:
         where_clause += f"""            where 
-                co_dim_unidade_saude = {cnes} """
+                codigo_unidade_saude = {cnes} """
         if equipe and equipe is not None:
             where_clause += f" and codigo_equipe = {equipe} "
     return f""" select 
@@ -298,7 +298,7 @@ def get_disease_base_sql(cnes: int = None, equipe: int = None, hypertension = Tr
     where_clause = ""
     if cnes is not None:
         where_clause += f"""            where 
-                co_dim_unidade_saude = {cnes} """
+                codigo_unidade_saude = {cnes} """
         if equipe and equipe is not None:
             where_clause += f" and codigo_equipe = {equipe} "
 
@@ -439,9 +439,9 @@ def filter_diabetes_by_localidade(cnes: int = None, equipe: int = None):
             select
                 p.*,
                 case 
-                    when LOWER(ds_tipo_localizacao_domicilio) is null  then 'nao_definido'
-                    when LOWER(ds_tipo_localizacao_domicilio) = 'rural' then 'rural'
-                    when LOWER(ds_tipo_localizacao_domicilio) = 'urbana' then 'urbano'
+                    when LOWER(tipo_localizacao_domicilio) is null  then 'nao_definido'
+                    when LOWER(tipo_localizacao_domicilio) = 'rural' then 'rural'
+                    when LOWER(tipo_localizacao_domicilio) = 'urbana' then 'urbano'
                 end tipo    
             from
                 condition p )
@@ -457,11 +457,12 @@ def filter_hypertension_by_localidade(cnes: int = None, equipe: int = None):
             select
                 p.*,
                 case 
-                    when LOWER(ds_tipo_localizacao_domicilio) is null  then 'nao_definido'
-                    when LOWER(ds_tipo_localizacao_domicilio) = 'rural' then 'rural'
-                    when LOWER(ds_tipo_localizacao_domicilio) = 'urbana' then 'urbano'
+                    when LOWER(tipo_localizacao_domicilio) is null  then 'nao_definido'
+                    when LOWER(tipo_localizacao_domicilio) = 'rural' then 'rural'
+                    when LOWER(tipo_localizacao_domicilio) = 'urbana' then 'urbano'
                 end tipo    
             from
                 condition p )
             select tipo, count(*) total  from cidadaos group by 1
     """
+

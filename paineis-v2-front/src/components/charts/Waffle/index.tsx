@@ -1,9 +1,9 @@
 import { Waffle as Nivo } from "@nivo/waffle";
 import { memo } from "react";
-import { DonutChart } from "../charts.types";
-import { content } from "../../../assets/content/content";
 import { FaUser } from "react-icons/fa";
+import { content } from "../../../assets/content/content";
 import { formatAsPercent } from "../../../utils";
+import { DonutChart } from "../charts.types";
 
 const colors = [
    "#0B5B98",
@@ -47,7 +47,7 @@ const Waffle = (props: DonutChart) => {
   const cloneWaffleInfo:any = JSON.parse(JSON.stringify(waffleData));
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+    <div style={{ maxWidth: "600px", margin: "0 auto", ...(props?.config?.componentStyle || {}) }}>
       <Nivo
         width={600}
         height={300}

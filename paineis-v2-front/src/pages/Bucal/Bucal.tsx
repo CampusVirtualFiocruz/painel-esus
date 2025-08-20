@@ -1,18 +1,19 @@
-import { CSSProperties, memo, useState } from "react";
 import { Button } from "bold-ui";
+import { CSSProperties, memo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
+import { content } from "../../assets/content/content";
 import People from "../../assets/images/people.svg";
+import ErrorMessage from "../../components/ui/ErrorMessage";
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
 import { ReportFooter } from "../../components/ui/ReportFooter";
 import ReportWrapper from "../../components/ui/ReportWrapper";
-import { content } from "../../assets/content/content";
 import useReportDataBucal from "../../hooks/sections/bucal/useReportDataBucal";
-import { PainelParams } from "../Hipertensao";
-import { reportCharts, reportSections } from "./Bucal.utils";
 import "../../styles/idosa.scss";
-import { formataNumero } from "../../utils";
+import { formataNumero, ReportBasicParams } from "../../utils";
 import { getChartDescription } from "../../utils/chartTitleUtils";
 import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
+import { reportCharts, reportSections } from "./Bucal.utils";
 
 const RenderChartGroup = ({
   report,
@@ -20,6 +21,9 @@ const RenderChartGroup = ({
   renderSmall,
   alignMiddle,
   reportViewType,
+  loadings,
+  errors,
+  refetchAll,
 }: any) => {
   return Object.keys(chartList).map((chartKey) => {
     const CustomChart = chartList?.[chartKey]?.Chart;
@@ -27,6 +31,24 @@ const RenderChartGroup = ({
     const data = (report as any)?.[chartKey]?.data;
     const isRow = chartKey === "row" || chartKey.indexOf("Row") !== -1;
     const isSecondRow = chartKey === "secondRow";
+
+    // Verificar loading para esta seção
+    if (loadings[chartKey as keyof typeof loadings]) {
+      return <LoadingSpinner key={chartKey} />;
+    }
+
+    // Verificar erro para esta seção
+    if (errors[chartKey as keyof typeof errors]) {
+      return (
+        <ErrorMessage
+          key={chartKey}
+          error={errors[chartKey as keyof typeof errors]}
+          title={`Erro ao carregar ${content?.[chartKey] || chartKey}`}
+          showRetry={true}
+          onRetry={refetchAll}
+        />
+      );
+    }
 
     if (chartConfigs) {
       const xAxisNames = data?.map((d: any) => content?.[d?.tag] ?? d?.tag);
@@ -52,6 +74,7 @@ const RenderChartGroup = ({
     if (isRow) {
       return (
         <div
+          key={chartKey}
           className="is-row"
           style={{
             gap: "60px",
@@ -64,6 +87,9 @@ const RenderChartGroup = ({
             renderSmall
             alignMiddle={isSecondRow}
             reportViewType={reportViewType}
+            loadings={loadings}
+            errors={errors}
+            refetchAll={refetchAll}
           />
         </div>
       );
@@ -79,7 +105,7 @@ const RenderChartGroup = ({
     }
 
     return (
-      <div style={containerStyle}>
+      <div key={chartKey} style={containerStyle}>
         <h5
           style={{
             fontWeight: "bold",
@@ -132,20 +158,14 @@ const Bucal = () => {
     "atendidas"
   );
 
-  const { id } = useParams<PainelParams>();
-  const reportData: any = useReportDataBucal({ ubsId: id, equipe, recorte });
+  const { id } = useParams<ReportBasicParams>();
+  const { data, loadings, errors, refetchAll } = useReportDataBucal({ ubsId: id, equipe, recorte });
 
   const reportViewType = !!equipe
     ? ReportViewTypeEnum.EQUIPE
     : !!id
     ? ReportViewTypeEnum.UBS
     : ReportViewTypeEnum.MUNICIPIO;
-
-  const report = reportData?.data;
-
-  if (reportData?.isLoading) {
-    return <center>Aguarde...</center>;
-  }
 
   const footerNote =
     recorte === "atendidas" ? (
@@ -232,29 +252,42 @@ const Bucal = () => {
                 textAlign: "center",
               }}
             >
-              <span
-                style={{
-                  display: "block",
-                  fontSize: "16px",
-                  marginBottom: "8px",
-                }}
-              >
-                Total de pessoas
-                <br />
-                atendidas {getChartDescription("", reportViewType, [])}
-              </span>
-              <img
-                src={People}
-                alt="Icone de pessoas"
-                width={"30px"}
-                style={{
-                  filter: recorte === "atendidas" ? "brightness(10)" : "",
-                  transform: "translate(-10px, -5px)",
-                }}
-              />
-              <span style={{ fontSize: "26px" }}>
-                {formataNumero(report?.total?.data?.atendidas)}
-              </span>
+              {loadings.total ? (
+                <LoadingSpinner size="sm" text="Carregando total..." />
+              ) : errors.total ? (
+                <ErrorMessage
+                  error={errors.total}
+                  title="Erro ao carregar total de atendidas"
+                  showRetry={true}
+                  onRetry={refetchAll}
+                />
+              ) : (
+                <>
+                  <span
+                    style={{
+                      display: "block",
+                      fontSize: "16px",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Total de pessoas
+                    <br />
+                    atendidas {getChartDescription("", reportViewType, [])}
+                  </span>
+                  <img
+                    src={People}
+                    alt="Icone de pessoas"
+                    width={"30px"}
+                    style={{
+                      filter: recorte === "atendidas" ? "brightness(10)" : "",
+                      transform: "translate(-10px, -5px)",
+                    }}
+                  />
+                  <span style={{ fontSize: "26px" }}>
+                    {formataNumero(data?.total?.data?.atendidas)}
+                  </span>
+                </>
+              )}
             </div>
             <span>&nbsp;</span>
           </div>
@@ -273,29 +306,42 @@ const Bucal = () => {
                 textAlign: "center",
               }}
             >
-              <span
-                style={{
-                  display: "block",
-                  fontSize: "16px",
-                  marginBottom: "8px",
-                }}
-              >
-                Total de pessoas
-                <br />
-                cadastradas {getChartDescription("", reportViewType, [])}*
-              </span>
-              <img
-                src={People}
-                alt="Icone de pessoas"
-                width={"30px"}
-                style={{
-                  filter: recorte !== "atendidas" ? "brightness(10)" : "",
-                  transform: "translate(-10px, -5px)",
-                }}
-              />
-              <span style={{ fontSize: "26px" }}>
-                {formataNumero(report?.total?.data?.cadastradas)}
-              </span>
+              {loadings.total ? (
+                <LoadingSpinner size="sm" text="Carregando total..." />
+              ) : errors.total ? (
+                <ErrorMessage
+                  error={errors.total}
+                  title="Erro ao carregar total de cadastradas"
+                  showRetry={true}
+                  onRetry={refetchAll}
+                />
+              ) : (
+                <>
+                  <span
+                    style={{
+                      display: "block",
+                      fontSize: "16px",
+                      marginBottom: "8px",
+                    }}
+                  >
+                    Total de pessoas
+                    <br />
+                    cadastradas {getChartDescription("", reportViewType, [])}*
+                  </span>
+                  <img
+                    src={People}
+                    alt="Icone de pessoas"
+                    width={"30px"}
+                    style={{
+                      filter: recorte !== "atendidas" ? "brightness(10)" : "",
+                      transform: "translate(-10px, -5px)",
+                    }}
+                  />
+                  <span style={{ fontSize: "26px" }}>
+                    {formataNumero(data?.total?.data?.cadastradas)}
+                  </span>
+                </>
+              )}
             </div>
             <div
               style={{
@@ -310,13 +356,6 @@ const Bucal = () => {
             </div>
           </div>
         </div>
-        {reportSections(recorte).map((chartList: any) => (
-          <RenderChartGroup
-            report={report}
-            chartList={chartList}
-            reportViewType={reportViewType}
-          />
-        ))}
         <center style={{ marginTop: "60px", marginBottom: "30px" }}>
           <h2>
             <b>
@@ -328,7 +367,25 @@ const Bucal = () => {
           <p>(Dados referentes aos últimos 24 meses)</p>
         </center>
         {reportCharts.map((chartList: any) => (
-          <RenderChartGroup report={report} chartList={chartList} />
+          <RenderChartGroup
+            key={JSON.stringify(chartList)}
+            report={data}
+            chartList={chartList}
+            loadings={loadings}
+            errors={errors}
+            refetchAll={refetchAll}
+          />
+        ))}
+        {reportSections(recorte).map((chartList: any, index: number) => (
+          <RenderChartGroup
+            key={index}
+            report={data}
+            chartList={chartList}
+            reportViewType={reportViewType}
+            loadings={loadings}
+            errors={errors}
+            refetchAll={refetchAll}
+          />
         ))}
       </ReportWrapper>
     </>

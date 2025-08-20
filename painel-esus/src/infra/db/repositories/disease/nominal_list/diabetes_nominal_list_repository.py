@@ -1,25 +1,27 @@
 # pylint: disable=R0913
-from typing import Dict
 import json
+from typing import Dict
+
 import duckdb
 import pandas as pd
 from sqlalchemy import or_
 from src.domain.entities.diabetes import Diabetes
+from src.env.conf import getenv
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.equipes import Equipes
 from src.infra.db.entities.pessoas import Pessoas
 from src.infra.db.repositories.sqls.disease.auto_referidos import (
+    get_diabetes_base_export,
     get_diabetes_base_sql,
     get_diabetes_base_sql_filter,
-    get_diabetes_base_export,
 )
+from src.infra.db.repositories.utils.str_utils import anonymize_data_frame
 from src.infra.db.settings.connection_local import DBConnectionHandler
-from src.main.adapters.nominal_list_adapter import mock_word
-from src.env.conf import getenv
+
 
 class DiabetesNominalListRepository:
     def __init__(self):
-         self.mock_data = getenv("MOCK", False, False) == 'True'
+        self.mock_data = getenv("MOCK", False, False) == 'True'
     def find_all(self, cnes: int = None) -> Dict:
         with DBConnectionHandler() as db_con:
             users = (
@@ -44,23 +46,8 @@ class DiabetesNominalListRepository:
         pessoas_sql = get_diabetes_base_export(cnes, equipe)
 
         result= con.sql(pessoas_sql).df()
-        if self.mock_data:
-            def parse(x):
-                x['cpf'] = mock_word(x['cpf'], 2)
-                x['cns'] = mock_word(x['cns'], 2)
-                x['nome'] = mock_word(x['nome'], 3, True)
-                x['telefone'] = mock_word(x['telefone'], 2)
-                x['endereco'] = mock_word(x['endereco'], 2)
-                x['numero'] = mock_word(x['numero'], 2)
-                x['cep'] = mock_word(x['cep'], 2)
-                x['complemento'] = mock_word(x['complemento'], 2)
-                x['bairro'] = mock_word(x['bairro'], 2)
-                x['nome_unidade_saude'] = mock_word(x['nome_unidade_saude'], 2)
-                x['nome_equipe'] = mock_word(x['nome_equipe'], 2)
-                return x            
-            result=result.apply(parse, axis=1)
+        result = result.apply(anonymize_data_frame, axis=1)
         return result
-
 
     def find_by_nome(self, nome: str):
         with DBConnectionHandler() as db_con:
@@ -143,23 +130,23 @@ class DiabetesNominalListRepository:
             for s in sort:
                 filter = json.loads(s)
                 if filter["field"] not in mapped_columns: continue
-                
+
                 direction = filter['direction'] if 'direction' in filter else'asc'
                 columns = mapped_columns[filter["field"]]
                 order_list.append( f'{columns} {direction}')
         else:
             order_list = 'no_cidadao asc'
-            
+
         if len(order_list)>0:
             order = 'order by '
             order += ", ".join(order_list)
-        
+
         users = con.sql(
             pessoas_sql
             + sql_where
             + f"  {order} LIMIT {limit} OFFSET {offset} "
         ).df()
-        
+
         users = users.to_dict(orient="records")
         total = len(con.sql(pessoas_sql + sql_where).fetchall())
         return {

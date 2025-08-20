@@ -4,6 +4,7 @@ import io
 
 from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
+from src.infra.requests.factory import send_download_request
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.oral_health_compose import (
     oral_health_get_atraumatic_treatment,
@@ -19,6 +20,7 @@ from src.main.composers.oral_health_compose import (
     oral_health_get_total,
 )
 from src.main.server.cache import cache
+from src.main.server.decorators.token_required import extract_token
 
 oral_health_bp = Blueprint("oral_health", __name__)
 
@@ -62,7 +64,7 @@ def oral_health_get_extraction_fn(cnes=None):
         http_response = request_adapter(request, oral_health_get_extraction())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -84,7 +86,7 @@ def oral_health_get_cares_by_gender_fn(cnes=None):
         http_response = request_adapter(request, oral_health_get_cares_by_gender())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -106,7 +108,7 @@ def oral_health_get_cares_by_race_fn(cnes=None):
         http_response = request_adapter(request, oral_health_get_cares_by_race())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -130,7 +132,7 @@ def oral_health_get_first_appointment_fn(cnes=None):
         http_response = request_adapter(request, oral_health_get_first_appointment())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -154,7 +156,7 @@ def oral_health_get_conclued_treatment_fn(cnes=None):
         http_response = request_adapter(request, oral_health_get_conclued_treatment())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
     return response, http_response.status_code
 
 
@@ -178,7 +180,7 @@ def oral_health_get_prevention_procedures_fn(cnes=None):
         )
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
 
         response = jsonify(http_response.body)
 
@@ -203,7 +205,7 @@ def oral_health_get_supervised_brushing_fn(cnes=None):
         http_response = request_adapter(request, oral_health_get_supervised_brushing())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
 
         response = jsonify(http_response.body)
 
@@ -228,7 +230,7 @@ def oral_health_get_atraumatic_treatment_fn(cnes=None):
         http_response = request_adapter(request, oral_health_get_atraumatic_treatment())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
 
         response = jsonify(http_response.body)
 
@@ -252,7 +254,7 @@ def oral_health_get_nominal_list_fn(cnes=None):
         http_response = request_adapter(request, oral_health_get_nominal_list())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
 
         response = jsonify(http_response.body)
 
@@ -277,7 +279,7 @@ def oral_health_get_total_fn(cnes=None):
         http_response = request_adapter(request, oral_health_get_total())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -311,6 +313,11 @@ def oral_health_get_nominal_list_download(cnes=None):
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
             "Content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         }
+        send_download_request(
+            "Baixando lista nominal de sapude bucal.",
+            "lista_nominal_saude_bucal",
+            request,
+        )
         return Response(
             buffer.getvalue(),
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -318,7 +325,7 @@ def oral_health_get_nominal_list_download(cnes=None):
         )
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, 200

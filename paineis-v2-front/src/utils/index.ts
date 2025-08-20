@@ -1,3 +1,7 @@
+export type ReportBasicParams = {
+  id: string;
+};
+
 export function formataNumero(numero: number | undefined) {
   if (numero) {
     return numero.toLocaleString("pt-BR");

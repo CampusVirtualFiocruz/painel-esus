@@ -3,6 +3,7 @@ from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.demographics_info_composer import demographics_info_composer
 from src.main.server.cache import cache
+from src.main.server.decorators.token_required import extract_token
 
 demographics_info_bp = Blueprint("demographics_info", __name__)
 
@@ -32,7 +33,9 @@ def get_demographics_info_fn(cnes=None):
         http_response = request_adapter(request, demographics_info_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(
+            exception, extract_token(request.headers.get("Authorization"))
+        )
         response = jsonify(http_response.body)
 
     # print(response.get_json())

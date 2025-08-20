@@ -14,13 +14,9 @@ import { Header } from "../components/Header";
 import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
 import { Pie } from "../charts/Pie";
-import { getNomeUbs, showValuePerTrimester, showValuePerWeeks } from "../utils";
+import { getNomeUbs, ReportBasicParams, showValuePerTrimester, showValuePerWeeks } from "../utils";
 import { wait } from "../utils/reports";
 import "../styles/gestantes.scss";
-
-type PainelParams = {
-  id: string;
-};
 
 type TModal = {
   loaded: number;
@@ -46,7 +42,7 @@ type ResponseDataListUbs = {
 export function Gestantes() {
   let navigate = useNavigate();
   const user = getUserLocalStorage();
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
 
   let paramRoute = id ? id : "all";
 

@@ -1,42 +1,39 @@
-import { CSSProperties, useState, useEffect } from "react";
-import Select, { StylesConfig } from "react-select";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import { Spinner } from "reactstrap";
 import { Button } from "bold-ui";
+import { CSSProperties, useEffect, useState } from "react";
 import { MdInfoOutline } from "react-icons/md";
+import { useQuery } from "react-query";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import Select, { StylesConfig } from "react-select";
+import { Spinner } from "reactstrap";
 
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
-import { formataNumero, getNomeUbs, navigateHome, somaIndicador } from "../utils";
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
 import { Zonas } from "../charts/Zonas";
-import { Api } from "../services/api";
-import { useInfo } from "../context/infoProvider/useInfo";
-import "../styles/painel.scss";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
+import Card from "../components/ui/Card";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "../components/ui/Tooltip";
 import { Typography } from "../components/ui/Typography";
-import Card from "../components/ui/Card";
+import { useInfo } from "../context/infoProvider/useInfo";
+import { Api } from "../services/api";
+import "../styles/painel.scss";
+import { ReportBasicParams, formataNumero, getNomeUbs, navigateHome, somaIndicador } from "../utils";
 
-import masculino from "../assets/images/masculino.svg";
 import feminino from "../assets/images/feminino.svg";
 import homem from "../assets/images/homem.svg";
-import mulher from "../assets/images/mulher.svg";
-import diabetes from "../assets/images/menu/diabetes.png";
-import hipertensao from "../assets/images/menu/hipertensao.png";
+import masculino from "../assets/images/masculino.svg";
 import bucal from "../assets/images/menu/bucal.png";
 import children from "../assets/images/menu/children.png";
+import diabetes from "../assets/images/menu/diabetes.png";
+import hipertensao from "../assets/images/menu/hipertensao.png";
 import old from "../assets/images/menu/old.png";
 import quality from "../assets/images/menu/quality.png";
+import mulher from "../assets/images/mulher.svg";
 
-type PainelParams = {
-  id: string;
-};
 type Indicator = {
   rural: number;
   urbano: number;
@@ -115,7 +112,7 @@ type ResponseDataListUbs = {
 
 export function Painel() {
   let navigate = useNavigate();
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe");
   const { cityInformation } = useInfo();
@@ -346,7 +343,7 @@ export function Painel() {
                     />
                     <span>{formataNumero(dadosPainel?.gender.masculino)}</span>
                   </div>
-                  <div className="mx-2" style={{ height: '100px', width: '1px', backgroundColor: '#FFFFFF' }} />          
+                  <div className="mx-2" style={{ height: '100px', width: '1px', backgroundColor: '#FFFFFF' }} />
                   <div className="d-flex flex-column align-items-center ms-4 me-2">
                     <img
                       className="my-2 force-white"

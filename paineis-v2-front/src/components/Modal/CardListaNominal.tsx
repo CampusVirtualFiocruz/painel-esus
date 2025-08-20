@@ -3,6 +3,17 @@ import { capitalizeName } from "../../utils/stringUtils";
 import { groupBy } from "../../utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/Tooltip";
 
+function parseDate(str: string) {
+  let dateStr;
+  try {
+    dateStr = str ? moment.utc(str).format("DD/MM/YYYY") : "";
+    return dateStr.indexOf("Invalid") != -1
+      ? str.split("-").reverse().join("/")
+      : dateStr;
+  } catch (e) { 
+    return str.split('-').reverse().join('/')
+  }
+}
 export function parseText(text: string | number): number | string {
   if (text === null || text === 0 || text === "" || text === "0") {
     return "-";
@@ -69,9 +80,7 @@ export const CardListaNominal = ({
             <>
               {" "}
               <strong>Idade:</strong> {item?.idade} | DN:{" "}
-              {item?.dataNascimento
-                ? moment.utc(item.dataNascimento).format("DD/MM/YYYY")
-                : ""}
+              {parseDate(item?.dataNascimento)}
               <br />
             </>
             <strong>CPF:</strong> {item?.cpf} <br />

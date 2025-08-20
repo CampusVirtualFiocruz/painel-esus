@@ -4,3 +4,4 @@ from .create_indicadores_criancas_repository import CreateIndicadoresCriancasRep
 def test_create_base():
     repo = CreateIndicadoresCriancasRepository()
     repo.create_base()
+    

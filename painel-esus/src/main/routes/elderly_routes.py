@@ -2,23 +2,25 @@ import io
 
 from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
+from src.infra.requests.factory import send_download_request
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.elderly_composer import (
-    elderly_ivcf_20_composer,
-    elderly_dentist_appointment_composer,
-    elderly_influenza_vaccines_composer,
-    elderly_creatinine_composer,
     elderly_acs_visits_composer,
-    elderly_height_records_composer,
-    elderly_medical_appointment_composer,
-    elderly_by_race_composer,
     elderly_by_gender_composer,
+    elderly_by_race_composer,
+    elderly_creatinine_composer,
+    elderly_dentist_appointment_composer,
+    elderly_get_nominal_list_composer,
+    elderly_get_nominal_list_download_composer,
+    elderly_height_records_composer,
+    elderly_influenza_vaccines_composer,
+    elderly_ivcf_20_composer,
+    elderly_medical_appointment_composer,
+    elderly_total_card_composer,
     elderly_total_medical_cares_composer,
     elderly_total_ubs_composer,
-    elderly_total_card_composer,
-    elderly_get_nominal_list_composer,
-    elderly_get_nominal_list_download_composer
 )
+from src.main.server.decorators.token_required import extract_token
 
 elderly_bp = Blueprint('elderly', __name__)
 
@@ -58,7 +60,7 @@ def elderly_total_ubs(cnes=None):
         http_response = request_adapter(request, elderly_total_ubs_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -74,7 +76,7 @@ def elderly_total_card(cnes=None):
         http_response = request_adapter(request, elderly_total_card_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -91,7 +93,7 @@ def elderly_total_cares(cnes=None):
         http_response = request_adapter(request, elderly_total_medical_cares_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -107,7 +109,7 @@ def elderly_by_gender(cnes=None):
         http_response = request_adapter(request, elderly_by_gender_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -123,7 +125,7 @@ def elderly_by_race(cnes=None):
         http_response = request_adapter(request, elderly_by_race_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -139,7 +141,7 @@ def elderly_medical_appointment(cnes=None):
         http_response = request_adapter(request, elderly_medical_appointment_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -155,7 +157,7 @@ def elderly_height_records(cnes=None):
         http_response = request_adapter(request, elderly_height_records_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -171,7 +173,7 @@ def elderly_acs_visits(cnes=None):
         http_response = request_adapter(request, elderly_acs_visits_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -187,7 +189,7 @@ def elderly_creatinine(cnes=None):
         http_response = request_adapter(request, elderly_creatinine_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -203,7 +205,7 @@ def elderly_influenza_vaccines(cnes=None):
         http_response = request_adapter(request, elderly_influenza_vaccines_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -219,7 +221,7 @@ def elderly_dentist_appointment(cnes=None):
         http_response = request_adapter(request, elderly_dentist_appointment_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -235,7 +237,7 @@ def elderly_ivcf_20(cnes=None):
         http_response = request_adapter(request, elderly_ivcf_20_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -251,7 +253,7 @@ def elderly_get_nominal_list(cnes=None):
         http_response = request_adapter(request, elderly_get_nominal_list_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -276,6 +278,11 @@ def elderly_get_nominal_list_download(cnes=None):
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
             "Content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         }
+        send_download_request(
+            "Baixando lista nominal de idoso.",
+            "lista_nominal_idoso",
+            request,
+        )
         return Response(
             buffer.getvalue(),
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -283,7 +290,7 @@ def elderly_get_nominal_list_download(cnes=None):
         )
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, 200

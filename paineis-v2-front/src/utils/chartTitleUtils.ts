@@ -1,7 +1,5 @@
 export function getChartDescription(description: string | undefined, reportViewType: any, content: Record<string, any>) {
   const baseDesc = !!content?.[String(description)] ? String(content?.[String(description)]) : description || '';
-  
-  console.log({reportViewType})
 
   if (reportViewType) {
     let sufixo = " no município";

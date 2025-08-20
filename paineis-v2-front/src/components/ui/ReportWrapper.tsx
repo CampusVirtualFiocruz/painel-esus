@@ -1,12 +1,11 @@
 import { HTMLProps, ReactNode } from "react";
 import { Header } from "../Header";
 import { Footer } from "../Footer";
-import { getNomeUbs } from "../../utils";
+import { getNomeUbs, ReportBasicParams } from "../../utils";
 import { useInfo } from "../../context/infoProvider/useInfo";
 import { useQuery } from "react-query";
 import { Api } from "../../services/api";
 import { useParams, useSearchParams } from "react-router-dom";
-import { PainelParams } from "./ReportFooter";
 
 type Lista = {
   nome_equipe: string;
@@ -42,7 +41,7 @@ const ReportWrapper = ({
   children: ReactNode;
   footerNote?: string | ReactNode;
 } & HTMLProps<HTMLDivElement>) => {
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const { city } = useInfo();
 
   const [params] = useSearchParams();

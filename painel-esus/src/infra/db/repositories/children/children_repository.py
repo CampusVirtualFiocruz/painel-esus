@@ -1,6 +1,7 @@
 import duckdb
-
+from src.infra.db.repositories.utils.str_utils import anonymize_data_frame
 from src.infra.db.settings.connection_duckdb import DuckDbHandler
+
 from .sqls.children_queries import (
     get_medical_cares,
     get_total_card,
@@ -131,7 +132,7 @@ class ChildrenRepository:
             .split("ORDER BY")[0]
         )
 
-        total = self.session.fetchone(count_query)
+        total = self.session.fetchone(count_query)[0]
 
         return {
             "items": items,
@@ -143,5 +144,5 @@ class ChildrenRepository:
 
     def get_nominal_list_download(self, cnes: int = None, equipe: int = None):
         response = self.session.fetch_df(sql_get_nominal_list_download(cnes, equipe))
-
+        response = response.apply(anonymize_data_frame, axis=1)
         return response
