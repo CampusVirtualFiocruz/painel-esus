@@ -110,6 +110,8 @@ class DemographicAdapter(AbstractAdapter):
             for resp in response:
                 key_side = side_map.get(resp[0], None)
                 key_gender = location_map.get(resp[2].lower(), "nao informado")
+                if not key_side:
+                    continue
                 if resp[1] in result[key_side]:
                     result[key_side][resp[1]]["value"][key_gender] = resp[3]
 
