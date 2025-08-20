@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-//import { Api } from "../../../services/api";
-import { charts as homeData } from "../../../components/charts/home.mock";
+import { Api } from "../../../services/api";
+// import { charts as homeData } from "../../../components/charts/home.mock";
 
 type reportBasicInfo = {
   ubsId?: string | undefined;
@@ -11,78 +11,69 @@ const useReportDataHome = ({ ubsId, squadId }: reportBasicInfo) => {
   return useQuery(
     ["relatorio-home", ubsId, squadId],
     async () => {
-      //  const ubsParam = ubsId ? `/${ubsId}` : "";
+      // const ubsParam = ubsId ? `/${ubsId}` : ""; // Não usado nos novos endpoints
 
-      /*  const requests = {
-        "total-ubs": Api.get(`/elderly/total-ubs${ubsParam}`, {
+      // Mapeamento com os endpoints reais baseado nas chaves do MockRelatorioHome
+      const requests = {
+        "piramide-etaria": Api.get(`/v1/demographic/age-groups`, {
           params: {
             equipe: squadId,
           },
         }),
-        "total-atendidas": Api.get(`/elderly/total-medical-cares${ubsParam}`, {
+        "total-masculino": Api.get(`/v1/demographic/gender`, {
           params: {
             equipe: squadId,
           },
         }),
-        "pessoas-por-sexo": Api.get(`/elderly/by-gender${ubsParam}`, {
+        "total-feminino": Api.get(`/v1/demographic/gender`, {
           params: {
             equipe: squadId,
           },
         }),
-        "distribuicao-pessoas-raca-cor": Api.get(
-          `/elderly/by-race${ubsParam}`,
-          {
-            params: {
-              equipe: squadId,
-            },
-          }
-        ),
-        "duas-consultas-medicas-enfermagem": Api.get(
-          `/elderly/two-medical-appointments${ubsParam}`,
-          {
-            params: {
-              equipe: squadId,
-            },
-          }
-        ),
-        "dois-registros-peso-altura": Api.get(
-          `/elderly/two-height-records${ubsParam}`,
-          {
-            params: {
-              equipe: squadId,
-            },
-          }
-        ),
-        "duas-visitas-domiciliares-acs-tacs": Api.get(
-          `/elderly/two-acs-visits${ubsParam}`,
-          {
-            params: {
-              equipe: squadId,
-            },
-          }
-        ),
-        "avalicao-creatina": Api.get(`/elderly/creatinine${ubsParam}`, {
+        "tipo-localizacao": Api.get(`/v1/demographic/location-area`, {
           params: {
             equipe: squadId,
           },
         }),
-        "registro-vacina-influenza": Api.get(
-          `/elderly/influenza-vaccines${ubsParam}`,
-          {
-            params: {
-              equipe: squadId,
-            },
-          }
-        ),
-        "consulta-com-dentista-aps": Api.get(
-          `/elderly/dentist-appointment${ubsParam}`,
-          {
-            params: {
-              equipe: squadId,
-            },
-          }
-        ),
-        "ivcf-20": Api.get(`/elderly/ivcf-20${ubsParam}`, {
+        "tematico-diabetes": Api.get(`/v1/demographic/location-area/diabetes`, {
+          params: {
+            equipe: squadId,
+          },
+        }),
+        "tematico-hipertensao": Api.get(`/v1/demographic/location-area/hypertension`, {
+          params: {
+            equipe: squadId,
+          },
+        }),
+        "tematico-idoso": Api.get(`/v1/demographic/location-area/elderly`, {
+          params: {
+            equipe: squadId,
+          },
+        }),
+        "total-cidadaos-cadastrados": Api.get(`/v1/demographic/total-people`, {
+          params: {
+            equipe: squadId,
+          },
+        }),
+        "total-populacao-apurada": Api.get(`/v1/demographic/total-people`, {
+          params: {
+            equipe: squadId,
+          },
+        }),
+        // TODO: Adicionar endpoint específico para qualidade quando disponível
+        "tematico-qualidade": Api.get(`/v1/demographic/location-area`, {
+          params: {
+            equipe: squadId,
+          },
+        }),
+        // Endpoint para desenvolvimento infantil
+        "tematico-infantil": Api.get(`/v1/demographic/location-area/child`, {
+          params: {
+            equipe: squadId,
+          },
+        }),
+        // TODO: Adicionar endpoint específico para saúde bucal quando disponível
+        "tematico-bucal": Api.get(`/v1/demographic/location-area`, {
           params: {
             equipe: squadId,
           },
@@ -101,12 +92,10 @@ const useReportDataHome = ({ ubsId, squadId }: reportBasicInfo) => {
         {}
       );
 
-      return {
-        ...reducedData,
-        ...reducedData?.indicadores?.data,
-      }; */
+      return reducedData;
 
-      return homeData;
+      // TEMPORÁRIO: Para usar mock durante desenvolvimento, descomente a linha abaixo
+      // return homeData;
     },
     {
       staleTime: 1000 * 60 * 10, //10 minutos

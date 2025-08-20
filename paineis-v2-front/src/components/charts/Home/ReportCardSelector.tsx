@@ -1,16 +1,16 @@
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { ReportBasicParams } from "../../../utils";
 import { Typography } from "../../ui/Typography";
-import { PainelParams } from "../../ui/ReportFooter";
 
-import diabetes from "../../../assets/images/menu/diabetes.png";
-import hipertensao from "../../../assets/images/menu/hipertensao.png";
+import ReactECharts from "echarts-for-react";
+import { content } from "../../../assets/content/content";
 import bucal from "../../../assets/images/menu/bucal.png";
 import children from "../../../assets/images/menu/children.png";
+import diabetes from "../../../assets/images/menu/diabetes.png";
+import hipertensao from "../../../assets/images/menu/hipertensao.png";
 import old from "../../../assets/images/menu/old.png";
 import quality from "../../../assets/images/menu/quality.png";
-import ReactECharts from "echarts-for-react";
 import { getPorcentagemIndicador } from "../../../utils";
-import { content } from "../../../assets/content/content";
 
 const sumValues = (data: Array<{ value: number }>) =>
   data.reduce((acc, item) => acc + (item.value || 0), 0);
@@ -72,7 +72,7 @@ const CardDonutChart = ({ data }: { data: Array<{ tag: string, value: number }> 
 
 const ReportCardSelector = ({ charts }: any) => {
   let navigate = useNavigate();
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe");
 

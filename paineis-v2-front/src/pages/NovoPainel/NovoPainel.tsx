@@ -1,16 +1,15 @@
-import { CSSProperties, useState } from "react";
 import { Button } from "bold-ui";
+import { CSSProperties, useState } from "react";
+import { useQuery } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import Select, { StylesConfig } from "react-select";
 import Piramide from "../../components/charts/Home/Piramide";
 import ReportCardSelector from "../../components/charts/Home/ReportCardSelector";
 import TopIndicatorsContent from "../../components/charts/Home/TopIndicatorsContent";
 import ReportWrapper from "../../components/ui/ReportWrapper";
 import useReportDataHome from "../../hooks/sections/home/useReportDataHome";
-import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
 import { Api } from "../../services/api";
-import Select, { StylesConfig } from "react-select";
-import { PainelParams } from "../../components/ui/ReportFooter";
-import { navigateHome } from "../../utils";
+import { ReportBasicParams, navigateHome } from "../../utils";
 
 type IsMulti = false;
 
@@ -52,7 +51,7 @@ type TypeUbs = {
 };
 
 const NovoPainel = () => {
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
 
   let navigate = useNavigate();
   const squadId = "456";
