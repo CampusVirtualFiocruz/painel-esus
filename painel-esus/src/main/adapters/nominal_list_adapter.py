@@ -127,7 +127,6 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user["total_consulta_med_enferm"],
                 exibir_alerta=user["agg_medicos_enfermeiros"] == 0,
-                exibir_alerta=user["agg_medicos_enfermeiros"] == 0,
                 descricao="Total de consultas Médicas ou de Enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
