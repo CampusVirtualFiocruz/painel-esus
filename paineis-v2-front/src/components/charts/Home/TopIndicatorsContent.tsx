@@ -1,11 +1,11 @@
 import { MdInfoOutline } from "react-icons/md";
-import { formataNumero } from "../../../utils";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/Tooltip";
-import Card from "../../ui/Card";
-import { Zonas } from "../../../charts/Zonas";
-import { Typography } from "../../ui/Typography";
 import homem from "../../../assets/images/homem.svg";
 import mulher from "../../../assets/images/mulher.svg";
+import { Zonas } from "../../../charts/Zonas";
+import { formataNumero } from "../../../utils";
+import Card from "../../ui/Card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../../ui/Tooltip";
+import { Typography } from "../../ui/Typography";
 
 const TopIndicatorsContent = ({ charts }: any) => {
   const CounterCard = () => (
@@ -14,7 +14,10 @@ const TopIndicatorsContent = ({ charts }: any) => {
         <div className="w-50 d-flex flex-column align-items-center justify-content-center">
           <h4 className="text-center">Cidadãos Cadastrados</h4>
           <span>
-            {formataNumero(charts?.["total-cidadaos-cadastrados"]?.data)}
+            {formataNumero(
+              charts?.["total-cidadaos-cadastrados"]?.data?.find(
+                      ({ tag }: any) => tag === "total"
+                    )?.value)}
           </span>
         </div>
         <div
@@ -55,7 +58,9 @@ const TopIndicatorsContent = ({ charts }: any) => {
             </a>
           </Tooltip>
           <span>
-            {formataNumero(charts?.["total-populacao-apurada"]?.data)}
+            {formataNumero(charts?.["total-cidadaos-cadastrados"]?.data?.find(
+                      ({ tag }: any) => tag === "ibgePopulation"
+                    )?.value)}
           </span>
         </div>
       </div>
@@ -155,7 +160,11 @@ const TopIndicatorsContent = ({ charts }: any) => {
             alt="Homem"
             width={60}
           />
-          <span>{formataNumero(charts?.["total-masculino"]?.data)}</span>
+          <span>{formataNumero(
+                    charts?.["total-por-sexo"]?.data?.find(
+                      ({ tag }: any) => tag === "masculino"
+                    )?.value
+                  )}</span>
         </div>
         <div
           className="mx-2"
@@ -172,7 +181,11 @@ const TopIndicatorsContent = ({ charts }: any) => {
             alt="Mulher"
             width={60}
           />
-          <span>{formataNumero(charts?.["total-feminino"]?.data)}</span>
+          <span>{formataNumero(
+                    charts?.["total-por-sexo"]?.data?.find(
+                      ({ tag }: any) => tag === "feminino"
+                    )?.value
+                  )}</span>
         </div>
       </div>
     </div>

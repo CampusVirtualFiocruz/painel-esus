@@ -22,7 +22,7 @@ const CardDonutChart = ({ data }: { data: Array<{ tag: string, value: number }> 
   const entries = data.map(({ value, tag }) => ({
     value,
     name: getPorcentagemIndicador(tag, total, value),
-    label:content?.[tag],
+    label: content?.[tag] ?? 'Não informado',
   }));
 
   console.log("entries", entries);
@@ -92,6 +92,97 @@ const ReportCardSelector = ({ charts }: any) => {
     }
   };
 
+  // Configuração dos cartões temáticos
+  interface ThematicCardConfig {
+    chartKey: string;
+    routeKey: availableRoutesToThemedReport;
+    title: string;
+    icon: string;
+    alt: string;
+    width?: string;
+  }
+
+  const thematicCardsConfig: ThematicCardConfig[][] = [
+    // Primeira linha
+    [
+      {
+        chartKey: "tematico-diabetes",
+        routeKey: "diabetes",
+        title: "Diabetes",
+        icon: diabetes,
+        alt: "Diabetes"
+      },
+      {
+        chartKey: "tematico-hipertensao",
+        routeKey: "hipertensao",
+        title: "Hipertensão",
+        icon: hipertensao,
+        alt: "Hipertensão"
+      },
+      {
+        chartKey: "tematico-qualidade",
+        routeKey: "qualidade",
+        title: "Qualidade de Cadastros",
+        icon: quality,
+        alt: "Qualidade"
+      }
+    ],
+    // Segunda linha
+    [
+      {
+        chartKey: "tematico-idoso",
+        routeKey: "idosaV2",
+        title: "Cuidado da Pessoa Idosa",
+        icon: old,
+        alt: "Pessoa Idosa",
+        width: "30%"
+      },
+      {
+        chartKey: "tematico-bucal",
+        routeKey: "saude-bucal",
+        title: "Saúde Bucal",
+        icon: bucal,
+        alt: "Saude Bucal",
+        width: "34%"
+      },
+      {
+        chartKey: "tematico-infantil",
+        routeKey: "infantil",
+        title: "Desenvolvimento Infantil",
+        icon: children,
+        alt: "Desenvolvimento Infantil",
+        width: "30%"
+      }
+    ]
+  ];
+
+  const renderThematicCard = (cardConfig: ThematicCardConfig) => {
+    const { chartKey, routeKey, title, icon, alt, width } = cardConfig;
+    const chartData = charts?.[chartKey]?.data;
+
+    if (!Boolean(chartData)) return null;
+
+    return (
+      <div
+        key={chartKey}
+        className="card-condicao p-2"
+        onClick={() => handleToThemedReport(routeKey)}
+      >
+        <span className="nome-condicao">{title}</span>
+        <h4>{sumValues(chartData)}</h4>
+        <div className="d-flex align-items-center">
+          <img
+            src={icon}
+            alt={alt}
+            className="mx-2"
+            {...(width && { width })}
+          />
+          <CardDonutChart data={chartData} />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       {" "}
@@ -99,106 +190,15 @@ const ReportCardSelector = ({ charts }: any) => {
         <Typography.Subtitle>Relatórios Temáticos</Typography.Subtitle>
       </div>
       <div className="container">
-        <div className="row container-cards-condicoes">
-          {Boolean(charts?.["tematico-diabetes"]?.data) && (
-            <div
-              className="card-condicao p-2"
-              onClick={() => handleToThemedReport("diabetes")}
-            >
-              <span className="nome-condicao">Diabetes</span>
-              <h4>{sumValues(charts?.["tematico-diabetes"]?.data)}</h4>
-              <div className="d-flex align-items-center">
-                <img src={diabetes} alt="Diabetes" className="mx-2" />
-                <CardDonutChart data={charts?.["tematico-diabetes"]?.data} />
-              </div>
-            </div>
-          )}
-          {Boolean(charts?.["tematico-diabetes"]?.data) && (
-            <div
-              className="card-condicao p-2"
-              onClick={() => handleToThemedReport("hipertensao")}
-            >
-              <span className="nome-condicao">Hipertensão</span>
-              <h4>{sumValues(charts?.["tematico-diabetes"]?.data)}</h4>
-              <div className="d-flex align-items-center">
-                <img src={hipertensao} alt="Hipertensão" className="mx-2" />
-                <CardDonutChart data={charts?.["tematico-diabetes"]?.data} />
-              </div>
-            </div>
-          )}
-          {Boolean(charts?.["tematico-diabetes"]?.data) && (
-            <div
-              className="card-condicao p-2"
-              onClick={() => handleToThemedReport("qualidade")}
-            >
-              <span className="nome-condicao">Qualidade de Cadastros</span>
-              <h4>{sumValues(charts?.["tematico-diabetes"]?.data)}</h4>
-              <div className="d-flex align-items-center">
-                <img src={quality} alt="Qualidade" className="mx-2" />
-                <CardDonutChart data={charts?.["tematico-diabetes"]?.data} />
-              </div>
-            </div>
-          )}
-        </div>
-        <div
-          className="row container-cards-condicoes"
-          style={{ marginTop: "20px" }}
-        >
-          {Boolean(charts?.["tematico-diabetes"]?.data) && (
-            <div
-              className="card-condicao p-2"
-              onClick={() => handleToThemedReport("idosaV2")}
-            >
-              <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
-              <h4>{sumValues(charts?.["tematico-diabetes"]?.data)}</h4>
-              <div className="d-flex align-items-center">
-                <img
-                  width={"30%"}
-                  src={old}
-                  alt="Pessoa Idosa"
-                  className="mx-2"
-                />
-                <CardDonutChart data={charts?.["tematico-diabetes"]?.data} />
-              </div>
-            </div>
-          )}
-          {Boolean(charts?.["tematico-diabetes"]?.data) && (
-            <div
-              className="card-condicao p-2"
-              onClick={() => handleToThemedReport("saude-bucal")}
-            >
-              <span className="nome-condicao">Saúde Bucal</span>
-              <h4>{sumValues(charts?.["tematico-diabetes"]?.data)}</h4>
-              <div className="d-flex align-items-center">
-                <img
-                  width={"34%"}
-                  src={bucal}
-                  alt="Saude Bucal"
-                  className="mx-2"
-                />
-                <CardDonutChart data={charts?.["tematico-diabetes"]?.data} />
-              </div>
-            </div>
-          )}
-          {Boolean(charts?.["tematico-diabetes"]?.data) && (
-            <div
-              className="card-condicao p-2"
-              onClick={() => handleToThemedReport("infantil")}
-            >
-              <span className="nome-condicao">Desenvolvimento Infantil</span>
-              <h4>{sumValues(charts?.["tematico-diabetes"]?.data)}</h4>
-              <div className="d-flex align-items-center">
-                <img
-                  width={"30%"}
-                  src={children}
-                  alt="Desenvolvimento Infantil"
-                  className="mx-2"
-                />
-                <CardDonutChart data={charts?.["tematico-diabetes"]?.data} />
-              </div>
-            </div>
-          )}
-        </div>
+        {thematicCardsConfig.map((cardRow, rowIndex) => (
+          <div
+            key={`thematic-row-${rowIndex}`}
+            className="row container-cards-condicoes"
+            style={rowIndex > 0 ? { marginTop: "20px" } : undefined}
+          >
+            {cardRow.map(renderThematicCard)}
+          </div>
+        ))}
         <div className="d-flex my-5 justify-content-center">
           <div className="container-areas d-flex align-items-center me-4">
             <div className="box-container-light me-2"></div>

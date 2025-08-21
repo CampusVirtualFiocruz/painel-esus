@@ -15,65 +15,55 @@ const useReportDataHome = ({ ubsId, squadId }: reportBasicInfo) => {
 
       // Mapeamento com os endpoints reais baseado nas chaves do MockRelatorioHome
       const requests = {
-        "piramide-etaria": Api.get(`/v1/demographic/age-groups`, {
+        "piramide-etaria": Api.get(`demographic/age-groups`, {
           params: {
             equipe: squadId,
           },
         }),
-        "total-masculino": Api.get(`/v1/demographic/gender`, {
+        "total-por-sexo": Api.get(`demographic/gender`, {
           params: {
             equipe: squadId,
           },
         }),
-        "total-feminino": Api.get(`/v1/demographic/gender`, {
+        "tipo-localizacao": Api.get(`demographic/location-area`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tipo-localizacao": Api.get(`/v1/demographic/location-area`, {
+        "tematico-diabetes": Api.get(`demographic/location-area/diabetes`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tematico-diabetes": Api.get(`/v1/demographic/location-area/diabetes`, {
+        "tematico-hipertensao": Api.get(`demographic/location-area/hypertension`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tematico-hipertensao": Api.get(`/v1/demographic/location-area/hypertension`, {
+        "tematico-idoso": Api.get(`demographic/location-area/elderly`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tematico-idoso": Api.get(`/v1/demographic/location-area/elderly`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-        "total-cidadaos-cadastrados": Api.get(`/v1/demographic/total-people`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-        "total-populacao-apurada": Api.get(`/v1/demographic/total-people`, {
+        "total-cidadaos-cadastrados": Api.get(`demographic/total-people`, {
           params: {
             equipe: squadId,
           },
         }),
         // TODO: Adicionar endpoint específico para qualidade quando disponível
-        "tematico-qualidade": Api.get(`/v1/demographic/location-area`, {
+        "tematico-qualidade": Api.get(`demographic/location-area`, {
           params: {
             equipe: squadId,
           },
         }),
         // Endpoint para desenvolvimento infantil
-        "tematico-infantil": Api.get(`/v1/demographic/location-area/child`, {
+        "tematico-infantil": Api.get(`demographic/location-area/child`, {
           params: {
             equipe: squadId,
           },
         }),
         // TODO: Adicionar endpoint específico para saúde bucal quando disponível
-        "tematico-bucal": Api.get(`/v1/demographic/location-area`, {
+        "tematico-bucal": Api.get(`demographic/location-area`, {
           params: {
             equipe: squadId,
           },

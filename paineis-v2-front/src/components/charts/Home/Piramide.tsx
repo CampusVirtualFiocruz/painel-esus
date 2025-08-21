@@ -1,8 +1,8 @@
-import { Typography } from "../../ui/Typography";
-import masculino from "../../../assets/images/masculino.svg";
-import feminino from "../../../assets/images/feminino.svg";
 import ReactECharts from "echarts-for-react";
 import { content } from "../../../assets/content/content";
+import feminino from "../../../assets/images/feminino.svg";
+import masculino from "../../../assets/images/masculino.svg";
+import { Typography } from "../../ui/Typography";
 
 type NewData = {
   left: {
@@ -46,69 +46,18 @@ export function transformNewDataToOldData(newDataInput: NewData) {
     return { type, areaUrbana, areaRural, nao_informado };
   }
 
+  if (!newDataInput || !newDataInput.left || !newDataInput.right) {
+    return [];
+  }
+
   return [
-    buildGenderData(newDataInput.left, "Masculino"),
-    buildGenderData(newDataInput.right, "Feminino"),
+    buildGenderData(newDataInput?.left, "Masculino"),
+    buildGenderData(newDataInput?.right, "Feminino"),
   ];
 }
 
-const newData = {
-  left: [
-    {
-      tag: "100-mais",
-      value: {
-        urbano: 0,
-        rural: 0,
-        "nao-informado": 0,
-      },
-    },
-    {
-      tag: "95-99",
-      value: {
-        urbano: 12,
-        rural: 10,
-        "nao-informado": 6,
-      },
-    },
-    {
-      tag: "90-94",
-      value: {
-        urbano: 22,
-        rural: 16,
-        "nao-informado": 19,
-      },
-    },
-  ],
-  right: [
-    {
-      tag: "100-mais",
-      value: {
-        urbano: 0,
-        rural: 0,
-        "nao-informado": 0,
-      },
-    },
-    {
-      tag: "95-99",
-      value: {
-        urbano: 14,
-        rural: 8,
-        "nao-informado": 8,
-      },
-    },
-    {
-      tag: "90-94",
-      value: {
-        urbano: 32,
-        rural: 30,
-        "nao-informado": 10,
-      },
-    },
-  ],
-};
-
 const PyramidChart = ({ data }: any) => {
-  const finalInput = transformNewDataToOldData(newData);
+  const finalInput = transformNewDataToOldData(data);
 
   const waterMarkText = "ECHARTS";
   const canvas = document.createElement("canvas");
@@ -299,6 +248,7 @@ const PyramidChart = ({ data }: any) => {
 };
 
 const Piramide = ({ charts }: any) => {
+  console.log('piramide', charts?.["piramide-etaria"]?.data);
   return (
     <>
       <div className="my-5">

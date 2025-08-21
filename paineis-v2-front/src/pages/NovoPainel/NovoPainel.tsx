@@ -99,9 +99,13 @@ const NovoPainel = () => {
     <ReportWrapper title={""}>
       <div id="novo-painel">
         <div className="contentWrapper">
-          <TopIndicatorsContent charts={reportData.data} />
-          <Piramide charts={reportData.data} />
-          <ReportCardSelector charts={reportData.data} />
+          {!!reportData.data && (
+            <>
+              <TopIndicatorsContent charts={reportData.data} />
+              <Piramide charts={reportData.data} />
+              <ReportCardSelector charts={reportData.data} />
+            </>
+          )}
           <div className="my-5">
             {id ? (
               <Button kind="primary" onClick={() => navigateHome(navigate)}>
