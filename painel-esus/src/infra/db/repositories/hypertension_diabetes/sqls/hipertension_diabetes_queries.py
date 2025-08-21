@@ -29,6 +29,7 @@ def get_number_of_patients(type: str, cnes: int = None, equipe: int = None):
     SELECT
         (
         SELECT count(n_atendimentos_12_meses) FROM lista WHERE {type} =1 
+        SELECT count(n_atendimentos_12_meses) FROM lista WHERE {type} =1 
     ) as cid_ciaps,
     (
         SELECT count(n_atendimentos_12_meses) FROM lista WHERE autoreferido =1 

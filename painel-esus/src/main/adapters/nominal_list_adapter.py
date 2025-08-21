@@ -127,6 +127,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user["total_consulta_med_enferm"],
                 exibir_alerta=user["agg_medicos_enfermeiros"] == 0,
+                exibir_alerta=user["agg_medicos_enfermeiros"] == 0,
                 descricao="Total de consultas Médicas ou de Enfermagem",
                 tipo_alerta="alerta-total-de-consultas-medico-menor-2",
             )
@@ -221,6 +222,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user["ultima_data_afericao_pa"],
                 exibir_alerta=not user["agg_afericao_pa"],
+                exibir_alerta=not user["agg_afericao_pa"],
                 descricao="Data da última aferição de PA",
                 tipo_alerta="alerta-afericao-pa-maior-6-meses",
             )
@@ -228,6 +230,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultima_data_creatinina"],
+                exibir_alerta=(not user["agg_creatinina"]),
                 exibir_alerta=(not user["agg_creatinina"]),
                 descricao="Data da última avaliação da Dosagem de Creatinina",
                 tipo_alerta="alerta-creatinina-maior-6-meses",
@@ -246,6 +249,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user["ultimo_atendimento_medico"],
                 exibir_alerta=(not user["agg_medicos_enfermeiros"]),
+                exibir_alerta=(not user["agg_medicos_enfermeiros"]),
                 descricao="Data da última consulta Médica ou de Enfermagem",
                 tipo_alerta="alerta-ultimo-atendimento-medico-maior-6-meses",
             )
@@ -254,6 +258,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultimo_atendimento_odonto"],
+                exibir_alerta=(not user["agg_cirurgiao_dentista"]),
                 exibir_alerta=(not user["agg_cirurgiao_dentista"]),
                 descricao="Data da última consulta Odontológica",
                 tipo_alerta="alerta-ultimo-atendimento-odonto-maior-6-meses",
@@ -264,6 +269,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
             AlertRecord(
                 data=user["dt_ultima_visita_acs"],
                 exibir_alerta=(not user["agg_visitas_domiciliares_acs"]),
+                exibir_alerta=(not user["agg_visitas_domiciliares_acs"]),
                 descricao="Data da última visita ACS",
                 tipo_alerta="alerta-data-ultima-visita-acs-maior-6-meses",
             )
@@ -271,6 +277,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         self.registros.append(
             AlertRecord(
                 data=user["ultima_data_hemoglobina_glicada"] or "-",
+                exibir_alerta=(not user["agg_hemoglobina"]),
                 exibir_alerta=(not user["agg_hemoglobina"]),
                 descricao="Data da última avaliação da Dosagem de Hemoglobina Glicada",
                 tipo_alerta="alerta-ultima-data-hemoglobina-glicada-maior-6-meses",
@@ -299,6 +306,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
                 "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
                 "racaCor": anonymize_data(self.raca_cor),
+                "racaCor": anonymize_data(self.raca_cor),
                 "detalhesCondicaoSaude": [
                     {
                         "cidCondicaoSaude": self.cids,
@@ -322,7 +330,9 @@ class CriancaNominalListAdapter:
         self.cns = user["cns"]
         self.data_nascimento = user["data_nascimento"]
 
+
         def calc_idade(user):
+            return user["idade_mes_ano"]
             return user["idade_mes_ano"]
 
         self.idade = calc_idade(user)
@@ -686,6 +696,7 @@ class RecordNominalListAdapter:
             ultima_atualizacao_fcd = False
 
         self.registros = []
+        acompanhamento = {"1": "Em acompanhamento", "0": "Não acompanhado"}
         acompanhamento = {"1": "Em acompanhamento", "0": "Não acompanhado"}
         self.registros.append(
             AlertRecord(
