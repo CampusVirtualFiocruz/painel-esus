@@ -1,5 +1,5 @@
-import { Api } from "../../services/api";
 import { Icon } from "bold-ui";
+import { Api } from "../../services/api";
 import { capitalizeName } from "../../utils/stringUtils";
 
 export const footerNotes = {
@@ -33,20 +33,6 @@ export const columns = ({ handleClick, condicao }: any) => {
           )}
         </div>
       ),
-    },
-    {
-      name: "gestante",
-      header: <div className="iconHeader iconGestante ms-2"></div>,
-      sortable: true,
-      render: (item: any) => {
-        if (String(item.gestante).toUpperCase() === "SIM") {
-          return (
-            <span className="iconCircle iconGestante ms-2" title="Alertas">
-              G
-            </span>
-          );
-        }
-      },
     },
     {
       name: "alert",
@@ -123,20 +109,35 @@ export const columns = ({ handleClick, condicao }: any) => {
     },
   ];
 
+  // Adiciona coluna "gestante" na segunda posição se não for infantil nem idosa
+  if (condicao !== "Infantil" && condicao !== "Idosa") {
+    baseColumns.splice(1, 0, {
+      name: "gestante",
+      header: <div className="iconHeader iconGestante ms-2"></div>,
+      sortable: true,
+      render: (item: any) => {
+        if (String(item.gestante).toUpperCase() === "SIM") {
+          return (
+            <span className="iconCircle iconGestante ms-2" title="Alertas">
+              G
+            </span>
+          );
+        }
+      },
+    });
+  }
+
   if (
     condicao &&
     !["Idosa", "Infantil", "Qualidade", "Bucal"].includes(condicao)
   ) {
-    baseColumns.splice(5, 0, {
+    const targetIndex = condicao !== "Infantil" && condicao !== "Idosa" ? 6 : 5;
+    baseColumns.splice(targetIndex, 0, {
       name: "grupo_ condicao",
       header: "Grupo/Condição",
       sortable: true,
       render: (item: any) => renderString(item?.diagnostico).toUpperCase(),
     });
-  }
-
-  if (condicao === "Infantil") {
-    baseColumns.splice(1, 1);
   }
 
   if (condicao === "Bucal") {
@@ -171,7 +172,7 @@ export const columns = ({ handleClick, condicao }: any) => {
 
 export const Footer = ({ pathToReport, condicao, id, recorte }: any) => {
   let recorteQuery = '';
-  if (recorte != undefined || recorte != null) {
+  if (recorte !== undefined || recorte !== null) {
     recorteQuery=`?recorte=${recorte}`;
   }
   return (
@@ -180,7 +181,7 @@ export const Footer = ({ pathToReport, condicao, id, recorte }: any) => {
         <p>* Nome Social</p>
       </div>
       <div className="legend-icons">
-        {condicao !== "Infantil" && (
+        {condicao !== "Infantil" && condicao !== 'Idosa' && (
           <p>
             <span className="iconCircle iconGestante" title="Alertas">
               G
