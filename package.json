@@ -1,0 +1,14 @@
+{
+  "name": "painel-esus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "d": "docker build -t painel-esus . && docker run -p 5001:5001 -it painel-esus ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1"
+}

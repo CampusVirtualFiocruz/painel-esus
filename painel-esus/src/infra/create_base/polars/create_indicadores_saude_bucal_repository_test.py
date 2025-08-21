@@ -5,3 +5,4 @@ def test_init():
     # r1.create_base()
     repo = CreateIndicadoresSaudeBucalRepository()
     repo.create_base()
+    

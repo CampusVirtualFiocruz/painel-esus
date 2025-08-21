@@ -3,7 +3,7 @@ import asyncio
 
 import aiohttp
 from src.main.routes.city_informations_route import CityInfoPath
-from src.main.routes.demographics_info_route import DemographichInfoPath
+from src.main.routes.demographic_route import DemographicPath
 from src.main.routes.hypertension_routes import HypertensionPath
 from src.main.routes.units_route import UnitsPath
 
@@ -20,14 +20,15 @@ async def main(urls):
         for response in responses:
             print(response)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 
     urls = []
 
     city = CityInfoPath()
-    demographic = DemographichInfoPath
+    demographic = DemographicPath()
     units = UnitsPath()
-    root_path = 'http://localhost:5001'
+    root_path = "http://localhost:5001"
 
     urls.append(root_path + city.root_path)
     urls.append(root_path + demographic.root_path)

@@ -107,7 +107,7 @@ const ReportWrapper = ({
     return id ? (!isLoadingUbs ? nomeUbs : "Carregando nome UBS...") : nomeUbs;
   })();
 
-  const titleWithDetails = `${prefix ? prefix + "/" : ""} ${title}`;
+  const titleWithDetails = `${prefix} ${(prefix && title) ? "/" : ""} ${title}`;
 
   return (
     <div

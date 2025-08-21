@@ -9,7 +9,7 @@ import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import { Api } from "../../services/api2";
 import "../../styles/sindromeAguda.scss";
-import { ReportBasicParams } from "../../utils";
+import { ReportBasicParams, navigateHome } from "../../utils";
 
 type TResponse = {
   co_dim_tempo: string;
@@ -190,10 +190,6 @@ export function SindromesAgudas() {
     handleSindromeAgudaData(filteredData);
   }, [rangeData]);
 
-  function handleToHome() {
-    setLoading(true);
-    navigate("/painelx");
-  }
   return (
     <div id="page-painel">
       <Header />
@@ -337,7 +333,7 @@ export function SindromesAgudas() {
             <div className="col-12 col-lg-12 d-flex-center">
               <button
                 type="button"
-                onClick={handleToHome}
+                onClick={() => navigateHome(navigate)}
                 className="btn btn-primary"
               >
                 Voltar

@@ -39,7 +39,13 @@ const reportSections = [
     "total-cadastros-cidadaos-por-tipo-identificacao": {
       Chart: Donut,
       config: {
+        radius: [50, 90],
         formatterKind: "perc",
+          componentStyle: {
+            width: "400px",
+            minWidth: "400px",
+            height: "250px",
+          },
         colors: ["#b9b9b9", "#09406a"],
       },
     },
@@ -47,7 +53,13 @@ const reportSections = [
       Chart: Donut,
       config: {
         formatterKind: "perc",
-        radiusStart: "0%",
+          componentStyle: {
+            width: "400px",
+            minWidth: "400px",
+            height: "350px",
+          },
+
+        radius: [0, 90],
         colors: ["#0069d0", "#84aaff", "#e4e4e4", "#5c7ea0"],
       },
     },
@@ -55,7 +67,13 @@ const reportSections = [
       Chart: Donut,
       config: {
         formatterKind: "perc",
-        radiusStart: "0%",
+          componentStyle: {
+            width: "400px",
+            minWidth: "400px",
+            height: "350px",
+          },
+
+        radius: [0, 90],
         colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
@@ -64,7 +82,12 @@ const reportSections = [
     "total-cidadaos-acompanhados": {
       Chart: Donut,
       config: {
+        radius: [50, 90],
         formatterKind: "perc",
+          componentStyle: {
+            width: "400px",
+            minWidth: "400px",
+          },
         colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
@@ -72,7 +95,13 @@ const reportSections = [
       Chart: Donut,
       config: {
         formatterKind: "perc",
-        radiusStart: "0%",
+          componentStyle: {
+            width: "400px",
+            minWidth: "400px",
+            height: "350px",
+          },
+
+        radius: [0, 90],
         colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },

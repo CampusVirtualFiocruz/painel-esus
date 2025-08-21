@@ -1,5 +1,3 @@
-# import pandas as pd
-# from sqlalchemy import text
 import logging
 
 from src.data.interfaces.create_bases.create_bases_repository import (
@@ -26,4 +24,5 @@ class CreateIndicadoresHipertensaoRepository(CreateBasesRepositoryInterface):
             logging.error(e)
         except Exception as e:
             # Trata quaisquer outras exceções
-            logging.error(f"Ocorreu um erro inesperado: {str(e)}")
+            error = f"Ocorreu um erro inesperado: {str(e)}"
+            logging.error(error)

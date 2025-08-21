@@ -45,3 +45,4 @@ class AbstractGenerateBase(CreateBasesRepositoryInterface):
         except Exception as e:
             logging.error("BASE: {} \n {}".format(self._base, __name__))
             logging.exception(e)
+            

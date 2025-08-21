@@ -17,7 +17,13 @@ def create_user(user, password):
     }
 
 def get_users_list():
-    users = getenv("ACCESS_LIST", [], False)
+    users = getenv("ACCESS_LIST", '[]', False)
     return json.loads(users)
 
-users = [create_user(user['user'], user['password']) for user in get_users_list()]
+users_list = get_users_list()
+if len(users_list) > 0: 
+    users = [
+        create_user(user["user"], user["password"]) for user in users_list
+    ]
+else:
+    users = []

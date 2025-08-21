@@ -4,3 +4,4 @@ from src.infra.create_base.polars.create_fat_vacinacao_repository import CreateV
 def test_gen():
     repo = CreateVacinacaoBaseRepository()
     repo.create_base()
+    

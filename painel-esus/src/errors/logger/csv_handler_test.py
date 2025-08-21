@@ -1,3 +1,4 @@
+# pylint: disable=E1121,W0212
 from src.errors.logger.csv_handler import CsvFileHandler
 
 
@@ -16,6 +17,3 @@ def test_get_delete_list():
     result = csv.getFilesToDelete(file_path)
     csv._delete_files()
     assert len(result) > 0
-
-
-

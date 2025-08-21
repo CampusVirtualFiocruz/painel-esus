@@ -29,6 +29,7 @@ def get_number_of_patients(type: str, cnes: int = None, equipe: int = None):
     SELECT
         (
         SELECT count(n_atendimentos_12_meses) FROM lista WHERE {type} =1 
+        SELECT count(n_atendimentos_12_meses) FROM lista WHERE {type} =1 
     ) as cid_ciaps,
     (
         SELECT count(n_atendimentos_12_meses) FROM lista WHERE autoreferido =1 
@@ -205,10 +206,15 @@ def _hipertensao_query():
                 agg_cirurgiao_dentista,
                 agg_visitas_domiciliares_acs                ,
                 coalesce( cast(dt_ultima_afericao_pa as varchar), '-')  ultima_data_afericao_pa,
-               coalesce( cast(dt_ultima_visita_domiciliar_acs as varchar), '-') dt_ultima_visita_acs,
+                agg_afericao_pa,
+                agg_visitas_domiciliares_acs,
+                agg_medicos_enfermeiros,
+                agg_cirurgiao_dentista,
+                coalesce( cast(dt_ultima_visita_domiciliar_acs as varchar), '-') dt_ultima_visita_acs,
                 coalesce( cast(dt_ultimo_atend_odonto as varchar), '-') ultimo_atendimento_odonto,
                 coalesce(agg_cirurgiao_dentista, 0) alerta_ultima_consulta_odontologica,
-                coalesce( cast(data_ultimo_creatinina as varchar), '-') ultima_data_creatinina,                
+                coalesce( cast(data_ultimo_creatinina as varchar), '-') ultima_data_creatinina,
+                agg_creatinina,
                 coalesce(total_consulta_med_enferm, 0)  total_consulta_med_enferm,
                 case 
                     when total_consulta_med_enferm < 2 then 0
@@ -279,12 +285,13 @@ def _diabetes_query():
                 agg_medicos_enfermeiros,
                 agg_cirurgiao_dentista,
                 agg_visitas_domiciliares_acs,
-                agg_hemoglobina                ,
+                agg_hemoglobina,
                 coalesce( cast(dt_ultima_afericao_pa as varchar), '-')  ultima_data_afericao_pa,
                 coalesce( cast(dt_ultima_visita_domiciliar_acs as varchar), '-') dt_ultima_visita_acs,
                 coalesce( cast(dt_ultimo_atend_odonto as varchar), '-') ultimo_atendimento_odonto,
                 coalesce(agg_cirurgiao_dentista, 1) alerta_ultima_consulta_odontologica,
                 coalesce( cast(dt_ultimo_creatinina as varchar), '-') ultima_data_creatinina,
+                agg_creatinina,
                 coalesce(total_consulta_med_enferm, 0)  total_consulta_med_enferm,
                 case 
                     when total_consulta_med_enferm < 2 then 0

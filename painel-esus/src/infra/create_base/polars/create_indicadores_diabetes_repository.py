@@ -24,4 +24,5 @@ class CreateIndicadoresDiabetesRepository(CreateBasesRepositoryInterface):
             logging.error(e)
         except Exception as e:
             # Trata quaisquer outras exceções
-            logging.error(f"Ocorreu um erro inesperado: {str(e)}")
+            error =  f"Ocorreu um erro inesperado: {str(e)}"
+            logging.error(error)

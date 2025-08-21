@@ -1,3 +1,4 @@
+# pylint: disable=R0913,W0102
 class HypertensionDiabetesRepositoryInterface:
     def get_total(self, cnes: int = None, equipe: int = None, debug=False):
         pass

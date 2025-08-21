@@ -1,29 +1,30 @@
 import { useLayoutEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AuthProvider } from "./context/AuthProvider";
-import { InfoProvider } from "./context/infoProvider";
-import { ProtectedLayout } from "./components/ProtectedLayout";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import BarraBrasil from "./components/BarraBrasil";
+import { ProtectedLayout } from "./components/ProtectedLayout";
+import { AuthProvider } from "./context/AuthProvider";
 import { getUserLocalStorage } from "./context/AuthProvider/util";
+import { InfoProvider } from "./context/infoProvider";
 
-import { Login } from "./pages/Login";
-import { Painel } from "./pages/Painel";
-import { Gestantes } from "./pages/Gestantes";
-import { Gestante } from "./pages/Gestante";
-import { GestantesList } from "./pages/GestantesList";
-import ListaNominal from "./pages/ListaNominal";
-import { SindromesAgudas } from "./pages/SindromesAgudas/SindromesAgudas";
-import { SelecionarUbs } from "./pages/SelecionarUbs";
-import { SelecionarVisualizacao } from "./pages/SelecionarVisualizacao";
-import Tabagismo from "./pages/Tabagismo";
-import FeridaVascular from "./pages/FeridaVascular";
 import Bucal from "./pages/Bucal";
-import Qualidade from "./pages/Qualidade";
-import Infantil from "./pages/Infantil";
+import Diabetes from "./pages/Diabetes";
+import FeridaVascular from "./pages/FeridaVascular";
+import { Gestante } from "./pages/Gestante";
+import { Gestantes } from "./pages/Gestantes";
+import { GestantesList } from "./pages/GestantesList";
+import Hipertensao from "./pages/Hipertensao";
 import Idosa from "./pages/Idosa";
 import IdosaV2 from "./pages/IdosaV2";
-import Diabetes from "./pages/Diabetes";
-import Hipertensao from "./pages/Hipertensao";
+import Infantil from "./pages/Infantil";
+import ListaNominal from "./pages/ListaNominal";
+import { Login } from "./pages/Login";
+import NovoPainel from "./pages/NovoPainel";
+import { Painel } from "./pages/Painel";
+import Qualidade from "./pages/Qualidade";
+import { SelecionarUbs } from "./pages/SelecionarUbs";
+import { SelecionarVisualizacao } from "./pages/SelecionarVisualizacao";
+import { SindromesAgudas } from "./pages/SindromesAgudas/SindromesAgudas";
+import Tabagismo from "./pages/Tabagismo";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -134,7 +135,7 @@ function App() {
                 }
               />
               <Route
-                path="/painelx"
+                path="/antigo-painelx"
                 element={
                   <ProtectedLayout>
                     <Painel />
@@ -142,10 +143,26 @@ function App() {
                 }
               />
               <Route
-                path="/painel/:id"
+                path="/antigo-painel/:id"
                 element={
                   <ProtectedLayout>
                     <Painel />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedLayout>
+                    <NovoPainel />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/home/:id"
+                element={
+                  <ProtectedLayout>
+                    <NovoPainel />
                   </ProtectedLayout>
                 }
               />

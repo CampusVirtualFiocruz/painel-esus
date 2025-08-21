@@ -1,4 +1,4 @@
-import { DonutChart, ValueChart, PyramidChart } from "./charts.types";
+import { DonutChart, PyramidChart, ValueChart } from "./charts.types";
 
 type MockRelatorioHome = {
   "total-cidadaos-cadastrados": ValueChart;
@@ -11,6 +11,8 @@ type MockRelatorioHome = {
   "tematico-hipertensao": DonutChart;
   "tematico-qualidade": DonutChart;
   "tematico-idoso": DonutChart;
+  "tematico-infantil": DonutChart;
+  "tematico-bucal": DonutChart;
 };
 
 export const charts: MockRelatorioHome = {
@@ -159,6 +161,38 @@ export const charts: MockRelatorioHome = {
       {
         tag: "rural",
         value: 614,
+      },
+    ],
+  },
+  "tematico-infantil": {
+    data: [
+      {
+        tag: "urbano",
+        value: 1200,
+      },
+      {
+        tag: "nao-informado",
+        value: 85,
+      },
+      {
+        tag: "rural",
+        value: 410,
+      },
+    ],
+  },
+  "tematico-bucal": {
+    data: [
+      {
+        tag: "urbano",
+        value: 950,
+      },
+      {
+        tag: "nao-informado",
+        value: 75,
+      },
+      {
+        tag: "rural",
+        value: 320,
       },
     ],
   },

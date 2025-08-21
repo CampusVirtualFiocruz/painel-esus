@@ -1,5 +1,5 @@
 from rich.logging import RichHandler
 
-from .config import formatter, levels, logger, logging
+from .config import logger
 
 logger.addHandler(RichHandler())

@@ -1,3 +1,4 @@
+# pylint: disable=W0212
 import json
 import logging
 
@@ -14,12 +15,12 @@ for level in LOG_LEVELS.values():
 
 def login(self, message, *args, **kws):
     message, extra_info = base_log(message, **kws)
-    self._log(LOG_LEVELS["LOGIN"][0], message, args, **kws)
+    self._log(LOG_LEVELS["LOGIN"][0], message, args, {**kws,"extra":extra_info})
 
 
 def logapi(self, message, *args, **kws):
     message, extra_info = base_log(message, **kws)
-    self._log(LOG_LEVELS["LOG_API"][0], message, args, **kws)
+    self._log(LOG_LEVELS["LOG_API"][0], message, args, {**kws,"extra":extra_info})
 
 
 def base_log(message, **kws):

@@ -33,7 +33,7 @@ export const ReportFooter = ({
       }`
     );
 
-  const handleToPainelMunicipio = () => navigate("/painelx");
+  const handleToPainelMunicipio = () => navigate("/home");
 
   const handleToPainelUBS = () => navigate(-1);
 

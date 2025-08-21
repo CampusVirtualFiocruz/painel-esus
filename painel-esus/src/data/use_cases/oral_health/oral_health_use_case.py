@@ -1,3 +1,4 @@
+# pylint: disable=W0102,R0913
 from src.data.interfaces.oral_health_dashboard_repository import (
     OralHealthDashboardRepositoryInterface,
 )
