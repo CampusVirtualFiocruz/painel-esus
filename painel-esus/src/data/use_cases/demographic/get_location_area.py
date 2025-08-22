@@ -15,7 +15,6 @@ class GetLocationAreaUseCase(LocationAreaUseCaseInterface):
         self, cnes: Optional[int] = None, equipe: Optional[int] = None
     ) -> Dict:
         result = self._repository.get_location_area(cnes, equipe)
-        print("--", result)
         return self._adapter.location_type_adapter(result)
 
     def get_diabetes_by_location_area(self, cnes: int = None, equipe: int = None):

@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 from src.env.conf import getenv
 
 from .codigos_cbo import *
+from .rename_columns import columns_to_rename
 
 
 def ler_dados_raw(nome_parquet,columns=""):
@@ -35,7 +36,7 @@ def ler_dados_raw(nome_parquet,columns=""):
             return df
     except Exception as e:
          raise RuntimeError(f"Ocorreu um erro inesperado: {str(e)}") from e
-        
+
 
 def escrever_dados_raw(df,nome_parquet):
 
@@ -65,7 +66,6 @@ def gerar_banco():
                 ,'nu_micro_area_domicilio','nu_micro_area_tb_cidadao','nu_ine_vinc_equipe','nu_cnes_vinc_equipe',
                 'ds_tipo_localizacao_domicilio','dt_ultima_atualizacao_cidadao','co_seq_acomp_cidadaos_vinc','tp_identidade_genero_cidadao']
 
-
     coluns_acv_end = ['no_tipo_logradouro_tb_cidadao','ds_logradouro_tb_cidadao',
                 'nu_numero_tb_cidadao','no_bairro_tb_cidadao','ds_complemento_tb_cidadao',
                 'ds_cep_tb_cidadao','no_municipio_tb_cidadao','no_tipo_logradouro_domicilio',
@@ -77,16 +77,13 @@ def gerar_banco():
     # FCI
     selected_columns_fci = ["co_fat_cidadao_pec","co_dim_tempo","nu_uuid_ficha","co_dim_raca_cor","nu_micro_area",'st_comunidade_tradicional']
 
-
     # FAOI
     columns_fao = ['co_fat_cidadao_pec','co_dim_tempo',"nu_altura","nu_peso",'co_dim_cbo_1','co_dim_cbo_2',
                 'co_seq_fat_atd_odnt','ds_filtro_procedimentos','co_dim_tipo_consulta', 'st_conduta_tratamento_concluid','st_paciente_necessidades_espec','st_gestante']
 
-
-
     tb_pessoa = ler_dados_raw("tb_acomp_cidadaos_vinculados.parquet",columns_acv)
 
-    #fci = pl.read_parquet(caminho_pasta+"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
+    # fci = pl.read_parquet(caminho_pasta+"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
     fci = ler_dados_raw("tb_fat_cad_individual.parquet",selected_columns_fci)
     fci = fci.rename({"nu_micro_area" : "nu_micro_area_fci"})
 
@@ -96,20 +93,16 @@ def gerar_banco():
 
     tb_dim_und_saude = ler_dados_raw("tb_dim_unidade_saude.parquet")
 
-
     dim_raca_cor = ler_dados_raw("tb_dim_raca_cor.parquet")
     dim_raca_cor = dim_raca_cor.rename({"co_seq_dim_raca_cor" : "co_dim_raca_cor"}).select("co_dim_raca_cor","ds_raca_cor")
 
     fci = fci.join(dim_raca_cor,on="co_dim_raca_cor",how='left')
 
-
     coluns_cbo = ['nu_cbo','co_seq_dim_cbo']
 
     dim_cbo = ler_dados_raw("tb_dim_cbo.parquet", coluns_cbo)
 
-
     dim_cbo = dim_cbo.with_columns(pl.col("co_seq_dim_cbo").cast(pl.Int64))
-
 
     fci = (
         fci
@@ -123,7 +116,6 @@ def gerar_banco():
         )
 
     )
-
 
     tb_pessoa = (
         tb_pessoa
@@ -140,11 +132,9 @@ def gerar_banco():
         )  
     )
 
-
     # ## Passo 5. Criar variáveis de tempo de acordo com Indicadores
 
     # In[5]:
-
 
     dt_24meses = datetime.today() - relativedelta(months=24)
     dt_30meses = datetime.today() - relativedelta(months=30)
@@ -152,23 +142,13 @@ def gerar_banco():
     def calcular_data(meses: int):
         return datetime.today() - relativedelta(months=meses)
 
-
     # ## Passo 6. Filtrar os códigos de profissionais, exames ou condições de saúde dos Indicadores
 
     # In[ ]:
 
-
-
-
-
     # In[ ]:
 
-
-
-
-
     # In[6]:
-
 
     # AJUSTE de CBO
 
@@ -194,13 +174,11 @@ def gerar_banco():
         .rename({"nu_cbo": "co_dim_cbo_2"})
     )
 
-
     # ## Passo 7. Manipular dados conforme necessidades dos Indicadores
 
     # ### Manipulando dados comuns aos indicadores
 
     # In[7]:
-
 
     fao_v2 = (
         fao
@@ -210,7 +188,6 @@ def gerar_banco():
         .filter(
             pl.col("co_fat_cidadao_pec").is_not_null()
         ))
-
 
     fao_vars = (
         fao_v2
@@ -239,7 +216,6 @@ def gerar_banco():
         )
     )
 
-
     cad_grouped = (
         fci
         .with_columns(
@@ -255,9 +231,7 @@ def gerar_banco():
         ])
     )
 
-
     fci_v2 = fci.select("co_fat_cidadao_pec","nu_uuid_ficha","nu_micro_area_fci","st_comunidade_tradicional")
-
 
     tb_pessoa = (
         tb_pessoa
@@ -265,7 +239,6 @@ def gerar_banco():
             pl.col("dt_ultima_atualizacao_cidadao").cast(pl.Utf8).str.strptime(pl.Date, "%Y-%m-%d").alias("dt_ultima_atualizacao_cidadao")
         )
     )
-
 
     tb_pessoa_v2 = tb_pessoa.join(
         fci_v2,
@@ -282,8 +255,6 @@ def gerar_banco():
         how="left"
     )
 
-
-
     # removendo co_fat_cidadao_pec duplicados priorizando chave, depois data, depois variável inteira
 
     tb_pessoa_v2 = tb_pessoa_v2.sort(
@@ -296,12 +267,7 @@ def gerar_banco():
 
     # criando dt_atendimento para FAO, usada em mais de um indicador, e filtrando cidadaos não nulos
 
-
-
-
-
     # In[8]:
-
 
     today = date.today()
 
@@ -371,11 +337,9 @@ def gerar_banco():
         )
         #.drop("idade_dias", "idade_meses_completos", "idade_anos_completos","idade_aux")
     )
-    #print(tb_pessoa_v2["idade"].head(4))
-
+    # print(tb_pessoa_v2["idade"].head(4))
 
     # In[9]:
-
 
     tb_pessoa_odonto = (
         tb_pessoa_v2
@@ -396,20 +360,17 @@ def gerar_banco():
             .then(1).otherwise(0).cast(pl.Int8).alias("cadastradas_odonto")
         )
     ).filter(  (pl.col("atendimento_odonto") == 1) |  (pl.col("cadastradas_odonto") == 1  ) )
-    #.select("co_fat_cidadao_pec","cadastradas_odonto","atendimento_odonto")
+    # .select("co_fat_cidadao_pec","cadastradas_odonto","atendimento_odonto")
 
     # OBS.: populações de cidadãos presentes na tabela de acompanhamento e vínculo e que são:
 
     # pessoas atendidas de interesse = pessoas atendidas nos últimos 2 anos (aqui ainda 30 meses): atendimento_odonto == 1
-    # pessoas cadastradas de interesse = pessoas cadastradas com cadastro atualizado nos últimos 2 anos (aqui ainda 30 meses): 
+    # pessoas cadastradas de interesse = pessoas cadastradas com cadastro atualizado nos últimos 2 anos (aqui ainda 30 meses):
     # cadastradas_odonto == 1
-
 
     # In[10]:
 
-
     tb_pessoa_odonto_populacao = tb_pessoa_odonto.select("co_fat_cidadao_pec","cadastradas_odonto","atendimento_odonto")
-
 
     fao_v3 = (
         fao_v2
@@ -423,13 +384,11 @@ def gerar_banco():
         pl.col("atendimento_odonto").fill_null(0),
     )
 
-
     # ## PARTE I: PESSOAS ATENDIDAS
 
     # #### Total de pessoas atendidas - Dashboard
 
     # In[11]:
-
 
     # pessoas atendidas nos últimos 2 anos: atendimento_odonto == 1
 
@@ -440,14 +399,12 @@ def gerar_banco():
             .group_by("co_fat_cidadao_pec")
             .agg()
             )
-    #print(atendidas)
-    #atendidas.height
-
+    # print(atendidas)
+    # atendidas.height
 
     # #### Total de pessoas atendidas segundo sexo - Dashboard
 
     # In[12]:
-
 
     categorias_validas_sexo = ["MASCULINO", "FEMININO", "INDETERMINADO"]
 
@@ -458,11 +415,9 @@ def gerar_banco():
         .alias("no_sexo_cidadao")  # Atualiza a coluna original
     )
 
-
     # #### Total de pessoas atendidas segundo raça/cor - Dashboard
 
     # In[13]:
-
 
     categorias_validas = ["Branca", "Preta", "Amarela", "Parda", "Indígena"]
 
@@ -473,11 +428,9 @@ def gerar_banco():
             .alias("ds_raca_cor")  # Atualiza a coluna original
     )
 
-
     # #### Total de pessoas atendidas segundo faixa etária - Dashboard
 
     # In[14]:
-
 
     tb_pessoa_odonto = (tb_pessoa_odonto
         .with_columns(
@@ -498,15 +451,13 @@ def gerar_banco():
     )
     )
 
-
     # #### **Indicador I** - Pessoas atendidas que realizaram a primeira consulta odontológica programática
-    # 
-    # 
+    #
+    #
     # #### Card da Lista Nominal: Exibir a data da 1ª consulta ou se não tiver realizado nenhuma consulta colocar um hífen
-    # 
+    #
 
     # In[15]:
-
 
     indicador_primeira_consulta_at = (
         fao_v3
@@ -550,14 +501,12 @@ def gerar_banco():
         ])
     )
 
-
-    # #### Indicador I e Itens da **Lista nominal** do Indicador I no df **"tb_pessoa_odonto_final"**:  
+    # #### Indicador I e Itens da **Lista nominal** do Indicador I no df **"tb_pessoa_odonto_final"**:
     # #### *A saber:*
     # ##### Número de cidadãos atendidos pela Equipe de Saúde Bucal que realizaram a primeira consulta odontológica nos últimos 2 anos: **'agg_primeira_consulta'= 1**
     # ##### - data da primeira consulta odontológica programática (**"dt_primeira_consulta_atendidas"**) ou "-" se ausente
 
     # In[16]:
-
 
     atendidas = (
         atendidas
@@ -572,19 +521,15 @@ def gerar_banco():
         )
     )
 
-
     # In[17]:
 
-
-    #print(atendidas["agg_primeira_consulta_atendidas"].value_counts())
-
+    # print(atendidas["agg_primeira_consulta_atendidas"].value_counts())
 
     # ### **Indicador II** -  Pessoas atendidas que concluíram o tratamento odontológico - Dashboard
-    # 
+    #
     # ### Card da Lista Nominal: Exibir a data da conclusão do tratamento ou se não tiver finalizado colocar um hífen
 
     # In[18]:
-
 
     tratamento_odontologico_concluido_at = (
         fao_v3
@@ -621,21 +566,17 @@ def gerar_banco():
         ])
     )
 
-
     # In[19]:
 
-
-    #tratamento_odontologico_concluido_at["dt_tratamento_concluido_atendidas"].describe()
-
+    # tratamento_odontologico_concluido_at["dt_tratamento_concluido_atendidas"].describe()
 
     # #### **Indicador II** e Itens da **Lista nominal** do Indicador II no df **"tabela_pessoa_odonto_final"**:
     # ##### *A saber:*
     # ##### Número de cidadãos atendidos pela Equipe de Saúde Bucal que tiveram o tratamento concluído nos últimos 2 anos **"agg_tratamento_odonto_concluido_atendidas" = 1**
-    # 
+    #
     # ##### - Exibir a data da conclusão do tratamento ou se não tiver finalizado colocar um hífen: **"dt_tratamento_concluido_atendidas**
 
     # In[20]:
-
 
     atendidas = (
         atendidas
@@ -649,19 +590,15 @@ def gerar_banco():
         )
     )
 
-
     # In[21]:
 
-
-    #atendidas["agg_tratamento_odonto_concluido_atendidas"].value_counts()
-
+    # atendidas["agg_tratamento_odonto_concluido_atendidas"].value_counts()
 
     # ### **Indicador III** - Proporção de pessoas atendidas que realizaram exodontia - Dashboard
-    # 
+    #
     # ### Card da Nominal: Exibir quantidade de exodontias realizadas
 
     # In[22]:
-
 
     import re
     codigos_procurados = ["0414020138", "0414020146"]
@@ -669,9 +606,7 @@ def gerar_banco():
     codigos_escaped = [re.escape(codigo) for codigo in codigos_procurados]
     regex_pattern = rf"\|({'|'.join(codigos_procurados)})\|"
 
-
     # In[23]:
-
 
     tb_pessoa_odonto_exodontia_at = (
         fao_v3
@@ -711,33 +646,25 @@ def gerar_banco():
         ])
     )
 
-
     # In[24]:
 
-
-    #tb_pessoa_odonto_exodontia_at["agg_realizaram_exodontia_atendidas"].value_counts()
-
+    # tb_pessoa_odonto_exodontia_at["agg_realizaram_exodontia_atendidas"].value_counts()
 
     # In[25]:
 
-
-    #tb_pessoa_odonto_exodontia_at["total_exodontia_atendidas"].value_counts()
-
+    # tb_pessoa_odonto_exodontia_at["total_exodontia_atendidas"].value_counts()
 
     # In[26]:
 
-
-    #tb_pessoa_odonto_exodontia_at["agg_realizaram_exodontia_atendidas"].value_counts()
-
+    # tb_pessoa_odonto_exodontia_at["agg_realizaram_exodontia_atendidas"].value_counts()
 
     # #### **Indicador III** e Itens da **Lista nominal** do Indicador III no df **"tabela_pessoa_odonto_final"**:
     # ##### *A saber*
     # #### Número de  cidadãos atendidos pela Equipe de Saúde Bucal que realizaram exodontia nos últimos 2 anos: **"agg_realizaram_exodontia_atendidas" = 1**
-    # 
+    #
     # ##### Exibir a quantidade de exodontias realizadas: **"total_exodontia_atendidas"**
 
     # In[27]:
-
 
     atendidas = (
         atendidas
@@ -752,13 +679,11 @@ def gerar_banco():
         )
     )
 
-
     # ### **Indicador IV** - Pessoas atendidas que realizaram procedimentos preventivos - Dashboard
-    # 
+    #
     # ### Card Lista Nominal:  Exibir a descrição do procedimento realizado conforme o SIGTAP ou se não tiver realizado nenhum procedimento colocar um hífen
 
     # In[28]:
-
 
     # Dicionário de códigos para descrições
     dict_procedimentos = {
@@ -791,8 +716,6 @@ def gerar_banco():
 
     def extrair_descricoes(texto: str) -> str :
         return extrair_procedimentos(texto, substituir_por_descricao=True)
-
-
 
     indicador_procedimentos_preventivos_at = (
         fao_v3
@@ -832,33 +755,25 @@ def gerar_banco():
         ])
     )
 
-
     # In[29]:
 
-
-    #print(indicador_procedimentos_preventivos_at["agg_procedimentos_preventivos_atendidas"].value_counts())
-
+    # print(indicador_procedimentos_preventivos_at["agg_procedimentos_preventivos_atendidas"].value_counts())
 
     # In[30]:
 
-
-    #print(indicador_procedimentos_preventivos_at["codigos_procedimentos_preventivos_atendidas"].value_counts())
-
+    # print(indicador_procedimentos_preventivos_at["codigos_procedimentos_preventivos_atendidas"].value_counts())
 
     # In[31]:
 
-
-    #print(indicador_procedimentos_preventivos_at["descricao_procedimentos_preventivos_atendidas"].value_counts())
-
+    # print(indicador_procedimentos_preventivos_at["descricao_procedimentos_preventivos_atendidas"].value_counts())
 
     # #### **Indicador IV** e Itens da **Lista nominal** do Indicador IV no df **"tabela_pessoa_odonto_final"**:
     # ##### *A saber*
     # #### Número de cidadãos atendidos pela Equipe de Saúde Bucal que realizaram procedimentos preventivos nos últimos 2 anos : **"agg_procedimentos_preventivos_atendidas" = 1**
-    # 
+    #
     # ##### - Exibir a descrição (e código) do procedimento realizado conforme o SIGTAP ou se não tiver realizado nenhum procedimento colocar um hífen **"codigos_preventivos_atendidas"**, **"procedimentos_preventivos_atendidas"**
 
     # In[32]:
-
 
     atendidas = (
         atendidas
@@ -874,31 +789,23 @@ def gerar_banco():
         )
     )
 
-
     # In[33]:
 
-
-    #print(atendidas["codigos_procedimentos_preventivos_atendidas"].len())
-
+    # print(atendidas["codigos_procedimentos_preventivos_atendidas"].len())
 
     # In[34]:
 
-
-    #print(atendidas["descricao_procedimentos_preventivos_atendidas"].len())
-
+    # print(atendidas["descricao_procedimentos_preventivos_atendidas"].len())
 
     # In[35]:
 
-
-    #print(atendidas["agg_procedimentos_preventivos_atendidas"].value_counts())
-
+    # print(atendidas["agg_procedimentos_preventivos_atendidas"].value_counts())
 
     # ### **Indicador V** - Pessoas atendidas que realizaram tratamento restaurador atraumático (TRA) - Dashboard
-    # 
+    #
     # ### Lista Nominal: Exibir a data do último procedimento ou se não tiver realizado colocar um hífen
 
     # In[36]:
-
 
     tb_pessoa_odonto_TRA_at = (
         fao_v3
@@ -944,27 +851,21 @@ def gerar_banco():
         ])
     )
 
-
     # In[37]:
 
-
-    #print(tb_pessoa_odonto_TRA_at["agg_TRA_atendidas"].value_counts())
-
+    # print(tb_pessoa_odonto_TRA_at["agg_TRA_atendidas"].value_counts())
 
     # In[38]:
 
-
-    #print(tb_pessoa_odonto_TRA_at["dt_TRA_atendidas"].value_counts())
-
+    # print(tb_pessoa_odonto_TRA_at["dt_TRA_atendidas"].value_counts())
 
     # #### **Indicador V** e Itens da **Lista nominal** do Indicador V no df **"tabela_pessoa_odonto_final"**:
     # ##### *A saber*
     # #### Número de cidadãos atendidos pela Equipe de Saúde Bucal que realizaram tratamento restaurador atraumático (TRA) nos últimos 2 anos: **"agg_tratamento_restaurador_atendidas" = 1**
-    # 
+    #
     # ##### - Exibir a data do último procedimento ou se não tiver realizado colocar um hífen: **dt_tratamento_restaurador_atendidas**
 
     # In[39]:
-
 
     atendidas = (
         atendidas
@@ -978,34 +879,27 @@ def gerar_banco():
         )
     )
 
-
     # In[40]:
 
-
-    #print(atendidas["agg_TRA_atendidas"].value_counts())
-
+    # print(atendidas["agg_TRA_atendidas"].value_counts())
 
     # ### **Indicador VI** - Pessoas atendidas que realizaram escovação supervisionada em atividade coletiva - Dashboard
-    # 
+    #
     # ### Card Lista Nominal: Exibir a data da realização ou se não tiver realizado colocar um hífen
 
     # In[41]:
 
-
     # ESTE INDICADOR NÃO SERÁ APRESENTADO NA PRIMEIRA VERSÃO, POIS NÃO USAREMOS A TABELA DE ATIVIDADE COLETIVA
-
 
     # #### **Indicador VI** e Itens da **Lista nominal** do Indicador VI no df **"pessoa_atendida_saude_bucal"**:
     # ##### *A saber*
     # #### Número de cidadãos atendidos pela Equipe de Saúde Bucal que realizaram escovação supervisionada em atividade coletiva nos últimos 2 anos: **"agg_escovacao_supervisionada_atendidas" = 1**
-    # 
+    #
     # ##### - Exibir a data da realização ou se não tiver realizado colocar um hífen: **"dt_escovacao_supervisionada_atendidas"**
 
     # In[42]:
 
-
     # ESTE INDICADOR NÃO SERÁ APRESENTADO NA PRIMEIRA VERSÃO, POIS NÃO USAREMOS A TABELA DE ATIVIDADE COLETIVA
-
 
     # ## PARTE II - PESSOAS CADASTRADAS
 
@@ -1013,8 +907,7 @@ def gerar_banco():
 
     # In[43]:
 
-
-    #  pessoas cadastradas com cadastro atualizado nos últimos 2 anos: 
+    #  pessoas cadastradas com cadastro atualizado nos últimos 2 anos:
     # cadastradas_odonto == 1
 
     cadastradas = (
@@ -1024,14 +917,12 @@ def gerar_banco():
             .group_by("co_fat_cidadao_pec")
             .agg()
             ) 
-    #print(atendidas)
-    #cadastradas.height #4328
-
+    # print(atendidas)
+    # cadastradas.height #4328
 
     # ### Total de pessoas cadastradas segundo sexo / raça cor / faixa etária
 
     # In[44]:
-
 
     cadastradas = (
         cadastradas
@@ -1042,26 +933,20 @@ def gerar_banco():
         )
     )
 
-
     # In[45]:
 
-
-    #print(cadastradas["no_sexo_cidadao"].value_counts())
-
+    # print(cadastradas["no_sexo_cidadao"].value_counts())
 
     # In[46]:
 
-
-    #print(cadastradas["ds_raca_cor"].value_counts())
-
+    # print(cadastradas["ds_raca_cor"].value_counts())
 
     # ### **Indicador I** - Pessoas cadastradas que realizaram a primeira consulta odontológica programática
-    # 
-    # 
+    #
+    #
     # ### Card da Lista Nominal: Exibir a data da 1ª consulta ou se não tiver realizado nenhuma consulta colocar um hífen
 
     # In[47]:
-
 
     indicador_primeira_consulta_cad = (
         fao_v3
@@ -1105,26 +990,20 @@ def gerar_banco():
         ])
     )
 
-
     # In[48]:
 
-
-    #indicador_primeira_consulta_cad.filter(pl.col("co_fat_cidadao_pec") == 281)
-
+    # indicador_primeira_consulta_cad.filter(pl.col("co_fat_cidadao_pec") == 281)
 
     # In[49]:
 
+    # print(indicador_primeira_consulta_cad["dt_primeira_consulta_cadastradas"].describe())
 
-    #print(indicador_primeira_consulta_cad["dt_primeira_consulta_cadastradas"].describe())
-
-
-    # #### Indicador I e Itens da **Lista nominal** do Indicador I no df **"tb_pessoa_odonto_final"**:  
+    # #### Indicador I e Itens da **Lista nominal** do Indicador I no df **"tb_pessoa_odonto_final"**:
     # #### *A saber:*
     # ##### Número de cidadãos cadastrados pela Equipe de Saúde Bucal que realizaram a primeira consulta odontológica nos últimos 2 anos: **'agg_cidadaos_cadastrados'= 1**
     # ##### - data da primeira consulta odontológica programática (**"dt_primeira_consulta_cadastradas"**) ou "-" se ausente
 
     # In[50]:
-
 
     cadastradas = (
         cadastradas
@@ -1138,19 +1017,15 @@ def gerar_banco():
         )
     )
 
-
     # In[51]:
 
-
-    #cadastradas["agg_primeira_consulta_cadastradas"].value_counts()
-
+    # cadastradas["agg_primeira_consulta_cadastradas"].value_counts()
 
     # ### **Indicador II** -  Pessoas cadastradas que concluíram o tratamento odontológico - Dashboard
-    # 
+    #
     # ### Card da Lista Nominal: Exibir a data da conclusão do tratamento ou se não tiver finalizado colocar um hífen
 
     # In[52]:
-
 
     tratamento_odontologico_concluido_cad = (
         fao_v3
@@ -1183,27 +1058,21 @@ def gerar_banco():
         ])
     )
 
-
     # In[53]:
 
-
-    #tratamento_odontologico_concluido_cad["agg_tratamento_odonto_concluido_cadastradas"].value_counts()
-
+    # tratamento_odontologico_concluido_cad["agg_tratamento_odonto_concluido_cadastradas"].value_counts()
 
     # In[54]:
 
-
-    #tratamento_odontologico_concluido_cad["dt_tratamento_concluido_cadastradas"].describe()
-
+    # tratamento_odontologico_concluido_cad["dt_tratamento_concluido_cadastradas"].describe()
 
     # #### **Indicador II** e Itens da **Lista nominal** do Indicador II no df **"tabela_pessoa_odonto_final"**:
     # ##### *A saber:*
     # ##### Número de cidadãos cadastrados pela Equipe de Saúde Bucal que tiveram o tratamento concluído nos últimos 2 anos **"agg_tratamento_concluido_cadastradas" = 1**
-    # 
+    #
     # ##### - Exibir a data da conclusão do tratamento ou se não tiver finalizado colocar um hífen: **"dt_tratamento_concluido_cadastradas**
 
     # In[55]:
-
 
     cadastradas = (
         cadastradas
@@ -1217,19 +1086,15 @@ def gerar_banco():
         )
     )
 
-
     # In[56]:
 
-
-    #cadastradas["agg_tratamento_odonto_concluido_cadastradas"].value_counts()
-
+    # cadastradas["agg_tratamento_odonto_concluido_cadastradas"].value_counts()
 
     # ### **Indicador III** - Proporção de pessoas cadastradas que realizaram exodontia - Dashboard
-    # 
+    #
     # ### Card da Nominal: Exibir quantidade de exodontias realizadas
 
     # In[57]:
-
 
     import re
     codigos_procurados = ["0414020138", "0414020146"]
@@ -1237,9 +1102,7 @@ def gerar_banco():
     codigos_escaped = [re.escape(codigo) for codigo in codigos_procurados]
     regex_pattern = rf"\|({'|'.join(codigos_procurados)})\|"
 
-
     # In[58]:
-
 
     tb_pessoa_odonto_exodontia_cad = (
         fao_v3
@@ -1288,15 +1151,13 @@ def gerar_banco():
         ])
     )
 
-
     # #### **Indicador III** e Itens da **Lista nominal** do Indicador III no df **"tabela_pessoa_odonto_final"**:
     # ##### *A saber*
     # #### Número de  cidadãos cadastrados pela Equipe de Saúde Bucal que realizaram exodontia nos últimos 2 anos: **"agg_exodontia_cadastradas" = 1**
-    # 
+    #
     # ##### Exibir a quantidade de exodontias realizadas: **"dt_exodontia_cadastradas"**
 
     # In[59]:
-
 
     cadastradas = (
         cadastradas
@@ -1311,19 +1172,15 @@ def gerar_banco():
         )
     )
 
-
     # In[60]:
 
-
-    #cadastradas["agg_realizaram_exodontia_cadastradas"].value_counts()
-
+    # cadastradas["agg_realizaram_exodontia_cadastradas"].value_counts()
 
     # ### **Indicador IV** - Pessoas cadastradas que realizaram procedimentos preventivos - Dashboard
-    # 
+    #
     # ### Card Lista Nominal:  Exibir a descrição do procedimento realizado conforme o SIGTAP ou se não tiver realizado nenhum procedimento colocar um hífen
 
     # In[61]:
-
 
     ### dicionário de procedimentos e funções na etapa de "atendidas"
 
@@ -1365,33 +1222,25 @@ def gerar_banco():
         ])
     )
 
-
     # In[62]:
 
-
-    #print(indicador_procedimentos_preventivos_cad["codigos_procedimentos_preventivos_cadastradas"].value_counts())
-
+    # print(indicador_procedimentos_preventivos_cad["codigos_procedimentos_preventivos_cadastradas"].value_counts())
 
     # In[63]:
 
-
-    #print(indicador_procedimentos_preventivos_cad["descricao_procedimentos_preventivos_cadastradas"].value_counts())
-
+    # print(indicador_procedimentos_preventivos_cad["descricao_procedimentos_preventivos_cadastradas"].value_counts())
 
     # In[64]:
 
-
-    #print(indicador_procedimentos_preventivos_cad["agg_procedimentos_preventivos_cadastradas"].value_counts())
-
+    # print(indicador_procedimentos_preventivos_cad["agg_procedimentos_preventivos_cadastradas"].value_counts())
 
     # #### **Indicador IV** e Itens da **Lista nominal** do Indicador IV no df **"tabela_pessoa_odonto_final"**:
     # ##### *A saber*
     # #### Número de cidadãos cadastrados pela Equipe de Saúde Bucal que realizaram procedimentos preventivos nos últimos 2 anos : **"agg_procedimentos_preventivos_cadastradas" = 1**
-    # 
+    #
     # ##### - Exibir a descrição do procedimento realizado conforme o SIGTAP ou se não tiver realizado nenhum procedimento colocar um hífen **"procedimentos_preventivos_cadastradas**
 
     # In[65]:
-
 
     cadastradas = (
         cadastradas
@@ -1407,19 +1256,13 @@ def gerar_banco():
         )
     )
 
-
     # ### **Indicador V** - Pessoas cadastradas que realizaram tratamento restaurador atraumático (TRA) - Dashboard
-    # 
+    #
     # ### Lista Nominal: Exibir a data do último procedimento ou se não tiver realizado colocar um hífen
 
     # In[ ]:
 
-
-
-
-
     # In[66]:
-
 
     tb_pessoa_odonto_TRA_cad = (
         fao_v3
@@ -1463,15 +1306,13 @@ def gerar_banco():
         ])
     )
 
-
     # #### **Indicador V** e Itens da **Lista nominal** do Indicador V no df **"tabela_pessoa_odonto_final"**:
     # ##### *A saber*
     # #### Número de cidadãos cadastrados pela Equipe de Saúde Bucal que realizaram tratamento restaurador atraumático (TRA) nos últimos 2 anos: **"agg_tratamento_restaurador_cadastradas" = 1**
-    # 
+    #
     # ##### - Exibir a data do último procedimento ou se não tiver realizado colocar um hífen: **dt_tratamento_restaurador_cadastradas**
 
     # In[67]:
-
 
     cadastradas = (
         cadastradas
@@ -1485,41 +1326,31 @@ def gerar_banco():
         )
     )
 
-
-
-
     # In[68]:
 
-
-    #cadastradas["agg_TRA_cadastradas"].value_counts()
-
+    # cadastradas["agg_TRA_cadastradas"].value_counts()
 
     # ### **Indicador VI** - Pessoas cadastradas que realizaram escovação supervisionada em atividade coletiva - Dashboard
-    # 
+    #
     # ### Card Lista Nominal: Exibir a data da realização ou se não tiver realizado colocar um hífen
 
     # In[69]:
 
-
     # ESTE INDICADOR NÃO SERÁ APRESENTADO NA PRIMEIRA VERSÃO, POIS NÃO USAREMOS A TABELA DE ATIVIDADE COLETIVA
-
 
     # #### **Indicador VI** e Itens da **Lista nominal** do Indicador VI no df **"tabela_pessoa_odonto_final"**:
     # ##### *A saber*
     # #### Número de cidadãos cadastrados pela Equipe de Saúde Bucal que realizaram escovação supervisionada em atividade coletiva nos últimos 2 anos: **"agg_escovacao_supervisionada_cadastradas" = 1**
-    # 
+    #
     # ##### - Exibir a data da realização ou se não tiver realizado colocar um hífen: **"dt_escovacao_supervisionada_cadastradas"**
 
     # In[70]:
 
-
     # ESTE INDICADOR NÃO SERÁ APRESENTADO NA PRIMEIRA VERSÃO, POIS NÃO USAREMOS A TABELA DE ATIVIDADE COLETIVA
-
 
     # ## Passo 8. Criar tabela pessoa final com todas as variáveis necessárias para próximas etapas de desenvolvimento do Painel
 
     # In[71]:
-
 
     # arrumando variáveis de unidade de saúde e equipe
 
@@ -1548,8 +1379,6 @@ def gerar_banco():
 
     tb_dim_und_saude_v3 = tb_dim_und_saude_v2.select('codigo_unidade_saude','nome_unidade_saude','st_registro_valido_und_saude','co_dim_unidade_saude')
 
-
-
     tb_dim_equipe_v2 = (
         tb_dim_equipe
         .select([
@@ -1574,9 +1403,7 @@ def gerar_banco():
         ]).filter(pl.col("st_registro_valido_equipe") == 1)
     )
 
-
     # In[72]:
-
 
     # adicionando informações cidadaos conforme prioridades entre tabelas
 
@@ -1608,12 +1435,10 @@ def gerar_banco():
     )
     )
 
-
     # In[73]:
 
-
-    #padronizando informações de endereço
-    #endereço prioridade: domilicio -> cidadao
+    # padronizando informações de endereço
+    # endereço prioridade: domilicio -> cidadao
     colunas_cidadao = [
         'no_tipo_logradouro_tb_cidadao',
         'ds_logradouro_tb_cidadao',
@@ -1628,12 +1453,10 @@ def gerar_banco():
     colunas_domicilio = [col.replace("_tb_cidadao", "_domicilio") for col in colunas_cidadao]
     colunas_nomes = [col.replace("_tb_cidadao", "") for col in colunas_cidadao]
 
-
     condicao = (
         pl.col("ds_logradouro_domicilio").is_not_null() &
         (pl.col("ds_logradouro_domicilio") != "")
     )
-
 
     expressoes = [
         pl.when(condicao)
@@ -1644,9 +1467,7 @@ def gerar_banco():
     ]
     tb_pessoa_odonto_final = tb_pessoa_odonto_final.with_columns(expressoes)
 
-
     # In[74]:
-
 
     tb_pessoa_odonto_final = (
         tb_pessoa_odonto_final.join(
@@ -1680,124 +1501,73 @@ def gerar_banco():
 
     )
 
-
     # In[75]:
 
+    renamed_columns = columns_to_rename(tb_pessoa_odonto_final)
+    tb_pessoa_odonto_final = tb_pessoa_odonto_final.rename(renamed_columns)
 
-    tb_pessoa_odonto_final = tb_pessoa_odonto_final.rename({
-        'nu_cnes_vinc_equipe': 'cnes_equipe',
-        'nu_ine_vinc_equipe': 'ine_equipe',
-        'ds_cep': 'cep',
-        'ds_complemento': 'complemento',
-        'ds_logradouro': 'logradouro',
-        'ds_raca_cor': 'raca_cor',
-        'ds_tipo_localizacao_domicilio': 'tipo_localizacao_domicilio',
-        'nu_cns_cidadao': 'cns',
-        'nu_cpf_cidadao': 'cpf',
-        'nu_micro_area': 'micro_area',
-        'nu_numero': 'numero',
-        'no_cidadao': 'nome',
-        'no_sexo_cidadao': 'sexo',
-        'no_municipio': 'municipio',
-        'no_tipo_logradouro': 'tipo_logradouro',
-        'no_bairro': 'bairro',
-
-        # Novas renomeações adicionadas
-        'st_registro_valido_equipe': 'status_registro_valido_equipe',
-        'st_registro_valido_und_saude': 'status_registro_valido_unidade_saude',
-        'co_dim_unidade_saude': 'codigo_unidade_saude',
-        'co_fat_cidadao_pec': 'cidadao_pec',
-        'co_unico_ultima_ficha': 'codigo_unico_ultima_ficha',
-        'dt_nasc_cidadao': 'data_nascimento',
-        'dt_ultima_atualizacao_cidadao': 'data_ultima_atualizacao_cidadao',
-        'dt_ultima_fci': 'data_ultima_fci',
-        'dt_tratamento_concluido_atendidas':'data_tratamento_concluido_atendidas',
-        'dt_tratamento_concluido_cadastradas':'data_tratamento_concluido_cadastradas',
-        'dt_primeira_consulta_atendidas': 'data_primeira_consulta_atendidas',
-        'dt_primeira_consulta_cadastradas': 'data_primeira_consulta_cadastradas',
-        'dt_TRA_atendidas':'data_TRA_atendidas',
-        'dt_TRA_cadastradas':'data_TRA_cadastradas',
-        'dt_ultimo_atendimento':'data_ultimo_atendimento'
-    })
-
-
-    # In[76]:
-
-
-    # deixando variáveis em ordem alfabética
-    #tabela_pessoa_odonto_final = tb_pessoa_odonto_final.select((tb_pessoa_odonto_final.columns))
-
-
-    # In[77]:
-
-
-    tabela_pessoa_odonto_final = (tb_pessoa_odonto_final
-                        .select('agg_TRA_atendidas',
-                                'agg_TRA_cadastradas',
-                                'agg_primeira_consulta_atendidas',
-                                'agg_primeira_consulta_cadastradas',
-                                'agg_procedimentos_preventivos_atendidas',
-                                'agg_procedimentos_preventivos_cadastradas',
-                                'agg_realizaram_exodontia_atendidas',
-                                'agg_realizaram_exodontia_cadastradas',
-                                'agg_tratamento_odonto_concluido_atendidas',
-                                'agg_tratamento_odonto_concluido_cadastradas',
-                                'atendimento_odonto',
-                                'bairro',
-                                'cadastradas_odonto',
-                                'cep',
-                                'cidadao_pec',
-                                'cns',
-                                'cnes_equipe',
-                                'codigo_unidade_saude',
-                                'codigos_procedimentos_preventivos_atendidas',
-                                'codigos_procedimentos_preventivos_cadastradas',
-                                'co_seq_acomp_cidadaos_vinc',
-                                'codigo_unico_ultima_ficha',
-                                'codigo_equipe',
-                                'complemento',
-                                'cpf',
-                                'data_TRA_atendidas',
-                                'data_TRA_cadastradas',
-                                'data_nascimento',
-                                'data_primeira_consulta_atendidas',
-                                'data_primeira_consulta_cadastradas',
-                                'data_tratamento_concluido_atendidas',
-                                'data_tratamento_concluido_cadastradas',
-                                'data_ultima_atualizacao_cidadao',
-                                'data_ultima_fci',
-                                'data_ultimo_atendimento',
-                                'descricao_procedimentos_preventivos_atendidas',
-                                'descricao_procedimentos_preventivos_cadastradas',
-                                'faixa_etaria',
-                                'idade',
-                                'ine_equipe',
-                                'logradouro',
-                                'micro_area',
-                                'nome',
-                                'municipio',
-                                'sexo',
-                                'tipo_logradouro',
-                                'nome_equipe',
-                                'nome_unidade_saude',
-                                'idade_anos_completos',
-                                'numero',
-                                'raca_cor',
-                                'status_registro_valido_equipe',
-                                'status_registro_valido_unidade_saude',
-                                'telefone',
-                                'tipo_localizacao_domicilio',
-                                'total_exodontia_atendidas',
-                                'total_exodontia_cadastradas',
-                                'st_comunidade_tradicional',
-                                'st_gestante',
-                                'st_paciente_necessidades_espec',
-                                'tp_identidade_genero_cidadao'
-                            )
-                        )
-
+    tabela_pessoa_odonto_final = tb_pessoa_odonto_final.select(
+        "agg_TRA_atendidas",
+        "agg_TRA_cadastradas",
+        "agg_primeira_consulta_atendidas",
+        "agg_primeira_consulta_cadastradas",
+        "agg_procedimentos_preventivos_atendidas",
+        "agg_procedimentos_preventivos_cadastradas",
+        "agg_realizaram_exodontia_atendidas",
+        "agg_realizaram_exodontia_cadastradas",
+        "agg_tratamento_odonto_concluido_atendidas",
+        "agg_tratamento_odonto_concluido_cadastradas",
+        "atendimento_odonto",
+        "bairro",
+        "cadastradas_odonto",
+        "cep",
+        "cidadao_pec",
+        "cns",
+        "cnes_equipe",
+        "codigo_unidade_saude",
+        "codigos_procedimentos_preventivos_atendidas",
+        "codigos_procedimentos_preventivos_cadastradas",
+        "co_seq_acomp_cidadaos_vinc",
+        "codigo_unico_ultima_ficha",
+        "codigo_equipe",
+        "complemento",
+        "cpf",
+        "data_TRA_atendidas",
+        "data_TRA_cadastradas",
+        "data_nascimento",
+        "data_primeira_consulta_atendidas",
+        "data_primeira_consulta_cadastradas",
+        "data_tratamento_concluido_atendidas",
+        "data_tratamento_concluido_cadastradas",
+        "data_ultima_atualizacao_cidadao",
+        "data_ultima_fci",
+        "data_ultimo_atendimento",
+        "descricao_procedimentos_preventivos_atendidas",
+        "descricao_procedimentos_preventivos_cadastradas",
+        "faixa_etaria",
+        "idade",
+        "ine_equipe",
+        "logradouro",
+        "micro_area",
+        "nome",
+        "municipio",
+        "sexo",
+        "tipo_logradouro",
+        "nome_equipe",
+        "nome_unidade_saude",
+        "idade_anos_completos",
+        "numero",
+        "raca_cor",
+        "status_registro_valido_equipe",
+        "status_registro_valido_unidade_saude",
+        "telefone",
+        "tipo_localizacao_domicilio",
+        "total_exodontia_atendidas",
+        "total_exodontia_cadastradas",
+        "st_comunidade_tradicional",
+        "st_gestante",
+        "st_paciente_necessidades_espec",
+        "tp_identidade_genero_cidadao",
+    )
 
     escrever_dados_raw(tabela_pessoa_odonto_final,"saude_bucal.parquet")
-
-
-
