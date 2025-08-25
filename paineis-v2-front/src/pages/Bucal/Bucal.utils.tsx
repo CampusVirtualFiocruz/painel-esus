@@ -85,6 +85,8 @@ export const reportCharts: any = [
             },
           ],
           componentStyle: {
+            width: "400px",
+            minWidth: "430px",
             height: "250px",
           },
           colors: ["to-be-defined", "#E4E4E4"],
@@ -99,6 +101,8 @@ export const reportCharts: any = [
           formatterKind: "perc",
           radius: [0, 60],
           componentStyle: {
+            width: "400px",
+            minWidth: "430px",
             height: "250px",
           },
           sort: ["Realizado", "Não Realizado"],
@@ -167,6 +171,8 @@ export const reportCharts: any = [
             },
           ],
           componentStyle: {
+            width: "400px",
+            minWidth: "430px",
             height: "250px",
           },
           colors: ["to-be-defined", "#E4E4E4"],
@@ -183,6 +189,8 @@ export const reportCharts: any = [
           formatterKind: "perc",
           radius: [40, 60],
           componentStyle: {
+            width: "400px",
+            minWidth: "430px",
             height: "250px",
           },
           sort: ["Realizado", "Não Realizado"],
@@ -233,6 +241,8 @@ export const reportCharts: any = [
           formatterKind: "perc",
           radius: [40, 60],
           componentStyle: {
+            width: "400px",
+            minWidth: "430px",
             height: "250px",
           },
           sort: ["Realizado", "Não Realizado"],

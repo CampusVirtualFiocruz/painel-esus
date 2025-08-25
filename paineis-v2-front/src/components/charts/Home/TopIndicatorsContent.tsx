@@ -125,7 +125,7 @@ const TopIndicatorsContent = ({ charts }: any) => {
                 <span>
                   {formataNumero(
                     charts?.["tipo-localizacao"]?.data?.find(
-                      ({ tag }: any) => tag === "urbano"
+                      ({ tag }: any) => tag === "rural"
                     )?.value
                   )}
                 </span>
@@ -138,7 +138,7 @@ const TopIndicatorsContent = ({ charts }: any) => {
                 <span>
                   {formataNumero(
                     charts?.["tipo-localizacao"]?.data?.find(
-                      ({ tag }: any) => tag === "urbano"
+                      ({ tag }: any) => tag === "nao_informado"
                     )?.value
                   )}
                 </span>

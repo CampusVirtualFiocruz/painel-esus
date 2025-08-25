@@ -43,7 +43,7 @@ const reportSections = [
         formatterKind: "perc",
           componentStyle: {
             width: "400px",
-            minWidth: "400px",
+            minWidth: "430px",
             height: "250px",
           },
         colors: ["#b9b9b9", "#09406a"],
@@ -55,7 +55,7 @@ const reportSections = [
         formatterKind: "perc",
           componentStyle: {
             width: "400px",
-            minWidth: "400px",
+            minWidth: "430px",
             height: "350px",
           },
 
@@ -69,7 +69,7 @@ const reportSections = [
         formatterKind: "perc",
           componentStyle: {
             width: "400px",
-            minWidth: "400px",
+            minWidth: "430px",
             height: "350px",
           },
 
@@ -86,7 +86,7 @@ const reportSections = [
         formatterKind: "perc",
           componentStyle: {
             width: "400px",
-            minWidth: "400px",
+            minWidth: "430px",
           },
         colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
@@ -97,7 +97,7 @@ const reportSections = [
         formatterKind: "perc",
           componentStyle: {
             width: "400px",
-            minWidth: "400px",
+            minWidth: "430px",
             height: "350px",
           },
 
