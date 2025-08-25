@@ -113,8 +113,13 @@ def get_hypertension_by_location_area(cnes=None):
     methods=["GET"],
     endpoint="child_by_location_area",
 )
-def get_child_by_location_area():
-    return handle_request(get_child_by_location_area_composer)
+@demographics_bp.route(
+    f"{URLS['child_by_location_area']}/<int:cnes>",
+    methods=["GET"],
+    endpoint="child_by_location_area_id",
+)
+def get_child_by_location_area(cnes=None):
+    return handle_request(get_child_by_location_area_composer, cnes=cnes)
 
 
 @demographics_bp.route(
@@ -122,8 +127,13 @@ def get_child_by_location_area():
     methods=["GET"],
     endpoint="elderly_by_location_area",
 )
-def get_elderly_by_location_area():
-    return handle_request(get_elderly_by_location_area_composer)
+@demographics_bp.route(
+    f"{URLS['elderly_by_location_area']}/<int:cnes>",
+    methods=["GET"],
+    endpoint="elderly_by_location_area_id",
+)
+def get_elderly_by_location_area(cnes=None):
+    return handle_request(get_elderly_by_location_area_composer, cnes=cnes)
 
 
 # Total people
