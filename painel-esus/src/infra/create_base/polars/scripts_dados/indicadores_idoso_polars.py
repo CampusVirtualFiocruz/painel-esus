@@ -8,9 +8,10 @@ from dateutil.relativedelta import relativedelta
 from src.env.conf import getenv
 
 from .codigos_cbo import *
+from .rename_columns import columns_to_rename
 
 
-#from utils import ler_dados_raw,escrever_dados_raw
+# from utils import ler_dados_raw,escrever_dados_raw
 def ler_dados_raw(nome_parquet,columns=""):
 
     try:
@@ -33,7 +34,7 @@ def ler_dados_raw(nome_parquet,columns=""):
             return df
     except Exception as e:
          raise RuntimeError(f"Ocorreu um erro inesperado: {str(e)}") from e
-        
+
 
 def escrever_dados_raw(df,nome_parquet):
 
@@ -56,7 +57,6 @@ def escrever_dados_raw(df,nome_parquet):
         df.write_parquet(output_path + os.sep +nome_parquet)
 
 
-
 def gerar_banco():
     start_time = time.time()
     # ## Passo 3. Separar variáveis da(s) tabela(s) necessárias ao desenvolvimento do Indicador
@@ -66,7 +66,6 @@ def gerar_banco():
                 'nu_cns_cidadao','nu_telefone_celular','nu_telefone_contato','no_cidadao'
                 ,'nu_micro_area_domicilio','nu_micro_area_tb_cidadao','nu_ine_vinc_equipe','nu_cnes_vinc_equipe',
                 'ds_tipo_localizacao_domicilio','dt_ultima_atualizacao_cidadao','co_seq_acomp_cidadaos_vinc']
-
 
     coluns_acv_end = ['no_tipo_logradouro_tb_cidadao','ds_logradouro_tb_cidadao',
                 'nu_numero_tb_cidadao','no_bairro_tb_cidadao','ds_complemento_tb_cidadao',
@@ -79,22 +78,17 @@ def gerar_banco():
     # FCI
     selected_columns_fci = ["co_fat_cidadao_pec","co_dim_tempo","nu_uuid_ficha","co_dim_raca_cor","nu_micro_area"]
 
-
     # FAI
     selected_columns_atd_ind = ["co_fat_cidadao_pec", "co_seq_fat_atd_ind","nu_altura","nu_peso","co_dim_tempo","co_dim_cbo_1", "co_dim_cbo_2", "dt_nascimento"]
-
 
     # PROCED / ATEND
     columns_proced = ['co_seq_fat_proced_atend','co_fat_cidadao_pec',"nu_altura","nu_peso",'co_dim_tempo','ds_filtro_procedimento','co_dim_cbo']
 
-
     # FAOI
     columns_fao = ['co_fat_cidadao_pec','co_dim_tempo',"nu_altura","nu_peso",'co_dim_cbo_1','co_dim_cbo_2','co_seq_fat_atd_odnt','ds_filtro_procedimentos']
 
-
     # FAC (atividade coletiva)
     columns_atvdd_coletiva = ['co_fat_cidadao_pec','co_dim_tempo',"nu_participante_altura","nu_participante_peso",'co_seq_fat_atvdd_cltv_part']
-
 
     # VIS_DOM (visita domiciliar)
     columns_vis_dom = ['co_seq_fat_visita_domiciliar','co_fat_cidadao_pec','co_dim_tempo','co_dim_cbo',"nu_altura","nu_peso"]
@@ -105,59 +99,51 @@ def gerar_banco():
     # IVCF
     columns_ivcf = ['co_fat_cidadao_pec','co_dim_tempo','nu_resultado']
 
-
-    # 
+    #
     # ## Passo 4. Carregar tabelas necessárias ao desenvolvimento do Indicador e nomeá-las
 
-    #tb_pessoa = pl.read_parquet(caminho_pasta+"tb_acomp_cidadaos_vinculados.parquet",columns=columns_acv)
+    # tb_pessoa = pl.read_parquet(caminho_pasta+"tb_acomp_cidadaos_vinculados.parquet",columns=columns_acv)
     tb_pessoa = ler_dados_raw("tb_acomp_cidadaos_vinculados.parquet",columns_acv)
 
-    #fci = pl.read_parquet(caminho_pasta+"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
+    # fci = pl.read_parquet(caminho_pasta+"tb_fat_cad_individual.parquet", columns=selected_columns_fci)
     fci = ler_dados_raw("tb_fat_cad_individual.parquet",selected_columns_fci)
     fci = fci.rename({"nu_micro_area" : "nu_micro_area_fci"})
 
-
-   # fai = pl.read_parquet(caminho_pasta+"tb_fat_atendimento_individual.parquet",columns=selected_columns_atd_ind)
+    # fai = pl.read_parquet(caminho_pasta+"tb_fat_atendimento_individual.parquet",columns=selected_columns_atd_ind)
     fai = ler_dados_raw("tb_fat_atendimento_individual.parquet", selected_columns_atd_ind)
 
-
-    #fao = pl.read_parquet(caminho_pasta+"tb_fat_atendimento_odonto.parquet",columns = columns_fao)
+    # fao = pl.read_parquet(caminho_pasta+"tb_fat_atendimento_odonto.parquet",columns = columns_fao)
     fao = ler_dados_raw("tb_fat_atendimento_odonto.parquet", columns_fao)
 
-    #fai_cods = pl.read_parquet(caminho_pasta+"fat_atd_ind_cod.parquet")
+    # fai_cods = pl.read_parquet(caminho_pasta+"fat_atd_ind_cod.parquet")
     fai_cods = ler_dados_raw("fat_atd_ind_cod.parquet")
 
-    #vis_dom = pl.read_parquet(caminho_pasta+"tb_fat_visita_domiciliar.parquet", columns= columns_vis_dom)
+    # vis_dom = pl.read_parquet(caminho_pasta+"tb_fat_visita_domiciliar.parquet", columns= columns_vis_dom)
     vis_dom = ler_dados_raw("tb_fat_visita_domiciliar.parquet", columns_vis_dom)
 
-    #proced_atend = pl.read_parquet(caminho_pasta+"tb_fat_proced_atend.parquet",columns= columns_proced)
+    # proced_atend = pl.read_parquet(caminho_pasta+"tb_fat_proced_atend.parquet",columns= columns_proced)
     proced_atend = ler_dados_raw("tb_fat_proced_atend.parquet", columns_proced)
 
     vacina = ler_dados_raw("tb_fat_vacinacao.parquet",columns_vacina)
 
     ivcf = ler_dados_raw("tb_fat_ivcf.parquet",columns_ivcf)
 
-
-    #tb_dim_equipe = pl.read_parquet(caminho_pasta+"tb_dim_equipe.parquet")
+    # tb_dim_equipe = pl.read_parquet(caminho_pasta+"tb_dim_equipe.parquet")
     tb_dim_equipe = ler_dados_raw("tb_dim_equipe.parquet")
 
-
-    #tb_dim_und_saude = pl.read_parquet(caminho_pasta+"tb_dim_unidade_saude.parquet")
+    # tb_dim_und_saude = pl.read_parquet(caminho_pasta+"tb_dim_unidade_saude.parquet")
     tb_dim_und_saude = ler_dados_raw("tb_dim_unidade_saude.parquet")
 
-    #dim_raca_cor = pl.read_parquet(caminho_pasta+"tb_dim_raca_cor.parquet")
+    # dim_raca_cor = pl.read_parquet(caminho_pasta+"tb_dim_raca_cor.parquet")
     dim_raca_cor = ler_dados_raw("tb_dim_raca_cor.parquet")
     dim_raca_cor = dim_raca_cor.rename({"co_seq_dim_raca_cor" : "co_dim_raca_cor"}).select("co_dim_raca_cor","ds_raca_cor")
 
     fci = fci.join(dim_raca_cor,on="co_dim_raca_cor",how='left')
 
-    
     coluns_cbo = ['nu_cbo','co_seq_dim_cbo']
     dim_cbo = ler_dados_raw("tb_dim_cbo.parquet")
 
-
     dim_cbo = dim_cbo.with_columns(pl.col("co_seq_dim_cbo").cast(pl.Int64))
-
 
     dt_12meses = datetime.today() - relativedelta(months=12)
 
@@ -170,10 +156,9 @@ def gerar_banco():
 
     # In[7]:
 
-
     # AJUSTE de CBO
 
-    #FAI
+    # FAI
 
     fai = (
         fai
@@ -217,7 +202,7 @@ def gerar_banco():
         .rename({"nu_cbo": "co_dim_cbo_2"})
     )
 
-    #VIS_DOM
+    # VIS_DOM
 
     vis_dom = (
         vis_dom
@@ -247,11 +232,9 @@ def gerar_banco():
 
     # In[8]:
 
-
     ### separando informações de interesse exames - sem ciaps e cids, apenas procedimentos avaliados ou solicitados
 
     # In[9]:
-
 
     exames = (
         fai_cods
@@ -266,8 +249,6 @@ def gerar_banco():
     # ### Manipulando dados comuns aos indicadores
 
     # In[10]:
-
-
 
     cad_grouped = (
         fci
@@ -284,9 +265,7 @@ def gerar_banco():
         ])
     )
 
-
     fci_v2 = fci.select("co_fat_cidadao_pec","nu_uuid_ficha","nu_micro_area_fci")
-
 
     tb_pessoa = (
         tb_pessoa
@@ -294,7 +273,6 @@ def gerar_banco():
             pl.col("dt_ultima_atualizacao_cidadao").cast(pl.Utf8).str.strptime(pl.Date, "%Y-%m-%d").alias("dt_ultima_atualizacao_cidadao")
         )
     )
-
 
     tb_pessoa_v2 = tb_pessoa.join(
         fci_v2,
@@ -314,7 +292,6 @@ def gerar_banco():
         subset="co_fat_cidadao_pec",                            # Remove duplicatas pela chave
         keep="first"                               # Mantém a primeira ocorrência após a ordenação
     )
-
 
     # criando dt_atendimento para FAI, usada em mais de um indicador, e filtrando cidadaos não nulos
 
@@ -350,7 +327,6 @@ def gerar_banco():
         )
     )
 
-
     vacina_v2 = (
         vacina
         .with_columns(
@@ -360,7 +336,6 @@ def gerar_banco():
             (pl.col("co_fat_cidadao_pec").is_not_null() ) # &  (pl.col("dt_atendimento") >= dt_24meses)
         )
     )
-
 
     ivcf_v2 = (
         ivcf
@@ -372,16 +347,13 @@ def gerar_banco():
         )
     )
 
-
     # In[11]:
-
 
     # print(tb_pessoa_v2.glimpse())
 
     # ### Total de pessoas idosas - Dashboard
 
     # In[12]:
-
 
     today = date.today()
 
@@ -403,24 +375,21 @@ def gerar_banco():
 
     # In[13]:
 
-
     idoso = tb_pessoa_v2.filter(
         pl.col("idade") >= 60
     )
 
     # In[14]:
 
-
-    #dataframe para adicionar a todo os indicadores para conferir se a idade é maior ou igual a 61 anos
+    # dataframe para adicionar a todo os indicadores para conferir se a idade é maior ou igual a 61 anos
     df_idade = idoso.select("co_fat_cidadao_pec","idade")
 
     # ### Pessoas idosas por sexo - Dashboard
 
     # In[15]:
 
-
     # COUNT ACV
-    #tb_pessoa_v2['no_sexo_cidadao'].value_counts()
+    # tb_pessoa_v2['no_sexo_cidadao'].value_counts()
     categorias_validas_sexo = ["MASCULINO", "FEMININO", "INDETERMINADO"]
 
     idoso = idoso.with_columns(
@@ -434,7 +403,6 @@ def gerar_banco():
 
     # In[16]:
 
-
     categorias_validas = ["Branca", "Preta", "Amarela", "Parda", "Indígena"]
 
     idoso = idoso.with_columns(
@@ -447,7 +415,6 @@ def gerar_banco():
     # ### Pessoas idosas por faixa etária - Dashboard
 
     # In[17]:
-
 
     idoso = (idoso
         .with_columns(
@@ -463,13 +430,11 @@ def gerar_banco():
 
     # In[18]:
 
-
-    #idoso['faixa_etaria'].value_counts()
+    # idoso['faixa_etaria'].value_counts()
 
     # ### Total de pessoas atendidas  nos últimos 12 meses - Dashboard
 
     # In[19]:
-
 
     total_pessoas_atd = (
         fai_v2
@@ -489,11 +454,10 @@ def gerar_banco():
     )
 
     # ### **Indicador I** - Pessoa idosa com duas consultas médica e/ou de enfermagem nos últimos 12 meses - Dashboard
-    # 
+    #
     # ### Lista Nominal: Alerta quando  a quantidade for < 2
 
     # In[20]:
-
 
     fai_idoso_12meses = (
         fai_v2.join(
@@ -585,19 +549,15 @@ def gerar_banco():
         )
     )
 
-
     # In[21]:
-
 
     fai_idoso_12meses.head(5)
 
     # In[22]:
 
-
-    #fai_idoso_12meses.filter(pl.col("co_fat_cidadao_pec") == 3901)
+    # fai_idoso_12meses.filter(pl.col("co_fat_cidadao_pec") == 3901)
 
     # In[23]:
-
 
     fai_idoso_12meses = (
         fai_idoso_12meses
@@ -625,8 +585,7 @@ def gerar_banco():
         )
     )
 
-
-    # #### Indicador I e Itens da **Lista nominal** do Indicador I no df **"idoso"**:  
+    # #### Indicador I e Itens da **Lista nominal** do Indicador I no df **"idoso"**:
     # #### *A saber:*
     # ##### Número de pessoas idosas que tiveram pelo menos duas consultas médicas e/ou de enfermagem nos últimos 12 meses: **'agg_medicos_enfermeiros'= 1**
     # ##### - datas das duas últimas consultas realizadas com profissional médico ou de enfermagem (**"ultima_dt_medico_enferm e penultima_dt_medico_enferm"**)
@@ -634,7 +593,6 @@ def gerar_banco():
     # ##### - Alerta se **"agg_medicos_enfermeiros" = 0**
 
     # In[24]:
-
 
     # Left join idoso com indicador_medicos_enfermeiros
 
@@ -658,29 +616,25 @@ def gerar_banco():
         .alias("agg_classificacao_consulta_medica_enfermas")
     )
 
-
     # In[25]:
 
-
-    #idoso['agg_medicos_enfermeiros'].value_counts()
+    # idoso['agg_medicos_enfermeiros'].value_counts()
 
     # ### **Indicador II** - Dois registros de peso e altura  realizados na data das consultas com médico e/ou enfermeiro nos últimos 12 meses - Dashboard
-    # 
+    #
     # ### Lista Nominal: Alerta quando for "não"
 
     # In[26]:
 
-
     # tabelas fonte: fai, fao e vis_dom
 
-    #obs.: O indicador é sim/não respondendo à pergunta: "o idoso teve registro de duas medidas de peso/altura
+    # obs.: O indicador é sim/não respondendo à pergunta: "o idoso teve registro de duas medidas de peso/altura
     #  (em qualquer atendimento, com qualquer profissional considerado) realizadas na mesma data em que ele fez
     # consultas com médico/enfermeiro?"
 
     # Primeiro, pegando as datas de registro de peso e altura com todos profissionais considerados
 
     peso_altura = (pl.concat([fao_v2, fai_v2, vis_dom_v2], how="diagonal"))
-
 
     indicador_peso_altura_v1 = (
         peso_altura
@@ -743,21 +697,17 @@ def gerar_banco():
 
     # In[27]:
 
-
-    #peso_altura.filter(pl.col("co_fat_cidadao_pec") == 64756).sort("dt_atendimento", descending=True).select("co_fat_cidadao_pec","nu_altura","nu_peso","dt_atendimento","dt_nascimento")
+    # peso_altura.filter(pl.col("co_fat_cidadao_pec") == 64756).sort("dt_atendimento", descending=True).select("co_fat_cidadao_pec","nu_altura","nu_peso","dt_atendimento","dt_nascimento")
 
     # In[28]:
 
-
-    #indicador_peso_altura_v1.filter(pl.col("co_fat_cidadao_pec") == 64756)
+    # indicador_peso_altura_v1.filter(pl.col("co_fat_cidadao_pec") == 64756)
 
     # In[29]:
 
-
-    #indicador_peso_altura_v1
+    # indicador_peso_altura_v1
 
     # In[30]:
-
 
     # Agora, pegando as datas de consultas com médicos e/ou enfermeiros
     # tabelas fonte: fai, fao e vis_dom
@@ -793,14 +743,9 @@ def gerar_banco():
         )
     )
 
-
     # In[ ]:
 
-
-
-
     # In[31]:
-
 
     # Juntando dados datas peso e altura + medicos e enfermeiros
 
@@ -816,17 +761,14 @@ def gerar_banco():
         pl.col("datas_match_24").list.len().alias("qtd_24")
     )
 
-
     # #### **Indicador II** e Itens da **Lista nominal** do Indicador II no df **"idoso"**:
     # ##### *A saber:*
     # ##### Número de pessoas idosas que tiveram dois registros de peso e altura simultâneos ocorridos na data das consultas com médico e/ou enfermeiro, realizados nos últimos 12 meses:**"agg_peso_altura" = 1**
-    # 
+    #
     # ##### - Registro de peso e altura na mesma data de duas consultas médicas ou de enfermagem **(Sim = 1/Não = 0)**
     # ##### - Alerta se **"agg_peso_altura" = 0**
 
     # In[32]:
-
-
 
     indicador_idoso_peso_altura_v2 = (
         indicador_idoso_peso_altura
@@ -878,10 +820,7 @@ def gerar_banco():
 
     )
 
-
-
     # In[33]:
-
 
     # Left join idoso com indicador_peso_altura
 
@@ -900,15 +839,13 @@ def gerar_banco():
 
     # In[34]:
 
-
-    #idoso['agg_peso_altura'].value_counts()
+    # idoso['agg_peso_altura'].value_counts()
 
     # ### **Indicador III** - Avaliação de creatinina nos últimos 12 meses - Dashboard
-    # 
+    #
     # ### Lista Nominal: Data da última avaliação e Alerta quando for "não consta"
 
     # In[35]:
-
 
     creatinina_dfs = (pl.concat([fao_v2, fai_v2], how="diagonal"))
 
@@ -985,16 +922,14 @@ def gerar_banco():
         )
     ).select("co_fat_cidadao_pec","agg_creatinina","agg_alerta_creatinina","agg_dashboard_creatinina","dt_ultimo_creatinina")
 
-
     # #### **Indicador III** e Itens da **Lista nominal** do Indicador III no df **"idoso"**:
     # ##### *A saber*
     # #### Número de pessoas idosas que tiveram avaliação de creatinina realizada nos últimos 12 meses: **"agg_creatinina" = 1**
-    # 
+    #
     # ##### - Data da última avaliação: **"dt_ultimo_creatinina"**
     # ##### - Alerta se "Não consta": **"agg_creatinina" = 0**
 
     # In[36]:
-
 
     # Left join idoso com indicador_creatinina
 
@@ -1014,11 +949,10 @@ def gerar_banco():
     )
 
     # ### **Indicador IV** - Duas visitas domiciliares por ACS/TACS nos últimos 12 meses com intervalo mínimo de 30 dias entre as visitas - Dashboard
-    # 
+    #
     # ### Lista Nominal:  ALERTA quando a quantidade for < 2
 
     # In[37]:
-
 
     visita_asc = (
         vis_dom_v2
@@ -1107,16 +1041,14 @@ def gerar_banco():
         )
     )
 
-
     # #### **Indicador IV** e Itens da **Lista nominal** do Indicador IV no df **"idoso"**:
     # ##### *A saber*
     # #### Duas visitas domiciliares por ACS/TACS nos últimos 12 meses com intervalo mínimo de 30 dias entre as visitas: **"agg_visitas_domiciliares_acs" = 1**
-    # 
+    #
     # ##### - Quantidade de visitas recebidas **"total_visitas_domiciliares_acs**
     # ##### - Alerta se "Não consta": **"agg_visitas_domiciliares_acs" = 0**
 
     # In[38]:
-
 
     # Left join idoso com indicador_acs/tacs
 
@@ -1141,18 +1073,15 @@ def gerar_banco():
         .alias("agg_classificacao_visitas_domiciliares_acs")
     )
 
-
     # In[39]:
 
-
-    #idoso['agg_visitas_domiciliares_acs'].value_counts()
+    # idoso['agg_visitas_domiciliares_acs'].value_counts()
 
     # ### **Indicador V** - Registro de vacina influenza nos últimos 12 meses - Dashboard
-    #     
+    #
     # ### Lista Nominal: Data da última vacina e Alerta quando for "não consta"
 
     # In[40]:
-
 
     vacina_registro = (
         vacina_v2
@@ -1225,12 +1154,11 @@ def gerar_banco():
     # #### **Indicador V** e Itens da **Lista nominal** do Indicador V no df **"idoso"**:
     # ##### *A saber*
     # #### Número de pessoas idosas com registro de aplicação/transcrição da vacina influenza nos últimos 12 meses: **"agg_vacinas_influenza" = 1**
-    # 
+    #
     # ##### - Data da última avaliação: **"dt_ultima_vacina"**
     # ##### - Alerta se "Não consta": **"agg_vacinas_influenza" = 0**
 
     # In[41]:
-
 
     # Left join idoso com indicador_vacina
 
@@ -1250,11 +1178,10 @@ def gerar_banco():
     )
 
     # ### **Indicador VI** - Consulta com dentista na APS nos últimos 12 meses - Dashboard
-    # 
+    #
     # ### Lista Nominal: Data da última consulta e Alerta quando for "não consta"
 
     # In[42]:
-
 
     fao_atend_odonto = (
         fao_v2
@@ -1328,12 +1255,11 @@ def gerar_banco():
     # #### **Indicador VI** e Itens da **Lista nominal** do Indicador VI no df **"idoso"**:
     # ##### *A saber*
     # #### Número de pessoas idosas que realizaram consulta com dentista na APS nos últimos 12 meses: **"agg_cirurgiao_dentista" = 1**
-    # 
+    #
     # ##### - Data da última avaliação: **"dt_ultimo_atend_odonto"**
     # ##### - Alerta se "Não consta": **"agg_cirurgiao_dentista" = 0**
 
     # In[43]:
-
 
     # Left join idoso com indicador_dentista
 
@@ -1354,17 +1280,11 @@ def gerar_banco():
 
     # In[ ]:
 
-
-
-
     # ### **Indicador VII** - Aplicação da IVCF-20 - Dashboard
-    # 
+    #
     # ### Lista Nominal: Alerta quando for "não"
 
     # In[44]:
-
-
-
 
     ivcf_aplicado = (
         ivcf_v2
@@ -1434,7 +1354,6 @@ def gerar_banco():
         )
     ).select("co_fat_cidadao_pec","agg_ivcf_aplicado","agg_alerta_ivcf_aplicado","agg_dashboard_ivcf_aplicado","classificacao_risco_vcf")
 
-
     # Left join idoso com indicador_ivcf
 
     idoso = idoso.join(
@@ -1457,13 +1376,12 @@ def gerar_banco():
     # ##### *A saber*
     # #### Número de pessoas idosas que foram avaliadas com o instrumento (Índice de Vulnerabilidade Clínico Funcional - IVCF-20):
     #  **"agg_ivcf_avaliado" = 1**
-    # 
+    #
     # ##### - Alerta se "Não consta": **"agg_ivcf_avaliado" = 0**
 
     # ## Passo 8. Criar tabela pessoa final com todas as variáveis necessárias para próximas etapas de desenvolvimento do Painel
 
     # In[45]:
-
 
     # arrumando variáveis de unidade de saúde e equipe
 
@@ -1492,8 +1410,6 @@ def gerar_banco():
 
     tb_dim_und_saude_v3 = tb_dim_und_saude_v2.select('codigo_unidade_saude','nome_unidade_saude','st_registro_valido_und_saude','co_dim_unidade_saude')
 
-
-
     tb_dim_equipe_v2 = (
         tb_dim_equipe
         .select([
@@ -1519,7 +1435,6 @@ def gerar_banco():
     )
 
     # In[46]:
-
 
     # adicionando informações cidadaos conforme prioridades entre tabelas
 
@@ -1553,9 +1468,8 @@ def gerar_banco():
 
     # In[47]:
 
-
-    #padronizando informações de endereço
-    #endereço prioridade: domilicio -> cidadao
+    # padronizando informações de endereço
+    # endereço prioridade: domilicio -> cidadao
     colunas_cidadao = [
         'no_tipo_logradouro_tb_cidadao',
         'ds_logradouro_tb_cidadao',
@@ -1570,12 +1484,10 @@ def gerar_banco():
     colunas_domicilio = [col.replace("_tb_cidadao", "_domicilio") for col in colunas_cidadao]
     colunas_nomes = [col.replace("_tb_cidadao", "") for col in colunas_cidadao]
 
-
     condicao = (
         pl.col("ds_logradouro_domicilio").is_not_null() &
         (pl.col("ds_logradouro_domicilio") != "")
     )
-
 
     expressoes = [
         pl.when(condicao)
@@ -1588,121 +1500,72 @@ def gerar_banco():
 
     # In[48]:
 
-
-    tabela_idoso_final = tabela_idoso_final.rename({
-        'nu_cnes_vinc_equipe': 'cnes_equipe',
-        'nu_ine_vinc_equipe': 'ine_equipe',
-        'ds_cep': 'cep',
-        'ds_complemento': 'complemento',
-        'ds_logradouro': 'logradouro',
-        'ds_raca_cor': 'raca_cor',
-        'ds_tipo_localizacao_domicilio': 'tipo_localizacao_domicilio',
-        'nu_cns_cidadao': 'cns',
-        'nu_cpf_cidadao': 'cpf',
-        'nu_micro_area': 'micro_area',
-        'nu_numero': 'numero',
-        'no_cidadao': 'cidadao',
-        'no_sexo_cidadao': 'sexo',
-        'no_municipio': 'municipio',
-        'no_tipo_logradouro': 'tipo_logradouro',
-        'no_bairro': 'bairro',
-
-        # Novas renomeações adicionadas
-        'st_registro_valido_equipe': 'status_registro_valido_equipe',
-        'st_registro_valido_und_saude': 'status_registro_valido_unidade_saude',
-        'total_consulta_med_enferm': 'total_consulta_medico_enfermeiro',
-        'co_dim_unidade_saude': 'codigo_unidade_saude',
-        'co_fat_cidadao_pec': 'cidadao_pec',
-        'co_unico_ultima_ficha': 'codigo_unico_ultima_ficha',
-        'dt_nasc_cidadao': 'data_nascimento',
-        'dt_penultima_medico_enferm': 'data_penultima_consulta_medico_enfermeiro',
-        'dt_ultima_atualizacao_cidadao': 'data_ultima_atualizacao_cidadao',
-        'dt_ultima_fci': 'data_ultima_fci',
-        'dt_ultima_medico_enferm': 'data_ultima_consulta_medico_enfermeiro',
-        'dt_ultima_vacina': 'data_ultima_vacina',
-        'dt_ultimo_atend_odonto': 'data_ultimo_atendendimento_odonto',
-        'dt_ultimo_creatinina': 'data_ultimo_creatinina'
-    })
-
-    # In[49]:
-
-
-    # deixando variáveis em ordem alfabética
-    #tabela_idoso_final = tabela_idoso_final.select(sorted(tabela_idoso_final.columns))
-
-    # In[50]:
-
-
-    tabela_idoso_final = (tabela_idoso_final
-                        .select(
-                                'agg_cirurgiao_dentista',
-                                'agg_alerta_cirurgiao_dentista',
-                                'agg_dashboard_cirurgiao_dentista',
-                                'agg_creatinina',
-                                'agg_alerta_creatinina',
-                                'agg_dashboard_creatinina',
-                                'agg_ivcf_aplicado',
-                                'agg_alerta_ivcf_aplicado',
-                                'agg_dashboard_ivcf_aplicado',
-                                'agg_medicos_enfermeiros',
-                                'agg_alerta_medicos_enfermeiros',
-                                'agg_classificacao_consulta_medica_enfermas',
-                                'agg_peso_altura',
-                                'agg_dashboard_peso_altura',
-                                'agg_alerta_peso_altura',
-                                'agg_vacinas_influenza',
-                                'agg_alerta_vacinas_influenza',
-                                'agg_dashboard_vacinas_influenza',
-                                'agg_visitas_domiciliares_acs',
-                                'agg_dashboard_visitas_domiciliares_acs',
-                                'agg_alerta_visitas_domiciliares_acs',
-                                'agg_classificacao_visitas_domiciliares_acs',
-                                'agg_classificacao_risco_vcf',
-                                'cep',
-                                'cnes_equipe',
-                                'cns',
-                                'codigo_unidade_saude',
-                                'cidadao_pec',
-                                'co_seq_acomp_cidadaos_vinc',
-                                'codigo_unico_ultima_ficha',
-                                'codigo_equipe',
-                                'complemento',
-                                'cpf',
-                                'data_nascimento',
-                                'data_penultima_consulta_medico_enfermeiro',
-                                'data_ultima_atualizacao_cidadao',
-                                'data_ultima_fci',
-                                'data_ultima_consulta_medico_enfermeiro',
-                                'data_ultima_vacina',
-                                'data_ultimo_atendendimento_odonto',
-                                'data_ultimo_creatinina',
-                                'faixa_etaria',
-                                'idade',
-                                'ine_equipe',
-                                'logradouro',
-                                'micro_area',
-                                'bairro',
-                                'cidadao',
-                                'municipio',
-                                'sexo',
-                                'tipo_logradouro',
-                                'nome_equipe',
-                                'nome_unidade_saude',
-                                'numero',
-                                'raca_cor',
-                                'status_registro_valido_equipe',
-                                'status_registro_valido_unidade_saude',
-                                'telefone',
-                                'tipo_localizacao_domicilio',
-                                'total_consulta_medico_enfermeiro',
-                                'total_visitas_domiciliares_acs',
-                                'pessoa_atendida_12_meses'
-
-                            )
-                        )
-
-
-
+    renamed_columns = columns_to_rename(tabela_idoso_final)
+    tabela_idoso_final = tabela_idoso_final.rename(renamed_columns)
+    tabela_idoso_final = tabela_idoso_final.select(
+                    "agg_cirurgiao_dentista",
+                    "agg_alerta_cirurgiao_dentista",
+                    "agg_dashboard_cirurgiao_dentista",
+                    "agg_creatinina",
+                    "agg_alerta_creatinina",
+                    "agg_dashboard_creatinina",
+                    "agg_ivcf_aplicado",
+                    "agg_alerta_ivcf_aplicado",
+                    "agg_dashboard_ivcf_aplicado",
+                    "agg_medicos_enfermeiros",
+                    "agg_alerta_medicos_enfermeiros",
+                    "agg_classificacao_consulta_medica_enfermas",
+                    "agg_peso_altura",
+                    "agg_dashboard_peso_altura",
+                    "agg_alerta_peso_altura",
+                    "agg_vacinas_influenza",
+                    "agg_alerta_vacinas_influenza",
+                    "agg_dashboard_vacinas_influenza",
+                    "agg_visitas_domiciliares_acs",
+                    "agg_dashboard_visitas_domiciliares_acs",
+                    "agg_alerta_visitas_domiciliares_acs",
+                    "agg_classificacao_visitas_domiciliares_acs",
+                    "agg_classificacao_risco_vcf",
+                    "cep",
+                    "cnes_equipe",
+                    "cns",
+                    "codigo_unidade_saude",
+                    "cidadao_pec",
+                    "co_seq_acomp_cidadaos_vinc",
+                    "codigo_unico_ultima_ficha",
+                    "codigo_equipe",
+                    "complemento",
+                    "cpf",
+                    "data_nascimento",
+                    "data_penultima_consulta_medico_enfermeiro",
+                    "data_ultima_atualizacao_cidadao",
+                    "data_ultima_fci",
+                    "data_ultima_consulta_medico_enfermeiro",
+                    "data_ultima_vacina",
+                    "data_ultimo_atendendimento_odonto",
+                    "data_ultimo_creatinina",
+                    "faixa_etaria",
+                    "idade",
+                    "ine_equipe",
+                    "logradouro",
+                    "micro_area",
+                    "bairro",
+                    "nome",
+                    "municipio",
+                    "sexo",
+                    "tipo_logradouro",
+                    "nome_equipe",
+                    "nome_unidade_saude",
+                    "numero",
+                    "raca_cor",
+                    "status_registro_valido_equipe",
+                    "status_registro_valido_unidade_saude",
+                    "telefone",
+                    "tipo_localizacao_domicilio",
+                    "total_consulta_medico_enfermeiro",
+                    "total_visitas_domiciliares_acs",
+                    "pessoa_atendida_12_meses",
+    )
 
     escrever_dados_raw(tabela_idoso_final,"idoso.parquet")
 

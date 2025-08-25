@@ -185,7 +185,6 @@ class HypertensionDiabetesRepository:
 
     def get_nominal_list_download(self, cnes: int = None, equipe: int = None) -> Dict:
         con = duckdb.connect()
-        print("------")
         pessoas_sql = get_sql_base_export(self.disease, cnes, equipe)
         result = con.sql(pessoas_sql).df()
         if self.mock_data:

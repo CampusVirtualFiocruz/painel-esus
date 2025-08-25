@@ -4,6 +4,18 @@ from src.main.adapters.base.base_dashboard_adapter import BaseDashboardAdapter
 
 
 class HypertensionAdapter(BaseDashboardAdapter):
+    def __init__(self):
+        super().__init__()
+        self.columns = [
+            "glicemia",
+            "creatinina",
+            "eas_equ",
+            "sodio",
+            "potassio",
+            "colesterol",
+            "hemograma",
+            "eletro",
+        ]
     def __init(self, tag):
         return ({
                     tag: {
@@ -47,16 +59,8 @@ class HypertensionAdapter(BaseDashboardAdapter):
             }
             )
 
-        columns = [
-            "glicemia",
-            "creatinina",
-            "eas_equ",
-            "sodio",
-            "potassio",
-            "colesterol",
-            "hemograma",
-            "eletro",
-        ]
+        columns = self.columns
+        print(columns)
         result = {}
         result_map = {
             "1": "sem-solicitacao",
@@ -119,3 +123,16 @@ class HypertensionAdapter(BaseDashboardAdapter):
                 imc_mapped[key]["data"][1]["value"] = 1 - percent
 
         return list(imc_mapped.values())
+
+class DiabetesAdapter(HypertensionAdapter):
+    def __init__(self):
+        super().__init__()
+        self.columns = [
+            "glicemia",
+            "hemob_glica",
+            "retino",
+            "creatinina",
+            "eas_equ",
+            "hemograma",
+            "colesterol",
+        ]

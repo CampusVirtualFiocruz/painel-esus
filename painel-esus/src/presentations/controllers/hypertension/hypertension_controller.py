@@ -1,4 +1,4 @@
-from src.main.adapters.hypertension_adapter import HypertensionAdapter
+from src.main.adapters.hypertension_adapter import DiabetesAdapter, HypertensionAdapter
 from src.main.adapters.nominal_list_adapter import (
     DiabetesNominalListAdapter,
     HypertensionNominalListAdapter,
@@ -122,4 +122,4 @@ class HypertensionController(HypertensionDiabetesController):
 class DiabetesController(HypertensionDiabetesController):
 
     def __init__(self, repository: HypertensionDiabetesRepositoryInterface):
-        super().__init__(repository, HypertensionAdapter(), DiabetesNominalListAdapter)
+        super().__init__(repository, DiabetesAdapter(), DiabetesNominalListAdapter)

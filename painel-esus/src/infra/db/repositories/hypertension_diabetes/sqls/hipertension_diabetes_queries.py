@@ -28,12 +28,13 @@ def get_number_of_patients(type: str, cnes: int = None, equipe: int = None):
     WITH lista as ( SELECT n_atendimentos_12_meses, {type}, autoreferido FROM read_parquet('{_get_path(type)}') {where_clause} )
     SELECT
         (
-        SELECT sum(n_atendimentos_12_meses) FROM lista WHERE {type} =1 
+        SELECT count(n_atendimentos_12_meses) FROM lista WHERE {type} =1 
     ) as cid_ciaps,
     (
-        SELECT sum(n_atendimentos_12_meses) FROM lista WHERE autoreferido =1 
+        SELECT count(n_atendimentos_12_meses) FROM lista WHERE autoreferido =1 
     ) as autoreferido
     """
+    print(sql)
     return sql
 
 

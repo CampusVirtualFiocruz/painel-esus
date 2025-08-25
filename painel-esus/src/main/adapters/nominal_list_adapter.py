@@ -299,6 +299,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
                 "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
                 "racaCor": anonymize_data(self.raca_cor),
+                "racaCor": anonymize_data(self.raca_cor),
                 "detalhesCondicaoSaude": [
                     {
                         "cidCondicaoSaude": self.cids,
@@ -321,6 +322,7 @@ class CriancaNominalListAdapter:
         self.cpf = user["cpf"]
         self.cns = user["cns"]
         self.data_nascimento = user["data_nascimento"]
+
 
         def calc_idade(user):
             return user["idade_mes_ano"]
@@ -686,6 +688,7 @@ class RecordNominalListAdapter:
             ultima_atualizacao_fcd = False
 
         self.registros = []
+        acompanhamento = {"1": "Em acompanhamento", "0": "Não acompanhado"}
         acompanhamento = {"1": "Em acompanhamento", "0": "Não acompanhado"}
         self.registros.append(
             AlertRecord(
