@@ -2,9 +2,9 @@
 # pylint: disable=line-too-long
 # pylint: disable=W0012,R1710, W0611, C0103,W0622
 import urllib.parse
-from pprint import pprint
 
 import requests
+import urllib3
 from sqlalchemy import text
 from src.data.interfaces.login_repository import (
     LoginRepository as LoginRepositoryInterface,
@@ -15,6 +15,8 @@ from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
 
 from .queries.query_sessao import QUERY_SESSAO
+
+# from pprint import pprint
 
 
 class LoginBridgeRepository(LoginRepositoryInterface):
@@ -99,11 +101,13 @@ class LoginBridgeRepository(LoginRepositoryInterface):
         return None
 
     def get_reponse_body(self, session, url, headers, payload):
-        return session.request("POST", url, headers=headers, data=payload)
+        urllib3.disable_warnings(category=urllib3.exceptions.InsecureRequestWarning)
+        return session.request("POST", url, headers=headers, data=payload, verify=False)
 
     def post_bridge(self, url, head, query_sessao):
+        urllib3.disable_warnings(category=urllib3.exceptions.InsecureRequestWarning)
         return requests.request(
-            "POST", url, headers=head, data=query_sessao, timeout=30
+            "POST", url, headers=head, data=query_sessao, timeout=30, verify=False
         )
 
     def get_profiles(self, response):
@@ -137,11 +141,12 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                 "ubs": ubs,
                 "equipe": equipe
             })
-
+        profiles = list(sorted(profiles, key=lambda x: x["profissao"]))
         return profiles
 
     def check_credentials(self, username: str, password: str) -> UserPayload:
         session = requests.Session()
+        session.verify = False
         url_login = env.get("BRIDGE_LOGIN_URL", "")
         url = f"{url_login}/api/graphql"
         payload = (
@@ -157,9 +162,9 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             "Content-Type": "application/json",
             "Cookie": "JSESSIONID=87J4pWjfQUVaO3b_lndd1DQE-8hJ3RZzcHes0uFb; XSRF-TOKEN=25038984-1945-43e2-a990-f62709f4eddd",
         }
-        print('iniciando....')
+        # print('iniciando....')
         response = self.get_reponse_body(session, url, headers, payload)
-        print(response)
+        # print(response)
         if response.text is None:
             return None
         cookie = session.cookies.get_dict()

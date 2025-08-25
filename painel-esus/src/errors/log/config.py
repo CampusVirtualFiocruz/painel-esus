@@ -1,6 +1,6 @@
 import logging
 
-levels = logging.DEBUG
+LEVELS = logging.DEBUG
 
 formatter = logging.Formatter(
     fmt="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -8,6 +8,5 @@ formatter = logging.Formatter(
 )
 
 
-
 logger = logging.getLogger(__name__)
-logger.setLevel(levels)
+logger.setLevel(LEVELS)

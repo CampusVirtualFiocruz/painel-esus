@@ -1,7 +1,7 @@
 import ReactECharts from "echarts-for-react";
-import "./style.scss";
 import { content } from "../../../assets/content/content";
 import { PieChart } from "../charts.types";
+import "./style.scss";
 
 export function Pie(props: PieChart) {
   const options = {
@@ -17,7 +17,10 @@ export function Pie(props: PieChart) {
       {
         name: "",
         type: "pie",
-        radius: ["0%", "70%"],
+        radius: props?.config?.radius || [
+          props?.config?.radiusStart || "40%",
+          "70%",
+        ],
         avoidLabelOverlap: false,
         labelLine: {
           show: false,
@@ -44,8 +47,10 @@ export function Pie(props: PieChart) {
             ] as any,
           []
         ),
+        ...props?.config?.seriesConfigOverride
       },
     ],
+    ...props?.config?.chartConfigOverride
   };
 
   return (
@@ -55,6 +60,7 @@ export function Pie(props: PieChart) {
         width: "100%",
         minWidth: "316px",
         height: "316px",
+        ...props?.config?.componentStyle,
       }}
       opts={{ renderer: "svg" }}
     />

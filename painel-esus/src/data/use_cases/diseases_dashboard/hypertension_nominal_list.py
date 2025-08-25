@@ -1,4 +1,4 @@
-# pylint: disable=R0913
+# pylint: disable=R0913,W0102
 from src.errors import InvalidArgument
 from src.main.adapters.nominal_list_adapter import HypertensionNominalListAdapter
 
@@ -17,11 +17,12 @@ class HypertensionNominalListUseCase:
         cpf: str = None,
         equipe: int = None,
         query: str = None,
+        sort = []
     ):
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
         response = self.__repository.find_filter(
-            cnes, page, page_size, nome, cpf, equipe, query
+            cnes, page, page_size, nome, cpf, equipe, query, sort
         )
         response["items"] = [
             HypertensionNominalListAdapter(r).to_dict() for r in response["items"]

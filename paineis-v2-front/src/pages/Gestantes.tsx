@@ -14,13 +14,9 @@ import { Header } from "../components/Header";
 import { Bar } from "../charts/Bar";
 import { Donut } from "../charts/Donut";
 import { Pie } from "../charts/Pie";
-import { getNomeUbs, showValuePerTrimester, showValuePerWeeks } from "../utils";
+import { getNomeUbs, ReportBasicParams, showValuePerTrimester, showValuePerWeeks } from "../utils";
 import { wait } from "../utils/reports";
 import "../styles/gestantes.scss";
-
-type PainelParams = {
-  id: string;
-};
 
 type TModal = {
   loaded: number;
@@ -46,7 +42,7 @@ type ResponseDataListUbs = {
 export function Gestantes() {
   let navigate = useNavigate();
   const user = getUserLocalStorage();
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
 
   let paramRoute = id ? id : "all";
 
@@ -200,14 +196,6 @@ export function Gestantes() {
       staleTime: 1000 * 60 * 10, //10 minutos
     }
   );
-
-  function handleToPainelUbs() {
-    navigate(`/painel/${id}`);
-  }
-
-  function handleToPainelMunicipio() {
-    navigate("/painelx");
-  }
 
   function handleToGestantesList() {
     if (id !== undefined) {
@@ -557,7 +545,6 @@ export function Gestantes() {
               </div>
             </div>
           </div>
-
           <div className="row my-5 text-center">
             <div className="col-12">
               <button
@@ -570,20 +557,7 @@ export function Gestantes() {
             </div>
           </div>
         </div>
-
-        {/*  <div className="d-flex flex-column align-items-center mt-5 gap-3">
-          {id && (
-            <Button onClick={handleToPainelUbs}>
-              Voltar para o Painel da UBS
-            </Button>
-          )}
-
-          <Button onClick={handleToPainelMunicipio}>
-            Visualizar dados do painel do Município
-          </Button>
-        </div> */}
       </div>
-
       <Footer />
     </div>
   );

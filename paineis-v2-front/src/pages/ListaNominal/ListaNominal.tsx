@@ -1,21 +1,14 @@
 import { useState } from "react";
 import { useParams, useLocation, useSearchParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import { PagedTable, TextField, LocaleContext } from "bold-ui";
+import { PagedTable, TextField, LocaleContext, Button } from "bold-ui";
 import ptBr from "bold-ui/lib/i18n/locales/pt-BR";
 import { Modal } from "../../components/Modal";
 import ReportWrapper from "../../components/ui/ReportWrapper";
-import { useInfo } from "../../context/infoProvider/useInfo";
-import { getNomeUbs } from "../../utils";
-import { Api } from "../../services/api";
-import "../../styles/gestanteList.scss";
-import "../../styles/listaNominal.scss";
 import usePaginatedList from "./usePaginatedList";
 import { columns, Footer, footerNotes } from "./ListaNominal.utils";
-
-type PainelParams = {
-  id: string;
-};
+import "../../styles/gestanteList.scss";
+import "../../styles/listaNominal.scss";
+import { ReportBasicParams } from "../../utils";
 
 interface RowType {
   nome: string;
@@ -33,7 +26,7 @@ interface RowType {
 }
 
 const ListaNominal = () => {
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<any>({ loaded: 7 });
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,38 +42,30 @@ const ListaNominal = () => {
   const queryParams = new URLSearchParams(location.search);
   const condicao = String(queryParams.get("condicao"));
   const footerNote = footerNotes?.[condicao];
-
-  const { city } = useInfo();
-  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
-    "ubs",
-    async () => {
-      const response = await Api.get<any>("get-units");
-      const data = response.data;
-
-      const listData: any[] = data.data.map((ubs: any) => {
-        return {
-          label: ubs.no_unidade_saude,
-          value: ubs.co_seq_dim_unidade_saude,
-          id: ubs.co_seq_dim_unidade_saude,
-        };
-      });
-
-      return listData;
-    },
-    {
-      staleTime: 1000 * 60 * 10, //10 minutos
-    }
+  const [recorte, setRecorte] = useState<"" | "atendidas" | "cadastradas">(
+    condicao === "Bucal" ? "atendidas" : ""
   );
 
-  const { info, setParams, isLoadingInfo, pathToReport } = usePaginatedList({
+  const {
+    info,
+    params: tableParams,
+    setParams,
+    isLoadingInfo,
+    pathToReport,
+  } = usePaginatedList({
     condicao,
     equipe,
     id,
     searchTerm,
+    config: {
+      possuiRecorte: condicao === "Bucal",
+      recorte,
+    },
   });
 
-  const handleSortChange = (sort: string[]) =>
+  const handleSortChange = (sort: string[]) => {
     setParams((state: any) => ({ ...state, sort }));
+  };
 
   const handlePageChange = (page: number) =>
     setParams((state: any) => ({ ...state, page: page + 1 }));
@@ -92,13 +77,77 @@ const ListaNominal = () => {
       totalPages: Math.max(1, Math.ceil(state.totalElements / size)),
     }));
 
+  const alertMessage = `
+    Os sinais de alertas correspondem à não
+    conformidade com as orientações de boas
+    práticas, dentro de um período de ${condicao === "Infantil" ? 36 : condicao === "Bucal" ? 24 : 12} meses,
+    preconizadas pelo Ministério da Saúde
+  `;
+
+  const alertBeforeDetails =
+    condicao === "Bucal" ? "DADOS REFERENTES AOS ÚLTIMOS 30 MESES" : "";
+
+  const footerInfo =
+    condicao === "Infantil"
+      ? "Não se aplica: Crianças que ainda não atingiram idade mínima para inclusão no critério correspondente às diretrizes preconizadas pelo Ministério da Saúde"
+      : undefined;
+
   return (
     <div id="page-painel">
-      {showModal && <Modal data={data} setShowModal={setShowModal} />}
+      {showModal && (
+        <Modal
+          data={data}
+          setShowModal={setShowModal}
+          config={{ alertMessage, alertBeforeDetails, footerInfo }}
+        />
+      )}
       <ReportWrapper
-        title={"Lista Nominal / "+ (condicao === "Qualidade" ? "Qualidade de Cadastro" : condicao)}
-        subtitle={condicao === "Qualidade" ? "(Pessoas registradas a partir de 2019)" : "(Pessoas atendidas nos últimos 12 meses)" }
+        title={
+          "Lista Nominal / " +
+          (condicao === "Bucal"
+            ? "Saúde Bucal"
+            : condicao === "Qualidade"
+            ? "Qualidade de Cadastro"
+            : condicao === "Idosa"
+            ? "Cuidado da Pessoa Idosa"
+            : condicao === "Infantil"
+            ? "Desenvolvimento Infantil"
+            : condicao)
+        }
+        subtitle=""
         footerNote={footerNote}
+        preheader={
+          condicao === "Bucal" ? (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "end",
+                justifyContent: "end",
+                margin: "20px 20px",
+                gap: "10px",
+              }}
+            >
+              <Button
+                style={{ height: "36px" }}
+                kind={recorte === "atendidas" ? "primary" : "normal"}
+                onClick={() => {
+                  setRecorte("atendidas");
+                }}
+              >
+                Atendidas
+              </Button>
+              <Button
+                style={{ height: "36px" }}
+                kind={recorte === "cadastradas" ? "primary" : "normal"}
+                onClick={() => {
+                  setRecorte("cadastradas");
+                }}
+              >
+                Cadastradas
+              </Button>
+            </div>
+          ) : null
+        }
       >
         <div className="search">
           <TextField
@@ -123,9 +172,15 @@ const ListaNominal = () => {
             onSizeChange={handleSizeChange}
             loading={isLoadingInfo}
             columns={columns({ handleClick, condicao })}
+            sort={tableParams?.sort as any}
           />
         </LocaleContext.Provider>
-        <Footer pathToReport={pathToReport} condicao={condicao} id={id} />
+        <Footer
+          pathToReport={pathToReport}
+          condicao={condicao}
+          id={id}
+          recorte={recorte}
+        />
       </ReportWrapper>
     </div>
   );

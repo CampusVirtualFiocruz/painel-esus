@@ -9,6 +9,8 @@ from
 	tb_adm_municipal tam
 join tb_localidade tl on
 	tam.co_localidade = tl.co_localidade
+join tb_ator_papel tap on tap.co_seq_ator_papel  = tam.co_ator_papel 	
 join tb_uf tu on
-	tu.co_uf = tl.co_uf LIMIT 1
- """
+	tu.co_uf = tl.co_uf
+where tap.st_ativo =1
+limit 1 """

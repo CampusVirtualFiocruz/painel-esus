@@ -1,3 +1,7 @@
+export type ReportBasicParams = {
+  id: string;
+};
+
 export function formataNumero(numero: number | undefined) {
   if (numero) {
     return numero.toLocaleString("pt-BR");
@@ -94,7 +98,8 @@ export function getPorcentagemIndicador(
 }
 
 export function formatAsPercent(value: string) {
-  return `${parseFloat(value).toFixed(1)}%`;
+  const conversion = `${Number.parseFloat(parseFloat(value).toFixed(2))}%`;
+  return conversion;
 }
 
 type Ubs = {
@@ -103,11 +108,12 @@ type Ubs = {
 };
 
 export function getNomeUbs(data: any, id: string) {
-  console.log(data)
+  if (data == undefined) {
+    return "-";
+  }
   let ubs = Object.values(data).find(
     (item: any) => parseInt(item.value) === parseInt(id)
   ) as Ubs;
-  console.log(ubs);
   return ubs ? ubs.label : "-";
 }
 
@@ -238,3 +244,20 @@ export const profiles = [
   "CBO 322415: Auxiliar de saúde bucal",
   "CBO 411010: Assistente administrativo",
 ];
+
+export const groupBy = (input: any, key: string) => {
+  return Object.entries(
+    input.reduce((acc: any, currentValue: any) => {
+      let groupKey = currentValue[key];
+      if (!acc[groupKey]) {
+        acc[groupKey] = [];
+      }
+      acc[groupKey].push(currentValue);
+      return acc;
+    }, {})
+  ).map(([title, content]) => ({ title, content }));
+};
+
+export const navigateHome = (navigate: any, route: string = "") => {
+  navigate("/home"+(route));
+}

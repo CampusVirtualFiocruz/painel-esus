@@ -1,8 +1,9 @@
 # pylint: disable=C0201
 import os
 
-from src.data.interfaces.login_repository import \
-    LoginRepository as LoginRepositoryInterface
+from src.data.interfaces.login_repository import (
+    LoginRepository as LoginRepositoryInterface,
+)
 from src.domain.entities.user_payload import UserPayload
 
 admin_map = {
@@ -27,7 +28,8 @@ admin_map = {
         "uf": "",
         "municipio": "",
         "profiles": ["user"],
-        "ubs": 25,
+        "ubs": 26,
+        "equipe":19
     },
 }
 

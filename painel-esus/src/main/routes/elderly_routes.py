@@ -2,249 +2,267 @@ import io
 
 from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
+from src.infra.requests.factory import send_download_request
 from src.main.adapters.request_adapter import request_adapter
 from src.main.composers.elderly_composer import (
-    elderly_get_nominal_list,
-    elderly_get_nominal_list_download,
-    elderly_group_by_age_location_composer,
-    elderly_group_by_gender_composer,
-    elderly_group_by_imc,
-    elderly_group_by_race_composer,
-    elderly_hipertesnion_diabetes_rate_composer,
-    elderly_imc_rate_composer,
-    elderly_influenza_rate_composer,
-    elderly_odonto_rate_composer,
-    elderly_total_composer,
+    elderly_acs_visits_composer,
+    elderly_by_gender_composer,
+    elderly_by_race_composer,
+    elderly_creatinine_composer,
+    elderly_dentist_appointment_composer,
+    elderly_get_nominal_list_composer,
+    elderly_get_nominal_list_download_composer,
+    elderly_height_records_composer,
+    elderly_influenza_vaccines_composer,
+    elderly_ivcf_20_composer,
+    elderly_medical_appointment_composer,
+    elderly_total_card_composer,
+    elderly_total_medical_cares_composer,
+    elderly_total_ubs_composer,
 )
+from src.main.server.decorators.token_required import extract_token
 
-elderly_bp = Blueprint("elderly", __name__)
+elderly_bp = Blueprint('elderly', __name__)
 
 
 class ElderlyPath:
-    root_path = "/v1/elderly"
+    root_path = '/v1/elderly'
     urls = {
-        "root": "",
-        "total": "/total",
-        "group_by_age_location": "/group-by-age-location",
-        "group_by_gender": "/group-by-gender",
-        "group_by_race": "/group-by-race",
-        "group_by_imc": "/group-by-imc",
-        "grouping_by_imc_rate": "/group-by-imc-rate",
-        "grouping_by_influenza_rate": "/group-by-influenza-rate",
-        "grouping_by_odonto_rate": "/group-by-odonto-rate",
-        "grouping_hipertesnion_diabetes_rate": "/group-hipertesnion-diabetes-rate",
-        "get_nominal_list": "/get-nominal-list",
+        'root': '',
+        'total_card': '/total-card',
+        'total_ubs': '/total-ubs',
+        'total_medical_cares': '/total-medical-cares',
+        'by_gender': '/by-gender',
+        'by_race': '/by-race',
+        'two_medical_appointments': '/two-medical-appointments',
+        'two_height_records': '/two-height-records',
+        'two_acs_visits': '/two-acs-visits',
+        'creatinine': '/creatinine',
+        'influenza_vaccines': '/influenza-vaccines',
+        'dentist_appointment': '/dentist-appointment',
+        'ivcf_20': '/ivcf-20',
+        'get_nominal_list': '/get-nominal-list' ,      
+        'get_nominal_list_download': '/get-nominal-list/download' ,   
     }
 
 
 elderly = ElderlyPath()
 urls = elderly.urls
 
-
-@elderly_bp.route(urls["total"], methods=["GET"], endpoint="elderly_total")
+@elderly_bp.route(urls['total_ubs'], methods=['GET'], endpoint='elderly_total_ubs')
 @elderly_bp.route(
-    urls["total"] + "/<cnes>", methods=["GET"], endpoint="elderly_total_id"
+    urls['total_ubs'] + '/<cnes>', methods=['GET'], endpoint='elderly_total_ubs_id'
 )
-def elderly_total(cnes=None):
+def elderly_total_ubs(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, elderly_total_composer())
+        http_response = request_adapter(request, elderly_total_ubs_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+@elderly_bp.route(urls['total_card'], methods=['GET'], endpoint='elderly_total_card')
+@elderly_bp.route(
+    urls['total_card'] + '/<cnes>', methods=['GET'], endpoint='elderly_total_card_id'
+)
+def elderly_total_card(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, elderly_total_card_composer())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
 
 
+@elderly_bp.route(urls['total_medical_cares'], methods=['GET'], endpoint='elderly_total_medical_cares')
 @elderly_bp.route(
-    urls["group_by_age_location"], methods=["GET"], endpoint="group_by_age_location"
+    urls['total_medical_cares'] + '/<cnes>', methods=['GET'], endpoint='elderly_total_medical_cares_id'
 )
-@elderly_bp.route(
-    urls["group_by_age_location"] + "/<cnes>",
-    methods=["GET"],
-    endpoint="group_by_age_location_id",
-)
-def elderly_grouping_by_ages_location(cnes=None):
+def elderly_total_cares(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(
-            request, elderly_group_by_age_location_composer()
-        )
+        http_response = request_adapter(request, elderly_total_medical_cares_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
 
-
-@elderly_bp.route(urls["group_by_race"], methods=["GET"], endpoint="group_by_race")
+@elderly_bp.route(urls['by_gender'], methods=['GET'], endpoint='elderly_by_gender')
 @elderly_bp.route(
-    urls["group_by_race"] + "/<cnes>",
-    methods=["GET"],
-    endpoint="group_by_race_id",
+    urls['by_gender'] + '/<cnes>', methods=['GET'], endpoint='elderly_by_gender_id'
 )
-def elderly_grouping_by_race(cnes=None):
+def elderly_by_gender(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, elderly_group_by_race_composer())
+        http_response = request_adapter(request, elderly_by_gender_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
 
-
-@elderly_bp.route(urls["group_by_gender"], methods=["GET"], endpoint="group_by_gender")
+@elderly_bp.route(urls['by_race'], methods=['GET'], endpoint='elderly_by_race')
 @elderly_bp.route(
-    urls["group_by_gender"] + "/<cnes>",
-    methods=["GET"],
-    endpoint="group_by_gender_id",
+    urls['by_race'] + '/<cnes>', methods=['GET'], endpoint='elderly_by_race_id'
 )
-def elderly_grouping_by_gender(cnes=None):
+def elderly_by_race(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, elderly_group_by_gender_composer())
+        http_response = request_adapter(request, elderly_by_race_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
 
-
+@elderly_bp.route(urls['two_medical_appointments'], methods=['GET'], endpoint='elderly_medical_appointment')
 @elderly_bp.route(
-    urls["grouping_by_imc_rate"],
-    methods=["GET"],
-    endpoint="grouping_by_imc_rate",
+    urls['two_medical_appointments'] + '/<cnes>', methods=['GET'], endpoint='elderly_medical_appointment_id'
 )
-@elderly_bp.route(
-    urls["grouping_by_imc_rate"] + "/<cnes>",
-    methods=["GET"],
-    endpoint="grouping_by_imc_rate_id",
-)
-def elderly_grouping_by_imc_rate(cnes=None):
+def elderly_medical_appointment(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, elderly_imc_rate_composer())
+        http_response = request_adapter(request, elderly_medical_appointment_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
 
-
+@elderly_bp.route(urls['two_height_records'], methods=['GET'], endpoint='elderly_height_records')
 @elderly_bp.route(
-    urls["grouping_by_influenza_rate"],
-    methods=["GET"],
-    endpoint="grouping_by_influenza_rate",
+    urls['two_height_records'] + '/<cnes>', methods=['GET'], endpoint='elderly_height_records_id'
 )
-@elderly_bp.route(
-    urls["grouping_by_influenza_rate"] + "/<cnes>",
-    methods=["GET"],
-    endpoint="grouping_by_influenza_rate_id",
-)
-def elderly_grouping_by_influenza_rate(cnes=None):
+def elderly_height_records(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(
-            request, elderly_influenza_rate_composer()
-        )
+        http_response = request_adapter(request, elderly_height_records_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
 
-
+@elderly_bp.route(urls['two_acs_visits'], methods=['GET'], endpoint='elderly_acs_visits')
 @elderly_bp.route(
-    urls["grouping_by_odonto_rate"],
-    methods=["GET"],
-    endpoint="grouping_by_odonto_rate",
+    urls['two_acs_visits'] + '/<cnes>', methods=['GET'], endpoint='elderly_acs_visits_id'
 )
-@elderly_bp.route(
-    urls["grouping_by_odonto_rate"] + "/<cnes>",
-    methods=["GET"],
-    endpoint="grouping_by_odonto_rate_id",
-)
-def elderly_grouping_by_odonto_rate(cnes=None):
+def elderly_acs_visits(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, elderly_odonto_rate_composer())
+        http_response = request_adapter(request, elderly_acs_visits_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
 
-
+@elderly_bp.route(urls['creatinine'], methods=['GET'], endpoint='elderly_creatinine')
 @elderly_bp.route(
-    urls["grouping_hipertesnion_diabetes_rate"],
-    methods=["GET"],
-    endpoint="grouping_hipertesnion_diabetes_rate",
+    urls['creatinine'] + '/<cnes>', methods=['GET'], endpoint='elderly_creatinine_id'
 )
-@elderly_bp.route(
-    urls["grouping_hipertesnion_diabetes_rate"] + "/<cnes>",
-    methods=["GET"],
-    endpoint="grouping_hipertesnion_diabetes_rate_id",
-)
-def elderly_grouping_hipertesnion_diabetes_rate(cnes=None):
+def elderly_creatinine(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, elderly_hipertesnion_diabetes_rate_composer())
+        http_response = request_adapter(request, elderly_creatinine_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
 
-
+@elderly_bp.route(urls['influenza_vaccines'], methods=['GET'], endpoint='elderly_influenza_vaccines')
 @elderly_bp.route(
-    urls["group_by_imc"],
-    methods=["GET"],
-    endpoint="group_by_imc",
+    urls['influenza_vaccines'] + '/<cnes>', methods=['GET'], endpoint='elderly_influenza_vaccines_id'
 )
-@elderly_bp.route(
-    urls["group_by_imc"] + "/<cnes>",
-    methods=["GET"],
-    endpoint="group_by_imc_id",
-)
-def elderly_group_by_imc(cnes=None):
+def elderly_influenza_vaccines(cnes=None):
     http_response = None
     response = None
     try:
-        http_response = request_adapter(request, elderly_imc_rate_composer())
+        http_response = request_adapter(request, elderly_influenza_vaccines_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
 
+@elderly_bp.route(urls['dentist_appointment'], methods=['GET'], endpoint='elderly_dentist_appointment')
+@elderly_bp.route(
+    urls['dentist_appointment'] + '/<cnes>', methods=['GET'], endpoint='elderly_dentist_appointment_id'
+)
+def elderly_dentist_appointment(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, elderly_dentist_appointment_composer())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
+        response = jsonify(http_response.body)
 
+    return response, http_response.status_code
+
+@elderly_bp.route(urls['ivcf_20'], methods=['GET'], endpoint='elderly_ivcf_20')
 @elderly_bp.route(
-    f"{urls['get_nominal_list']}", methods=["GET"], endpoint="get_nominal_list"
+    urls['ivcf_20'] + '/<cnes>', methods=['GET'], endpoint='elderly_ivcf_20_id'
 )
+def elderly_ivcf_20(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, elderly_ivcf_20_composer())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+@elderly_bp.route(urls['get_nominal_list'], methods=['GET'], endpoint='elderly_get_nominal_list')
 @elderly_bp.route(
-    f"{urls['get_nominal_list']}/<cnes>",
-    methods=["GET"],
-    endpoint="get_nominal_list_id",
+    urls['get_nominal_list'] + '/<cnes>', methods=['GET'], endpoint='elderly_get_nominal_list_id'
 )
-def get_nominal_list(cnes=None):
+def elderly_get_nominal_list(cnes=None):
+    http_response = None
+    response = None
+    try:
+        http_response = request_adapter(request, elderly_get_nominal_list_composer())
+        response = jsonify(http_response.body)
+    except Exception as exception:
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
+        response = jsonify(http_response.body)
+
+    return response, http_response.status_code
+
+@elderly_bp.route(urls['get_nominal_list_download'], methods=['GET'], endpoint='elderly_get_nominal_list_download')
+@elderly_bp.route(
+    urls['get_nominal_list_download'] + '/<cnes>', methods=['GET'], endpoint='elderly_get_nominal_list_download_id'
+)
+def elderly_get_nominal_list_download(cnes=None):
     if cnes:
         request.view_args["cnes"] = int(request.view_args["cnes"])
 
@@ -252,34 +270,7 @@ def get_nominal_list(cnes=None):
     response = None
 
     try:
-        # _validation(request.args.to_dict(), schema)
-        http_response = request_adapter(request, elderly_get_nominal_list())
-        response = jsonify(http_response.body)
-
-    except Exception as exception:
-        http_response = handle_errors(exception)
-        response = jsonify(http_response.body)
-
-    return response, 200
-
-
-@elderly_bp.route(
-    f"{urls['get_nominal_list']}/download/<cnes>",
-    methods=["GET"],
-    endpoint="get_nominal_list_id_download",
-)
-# @cache.cached(query_string=True)
-def get_nominal_list_download(cnes=None):
-    if cnes:
-        request.view_args["cnes"] = int(request.view_args["cnes"])
-
-    http_response = None
-    response = None
-
-    try:
-        # _validation(request.args.to_dict(), schema)
-        response = request_adapter(request, elderly_get_nominal_list_download())
-        print(response.head())
+        response = request_adapter(request, elderly_get_nominal_list_download_composer())
         buffer = io.BytesIO()
         response.to_excel(buffer)
 
@@ -287,6 +278,11 @@ def get_nominal_list_download(cnes=None):
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
             "Content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         }
+        send_download_request(
+            "Baixando lista nominal de idoso.",
+            "lista_nominal_idoso",
+            request,
+        )
         return Response(
             buffer.getvalue(),
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -294,7 +290,7 @@ def get_nominal_list_download(cnes=None):
         )
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, 200

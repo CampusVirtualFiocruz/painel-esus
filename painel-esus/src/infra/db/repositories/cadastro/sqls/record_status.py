@@ -1,18 +1,12 @@
-from sqlalchemy import text
-
-from .total import sql_round
+from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import get_pessoas
 
 
 def group_records_by_status(cnes: int = None, equipe: int = None):
-    where_clause = " "
-    if cnes is not None and cnes:
-        where_clause += f" where pessoas.codigo_unidade_saude   = {cnes} "
-        if equipe is not None and equipe:
-            where_clause += f" and pessoas.codigo_equipe_vinculada  = {equipe} "
+    sql_pessoas = get_pessoas(cnes, equipe)
 
     sql = f"""with
-                listas as ( select * from pessoas {where_clause}),
-                total as ( select count(*) from listas)
-                select status_cadastro, count(*) value from listas group by 1;
+                pessoas as ({sql_pessoas}),
+                listas as ( select * from pessoas )
+                select status_cadastro, count(*) as 'value' from listas group by status_cadastro
               """
-    return text(sql)
+    return sql

@@ -78,37 +78,21 @@ class ProfessionalsGroup():
                 'totalCount': 0,
                 'total': 0
             },
+            
         }
-        professionals_dict = dict(sorted(professionals_dict.items()))
         professionals_dict['OUTROS'] = {
             'profissao': 'OUTROS',
             'totalCount': 0,
             'total': 0
         }
         self.professionals_dict = professionals_dict
-        print(self.professionals_dict)
 
-    def get_professionals_count(self, data_frame) -> List:
-        def _parse_professionals(cbo):
-            if cbo:
-                cbo = str(cbo).strip()
-                for cbo_initial in list(self.professionals_map.keys()):
-                    if cbo.startswith(cbo_initial):
-                        return self.professionals_map[cbo_initial]
-            return 'OUTROS'
-
-        data_frame['profissional'] = data_frame['cbo'].apply(
-            _parse_professionals)
-        data_frame = data_frame[['co_seq_fat_atd_ind', 'profissional']]
-        data_frame = data_frame.drop_duplicates()
-        result = data_frame.groupby(
-            by=['profissional']).size().reset_index(name='qtd')
-        total = int(result['qtd'].sum())
-        for i in result.iterrows():
-            item = {
-                'profissao': i[1][0],
-                'totalCount': i[1][1],
-                'total': round(float(i[1][1]/total)*100, 2)
-            }
-            self.professionals_dict[i[1][0]] = item
+    def get_professionals_count(self, cares) -> List:
+        keys = list(self.professionals_dict.keys())
+        for i, _ in enumerate(cares):
+            if i < len(keys):
+                self.professionals_dict[keys[i]]["totalCount"] = cares[i]
+                self.professionals_dict[keys[i]]["total"] = round(float(cares[i]/cares[-1])*100, 2)
+                
+        self.professionals_dict = dict(sorted(self.professionals_dict.items()))
         return list(self.professionals_dict.values())

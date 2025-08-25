@@ -649,10 +649,6 @@ equipe_pessoa = equipe_v2.join(tb_pessoa.select('cidadao_pec'),on ='cidadao_pec'
 equipe_pessoa.write_parquet(os.path.join(output_path, "equipe.parquet"))
 
 
-end_time = time.time()
-execution_time = end_time - start_time
-
-print(f"Tempo total de execução equipe: {execution_time:.2f} segundos")
 
 
 # In[31]:

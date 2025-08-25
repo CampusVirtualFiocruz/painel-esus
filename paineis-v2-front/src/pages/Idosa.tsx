@@ -1,15 +1,16 @@
+import { memo } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
-import { useQuery } from "react-query";
-
-import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
+import { Bar, Donut, ValueCard } from "../components/charts";
+import Waffle from "../components/charts/Waffle";
+import ErrorMessage from "../components/ui/ErrorMessage";
+import LoadingSpinner from "../components/ui/LoadingSpinner";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
-import { PainelParams } from "./Hipertensao";
 import useReportDataIdosas from "../hooks/sections/idosas/useReportDataIdosas";
-import { getNomeUbs } from "../utils";
-import { Api } from "../services/api";
-import { useInfo } from "../context/infoProvider/useInfo";
+import { getChartDescription } from "../utils/chartTitleUtils";
+import { ReportViewTypeEnum } from "../utils/viewTypeEnum";
+import { ReportBasicParams } from "../utils";
 import "../styles/idosa.scss";
 
 const reportHeader = [
@@ -17,131 +18,269 @@ const reportHeader = [
     "total-ubs": {
       Chart: ValueCard,
       config: {
-        description: "Total de pessoas idosas na UBS",
+        description: "total-idosas-ubs",
         icon: "paperdark",
       },
     },
     "total-atendidas": {
       Chart: ValueCard,
       config: {
-        description: "Total de pessoas idosas atendidas",
+        description: "total-idosas-atendidas",
         icon: "paper",
       },
     },
   },
 ];
 
-const reportSections = [
+const reportSections: any = [
   {
-    "total-raca-cor": {
-      Chart: ShallowTreemap,
-      config: {
-        colors: ["#0b5b98", "#6595ff", "#0066b4", "#49e8db", "#0066b4"],
-      },
-    },
-    "total-imc": {
-      Chart: Donut,
-      config: {
-        formatterKind: "perc",
-        radiusStart: "0%",
-        colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
-        yAxis: {
-          name: content?.["total-cadastros"],
-        },
-      },
-    },
     row: {
-      "total-proporcao-vacina-influenza": {
-        Chart: Donut,
+      "pessoas-por-sexo": {
+        Chart: Bar,
+        config: {
+          colors: ["#84aaff", "#0069d0", "#e4e4e4", "#5c7ea0"],
+          componentStyle: {
+            height: "500px",
+          },
+
+          yAxis: {
+            name: content?.["total-idosas-ubs"],
+          },
+        },
+      },
+      "distribuicao-pessoas-raca-cor": {
+        Chart: Waffle,
         config: {
           formatterKind: "perc",
           radiusStart: "0%",
-          colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
+          sort: [
+            "Branca",
+            "Preta",
+            "Amarela",
+            "Parda",
+            "Indígena",
+            "Não informado",
+          ],
           yAxis: {
             name: content?.["total-cadastros"],
           },
-          componentStyle: {
-            width: "100%",
-            minWidth: "150px",
-            height: "150px",
-          },
         },
-      },
-      "total-proporcao-atendimento-odonto": {
-        Chart: Donut,
-        config: {
-          formatterKind: "perc",
-          radiusStart: "0%",
-          colors: ["#0a406a", "#e4e4e4", "#84aaff", "#5c7ea0"],
-          yAxis: {
-            name: content?.["total-cadastros"],
-          },
-          componentStyle: {
-            width: "110%",
-            minWidth: "150px",
-            height: "150px",
-          },
-        },
-      },
-    },
-    "pessoas-por-faixa-etaria": {
-      Chart: Bar,
-      config: {
-        colors: ["#0069d0", "#e4e4e4", "#84aaff", "#5c7ea0"],
-        yAxis: {
-          name: content?.["total-idosas-ubs"],
-        },
-      },
-    },
-  },
-  {
-    "pessoas-por-sexo": {
-      Chart: Bar,
-      config: {
-        colors: ["rgba(57,150,193,255)", "rgba(92,210,200,255)", "#dddddd"],
-        yAxis: {
-          name: content?.["total-idosas-ubs"],
-        },
-      },
-    },
-    "pessoas-por-diagnostico": {
-      Chart: Bar,
-      config: {
-        hideLegend: true,
-        colors: ["#0069d0", "#49e8db", "#84aaff"],
-        invertAxis: true,
       },
     },
   },
 ];
 
-const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
+const reportSectionsSecond: any = [
+  {
+    firstRow: {
+      "duas-consultas-medicas-enfermagem": {
+        Chart: Donut,
+        config: {
+          formatterKind: "perc",
+          radius: [0, 80],
+          sort: ["Com duas ou\nmais visitas", "Com uma ou\nnenhuma visita"],
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "250px",
+          },
+          colors: ["#E4E4E4", "#0069D0", "#84aaff", "#5c7ea0"],
+          yAxis: {
+            name: content?.["total-cadastros"],
+          },
+        },
+      },
+      "dois-registros-peso-altura": {
+        Chart: Donut,
+        config: {
+          formatterKind: "perc",
+          radius: [0, 80],
+          sort: ["Com dois ou\nmais registros", "Com um ou\nnenhum registro"],
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "250px",
+          },
+          colors: ["#0A406A", "#E4E4E4", "#84aaff", "#5c7ea0"],
+          yAxis: {
+            name: content?.["total-cadastros"],
+          },
+        },
+      },
+      "duas-visitas-domiciliares-acs-tacs": {
+        Chart: Donut,
+        footerNote: (
+          <>
+            *com intervalo mínimo de
+            <br /> 30 dias entre as visitas
+          </>
+        ),
+        config: {
+          formatterKind: "perc",
+          radius: [0, 80],
+          sort: ["Com duas ou\nmais visitas", "Com uma ou\nnenhuma visita"],
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "250px",
+          },
+          colors: ["#49E8DB", "#E4E4E4", "#84aaff", "#5c7ea0"],
+          yAxis: {
+            name: content?.["total-cadastros"],
+          },
+        },
+      },
+    },
+    secondRow: {
+      "avalicao-creatina": {
+        Chart: Donut,
+        config: {
+          formatterKind: "perc",
+          radius: [50, 80],
+          sort: ["Avaliadas", "Sem avaliação"],
+          colors: ["#6595FF", "#E4E4E4", "#84aaff", "#5c7ea0"],
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "250px",
+          },
+          yAxis: {
+            name: content?.["total-cadastros"],
+          },
+        },
+      },
+      "registro-vacina-influenza": {
+        Chart: Donut,
+        config: {
+          formatterKind: "perc",
+          radius: [50, 80],
+          sort: ["Vacinadas", "Não\nVacinadas"],
+          colors: ["#49E8DB", "#E4E4E4", "#84aaff", "#5c7ea0"],
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "250px",
+          },
+          yAxis: {
+            name: content?.["total-cadastros"],
+          },
+        },
+      },
+      "consulta-com-dentista-aps": {
+        Chart: Donut,
+        config: {
+          formatterKind: "perc",
+          radius: [50, 80],
+          sort: ["Consultadas", "Sem consulta"],
+          colors: ["#0069D0", "#E4E4E4", "#84aaff", "#5c7ea0"],
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "250px",
+          },
+          yAxis: {
+            name: content?.["total-cadastros"],
+          },
+        },
+      },
+    },
+    "ivcf-20": {
+      Chart: Donut,
+      subtitle: "Índice disponibilizado para registro a partir de 2025",
+      config: {
+        formatterKind: "perc",
+        radiusStart: "35%",
+        sort: ["Avaliadas", "Sem avaliação"],
+        componentStyle: {
+          marginTop: "30px",
+          marginBottom: "-150px",
+          height: "360px",
+        },
+        colors: ["#0A406A", "#e4e4e4", "#84aaff", "#5c7ea0"],
+        yAxis: {
+          name: content?.["total-cadastros"],
+        },
+        halfDonut: true,
+      },
+    },
+  },
+];
+
+const RenderChartGroup = ({
+  report,
+  chartList,
+  renderSmall,
+  reportViewType,
+  loadings,
+  errors,
+  refetchAll,
+}: any) => {
   return Object.keys(chartList).map((chartKey) => {
     const CustomChart = chartList?.[chartKey]?.Chart;
     const chartConfigs = chartList?.[chartKey]?.config;
     const data = (report as any)?.[chartKey]?.data;
-    const isRow = chartKey === "row";
+    const isRow = chartKey === "row" || chartKey.indexOf("Row") !== -1;
+
+    // Verificar loading para esta seção
+    if (loadings[chartKey as keyof typeof loadings]) {
+      return <LoadingSpinner key={chartKey} />;
+    }
+
+    // Verificar erro para esta seção
+    if (errors[chartKey as keyof typeof errors]) {
+      return (
+        <ErrorMessage
+          key={chartKey}
+          error={errors[chartKey as keyof typeof errors]}
+          title={`Erro ao carregar ${content?.[chartKey] || chartKey}`}
+          showRetry={true}
+          onRetry={refetchAll}
+        />
+      );
+    }
 
     if (chartConfigs) {
       const xAxisNames = data?.map((d: any) => content?.[d?.tag] ?? d?.tag);
-      chartConfigs.xAxis = {};
+      chartConfigs.xAxis = { data: [], ...chartConfigs.xAxis };
       chartConfigs.xAxis.data = xAxisNames;
     }
 
+    const configWithYAxisName =
+      chartConfigs && chartConfigs.yAxis
+        ? {
+            ...chartConfigs,
+            yAxis: {
+              ...chartConfigs.yAxis,
+              name: getChartDescription(
+                chartConfigs.yAxis.name,
+                reportViewType,
+                content
+              ),
+            },
+          }
+        : chartConfigs;
+
     if (isRow) {
       return (
-        <div className="is-row">
+        <div key={chartKey} className="is-row">
           <RenderChartGroup
             report={report}
             chartList={chartList?.[chartKey]}
             renderSmall
+            reportViewType={reportViewType}
+            loadings={loadings}
+            errors={errors}
+            refetchAll={refetchAll}
           />
         </div>
       );
     }
 
     return (
-      <div style={{ marginBottom: "40px" }}>
+      <div
+        key={chartKey}
+        style={{ position: "relative", marginBottom: "40px" }}
+      >
         <h5
           style={{
             fontWeight: "bold",
@@ -151,113 +290,145 @@ const RenderChartGroup = ({ report, chartList, renderSmall }: any) => {
         >
           {content?.[chartKey] || chartKey}
         </h5>
-        <CustomChart data={data} config={chartConfigs} />
+        {Boolean(chartList?.[chartKey]?.subtitle) && (
+          <p
+            style={{
+              textAlign: "center",
+              padding: renderSmall ? "30px" : "initial",
+            }}
+          >
+            {content?.[chartList?.[chartKey]?.subtitle] ??
+              chartList?.[chartKey]?.subtitle}
+          </p>
+        )}
+        <CustomChart data={data} config={configWithYAxisName} />
+        {Boolean(chartList?.[chartKey]?.footerNote) && (
+          <center>
+            <p
+              style={{
+                width: "100%",
+                position: "absolute",
+                bottom: "-70px",
+                textAlign: "center",
+                fontSize: "12px",
+                padding: renderSmall ? "20px" : "initial",
+              }}
+            >
+              {content?.[chartList?.[chartKey]?.footerNote] ??
+                chartList?.[chartKey]?.footerNote}
+            </p>
+          </center>
+        )}
       </div>
     );
   });
 };
 
 const Idosa = () => {
-  const { id } = useParams<PainelParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
-  const { city } = useInfo();
-  const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
-    "ubs",
-    async () => {
-      const response = await Api.get<any>("get-units");
-      const data = response.data;
+  const { id } = useParams<ReportBasicParams>();
+  const { data, loadings, errors, refetchAll } = useReportDataIdosas({
+    ubsId: id,
+    squadId: equipe,
+  });
 
-      const listData: any[] = data.data.map((ubs: any) => {
-        return {
-          label: ubs.no_unidade_saude,
-          value: ubs.co_seq_dim_unidade_saude,
-          id: ubs.co_seq_dim_unidade_saude,
-        };
-      });
-
-      return listData;
-    },
-    {
-      staleTime: 1000 * 60 * 10, //10 minutos
-    }
-  );
-
-  const reportData = useReportDataIdosas({ ubsId: id, squadId: equipe });
-  const report = reportData?.data;
-
-  if (reportData?.isLoading) {
-    return <center>Aguarde...</center>;
-  }
+  const reportViewType = !!equipe
+    ? ReportViewTypeEnum.EQUIPE
+    : !!id
+    ? ReportViewTypeEnum.UBS
+    : ReportViewTypeEnum.MUNICIPIO;
 
   return (
     <ReportWrapper
       title={"Cuidado da Pessoa Idosa"}
-      subtitle="(referente aos últimos 12 meses)"
       footer={<ReportFooter chaveListaNominal="Idosa" equipe={equipe} />}
     >
-      {reportSections.map((chartList: any, colIndex) => (
-        <div className="col-12 col-md-6">
-          {colIndex === 0 && (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "50px",
-                  marginBottom: "66px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flex: "1",
-                    flexDirection: "row",
-                    gap: "50px",
-                    width: "100%",
-                    maxWidth: "600px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  {reportHeader.map((chartList: any) =>
-                    Object.keys(chartList).map((chartKey) => {
-                      const CustomChart = chartList?.[chartKey]?.Chart;
-                      const chartConfigs = chartList?.[chartKey]?.config;
-                      const data = (report as any)?.[chartKey]?.data;
+      <>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "50px",
+            marginBottom: "66px",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flex: "1",
+              flexDirection: "row",
+              gap: "50px",
+              width: "100%",
+              maxWidth: "600px",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {reportHeader.map((chartList: any) =>
+              Object.keys(chartList).map((chartKey) => {
+                const CustomChart = chartList?.[chartKey]?.Chart;
+                const chartConfigs = chartList?.[chartKey]?.config;
+                const chartData = data?.[chartKey as keyof typeof data]?.data;
 
-                      // "100+ anos" como item final dos gráficos
-                      const pessoasPorFaixaEtaria =
-                        report["pessoas-por-faixa-etaria"].data;
-                      const pessoasPorSexo = report["pessoas-por-sexo"].data;
+                if (loadings[chartKey as keyof typeof loadings]) {
+                  return <LoadingSpinner key={chartKey} />;
+                }
 
-                      if (pessoasPorFaixaEtaria[0]?.tag === "100-ou-mais") {
-                        const cemOuMaisItem = pessoasPorFaixaEtaria.shift();
-                        pessoasPorFaixaEtaria.push(cemOuMaisItem);
-                      }
+                if (errors[chartKey as keyof typeof errors]) {
+                  return (
+                    <ErrorMessage
+                      key={chartKey}
+                      error={errors[chartKey as keyof typeof errors]}
+                    />
+                  );
+                }
 
-                      if (pessoasPorSexo[0]?.tag === "100-ou-mais") {
-                        const cemOuMaisItem = pessoasPorSexo.shift();
-                        pessoasPorSexo.push(cemOuMaisItem);
-                      }
-
-                      return <CustomChart data={data} config={chartConfigs} />;
-                    })
-                  )}
-                </div>
-              </div>
-            </>
-          )}
-          {colIndex === 1 && (
-            <div style={{ paddingTop: "60px", content: " " }} />
-          )}
-          <RenderChartGroup report={report} chartList={chartList} />
+                chartConfigs.reportViewType = reportViewType;
+                return (
+                  <CustomChart
+                    key={chartKey}
+                    data={chartData}
+                    config={chartConfigs}
+                  />
+                );
+              })
+            )}
+          </div>
         </div>
+      </>
+      {reportSections.map((chartList: any, index: number) => (
+        <RenderChartGroup
+          key={index}
+          report={data}
+          chartList={chartList}
+          reportViewType={reportViewType}
+          loadings={loadings}
+          errors={errors}
+          refetchAll={refetchAll}
+        />
+      ))}
+      <center style={{ marginTop: "60px", marginBottom: "30px" }}>
+        <h2>
+          <b>Proporção de pessoas idosas com:</b>
+        </h2>
+        <p>(Referentes aos últimos 12 meses)</p>
+      </center>
+      {reportSectionsSecond.map((chartList: any, index: number) => (
+        <RenderChartGroup
+          key={index}
+          report={data}
+          chartList={chartList}
+          reportViewType={reportViewType}
+          loadings={loadings}
+          errors={errors}
+          refetchAll={refetchAll}
+        />
       ))}
     </ReportWrapper>
   );
 };
 
-export default Idosa;
+export default memo(Idosa);

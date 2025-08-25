@@ -1,44 +1,39 @@
-import { CSSProperties, useState, useEffect } from "react";
-import Select, { StylesConfig } from "react-select";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import { Spinner } from "reactstrap";
 import { Button } from "bold-ui";
+import { CSSProperties, useEffect, useState } from "react";
+import { MdInfoOutline } from "react-icons/md";
+import { useQuery } from "react-query";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import Select, { StylesConfig } from "react-select";
+import { Spinner } from "reactstrap";
 
-import { Header } from "../components/Header";
-import { Footer } from "../components/Footer";
-import { formataNumero, getNomeUbs, somaIndicador } from "../utils";
 import { Condicao } from "../charts/Condicao";
 import Piramide from "../charts/Piramide";
 import { Zonas } from "../charts/Zonas";
-import { Api } from "../services/api";
-
-import masculino from "../assets/images/masculino.svg";
-import feminino from "../assets/images/feminino.svg";
-import homem from "../assets/images/homem.svg";
-import mulher from "../assets/images/mulher.svg";
-import diabetes from "../assets/images/menu/diabetes.png";
-import hipertensao from "../assets/images/menu/hipertensao.png";
-import children from "../assets/images/menu/children.png";
-import old from "../assets/images/menu/old.png";
-import quality from "../assets/images/menu/quality.png";
-
-import { useInfo } from "../context/infoProvider/useInfo";
-
-import "../styles/painel.scss";
-import { MdInfoOutline } from "react-icons/md";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
+import Card from "../components/ui/Card";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "../components/ui/Tooltip";
 import { Typography } from "../components/ui/Typography";
-import Card from "../components/ui/Card";
-import { userCanSelectUBS } from "../App";
+import { useInfo } from "../context/infoProvider/useInfo";
+import { Api } from "../services/api";
+import "../styles/painel.scss";
+import { ReportBasicParams, formataNumero, getNomeUbs, navigateHome, somaIndicador } from "../utils";
 
-type PainelParams = {
-  id: string;
-};
+import feminino from "../assets/images/feminino.svg";
+import homem from "../assets/images/homem.svg";
+import masculino from "../assets/images/masculino.svg";
+import bucal from "../assets/images/menu/bucal.png";
+import children from "../assets/images/menu/children.png";
+import diabetes from "../assets/images/menu/diabetes.png";
+import hipertensao from "../assets/images/menu/hipertensao.png";
+import old from "../assets/images/menu/old.png";
+import quality from "../assets/images/menu/quality.png";
+import mulher from "../assets/images/mulher.svg";
+
 type Indicator = {
   rural: number;
   urbano: number;
@@ -86,6 +81,7 @@ interface IPainel {
   indicators: {
     diabetes: Indicator;
     gestantes: Indicator;
+    saude_bucal: Indicator;
     hipertensao: Indicator;
     crianca: Indicator;
     idosa: Indicator;
@@ -116,7 +112,7 @@ type ResponseDataListUbs = {
 
 export function Painel() {
   let navigate = useNavigate();
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe");
   const { cityInformation } = useInfo();
@@ -136,16 +132,13 @@ export function Painel() {
         setDadosPainel(data);
         setLoading(false);
       } catch (error) {
-        /* alert("Ocorreu um erro ao buscar informações demográficas"); */
         setLoading(false);
       }
     };
 
     getDados();
 
-    return () => {
-      console.log("...");
-    };
+    return () => {};
   }, [id]);
 
   const {
@@ -172,69 +165,33 @@ export function Painel() {
     }
   );
 
-  console.log({ dataUbs });
-
   const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : "-";
 
   function handleToPainelMunicipio() {
     setLoading(true);
-    navigate("/painelx");
+    navigateHome(navigate);
   }
 
   const onChangeSelection = (e: any) => {
     setLoading(true);
-    navigate(`/painel/${e.value}`);
+    navigateHome(navigate, `/${e.value}`);
   };
 
-  const openReport = (
-    report: "diabetes" | "hipertensao" | "infantil" | "qualidade" | "idosa"
-  ) => {
-    if (id !== undefined) {
-      navigate(`/diabetes/${id}${equipe ? `?equipe=${equipe}` : ""}`);
+  type availableRoutesToThemedReport =
+    | "diabetes"
+    | "hipertensao"
+    | "infantil"
+    | "qualidade"
+    | "idosa"
+    | "saude-bucal";
+
+  const handleToThemedReport = (key: availableRoutesToThemedReport) => {
+    if (id) {
+      navigate(`/${key}/${id}${equipe ? `?equipe=${equipe}` : ""}`);
     } else {
-      navigate(`/diabetes${equipe ? `?equipe=${equipe}` : ""}`);
+      navigate(`/${key}${equipe ? `?equipe=${equipe}` : ""}`);
     }
   };
-
-  function handleToDiabetes() {
-    if (id !== undefined) {
-      navigate(`/diabetes/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/diabetes${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
-
-  function handleToHipertensao() {
-    if (id !== undefined) {
-      navigate(`/hipertensao/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/hipertensao${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
-
-  function handleToInfantil() {
-    if (id !== undefined) {
-      navigate(`/infantil/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/infantil${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
-
-  function handleToQualidade() {
-    if (id !== undefined) {
-      navigate(`/qualidade/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/qualidade${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
-
-  function handleToIdosa() {
-    if (id !== undefined) {
-      navigate(`/idosa/${id}${equipe ? `?equipe=${equipe}` : ""}`);
-    } else {
-      navigate(`/idosa${equipe ? `?equipe=${equipe}` : ""}`);
-    }
-  }
 
   return (
     <div id="page-painel">
@@ -267,6 +224,7 @@ export function Painel() {
                     <h4 className="text-center">Cidadãos Cadastrados</h4>
                     <span>{formataNumero(dadosPainel?.total)}</span>
                   </div>
+                  <div className="mx-2" style={{ height: '100px', width: '1px', backgroundColor: '#FFFFFF' }} />
                   <div className="w-50 d-flex flex-column align-items-center justify-content-center">
                     <Tooltip>
                       <TooltipContent className="Tooltip">
@@ -384,7 +342,7 @@ export function Painel() {
                     />
                     <span>{formataNumero(dadosPainel?.gender.masculino)}</span>
                   </div>
-
+                  <div className="mx-2" style={{ height: '100px', width: '1px', backgroundColor: '#FFFFFF' }} />
                   <div className="d-flex flex-column align-items-center ms-4 me-2">
                     <img
                       className="my-2 force-white"
@@ -448,24 +406,37 @@ export function Painel() {
           </div>
           <div className="container">
             <div className="row container-cards-condicoes">
-              <div className="card-condicao p-2" onClick={handleToDiabetes}>
-                <span className="nome-condicao">Diabetes</span>
-                <h4>{somaIndicador(dadosPainel?.indicators?.diabetes)}</h4>
-                <div className="d-flex align-items-center">
-                  <img src={diabetes} alt="Diabetes" className="mx-2" />
-                  <Condicao data={dadosPainel?.indicators?.diabetes} />
+              {Boolean(dadosPainel?.indicators?.diabetes) && (
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("diabetes")}
+                >
+                  <span className="nome-condicao">Diabetes</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.diabetes)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img src={diabetes} alt="Diabetes" className="mx-2" />
+                    <Condicao data={dadosPainel?.indicators?.diabetes} />
+                  </div>
                 </div>
-              </div>
-              <div className="card-condicao p-2" onClick={handleToHipertensao}>
-                <span className="nome-condicao">Hipertensão</span>
-                <h4>{somaIndicador(dadosPainel?.indicators?.hipertensao)}</h4>
-                <div className="d-flex align-items-center">
-                  <img src={hipertensao} alt="Hipertensão" className="mx-2" />
-                  <Condicao data={dadosPainel?.indicators?.hipertensao} />
+              )}
+              {Boolean(dadosPainel?.indicators?.hipertensao) && (
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("hipertensao")}
+                >
+                  <span className="nome-condicao">Hipertensão</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.hipertensao)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img src={hipertensao} alt="Hipertensão" className="mx-2" />
+                    <Condicao data={dadosPainel?.indicators?.hipertensao} />
+                  </div>
                 </div>
-              </div>
+              )}
               {Boolean(dadosPainel?.indicators?.qualidade) && (
-                <div className="card-condicao p-2" onClick={handleToQualidade}>
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("qualidade")}
+                >
                   <span className="nome-condicao">Qualidade de Cadastros</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.qualidade)}</h4>
                   <div className="d-flex align-items-center">
@@ -474,8 +445,52 @@ export function Painel() {
                   </div>
                 </div>
               )}
-              {/* {Boolean(dadosPainel?.indicators?.crianca) && (
-                <div className="card-condicao p-2" onClick={handleToInfantil}>
+            </div>
+            <div
+              className="row container-cards-condicoes"
+              style={{ marginTop: "20px" }}
+            >
+              {Boolean(dadosPainel?.indicators?.idosa) && (
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("idosa")}
+                >
+                  <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img
+                      width={"30%"}
+                      src={old}
+                      alt="Pessoa Idosa"
+                      className="mx-2"
+                    />
+                    <Condicao data={dadosPainel?.indicators?.idosa} />
+                  </div>
+                </div>
+              )}
+              {Boolean(dadosPainel?.indicators?.saude_bucal) && (
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("saude-bucal")}
+                >
+                  <span className="nome-condicao">Saúde Bucal</span>
+                  <h4>{somaIndicador(dadosPainel?.indicators?.saude_bucal)}</h4>
+                  <div className="d-flex align-items-center">
+                    <img
+                      width={"34%"}
+                      src={bucal}
+                      alt="Saude Bucal"
+                      className="mx-2"
+                    />
+                    <Condicao data={dadosPainel?.indicators?.saude_bucal} />
+                  </div>
+                </div>
+              )}
+              {Boolean(dadosPainel?.indicators?.crianca) && (
+                <div
+                  className="card-condicao p-2"
+                  onClick={() => handleToThemedReport("infantil")}
+                >
                   <span className="nome-condicao">
                     Desenvolvimento Infantil
                   </span>
@@ -491,29 +506,12 @@ export function Painel() {
                   </div>
                 </div>
               )}
-              {Boolean(dadosPainel?.indicators?.idosa) && (
-                <div className="card-condicao p-2" onClick={handleToIdosa}>
-                  <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
-                  <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>
-                  <div className="d-flex align-items-center">
-                    <img
-                      width={"30%"}
-                      src={old}
-                      alt="Pessoa Idosa"
-                      className="mx-2"
-                    />
-                    <Condicao data={dadosPainel?.indicators?.idosa} />
-                  </div>
-                </div>
-              )} */}
             </div>
-
             <div className="d-flex my-5 justify-content-center">
               <div className="container-areas d-flex align-items-center me-4">
                 <div className="box-container-light me-2"></div>
                 <h4>Zona Urbana</h4>
               </div>
-
               <div className="container-areas d-flex align-items-center ms-4">
                 <div className="box-container-dark me-2"></div>
                 <h4>Zona Rural</h4>
@@ -524,10 +522,9 @@ export function Painel() {
               </div>
             </div>
           </div>
-
           <div className="my-5">
             {id ? (
-              <Button onClick={handleToPainelMunicipio}>
+              <Button kind="primary" onClick={handleToPainelMunicipio}>
                 Visualizar dados do painel do Município
               </Button>
             ) : (

@@ -1,33 +1,38 @@
 # pylint: disable=C0301, W0611
 import os
+# from src.main.server.decorators.check_access import check_access
+import sys
 
 import blueprint_decr
-from dotenv import dotenv_values
 from flask import Flask, send_from_directory
 from flask_cors import CORS
+
 from src.env import env as config
-from src.errors.logging import logging
-from src.main.routes.children_routes import ChildrenPath, children_bp
 from src.main.routes.city_informations_route import CityInfoPath, city_informations_bp
-from src.main.routes.demographics_info_route import (
-    DemographichInfoPath,
-    demographics_info_bp,
-)
+from src.main.routes.demographic_route import DemographicPath, demographics_bp
 from src.main.routes.diabetes_routes import DiabetesPath, diabetes_bp
 from src.main.routes.elderly_routes import ElderlyPath, elderly_bp
 from src.main.routes.hypertension_routes import HypertensionPath, hypertension_bp
+from src.main.routes.infantil_routes import ChildrenPath, children_bp
 from src.main.routes.login_route import login_bp
 from src.main.routes.oral_health import OralHealthPath, oral_health_bp
 from src.main.routes.records_routes import RecordsPath, records_bp
-from src.main.routes.smoking import SmokingPath, smoking_bp
 from src.main.routes.units_route import TeamsPath, UnitsPath, teams_bp, units_bp
 from src.main.server.cache import cache
 from src.main.server.decorators.token_required import token_required
 
-# from src.main.server.decorators.check_access import check_access
-
 app = Flask(__name__)
 app.config["JSON_SORT_KEYS"] = False
+
+import logging as logger
+
+from src.presentations import rich_banner
+
+log = logger.getLogger("werkzeug")
+log.disabled = True
+cli = sys.modules["flask.cli"]
+# cli.show_server_banner = lambda *x: logging.info(banner_message())
+cli.show_server_banner = lambda *x: rich_banner()
 # tell Flask to use the above defined config
 
 if config["ENV"] == "instalador":
@@ -39,7 +44,6 @@ else:
     static_folder = os.path.join(os.getcwd(), "..", "paineis-v2-front", "static-files")
     static_folder = os.path.abspath(static_folder)
 
-print(static_folder)
 app = Flask(__name__, static_folder=f"{static_folder}")
 CORS(app)
 
@@ -83,10 +87,10 @@ teams = TeamsPath()
 app.register_blueprint(teams_bp, url_prefix=teams.root_path)
 
 
-demographics_info = DemographichInfoPath()
+demographics_info = DemographicPath()
 register_blueprint(
     app,
-    (demographics_info_bp, demographics_info.root_path),
+    (demographics_bp, demographics_info.root_path),
     [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
 )
 
@@ -108,21 +112,18 @@ register_blueprint(
 oral_path = OralHealthPath()
 register_blueprint(app, (oral_health_bp, oral_path.root_path), [token_required])
 
-smoking = SmokingPath()
-register_blueprint(
-    app,
-    (smoking_bp, smoking.root_path),
-    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
-)
+# smoking = SmokingPath()
+# register_blueprint(
+#     app,
+#     (smoking_bp, smoking.root_path),
+#     [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
+# )
 
 children = ChildrenPath()
 register_blueprint(
     app,
     (children_bp, children.root_path),
-    [
-        token_required,
-        cache.cached(timeout=24 * 60 * 60, query_string=True)
-    ],
+    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
 )
 
 elderly = ElderlyPath()
@@ -137,8 +138,5 @@ records = RecordsPath()
 register_blueprint(
     app,
     (records_bp, records.root_path),
-    [
-        token_required,
-        cache.cached(timeout=24 * 60 * 60, query_string=True)
-    ],
+    [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
 )

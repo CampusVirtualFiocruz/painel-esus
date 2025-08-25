@@ -32,4 +32,9 @@ schema = {
         "required": False,
         "empty": True,
     },
+    "sort[]":{
+        "type": "list",
+        "empty": True,
+        "required": False
+    }
 }

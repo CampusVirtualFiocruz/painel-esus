@@ -1,4 +1,4 @@
-from sqlalchemy import text
+from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import get_pessoas
 
 
 def sql_round(numerador, denominador):
@@ -10,25 +10,16 @@ def sql_round(numerador, denominador):
 
 
 def get_total_cadastros(cnes:int = None, equipe:int=None):
-    where_clause = " "
-    where_clause2 = "  "
-    if cnes is not None and cnes:
-        partial = f" pessoas.codigo_unidade_saude = {cnes} "
-        where_clause2 += " and "+partial
-        where_clause += " where  "+partial
-        if equipe is not None and equipe:
-            partial = f" and pessoas.codigo_equipe_vinculada  = {equipe} "
-            where_clause2 += partial
-            where_clause += partial
+    sql_pessoas = get_pessoas(cnes, equipe)
     round_sql = sql_round("select * from cadastros_atualizados", "select * from total")
 
     sql = f"""with
+    pessoas as ({sql_pessoas}),
     total as ( 
-        select count(distinct co_cidadao) from pessoas {where_clause}),
+        select count(distinct co_cidadao) from pessoas ),
         cadastros_atualizados as (
-            select count(distinct co_cidadao) from pessoas where pessoas.fci_att_2anos = 1 {where_clause2})
+            select count(distinct co_cidadao) from pessoas where pessoas.fci_att_2anos = 1 )
     select
         ( select * from total) total,
         {round_sql} cadastros_atualizados """
-    print(sql)
-    return text(sql)
+    return sql

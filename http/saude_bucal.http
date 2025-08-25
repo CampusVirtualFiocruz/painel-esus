@@ -1,0 +1,13 @@
+# @name login
+POST http://localhost:5001/v1/auth
+Content-Type: application/json
+
+{"username": "admin", "password": "FCadmin23"}
+
+###
+
+@token = {{login.response.body.$.data}}
+
+###
+GET http://localhost:5001/v1/oral-health/get-nominal-list/download/27
+Authorization: Bearer {{token}}

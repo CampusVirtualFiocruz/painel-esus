@@ -39,6 +39,21 @@ def token_required(f):
     return decorated
 
 
+def extract_token(token: str):
+    auth_header = token
+    if auth_header:
+        return auth_header.split(" ")[1]
+    raise HttpBadTokenError("Bad Token")
+
+
+def check_token_str(_request: str) -> HttpResponse:
+    auth_header = _request
+    if auth_header:
+        return validate_token(auth_header)
+
+    raise HttpBadTokenError("Token is missing")
+
+
 def check_token(_request: Request) -> HttpResponse:
     auth_header = _request.headers.get("Authorization")
     if auth_header:

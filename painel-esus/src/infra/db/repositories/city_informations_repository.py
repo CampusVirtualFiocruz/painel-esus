@@ -2,13 +2,19 @@
 import json
 from math import e
 from typing import Dict
+from webbrowser import get
 
+import duckdb
 import pandas as pd
 from sqlalchemy.ext.declarative import DeclarativeMeta
 from src.data.interfaces.city_information_repository import CityInformationRepository
+from src.env.conf import getenv
 from src.infra.db.entities.equipes import Equipes
-from src.infra.db.repositories.sqls import CITY_INFORMATION
-from src.infra.db.repositories.sqls import UNITS_LIST
+from src.infra.db.repositories.sqls import (
+    CITY_INFORMATION,
+    UNIT_LIST_WITH_PATIENTS,
+    UNITS_LIST,
+)
 from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.db.settings.connection_local import (
     DBConnectionHandler as LocalDBConnectionHandler,
@@ -34,24 +40,68 @@ class AlchemyEncoder(json.JSONEncoder):
 
 
 class CityInformationsRepository(CityInformationRepository):
+    
+    def __init__(self):
+        self.mock_data = getenv("MOCK", False, False) == 'True'
+        
 
     def get_city_info(self, cnes: int = None) -> Dict:
+        if self.mock_data:
+            return pd.DataFrame(data=[{
+                "municipio":"SUSÓPOLIS",
+                "cep": 123456,
+                "codibge": 2508505,
+                "uf": "SUS",
+                "estado": "SUS"
+                }])
         with DBConnectionHandler() as db_con:
             engine = db_con.get_engine()
             res = pd.read_sql_query(CITY_INFORMATION, con=engine)
             return res
 
     def get_units(self) -> Dict:
-        with LocalDBConnectionHandler() as db_con:
-            engine = db_con.get_engine()
-            res = pd.read_sql_query(UNITS_LIST, con=engine)
-            return res
+        con = duckdb.connect()
+        res = con.sql(UNITS_LIST).df()
+        if self.mock_data:
+            def parse(x):
+                x['no_unidade_saude'] = "Unidade de saúde {}".format(x['co_seq_dim_unidade_saude'])
+                return x            
+            res=res.apply(parse, axis=1)
+        
+        return res
+
+    def get_units_with_patients(self) -> Dict:
+        con = duckdb.connect()
+        res = con.sql(UNIT_LIST_WITH_PATIENTS).df()
+        if self.mock_data:
+            def parse(x):
+                x['no_unidade_saude'] = "Unidade de saúde {}".format(x['co_seq_dim_unidade_saude'])
+                return x            
+            res=res.apply(parse, axis=1)
+        return res
 
     def get_teams(self, cnes: int = None):
-        with LocalDBConnectionHandler() as db_con:
-            users = (
-                db_con.session.query(Equipes)
-                .distinct(Equipes.cidadao_pec, Equipes.codigo_equipe)
-                .filter(Equipes.codigo_unidade_saude == cnes)
-            ).all()
-            return json.loads(json.dumps(list(users), cls=AlchemyEncoder))
+        sql = f""" select 
+                    distinct on (codigo_equipe) 
+                    co_fat_cidadao_pec cidadao_pec,
+                    co_cidadao co_cidadao,
+                    co_dim_unidade_saude codigo_unidade_saude,
+                    nome_unidade_saude nome_unidade_saude,
+                    codigo_equipe,
+                    nome_equipe,
+                    nu_micro_area micro_area
+                from 
+                read_parquet('./dados/output/cadastro_db.parquet') """
+
+        if cnes is not None:
+            sql += f""" where codigo_equipe={cnes} """
+        con = duckdb.connect()
+        result = con.sql(sql).df()
+        if self.mock_data:
+            def parse(x):
+                x['nome_unidade_saude'] = "Unidade de saúde {}".format(x['codigo_unidade_saude'])
+                x['nome_equipe'] = "Equipe {}".format(x['codigo_equipe'])
+                return x            
+            result=result.apply(parse, axis=1)
+        result_json = result.to_dict(orient="records")
+        return result_json

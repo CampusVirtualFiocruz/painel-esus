@@ -98,7 +98,7 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
   );
 }
 
-export function Pie({ data }: any) {
+export function Pie({ data, pallete }: any) {
   let nome = "obstetrics-factors";
   let comConsulta = data[1].com_consulta;
   let semConsulta = data[1].sem_consulta;
@@ -107,7 +107,7 @@ export function Pie({ data }: any) {
   let dataGraphic = [{ value: comConsulta }, { value: semConsulta }];
 
   const options = {
-    color: ["#e4e4e4", "#0069d0"],
+    color: pallete ?? ["#e4e4e4", "#0069d0"],
     tooltip: {
       trigger: "item",
       formatter: "({d}%)",

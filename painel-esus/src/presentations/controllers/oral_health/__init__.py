@@ -1,12 +1,16 @@
 # pylint: disable=W0611
-from .oral_health_get_all_cares_by_place import OralHealthGetAllCaresByPlaceController
-from .oral_health_get_cares_by_age_range import OralHealthGetCaresByAgeRangeController
+from .oral_health_get_atraumatic_treatment import (
+    OralHealthGetAtraumaticTreatmentController,
+)
 from .oral_health_get_cares_by_gender import OralHealthGetCaresByGenderController
-from .oral_health_get_cares_by_line_of_services_controller import \
-    OralHealthGetCaresByLineOfServicesController
-from .oral_health_get_cares_by_outcome import OralHealthGetCaresByOutcomeController
-from .oral_health_get_cares_by_place import OralHealthGetCaresByPlaceController
-from .oral_health_get_cares_by_type_of_services_controller import \
-    OralHealthGetCaresByTypeOfServicesController
-from .oral_health_get_total_controller import OralHealthGetTotalController
-from .oral_health_get_total_extraction_proportion import OralHealthGetExtractionProceduresProportionController
+from .oral_health_get_cares_by_race import OralHealthGetCaresByRaceController
+from .oral_health_get_conclued_treatment import OralHealthGetConcluedTreatmentController
+from .oral_health_get_extraction import OralHealthGetExtractionController
+from .oral_health_get_first_appointment import OralHealthGetFirstAppointmentController
+from .oral_health_get_prevention_procedures import (
+    OralHealthGetPreventionProceduresController,
+)
+from .oral_health_get_supervised_brushing import (
+    OralHealthGetSupervisedBrushingController,
+)
+from .oral_health_nominal_list_donwload import OralHealthNominalListDownloadController

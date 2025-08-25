@@ -4,6 +4,8 @@ import src.main.composers.records_composer as composer
 from flask import Blueprint, Response, jsonify, request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
+from src.main.server.decorators.token_required import extract_token
+from src.infra.requests.factory import send_download_request
 
 from .utils import convert_cnes
 
@@ -38,7 +40,7 @@ def records_total(cnes=None):
         http_response = request_adapter(request, composer.get_total_group_composer())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -59,7 +61,7 @@ def records_cpf_cns_rate(cnes=None):
         http_response = request_adapter(request, composer.get_cpf_cns_rate())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -80,7 +82,7 @@ def records_group_by_location(cnes=None):
         http_response = request_adapter(request, composer.group_localidade())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -101,7 +103,7 @@ def records_group_by_race(cnes=None):
         http_response = request_adapter(request, composer.group_raca_cor())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -122,7 +124,7 @@ def records_group_by_origin(cnes=None):
         http_response = request_adapter(request, composer.group_records_by_origin())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -143,7 +145,7 @@ def records_group_by_status(cnes=None):
         http_response = request_adapter(request, composer.group_records_status())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -164,7 +166,7 @@ def records_people_who_get_care(cnes=None):
         http_response = request_adapter(request, composer.people_who_get_care())
         response = jsonify(http_response.body)
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, http_response.status_code
@@ -191,7 +193,7 @@ def get_nominal_list(cnes=None):
         response = jsonify(http_response.body)
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, 200
@@ -220,6 +222,11 @@ def get_nominal_list_download(cnes=None):
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
             "Content-type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         }
+        send_download_request(
+            "Baixando lista nominal de qualidade de cadastro.",
+            "lista_nominal_qualidade_cadastro",
+            request,
+        )
         return Response(
             buffer.getvalue(),
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -227,7 +234,7 @@ def get_nominal_list_download(cnes=None):
         )
 
     except Exception as exception:
-        http_response = handle_errors(exception)
+        http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
     return response, 200

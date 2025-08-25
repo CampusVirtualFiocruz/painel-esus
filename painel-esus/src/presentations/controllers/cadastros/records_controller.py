@@ -54,7 +54,7 @@ class RecordsController:
         return HttpResponse(status_code=200, body=result)
 
     def nominal_list(self, request: HttpRequest) -> HttpResponse:
-        cnes, equipe, nome, cpf, page, page_size, q = None, None, None, None, 0, 10, None
+        cnes, equipe, nome, cpf, page, page_size, q, sort = None, None, None, None, 0, 10, None, []
 
         if request.path_params and "cnes" in request.path_params:
             cnes = int(request.path_params["cnes"])
@@ -74,8 +74,12 @@ class RecordsController:
 
         if request.query_params and "equipe" in request.query_params:
             equipe = request.query_params["equipe"]
+        
+        if request.query_params and "sort[]" in request.query_params:
+            sort = request.query_params.getlist('sort[]')
+            
         response = self.__use_case.find_filter_nominal(
-            cnes=cnes, equipe=equipe, pagesize=page_size, page=page, cpf=cpf, nome=nome, query=q
+            cnes=cnes, equipe=equipe, pagesize=page_size, page=page, cpf=cpf, nome=nome, query=q, sort=sort
         )
 
         result = self._adapter.nominal_list(response)

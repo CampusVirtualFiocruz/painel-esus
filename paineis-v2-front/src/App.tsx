@@ -1,29 +1,29 @@
 import { useLayoutEffect } from "react";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AuthProvider } from "./context/AuthProvider";
-import { InfoProvider } from "./context/infoProvider";
-import { ProtectedLayout } from "./components/ProtectedLayout";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import BarraBrasil from "./components/BarraBrasil";
+import { ProtectedLayout } from "./components/ProtectedLayout";
+import { AuthProvider } from "./context/AuthProvider";
 import { getUserLocalStorage } from "./context/AuthProvider/util";
+import { InfoProvider } from "./context/infoProvider";
 
-import { Login } from "./pages/Login";
-import { Painel } from "./pages/Painel";
-import { Gestantes } from "./pages/Gestantes";
+import Bucal from "./pages/Bucal";
+import Diabetes from "./pages/Diabetes";
+import FeridaVascular from "./pages/FeridaVascular";
 import { Gestante } from "./pages/Gestante";
+import { Gestantes } from "./pages/Gestantes";
 import { GestantesList } from "./pages/GestantesList";
-import { Diabetes } from "./pages/Diabetes";
-import { Hipertensao } from "./pages/Hipertensao";
+import Hipertensao from "./pages/Hipertensao";
+import Idosa from "./pages/Idosa";
+import Infantil from "./pages/Infantil";
 import ListaNominal from "./pages/ListaNominal";
-import { DiabeticosList } from "./pages/DiabeticosList";
-import { SindromesAgudas } from "./pages/SindromesAgudas/SindromesAgudas";
+import { Login } from "./pages/Login";
+import NovoPainel from "./pages/NovoPainel";
+import { Painel } from "./pages/Painel";
+import Qualidade from "./pages/Qualidade";
 import { SelecionarUbs } from "./pages/SelecionarUbs";
 import { SelecionarVisualizacao } from "./pages/SelecionarVisualizacao";
+import { SindromesAgudas } from "./pages/SindromesAgudas/SindromesAgudas";
 import Tabagismo from "./pages/Tabagismo";
-import FeridaVascular from "./pages/FeridaVascular";
-import { SaudeBucal } from "./pages/SaudeBucal/SaudeBucal";
-import Qualidade from "./pages/Qualidade";
-import Infantil from "./pages/Infantil";
-import Idosa from "./pages/Idosa";
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -50,6 +50,7 @@ export function getProfile() {
   const decodedPayload = atob(payload);
   return JSON.parse(decodedPayload)?.profiles[0];
 }
+
 export function getUBS() {
   const user = getUserLocalStorage();
   const parts = user?.token.split(".");
@@ -84,8 +85,6 @@ export function userCanSelectUBS() {
 
   const decodedPayload = atob(payload);
 
-  console.log({ decodedPayload })
-
   return (
     String(JSON.parse(decodedPayload)?.profiles[0]).toUpperCase() === "ADMIN"
   );
@@ -118,7 +117,6 @@ function App() {
           <Wrapper>
             <Routes>
               <Route path="/" element={<Login />} />
-
               <Route
                 path="/selecionarubs"
                 element={
@@ -136,7 +134,7 @@ function App() {
                 }
               />
               <Route
-                path="/painelx"
+                path="/antigo-painelx"
                 element={
                   <ProtectedLayout>
                     <Painel />
@@ -144,10 +142,26 @@ function App() {
                 }
               />
               <Route
-                path="/painel/:id"
+                path="/antigo-painel/:id"
                 element={
                   <ProtectedLayout>
                     <Painel />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/home"
+                element={
+                  <ProtectedLayout>
+                    <NovoPainel />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/home/:id"
+                element={
+                  <ProtectedLayout>
+                    <NovoPainel />
                   </ProtectedLayout>
                 }
               />
@@ -271,15 +285,7 @@ function App() {
                   </ProtectedLayout>
                 }
               />
-              <Route
-                path="/diabeticos"
-                element={
-                  <ProtectedLayout>
-                    <DiabeticosList />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
+               <Route
                 path="/hipertensao"
                 element={
                   <ProtectedLayout>
@@ -323,7 +329,7 @@ function App() {
                 path="/saude-bucal"
                 element={
                   <ProtectedLayout>
-                    <SaudeBucal />
+                    <Bucal />
                   </ProtectedLayout>
                 }
               />
@@ -331,7 +337,7 @@ function App() {
                 path="/saude-bucal/:id"
                 element={
                   <ProtectedLayout>
-                    <SaudeBucal />
+                    <Bucal />
                   </ProtectedLayout>
                 }
               />

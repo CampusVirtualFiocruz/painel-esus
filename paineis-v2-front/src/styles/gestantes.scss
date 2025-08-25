@@ -82,13 +82,17 @@
 
     .situacao-exames {
       .bordas {
-        border-radius: 5px;
-        border: 1px solid #343131b6;
+        border-radius: var(--default-radius);
+        border: 1px solid #cbcbcb;
       }
       .tipo {
         font-size: 1.125rem;
         font-weight: 700;
-        color: #343131;
+        color: #34343c;
+      }
+      .coluna {
+        font-size: 1.125rem;
+        color: #34343c;
       }
     }
 

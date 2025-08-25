@@ -13,6 +13,9 @@ from .create_fat_vacinacao_repository import CreateVacinacaoBaseRepository
 from .create_fat_visita_domic_repository import CreateVisistaDomiciliarBaseRepository
 from .create_indicadores_cadastro_repository import CreateIndicadoresCadastroRepository
 from .create_indicadores_criancas_repository import CreateIndicadoresCriancasRepository
+from .create_indicadores_hipertensao_repository import (
+    CreateIndicadoresHipertensaoRepository,
+)
 from .create_indicadores_idosos_repository import CreateIndicadoresIdososRepository
 from .create_tb_acomp_cidadaos_vinculados_repository import (
     CreateAcompCidadaosVinculadosBaseRepository,
@@ -21,7 +24,10 @@ from .create_tb_cidacao_repository import CreateCidadaoBaseRepository
 from .create_tb_cidciap_explode_atendimentos_repository import (
     CreateCidCiapExplodeAtendimentosRepository,
 )
-from .create_tb_dim_cbo_base_repository import CreateTbDimCboRepository
 from .create_tb_equipe_repository import CreateEquipeBaseRepository
 from .create_tb_tipo_equipe_repository import CreateTipoEquipeBaseRepository
 from .create_unidade_saude_base_repository import CreateUnidadesSaudeBaseRepository
+from .create_indicadores_diabetes_repository import CreateIndicadoresDiabetesRepository
+from .create_fat_ivcf_repository import CreatIvcfBaseRepository
+from .create_tb_dim_cbo_base_repository import CreateTbDimCboRepository
+from .create_indicadores_saude_bucal_repository import CreateIndicadoresSaudeBucalRepository

@@ -4,11 +4,13 @@
   display: flex;
   flex-direction: row;
 
-  div {
+  > div {
     display: grid;
+    width: 100%;
   }
 
   @media (max-width: 1400px) {
     flex-direction: column;
+    align-items: center;
   }
 }

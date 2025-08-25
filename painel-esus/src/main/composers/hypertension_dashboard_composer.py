@@ -1,133 +1,56 @@
-from src.data.use_cases.diseases_dashboard.disease_dashboard import DiseaseUseCase
-from src.data.use_cases.diseases_dashboard.hypertension_nominal_list import (
-    HypertensionNominalListUseCase,
+from src.infra.db.repositories.hypertension_diabetes.hypertension_diabetes_repository import (
+    HypertensionDiabetesRepository,
 )
-from src.domain.entities.hypertension import Hypertension
-from src.domain.entities.hypertension_exams import (
-    HypertensionExams,
-    IndividualHypertensionExams,
-)
-from src.infra.db.repositories.disease.diseases_dashboard_local import (
-    DiseasesDashboardLocalRepository as DiseasesDashboardRepository,
-)
-from src.infra.db.repositories.disease.nominal_list.hypertension_nominal_list_repository import (
-    HypertensionNominalListRepository,
-)
-from src.presentations.controllers.hypertension import (
-    HypertensionDashboardGetAgeGroupGender,
-    HypertensionDashboardGetAgeGroupsLocation,
-    HypertensionDashboardGetComplications,
-    HypertensionDashboardGetExamsCount,
-    HypertensionDashboardGetIMC,
-    HypertensionDashboardGetIndividualExamsCount,
-    HypertensionDashboardGetProfessionalsCount,
-    HypertensionDashboardGetTotal,
-)
-from src.presentations.controllers.hypertension.hypertension_dashboard_get_nominal_list import (
-    HypertensionDashboardGetNominalList,
-    HypertensionDashboardGetNominalListDownload,
+from src.presentations.controllers.hypertension.hypertension_controller import (
+    HypertensionController,
 )
 
+repository = HypertensionDiabetesRepository('hipertensao')
 
 def hypertension_dashboard_get_total():
-    hypertension = Hypertension()
-    repository = DiseasesDashboardRepository(hypertension)
-    use_case = DiseaseUseCase(repository)
-    controller = HypertensionDashboardGetTotal(use_case)
 
-    return controller.handle
+    controller = HypertensionController(repository)
 
-
-def hypertension_dashboard_get_age_groups_location():
-    hypertension = Hypertension()
-    repository = DiseasesDashboardRepository(hypertension)
-    use_case = DiseaseUseCase(repository)
-    controller = HypertensionDashboardGetAgeGroupsLocation(use_case)
-
-    return controller.handle
+    return controller.get_total
 
 
 def hypertension_dashboard_get_age_group_gender():
-    hypertension = Hypertension()
-    repository = DiseasesDashboardRepository(hypertension)
-    use_case = DiseaseUseCase(repository)
-    controller = HypertensionDashboardGetAgeGroupGender(use_case)
+    controller = HypertensionController(repository)
 
-    return controller.handle
+    return controller.get_by_gender
 
 
 def hypertension_dashboard_get_complications():
-    hypertension = Hypertension()
-    repository = DiseasesDashboardRepository(hypertension)
-    use_case = DiseaseUseCase(repository)
-    controller = HypertensionDashboardGetComplications(use_case)
+    controller = HypertensionController(repository)
 
-    return controller.handle
-
-
-def hypertension_dashboard_get_professionals_count():
-    hypertension = Hypertension()
-    repository = DiseasesDashboardRepository(hypertension)
-    use_case = DiseaseUseCase(repository)
-    controller = HypertensionDashboardGetProfessionalsCount(use_case)
-
-    return controller.handle
+    return controller.get_complications
 
 
 def hypertension_dashboard_get_exams_count():
-    hypertension = Hypertension()
-    repository = DiseasesDashboardRepository(hypertension)
-    hypertension_exams = HypertensionExams()
-    use_case = DiseaseUseCase(repository)
-    controller = HypertensionDashboardGetExamsCount(
-        use_case, hypertension_exams)
+    controller = HypertensionController(repository)
 
-    return controller.handle
+    return controller.get_exams_table
 
 
 def hypertension_dashboard_get_imc():
-    hypertension = Hypertension()
-    repository = DiseasesDashboardRepository(hypertension)
-    use_case = DiseaseUseCase(repository)
-    controller = HypertensionDashboardGetIMC(use_case)
+    controller = HypertensionController(repository)
 
-    return controller.handle
+    return controller.get_imc
 
 
-def hypertension_dashboard_get_individual_exams_count():
-    hypertension = Hypertension()
-    repository = DiseasesDashboardRepository(hypertension)
-    hypertension_exam = IndividualHypertensionExams()
-    use_case = DiseaseUseCase(repository)
-    controller = HypertensionDashboardGetIndividualExamsCount(
-        use_case, hypertension_exam)
+def hypertension_dashboard_get_by_race():
+    controller = HypertensionController(repository)
 
-    return controller.handle
+    return controller.get_by_race
 
 
 def hypertension_dashboard_get_nominal_list():
-    repository = HypertensionNominalListRepository()
-    use_case = HypertensionNominalListUseCase(repository)
-    controller = HypertensionDashboardGetNominalList(
-        use_case)
-
-    return controller.handle
-
-
-def hypertension_dashboard_get_nominal_list_download(cnes):
-    repository = HypertensionNominalListRepository()
-    use_case = HypertensionNominalListUseCase(repository)
-    controller = HypertensionDashboardGetNominalListDownload(
-        use_case)
-
-    return controller.handle
-    return controller.handle
+    controller = HypertensionController(repository)
+    return controller.get_nominal_list
+    
 
 
 def hypertension_dashboard_get_nominal_list_download():
-    repository = HypertensionNominalListRepository()
-    use_case = HypertensionNominalListUseCase(repository)
-    controller = HypertensionDashboardGetNominalListDownload(
-        use_case)
-
-    return controller.handle
+    controller = HypertensionController(repository)
+    return controller.get_nominal_list_download
+    

@@ -1,0 +1,202 @@
+name: Build and Deploy to Private Docker Hub
+
+on:
+  push:
+    branches: [release/*, demo/*]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        working-directory: ./paineis-v2-front
+        run: yarn
+
+      - name: Extract version from branch name
+        id: extract_version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/heads/release/* ]]; then
+            TAG_SUFFIX="hml"
+            RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
+          else
+            TAG_SUFFIX="demo"
+            RELEASE_VERSION="${GITHUB_REF#refs/heads/demo/}"
+          fi
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+          echo "DOCKER_TAG=673245419703.dkr.ecr.us-east-1.amazonaws.com/painel-esus:${RELEASE_VERSION}-${TAG_SUFFIX}" >> $GITHUB_ENV
+
+      - name: Build React project
+        working-directory: ./paineis-v2-front
+        run: |
+          cat <<EOF > .env
+          REACT_APP_ENV=production
+          BUILD_PATH=static-files
+          REACT_APP_VERSION=${{ env.RELEASE_VERSION }}
+          REACT_APP_LAST_UPDATE=$(date +"%d/%m/%Y")
+          EOF
+          CI=false npm run build --prod
+
+      - name: Create backend environment
+        working-directory: ./painel-esus
+        run: |
+          cat <<EOF > .env
+          ${{ vars.ENV_BACK }}
+          EOF
+
+      - name: Replace VERSION in backend config
+        working-directory: ./painel-esus
+        run: sed -i "s/\${VERSION}/${RELEASE_VERSION}/g" src/env/conf.py          
+
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        run: aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 673245419703.dkr.ecr.us-east-1.amazonaws.com
+
+      - name: Build Docker image
+        run: docker build -t ${{ env.DOCKER_TAG }} .
+
+      - name: Push Docker image to Amazon ECR
+        run: docker push ${{ env.DOCKER_TAG }}
+
+  conncet-vpn-ssh-aws:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      # Set up Pritunl profile and store client ID for later use
+      - name: Setup Pritunl Profile
+        id: pritunl-connection # A `Setup Step ID` has been added as a reference identifier for the output `client-id`.
+        uses: nathanielvarona/pritunl-client-github-action@v1
+        with:
+          profile-file: ${{ secrets.PRITUNL_PROFILE_FILE }}
+          start-connection: false # Do not establish a connection in this step.
+
+      # Start VPN connection using stored client ID and password (if available)
+      - name: Start VPN Connection Manually
+        shell: bash
+        run: |
+          pritunl-client start ${{ steps.pritunl-connection.outputs.client-id }} \
+            --password ${{ secrets.PRITUNL_PROFILE_PIN || '' }}
+          # Wait for 10 seconds to allow the connection to establish
+          sleep 10
+
+      # Display VPN connection status
+      - name: Show VPN Connection Status Manually
+        shell: bash
+        run: |
+          pritunl-client list -j | jq 'sort_by(.name) | .[0] | { "Profile Name": .name, "Client Address": .client_address }'
+          # Show the profile name and client address
+
+      - name: Extract version from branch name
+        id: extract_version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/heads/release/* ]]; then
+            TAG_SUFFIX="hml"
+            RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
+            APP_PORT=5003
+            DIRECTORY=livramento-hml
+            MOCK='False'
+            DOCKER_STACK=painel-esus-hml
+          else
+            TAG_SUFFIX="demo"
+            RELEASE_VERSION="${GITHUB_REF#refs/heads/demo/}"
+            APP_PORT=5004
+            DIRECTORY=livramento-demo
+            MOCK='True'
+            DOCKER_STACK=painel-esus-demo
+          fi
+          echo "RELEASE_VERSION=$RELEASE_VERSION" >> $GITHUB_ENV
+          echo "DOCKER_TAG=673245419703.dkr.ecr.us-east-1.amazonaws.com/painel-esus:${RELEASE_VERSION}-${TAG_SUFFIX}" >> $GITHUB_ENV
+          echo "TAG_SUFFIX=$TAG_SUFFIX" >> $GITHUB_ENV
+          echo "APP_PORT=$APP_PORT" >> $GITHUB_ENV
+          echo "DIRECTORY=$DIRECTORY" >> $GITHUB_ENV
+          echo "MOCK=$MOCK" >> $GITHUB_ENV
+          echo "DOCKER_STACK=$DOCKER_STACK" >> $GITHUB_ENV          
+         
+      - name: Deploy Docker Swarm
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_HOST }}
+          key: ${{ secrets.AWS_KEY }}
+          username: ${{ secrets.AWS_USERNAME }}
+          script: |
+            # Login no ECR dentro do servidor
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 673245419703.dkr.ecr.us-east-1.amazonaws.com
+
+            cd ${{ env.DIRECTORY }}
+            sudo rm docker-compose.yml || true
+
+            cat <<EOF > docker-compose.yml
+            version: "3.3"
+            services:
+              painel-esus-${{ env.TAG_SUFFIX }}:
+                image: "${{ env.DOCKER_TAG }}"
+                environment:
+                  RELOAD_BASE_SCHELDULE: '4:00'
+                  DB_USER: '${{ secrets.DATABASE_USER }}'
+                  DB_PASSWORD: '${{ secrets.DATABASE_PASSWORD }}'
+                  DB_HOST: '${{ secrets.DATABASE_HOST  }}'
+                  DB_PORT: '${{ secrets.DATABASE_PORT }}'
+                  DB_DATABASE: '${{ secrets.DATABASE_NAME }}'
+                  CIDADE_IBGE: 9999999
+                  ESTADO: 'FC'
+                  ADMIN_USERNAME: '${{ secrets.ADMIN_USERNAME }}'
+                  ADMIN_PASSWORD: '${{ secrets.ADMIN_PASSWORD }}'
+                  POPULATION: 20000
+                  SECRET_TOKEN: 111111111111111111111
+                  PASSWORD_SALT: 'painel'
+                  BRIDGE_LOGIN_URL: 'https://dev.pec.bridge.ufsc.br/api/graphql'
+                  ENV: linux
+                  GENERATE_BASE: 'True'
+                  CHUNK_SIZE: 100000
+                  POLARS_SKIP_CPU_CHECK: 'True'
+                  RELOAD_BASE_SCHELDULE_WEEKLY: 'True'
+                  LOG_API: https://painel-logs.painelsaude.info
+                  APPLICATION_VERSION: ${{ env.RELEASE_VERSION }}
+                  MOCK: '${{ env.MOCK }}'
+                  ACCESS_LIST: '${{ secrets.ACCESS_LIST }}'
+                ports:
+                  - ${{ env.APP_PORT }}:5001
+            networks:
+              default:
+                external:
+                  name: painel-esus-network
+            EOF
+
+            docker stack rm ${{ env.DOCKER_STACK }}
+            docker images -q | xargs docker rmi || true
+
+            docker pull ${{ env.DOCKER_TAG }}
+            docker stack deploy -c docker-compose.yml --resolve-image changed ${{ env.DOCKER_STACK }}
+
+
+      # Stop VPN connection using stored client ID (always run, even on failure)
+      - name: Stop VPN Connection Manually
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          pritunl-client stop ${{ steps.pritunl-connection.outputs.client-id }}
+          # Stop the VPN connection
+  
+  notify-slack:
+    runs-on: ubuntu-latest
+    needs: conncet-vpn-ssh-aws
+
+    steps:
+      - name: Notify Slack
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }}  -H 'Content-type: application/json' --data '{"text": "*Deploy Finalizado* :rocket:\n  Versão: *${{ github.head_ref || github.ref_name }}*"}'

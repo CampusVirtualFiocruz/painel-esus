@@ -1,86 +1,102 @@
-from src.data.use_cases.oral_health.oral_health_dashboard import \
-    OralHealthDashboardUseCase
-from src.infra.db.repositories.odonto.oral_health_dashboard_repository import \
-    OralHealthDashboardRepository
-from src.presentations.controllers.oral_health import OralHealthGetAllCaresByPlaceController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByAgeRangeController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByGenderController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByLineOfServicesController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByOutcomeController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByPlaceController
-from src.presentations.controllers.oral_health import OralHealthGetCaresByTypeOfServicesController
-from src.presentations.controllers.oral_health import OralHealthGetExtractionProceduresProportionController
-from src.presentations.controllers.oral_health import OralHealthGetTotalController
+from src.data.use_cases.oral_health.oral_health_use_case import (
+    OralHealthDashboardUseCase,
+)
+from src.infra.db.repositories.oral_health.oral_health_repository import (
+    OralHealthRepository,
+)
+from src.presentations.controllers import (
+    OralHealthGetAtraumaticTreatmentController,
+    OralHealthGetCaresByGenderController,
+    OralHealthGetCaresByRaceController,
+    OralHealthGetConcluedTreatmentController,
+    OralHealthGetExtractionController,
+    OralHealthGetFirstAppointmentController,
+    OralHealthGetPreventionProceduresController,
+    OralHealthGetSupervisedBrushingController,
+    OralHealthNominalListController,
+    OralHealthNominalListDownloadController,
+    OralHealthTotalController,
+)
 
 
-def oral_health_dashboard_get_total():
-    repository = OralHealthDashboardRepository()
+def oral_health_get_extraction():
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetTotalController(use_case)
-
-    return controller.handle
-
-
-def oral_health_dashboard_get_cares_by_line_of_services():
-    repository = OralHealthDashboardRepository()
-    use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByLineOfServicesController(use_case)
-
-    return controller.handle
-
-
-def oral_health_dashboard_get_cares_by_type_of_services():
-    repository = OralHealthDashboardRepository()
-    use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByTypeOfServicesController(use_case)
-
-    return controller.handle
-
-
-def oral_health_get_extraction_procedures_proportion():
-    repository = OralHealthDashboardRepository()
-    use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetExtractionProceduresProportionController(
-        use_case)
-
-    return controller.handle
-
-
-def oral_health_get_cares_by_age_range():
-    repository = OralHealthDashboardRepository()
-    use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByAgeRangeController(use_case)
+    controller = OralHealthGetExtractionController(use_case)
 
     return controller.handle
 
 
 def oral_health_get_cares_by_gender():
-    repository = OralHealthDashboardRepository()
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
     controller = OralHealthGetCaresByGenderController(use_case)
 
     return controller.handle
 
 
-def oral_health_get_cares_by_outcome():
-    repository = OralHealthDashboardRepository()
+def oral_health_get_cares_by_race():
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByOutcomeController(use_case)
+    controller = OralHealthGetCaresByRaceController(use_case)
 
     return controller.handle
 
 
-def oral_health_get_cares_by_place():
-    repository = OralHealthDashboardRepository()
+def oral_health_get_first_appointment():
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetCaresByPlaceController(use_case)
+    controller = OralHealthGetFirstAppointmentController(use_case)
 
     return controller.handle
 
 
-def oral_health_get_all_cares_by_place():
-    repository = OralHealthDashboardRepository()
+def oral_health_get_conclued_treatment():
+    repository = OralHealthRepository()
     use_case = OralHealthDashboardUseCase(repository)
-    controller = OralHealthGetAllCaresByPlaceController(use_case)
+    controller = OralHealthGetConcluedTreatmentController(use_case)
 
+    return controller.handle
+
+
+def oral_health_get_prevention_procedures():
+    repository = OralHealthRepository()
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthGetPreventionProceduresController(use_case)
+
+    return controller.handle
+
+
+def oral_health_get_supervised_brushing():
+    repository = OralHealthRepository()
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthGetSupervisedBrushingController(use_case)
+
+    return controller.handle
+
+
+def oral_health_get_atraumatic_treatment():
+    repository = OralHealthRepository()
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthGetAtraumaticTreatmentController(use_case)
+
+    return controller.handle
+
+def oral_health_get_nominal_list():
+    repository = OralHealthRepository()
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthNominalListController(use_case)
+    return controller.handle
+
+def oral_health_get_total():
+    repository = OralHealthRepository()
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthTotalController(use_case)
+    return controller.handle
+
+
+def oral_health_get_nominal_list_download_composer():
+    repository = OralHealthRepository()
+    use_case = OralHealthDashboardUseCase(repository)
+    controller = OralHealthNominalListDownloadController(use_case)
     return controller.handle

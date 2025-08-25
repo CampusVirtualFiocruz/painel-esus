@@ -1,19 +1,18 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { CSSProperties, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from "reactstrap";
 import { useQuery } from "react-query";
-
-import { CSSProperties, useEffect } from "react";
 import Select, { StylesConfig } from "react-select";
+import { Button } from "bold-ui";
 
 import { Api } from "../services/api";
-
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
-
-import "../styles/selecionarubs.scss";
-import variables from "../styles/_exports.module.scss";
-import { Button } from "bold-ui";
 import { getUBS, userCanSelectUBS } from "../App";
+import { navigateHome } from "../utils";
+import variables from "../styles/_exports.module.scss";
+import "../styles/selecionarubs.scss";
 
 type Lista = {
   co_seq_dim_unidade_saude: number;
@@ -91,17 +90,13 @@ export function SelecionarUbs() {
     if (!canSelect) {
       const selectedUBS = getUBS();
       if (selectedUBS) {
-        navigate(`/painel/${Number(String(selectedUBS))}`);
+        navigateHome(navigate,`/${Number(String(selectedUBS))}`);
       }
     }
   }, [canSelect]);
 
-  function handleToPainel() {
-    navigate("/painelx");
-  }
-
   const onChangeSelection = (e: any) => {
-    navigate(`/painel/${e.value}`);
+    navigateHome(navigate,`/${e.value}`)
   };
 
   return (
@@ -114,7 +109,7 @@ export function SelecionarUbs() {
         <div className="container-escolher-ubs d-flex flex-column flex-md-row align-items-center">
           <div className="container-municipio mb-4 mb-md-0">
             <Button
-              onClick={handleToPainel}
+              onClick={() => navigateHome(navigate)}
               type="button"
               kind="primary"
               size="medium"

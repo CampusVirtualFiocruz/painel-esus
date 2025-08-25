@@ -1,5 +1,7 @@
-from src.main.adapters.nominal_list_adapter import RecordNominalListAdapter
+import datetime
+import json
 
+from src.main.adapters.nominal_list_adapter import RecordNominalListAdapter
 
 class RecordsAdapter:
     def get_total_group(self, response):
@@ -80,7 +82,7 @@ class RecordsAdapter:
             {
                 "tag": "pec",
                 "value": {
-                    "pec": int(response[5] if response[5] is not None else 0),
+                    "pec": int(response[4] if response[4] is not None else 0),
                 },
             },
             {
@@ -124,7 +126,6 @@ class RecordsAdapter:
         ]
 
     def nominal_list(self, response):
-        print(response)
         response["items"] = [
             RecordNominalListAdapter(r).to_dict() for r in response["items"]
         ]

@@ -121,7 +121,6 @@ export function StackedArea(props: TStackData) {
   let echartRef: any = null;
   let timer: any = null;
   const onEvents = {
-    // 'click': (params: any)=> {console.log(params)},
     datazoom: (params: any) => {
       let starttime: string = `0`;
       let endtime: string = `0`;

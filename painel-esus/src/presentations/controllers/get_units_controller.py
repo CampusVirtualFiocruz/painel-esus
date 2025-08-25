@@ -10,7 +10,7 @@ class GetUnitsController(ControllerInterface):
         self.__use_case = use_case
 
     def handle(self, request: HttpRequest) -> HttpResponse:
-        response = self.__use_case.get_units()
+        response = self.__use_case.get_units_with_patients()
         response = response.to_dict(orient='records')
         return HttpResponse(
             status_code=200,

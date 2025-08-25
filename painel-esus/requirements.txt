@@ -16,7 +16,9 @@ cffi==1.15.1
 cfgv==3.4.0
 charset-normalizer==3.2.0
 click==8.1.7
+colorama==0.4.6
 coverage==7.3.2
+cramjam==2.9.1
 cryptography==41.0.4
 customtkinter==5.2.2
 darkdetect==0.8.0
@@ -25,12 +27,14 @@ distlib==0.3.7
 duckdb==1.1.0
 engineering-notation==0.10.0
 exceptiongroup==1.1.3
+fastparquet==2024.11.0
 filelock==3.12.4
 Flask==2.3.3
 Flask-APScheduler==1.13.1
 Flask-Caching==2.1.0
 Flask-Cors==4.0.0
 frozenlist==1.4.1
+fsspec==2025.3.0
 greenlet==2.0.2
 identify==2.5.29
 idna==3.4
@@ -39,8 +43,10 @@ iniconfig==2.0.0
 isort==5.13.2
 itsdangerous==2.1.2
 Jinja2==3.1.2
+markdown-it-py==3.0.0
 MarkupSafe==2.1.3
 mccabe==0.7.0
+mdurl==0.1.2
 mock==5.1.0
 multidict==6.0.4
 mypy-extensions==1.0.0
@@ -49,6 +55,7 @@ numpy==1.24.4
 packaging==23.1
 pandas==2.0.3
 pathspec==0.12.1
+pefile==2023.2.7
 pillow==10.4.0
 platformdirs==3.10.0
 pluggy==1.3.0
@@ -57,6 +64,7 @@ pre-commit==3.4.0
 psycopg2-binary==2.9.7
 pyarrow==17.0.0
 pycparser==2.21
+Pygments==2.19.1
 pyinstaller==6.10.0
 pyinstaller-hooks-contrib==2024.8
 PyJWT==2.8.0
@@ -67,8 +75,10 @@ pytest-mock==3.14.0
 python-dateutil==2.8.2
 python-dotenv==1.0.0
 pytz==2023.3.post1
+pywin32-ctypes==0.2.3
 PyYAML==6.0.1
 requests==2.31.0
+rich==13.9.4
 six==1.16.0
 SQLAlchemy==2.0.21
 tk==0.1.0

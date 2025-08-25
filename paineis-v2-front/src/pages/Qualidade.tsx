@@ -1,16 +1,17 @@
-import { useParams, useSearchParams } from "react-router-dom";
 import { MdInfoOutline } from "react-icons/md";
+import { useParams, useSearchParams } from "react-router-dom";
 import { content } from "../assets/content/content";
-import { Bar, Donut, ShallowTreemap, ValueCard } from "../components/charts";
+import { Donut, ValueCard } from "../components/charts";
+import { ErrorMessage, LoadingSpinner } from "../components/ui";
 import { ReportFooter } from "../components/ui/ReportFooter";
 import ReportWrapper from "../components/ui/ReportWrapper";
-import useReportDataQualidade from "../hooks/sections/qualidade/useReportDataQualidade";
-import { PainelParams } from "./Hipertensao";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "../components/ui/Tooltip";
+import useReportDataQualidade from "../hooks/sections/qualidade/useReportDataQualidade";
+import { ReportBasicParams } from "../utils";
 
 let reportHeader = [
   {
@@ -38,7 +39,13 @@ const reportSections = [
     "total-cadastros-cidadaos-por-tipo-identificacao": {
       Chart: Donut,
       config: {
+        radius: [50, 90],
         formatterKind: "perc",
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "250px",
+          },
         colors: ["#b9b9b9", "#09406a"],
       },
     },
@@ -46,7 +53,13 @@ const reportSections = [
       Chart: Donut,
       config: {
         formatterKind: "perc",
-        radiusStart: "0%",
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "350px",
+          },
+
+        radius: [0, 90],
         colors: ["#0069d0", "#84aaff", "#e4e4e4", "#5c7ea0"],
       },
     },
@@ -54,7 +67,13 @@ const reportSections = [
       Chart: Donut,
       config: {
         formatterKind: "perc",
-        radiusStart: "0%",
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "350px",
+          },
+
+        radius: [0, 90],
         colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
@@ -63,7 +82,12 @@ const reportSections = [
     "total-cidadaos-acompanhados": {
       Chart: Donut,
       config: {
+        radius: [50, 90],
         formatterKind: "perc",
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+          },
         colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
@@ -71,38 +95,108 @@ const reportSections = [
       Chart: Donut,
       config: {
         formatterKind: "perc",
-        radiusStart: "0%",
+          componentStyle: {
+            width: "400px",
+            minWidth: "430px",
+            height: "350px",
+          },
+
+        radius: [0, 90],
         colors: ["#e4e4e4", "#84aaff", "#0069d0", "#5c7ea0"],
       },
     },
   },
 ];
 
-const footer = `O número de pessoas cuja Qualidade do Cadastro foi avaliada equivale ao total de indivíduos registrados a partir do ano de 2019 por meio das Fichas de Cadastro Individual (FCI), Módulo Cidadão PEC (Prontuário Eletrônico do Cidadão) e da Recusa de Cadastro.`;
+const footer = `O número de pessoas cuja Qualidade do Cadastro foi avaliada equivale ao total de indivíduos registrados por meio das Fichas de Cadastro Individual (FCI), Módulo Cidadão PEC (Prontuário Eletrônico do Cidadão) e da Recusa de Cadastro.`;
 
 const Qualidade = () => {
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const [params] = useSearchParams();
   const equipe = params.get("equipe") as any;
 
-  if (id == undefined) {
+  if (id === undefined) {
     reportHeader[0]["total-cadastros-ubs"].config.description =
       "Total de Cadastros no Município";
   } else {
     delete reportSections[0]["total-cidadaos-acompanhados"];
   }
 
-  const reportData = useReportDataQualidade({ ubsId: id, squadId: equipe });
-  const report = reportData?.data;
+  const { data, loadings, errors } = useReportDataQualidade({ ubsId: id, squadId: equipe });
 
-  if (reportData?.isLoading) {
-    return <center>Aguarde...</center>;
-  }
+  // Mapeamento de chaves para os novos nomes do hook
+  const keyMapping = {
+    "total-cadastros-cidadaos-por-tipo-identificacao": "cpfCnsRate",
+    "total-cidadaos-conforme-situação-cadastral": "groupByStatus",
+    "localizacao-imoveis-cadastrados": "groupByLocation",
+    "total-cidadaos-acompanhados": "peopleWhoGetCare",
+    "total-cadastros-pessoas-raca-cor": "groupByRace",
+  };
+
+  // Função para renderizar componente baseado no estado
+  const renderComponent = (chartKey: string, CustomChart: any, chartConfigs: any, data: any) => {
+    const mappedKey = keyMapping[chartKey as keyof typeof keyMapping];
+    const isLoading = mappedKey ? loadings[mappedKey as keyof typeof loadings] : loadings.indicadores;
+    const error = mappedKey ? errors[mappedKey as keyof typeof errors] : errors.indicadores;
+
+    if (isLoading) {
+      return <LoadingSpinner />;
+    }
+
+    if (error) {
+      return <ErrorMessage error={error} />;
+    }
+
+    if (chartConfigs) {
+      const xAxisNames = data?.map(
+        (d: any) => content?.[d?.tag] ?? d?.tag
+      );
+      chartConfigs.xAxis = {};
+      chartConfigs.xAxis.data = xAxisNames;
+    }
+
+    const Title = () => {
+      const TitleText = () => (
+        <h5 style={{ fontWeight: "bold", textAlign: "center" }}>
+          {content?.[chartKey] || chartKey}{" "}
+          {Boolean(chartConfigs?.info) && (
+            <MdInfoOutline
+              style={{
+                cursor: "pointer",
+                color: "#222222",
+                height: 20,
+                width: 20,
+              }}
+            />
+          )}
+        </h5>
+      );
+
+      return chartConfigs?.info ? (
+        <Tooltip>
+          <TooltipTrigger>
+            <TitleText />
+          </TooltipTrigger>
+          <TooltipContent className="Tooltip">
+            {chartConfigs?.info}
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        <TitleText />
+      );
+    };
+
+    return (
+      <div style={{ marginBottom: "70px" }}>
+        <Title />
+        <CustomChart data={data} config={chartConfigs} />
+      </div>
+    );
+  };
 
   return (
     <ReportWrapper
       title="Qualidade de Cadastro"
-      subtitle={"(Pessoas registradas a partir de 2019)"}
       footerNote={footer}
       header={
         <div
@@ -130,8 +224,17 @@ const Qualidade = () => {
               Object.keys(chartList).map((chartKey) => {
                 const CustomChart = chartList?.[chartKey]?.Chart;
                 const chartConfigs = chartList?.[chartKey]?.config;
-                const data = (report as any)?.[chartKey]?.data;
-                return <CustomChart data={data} config={chartConfigs} />;
+                const chartData = data?.[chartKey];
+
+                if (loadings.indicadores) {
+                  return <LoadingSpinner key={chartKey} />;
+                }
+
+                if (errors.indicadores) {
+                  return <ErrorMessage key={chartKey} error={errors.indicadores} />;
+                }
+
+                return <CustomChart key={chartKey} data={chartData.data} config={chartConfigs} />;
               })
             )}
           </div>
@@ -139,56 +242,17 @@ const Qualidade = () => {
       }
       footer={<ReportFooter chaveListaNominal="Qualidade" equipe={equipe} />}
     >
-      {reportSections.map((chartList: any) => (
-        <div className="col-12 col-md-6">
+      {reportSections.map((chartList: any, sectionIndex: number) => (
+        <div key={sectionIndex} className="col-12 col-md-6">
           {Object.keys(chartList).map((chartKey) => {
             const CustomChart = chartList?.[chartKey]?.Chart;
             const chartConfigs = chartList?.[chartKey]?.config;
-            const data = (report as any)?.[chartKey]?.data;
-
-            if (chartConfigs) {
-              const xAxisNames = data?.map(
-                (d: any) => content?.[d?.tag] ?? d?.tag
-              );
-              chartConfigs.xAxis = {};
-              chartConfigs.xAxis.data = xAxisNames;
-            }
-
-            const Title = () => {
-              const TitleText = () => (
-                <h5 style={{ fontWeight: "bold", textAlign: "center" }}>
-                  {content?.[chartKey] || chartKey}{" "}
-                  {Boolean(chartConfigs?.info) && (
-                    <MdInfoOutline
-                      style={{
-                        cursor: "pointer",
-                        color: "#222222",
-                        height: 20,
-                        width: 20,
-                      }}
-                    />
-                  )}
-                </h5>
-              );
-
-              return chartConfigs?.info ? (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <TitleText />
-                  </TooltipTrigger>
-                  <TooltipContent className="Tooltip">
-                    {chartConfigs?.info}
-                  </TooltipContent>
-                </Tooltip>
-              ) : (
-                <TitleText />
-              );
-            };
+            const mappedKey = keyMapping[chartKey as keyof typeof keyMapping];
+            const chartData = mappedKey ? data?.[mappedKey] : data?.[chartKey];
 
             return (
-              <div style={{ marginBottom: "70px" }}>
-                <Title />
-                <CustomChart data={data} config={chartConfigs} />
+              <div key={chartKey}>
+                {renderComponent(chartKey, CustomChart, chartConfigs, chartData)}
               </div>
             );
           })}

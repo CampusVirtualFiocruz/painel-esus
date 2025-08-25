@@ -1,22 +1,16 @@
-# import pandas as pd
-# from sqlalchemy import text
-# import pyarrow as pa
-# import pyarrow.parquet as pq
 import logging
-import os
-import subprocess
-
-import polars
 from src.data.interfaces.create_bases.create_bases_repository import (
     CreateBasesRepositoryInterface,
 )
-from src.infra.create_base.polars.scripts_dados.Indicadores_Idoso_Polars import (
+from src.infra.create_base.polars.scripts_dados.indicadores_idoso_polars import (
     gerar_banco,
 )
 
 
 class CreateIndicadoresIdososRepository(CreateBasesRepositoryInterface):
 
+    _base = 'indicadores_idoso'
+    
     def __init__(self):
         ...
 
@@ -26,11 +20,6 @@ class CreateIndicadoresIdososRepository(CreateBasesRepositoryInterface):
     def create_base(self):
         try:
             gerar_banco()
-
-        except subprocess.CalledProcessError as e:
-            # Log detalhado do erro
-            logging.error("Erro ao executar o script idosos.py:")
-            logging.error(e.stderr)
         except FileNotFoundError as e:
             # Trata o caso onde o interpretador Python não é encontrado
             logging.error(str(e))

@@ -2,15 +2,12 @@ import { Button, Link } from "bold-ui";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { userCanSelectUBS } from "../../App";
+import { ReportBasicParams } from "../../utils";
 
 const content = {
   buttonViewList: "Ver lista nominal",
   buttonBackToCity: "Visualizar dados do Município",
   buttonBackToUbs: "Voltar página dados da UBS",
-};
-
-export type PainelParams = {
-  id: string;
 };
 
 export const ReportFooter = ({
@@ -22,10 +19,11 @@ export const ReportFooter = ({
     | "Diabetes"
     | "Idosa"
     | "Qualidade"
+    | "Bucal"
     | "Infantil";
   equipe?: any;
 }) => {
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const navigate = useNavigate();
 
   const handleToViewList = () =>
@@ -35,7 +33,7 @@ export const ReportFooter = ({
       }`
     );
 
-  const handleToPainelMunicipio = () => navigate("/painelx");
+  const handleToPainelMunicipio = () => navigate("/home");
 
   const handleToPainelUBS = () => navigate(-1);
 
@@ -73,20 +71,22 @@ export const ReportFooter = ({
           </Button>
         )}
         {id != undefined && (
-            <Button
-              kind="primary"
-              onClick={handleToPainelUBS}
-              style={{
-                width: "250px",
-              }}
-            >
-              {content.buttonBackToUbs}
-            </Button>
+          <Button
+            kind="primary"
+            onClick={handleToPainelUBS}
+            style={{
+              width: "250px",
+            }}
+          >
+            {content.buttonBackToUbs}
+          </Button>
         )}
       </div>
-
       {userCanSelectUBS() && (
-        <Link onClick={handleToPainelMunicipio} style={{ color: "#343131" }}>
+        <Link
+          onClick={handleToPainelMunicipio}
+          style={{ color: "#343131", zIndex: 2 }}
+        >
           {content.buttonBackToCity}
         </Link>
       )}

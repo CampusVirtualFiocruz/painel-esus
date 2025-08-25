@@ -9,9 +9,7 @@ import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import { Api } from "../../services/api2";
 import "../../styles/sindromeAguda.scss";
-type PainelParams = {
-  id: string;
-};
+import { ReportBasicParams, navigateHome } from "../../utils";
 
 type TResponse = {
   co_dim_tempo: string;
@@ -59,7 +57,7 @@ export function SindromesAgudas() {
   const [rangeData, setRangeData] = useState<string[]>([]);
   const [responseData, setResponseData] = useState<TResponse[]>([]);
 
-  const { id } = useParams<PainelParams>();
+  const { id } = useParams<ReportBasicParams>();
   const {
     data: sindromesAgudasData,
     isLoading,
@@ -91,7 +89,6 @@ export function SindromesAgudas() {
     const totalSindromeAgura: number[] = [];
 
     for (const resp of response) {
-      // console.log(resp)
       labels.add(resp.co_dim_tempo);
       if (!(resp.co_dim_tempo in dataSet)) {
         dataSet[resp.co_dim_tempo] = [resp];
@@ -193,10 +190,6 @@ export function SindromesAgudas() {
     handleSindromeAgudaData(filteredData);
   }, [rangeData]);
 
-  function handleToHome() {
-    setLoading(true);
-    navigate("/painelx");
-  }
   return (
     <div id="page-painel">
       <Header />
@@ -340,7 +333,7 @@ export function SindromesAgudas() {
             <div className="col-12 col-lg-12 d-flex-center">
               <button
                 type="button"
-                onClick={handleToHome}
+                onClick={() => navigateHome(navigate)}
                 className="btn btn-primary"
               >
                 Voltar
