@@ -247,45 +247,42 @@ const PyramidChart = ({ data }: any) => {
   );
 };
 
-const Piramide = ({ charts }: any) => {
-  console.log('piramide', charts?.["piramide-etaria"]?.data);
-  return (
-    <>
-      <div className="my-5">
-        <Typography.Subtitle>
-          Proporção de indivíduos cadastrados por sexo e idade
-        </Typography.Subtitle>
-      </div>
+const Piramide = ({ charts }: any) => (
+  <>
+    <div className="my-5">
+      <Typography.Subtitle>
+        Proporção de indivíduos cadastrados por sexo e idade
+      </Typography.Subtitle>
+    </div>
 
-      <div className="graficoPiramide">
-        <div className="w-100 painel-demografico">
-          <div className="d-flex justify-content-center">
-            <div className="mx-2">
-              <img src={masculino} className="img-fluid" alt="Masculino" />
-            </div>
-            <div className="mx-2">
-              <img src={feminino} className="img-fluid" alt="Feminino" />
-            </div>
+    <div className="graficoPiramide">
+      <div className="w-100 painel-demografico">
+        <div className="d-flex justify-content-center">
+          <div className="mx-2">
+            <img src={masculino} className="img-fluid" alt="Masculino" />
           </div>
-          <PyramidChart data={charts?.["piramide-etaria"]?.data} />
+          <div className="mx-2">
+            <img src={feminino} className="img-fluid" alt="Feminino" />
+          </div>
         </div>
-        <div className="d-flex align-items-center justify-content-between mt-5">
-          <div className="d-flex align-items-center mx-3">
-            <div className="box-container-light me-2"></div>
-            <h5 className="mb-0">Zona Urbana</h5>
-          </div>
-          <div className="d-flex align-items-center mx-3">
-            <div className="box-container-dark me-2"></div>
-            <h5 className="mb-0">Zona Rural</h5>
-          </div>
-          <div className="d-flex align-items-center mx-3">
-            <div className="box-container-nonactive me-2"></div>
-            <h5 className="mb-0">Não Informado</h5>
-          </div>
+        <PyramidChart data={charts?.["piramide-etaria"]?.data} />
+      </div>
+      <div className="d-flex align-items-center justify-content-between mt-5">
+        <div className="d-flex align-items-center mx-3">
+          <div className="box-container-light me-2"></div>
+          <h5 className="mb-0">Zona Urbana</h5>
+        </div>
+        <div className="d-flex align-items-center mx-3">
+          <div className="box-container-dark me-2"></div>
+          <h5 className="mb-0">Zona Rural</h5>
+        </div>
+        <div className="d-flex align-items-center mx-3">
+          <div className="box-container-nonactive me-2"></div>
+          <h5 className="mb-0">Não Informado</h5>
         </div>
       </div>
-    </>
-  );
-};
+    </div>
+  </>
+);
 
 export default Piramide;

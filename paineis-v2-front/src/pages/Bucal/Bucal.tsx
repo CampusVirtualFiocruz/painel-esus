@@ -356,6 +356,17 @@ const Bucal = () => {
             </div>
           </div>
         </div>
+        {reportSections(recorte).map((chartList: any, index: number) => (
+          <RenderChartGroup
+            key={index}
+            report={data}
+            chartList={chartList}
+            reportViewType={reportViewType}
+            loadings={loadings}
+            errors={errors}
+            refetchAll={refetchAll}
+          />
+        ))}
         <center style={{ marginTop: "60px", marginBottom: "30px" }}>
           <h2>
             <b>
@@ -371,17 +382,6 @@ const Bucal = () => {
             key={JSON.stringify(chartList)}
             report={data}
             chartList={chartList}
-            loadings={loadings}
-            errors={errors}
-            refetchAll={refetchAll}
-          />
-        ))}
-        {reportSections(recorte).map((chartList: any, index: number) => (
-          <RenderChartGroup
-            key={index}
-            report={data}
-            chartList={chartList}
-            reportViewType={reportViewType}
             loadings={loadings}
             errors={errors}
             refetchAll={refetchAll}

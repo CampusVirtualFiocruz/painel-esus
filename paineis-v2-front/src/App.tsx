@@ -14,7 +14,6 @@ import { Gestantes } from "./pages/Gestantes";
 import { GestantesList } from "./pages/GestantesList";
 import Hipertensao from "./pages/Hipertensao";
 import Idosa from "./pages/Idosa";
-import IdosaV2 from "./pages/IdosaV2";
 import Infantil from "./pages/Infantil";
 import ListaNominal from "./pages/ListaNominal";
 import { Login } from "./pages/Login";
@@ -255,26 +254,10 @@ function App() {
                 }
               />
               <Route
-                path="/idosaV2"
-                element={
-                  <ProtectedLayout>
-                    <IdosaV2 />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
                 path="/idosa/:id"
                 element={
                   <ProtectedLayout>
                     <Idosa />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/idosaV2/:id"
-                element={
-                  <ProtectedLayout>
-                    <IdosaV2 />
                   </ProtectedLayout>
                 }
               />

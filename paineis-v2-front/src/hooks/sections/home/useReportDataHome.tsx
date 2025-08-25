@@ -1,69 +1,64 @@
 import { useQuery } from "react-query";
 import { Api } from "../../../services/api";
-// import { charts as homeData } from "../../../components/charts/home.mock";
 
 type reportBasicInfo = {
-  ubsId?: string | undefined;
-  squadId?: string | undefined;
+  ubsId?: string | undefined | null;
+  squadId?: string | undefined | null;
 };
 
 const useReportDataHome = ({ ubsId, squadId }: reportBasicInfo) => {
   return useQuery(
     ["relatorio-home", ubsId, squadId],
     async () => {
-      // const ubsParam = ubsId ? `/${ubsId}` : ""; // Não usado nos novos endpoints
+      const ubsParam = ubsId ? `/${ubsId}` : "";
 
-      // Mapeamento com os endpoints reais baseado nas chaves do MockRelatorioHome
       const requests = {
-        "piramide-etaria": Api.get(`demographic/age-groups`, {
+        "piramide-etaria": Api.get(`demographic/age-groups${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "total-por-sexo": Api.get(`demographic/gender`, {
+        "total-por-sexo": Api.get(`demographic/gender${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tipo-localizacao": Api.get(`demographic/location-area`, {
+        "tipo-localizacao": Api.get(`demographic/location-area${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tematico-diabetes": Api.get(`demographic/location-area/diabetes`, {
+        "tematico-diabetes": Api.get(`demographic/location-area/diabetes${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tematico-hipertensao": Api.get(`demographic/location-area/hypertension`, {
+        "tematico-hipertensao": Api.get(`demographic/location-area/hypertension${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tematico-idoso": Api.get(`demographic/location-area/elderly`, {
+        "tematico-idoso": Api.get(`demographic/location-area/elderly${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "total-cidadaos-cadastrados": Api.get(`demographic/total-people`, {
+        "total-cidadaos-cadastrados": Api.get(`demographic/total-people${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        // TODO: Adicionar endpoint específico para qualidade quando disponível
-        "tematico-qualidade": Api.get(`demographic/location-area`, {
+        "tematico-qualidade": Api.get(`demographic/location-area${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        // Endpoint para desenvolvimento infantil
-        "tematico-infantil": Api.get(`demographic/location-area/child`, {
+        "tematico-infantil": Api.get(`demographic/location-area/child${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        // TODO: Adicionar endpoint específico para saúde bucal quando disponível
-        "tematico-bucal": Api.get(`demographic/location-area`, {
+        "tematico-bucal": Api.get(`demographic/location-area${ubsParam}`, {
           params: {
             equipe: squadId,
           },
@@ -83,12 +78,9 @@ const useReportDataHome = ({ ubsId, squadId }: reportBasicInfo) => {
       );
 
       return reducedData;
-
-      // TEMPORÁRIO: Para usar mock durante desenvolvimento, descomente a linha abaixo
-      // return homeData;
     },
     {
-      staleTime: 1000 * 60 * 10, //10 minutos
+      staleTime: 1000 * 60 * 10,
     }
   );
 };

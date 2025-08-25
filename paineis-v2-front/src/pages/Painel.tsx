@@ -132,7 +132,6 @@ export function Painel() {
         setDadosPainel(data);
         setLoading(false);
       } catch (error) {
-        /* alert("Ocorreu um erro ao buscar informações demográficas"); */
         setLoading(false);
       }
     };
@@ -183,7 +182,7 @@ export function Painel() {
     | "hipertensao"
     | "infantil"
     | "qualidade"
-    | "idosaV2"
+    | "idosa"
     | "saude-bucal";
 
   const handleToThemedReport = (key: availableRoutesToThemedReport) => {
@@ -454,7 +453,7 @@ export function Painel() {
               {Boolean(dadosPainel?.indicators?.idosa) && (
                 <div
                   className="card-condicao p-2"
-                  onClick={() => handleToThemedReport("idosaV2")}
+                  onClick={() => handleToThemedReport("idosa")}
                 >
                   <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>

@@ -1,7 +1,7 @@
 import { Button } from "bold-ui";
 import { CSSProperties, useState } from "react";
 import { useQuery } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Select, { StylesConfig } from "react-select";
 import Piramide from "../../components/charts/Home/Piramide";
 import ReportCardSelector from "../../components/charts/Home/ReportCardSelector";
@@ -52,11 +52,10 @@ type TypeUbs = {
 
 const NovoPainel = () => {
   const { id } = useParams<ReportBasicParams>();
-
+  const [params] = useSearchParams();
   let navigate = useNavigate();
-  const squadId = "456";
-  const ubsId = "456";
-  const [loading, setLoading] = useState(true);
+  const squadId = params.get("equipe");
+  const ubsId = id;
 
   type ResponseDataListUbs = {
     data: Lista[];

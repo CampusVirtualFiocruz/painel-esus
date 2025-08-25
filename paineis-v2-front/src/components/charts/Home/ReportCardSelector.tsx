@@ -25,8 +25,6 @@ const CardDonutChart = ({ data }: { data: Array<{ tag: string, value: number }> 
     label: content?.[tag] ?? 'Não informado',
   }));
 
-  console.log("entries", entries);
-
   options = {
     color: ["#84aaff", "#0069d0", "#e9ecef"],
     tooltip: {
@@ -81,7 +79,7 @@ const ReportCardSelector = ({ charts }: any) => {
     | "hipertensao"
     | "infantil"
     | "qualidade"
-    | "idosaV2"
+    | "idosa"
     | "saude-bucal";
 
   const handleToThemedReport = (key: availableRoutesToThemedReport) => {
@@ -131,7 +129,7 @@ const ReportCardSelector = ({ charts }: any) => {
     [
       {
         chartKey: "tematico-idoso",
-        routeKey: "idosaV2",
+        routeKey: "idosa",
         title: "Cuidado da Pessoa Idosa",
         icon: old,
         alt: "Pessoa Idosa",
