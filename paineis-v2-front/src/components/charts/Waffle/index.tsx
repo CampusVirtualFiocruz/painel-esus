@@ -83,7 +83,7 @@ const Waffle = (props: DonutChart) => {
               <FaUser size="26px" color={colors?.[dataIndex]} />
             </div>
             <h4 style={{ paddingTop: "8px" }}>
-              <b>{formatAsPercent(String((value / total) * 100))}</b>
+              <b>{formatAsPercent(((value / total) * 100).toFixed(1))}</b>
             </h4>
             <span style={{ padding: "4px", fontSize: "16px", paddingTop: 0 }}>
               {label}

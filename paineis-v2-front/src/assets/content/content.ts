@@ -242,6 +242,8 @@ export const content: any = {
   "eas-equ": "EAS/EQU (urina rotina)",
   "hemograma": "Hemograma",
   "eletro": "Eletrocardiograma",
+  "hemob-glica": "Hemoglobina Glicada",
+  "retino": "Retinografia",
 
   "sem-solicitacao": "Sem solicitação",
   "aguardando-resultado": "Aguardando resultado",
