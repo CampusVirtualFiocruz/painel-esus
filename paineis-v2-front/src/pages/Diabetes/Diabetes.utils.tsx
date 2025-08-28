@@ -8,7 +8,7 @@ export const reportLeftSections: any = () => [
       "por-sexo": {
         Chart: Bar,
         config: {
-          overrideTitle: "total-faixa-atendidas",
+          overrideTitle: "diabetes-total-faixa-atendidas",
           colors: ["#84aaff", "#0069d0", "#e4e4e4", "#5c7ea0"],
           componentStyle: {
             height: "500px",
@@ -39,7 +39,7 @@ export const reportRightSections: any = () => [
       "por-raca-cor": {
         Chart: Waffle,
         config: {
-          overrideTitle: "hipertensao-por-raca-cor",
+          overrideTitle: "diabetes-por-raca-cor",
           formatterKind: "perc",
           radiusStart: "0%",
           sort: [

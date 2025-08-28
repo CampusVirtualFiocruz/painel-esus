@@ -8,7 +8,7 @@ export const reportLeftSections: any = () => [
       "por-sexo": {
         Chart: Bar,
         config: {
-          overrideTitle: "total-faixa-atendidas",
+          overrideTitle: "hipertensao-total-faixa-atendidas",
           colors: ["#84aaff", "#0069d0", "#e4e4e4", "#5c7ea0"],
           componentStyle: {
             height: "500px",

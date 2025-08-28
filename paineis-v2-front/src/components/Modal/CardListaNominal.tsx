@@ -1,4 +1,5 @@
 import moment from "moment";
+import { BsInfoCircle } from "react-icons/bs";
 import { capitalizeName } from "../../utils/stringUtils";
 import { groupBy } from "../../utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/Tooltip";
@@ -10,8 +11,8 @@ function parseDate(str: string) {
     return dateStr.indexOf("Invalid") != -1
       ? str.split("-").reverse().join("/")
       : dateStr;
-  } catch (e) { 
-    return str.split('-').reverse().join('/')
+  } catch (e) {
+    return str.split("-").reverse().join("/");
   }
 }
 export function parseText(text: string | number): number | string {
@@ -100,6 +101,25 @@ export const CardListaNominal = ({
             {item?.complemento ? capitalizeName(item?.complemento) : "-"} <br />
             <strong>Telefone de contato:</strong>{" "}
             {item?.telefone ? item?.telefone : "-"} <br />
+            {Boolean(item?.acompanhamento) && (
+              <>
+                <Tooltip>
+                  <TooltipContent className="Tooltip">
+                    <div>
+                      Em acompanhamento: com ao menos um atendimento e um
+                      procedimento ou com dois ou mais atendimentos nos últimos
+                      12 meses
+                    </div>
+                  </TooltipContent>
+                  <TooltipTrigger>
+                    <span style={{ cursor: "help" }}>
+                    <strong>Acompanhamento:</strong>{" "}
+                    {item?.acompanhamento || "-"}{" "}<BsInfoCircle />
+                    </span>
+                  </TooltipTrigger>
+                </Tooltip>
+              </>
+            )}
             <br />
           </p>
         </div>

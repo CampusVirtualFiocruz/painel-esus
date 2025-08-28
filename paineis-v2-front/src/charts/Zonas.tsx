@@ -1,18 +1,30 @@
-import { useRef } from "react";
 import ReactECharts from "echarts-for-react";
 
-export function Zonas({ data }: any) {
-  const inputEl = useRef(null);
+export const Zonas = ({ charts }: any) => {
   let nome = "Zonas Urbana/Rural";
   let dados = [
-    { value: data?.urbano ?? 0, name: "Zona Urbana" },
-    { value: data?.rural ?? 0, name: "Zona Rural" },
-    { value: data?.nao_definido ?? 0, name: "Não informado" },
+    {
+      value:
+        charts?.["tipo-localizacao"]?.data?.find(
+          ({ tag }: any) => tag === "urbano"
+        )?.value || 0,
+      name: "Zona Urbana",
+    },
+    {
+      value:
+        charts?.["tipo-localizacao"]?.data?.find(
+          ({ tag }: any) => tag === "rural"
+        )?.value || 0,
+      name: "Zona Rural",
+    },
+    {
+      value:
+        charts?.["tipo-localizacao"]?.data?.find(
+          ({ tag }: any) => tag === "nao_informado"
+        )?.value || 0,
+      name: "Não informado",
+    },
   ];
-
-  function onChartClick(params: any) {
-    return;
-  }
 
   const options = {
     color: ["#0069d0", "#84aaff", "#d3d4dd"],
@@ -45,17 +57,13 @@ export function Zonas({ data }: any) {
   };
 
   return (
-    <>
-      <ReactECharts
-        ref={inputEl}
-        option={options}
-        style={{
-          width: "116px",
-          height: "116px",
-        }}
-        opts={{ renderer: "svg" }}
-        onEvents={{ click: onChartClick }}
-      />
-    </>
+    <ReactECharts
+      option={options}
+      opts={{ renderer: "svg" }}
+      style={{
+        width: "116px",
+        height: "116px",
+      }}
+    />
   );
-}
+};

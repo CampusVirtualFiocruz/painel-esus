@@ -16,8 +16,9 @@ const TopIndicatorsContent = ({ charts }: any) => {
           <span>
             {formataNumero(
               charts?.["total-cidadaos-cadastrados"]?.data?.find(
-                      ({ tag }: any) => tag === "total"
-                    )?.value)}
+                ({ tag }: any) => tag === "total"
+              )?.value
+            )}
           </span>
         </div>
         <div
@@ -58,9 +59,11 @@ const TopIndicatorsContent = ({ charts }: any) => {
             </a>
           </Tooltip>
           <span>
-            {formataNumero(charts?.["total-cidadaos-cadastrados"]?.data?.find(
-                      ({ tag }: any) => tag === "ibgePopulation"
-                    )?.value)}
+            {formataNumero(
+              charts?.["total-cidadaos-cadastrados"]?.data?.find(
+                ({ tag }: any) => tag === "ibgePopulation"
+              )?.value
+            )}
           </span>
         </div>
       </div>
@@ -75,7 +78,7 @@ const TopIndicatorsContent = ({ charts }: any) => {
       >
         <div className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2">
           <div className="me-2">
-            <Zonas data={charts?.["tipo-localizacao"]?.data} />
+            <Zonas charts={charts} />
           </div>
           <div>
             <Tooltip>
@@ -160,11 +163,13 @@ const TopIndicatorsContent = ({ charts }: any) => {
             alt="Homem"
             width={60}
           />
-          <span>{formataNumero(
-                    charts?.["total-por-sexo"]?.data?.find(
-                      ({ tag }: any) => tag === "masculino"
-                    )?.value
-                  )}</span>
+          <span>
+            {formataNumero(
+              charts?.["total-por-sexo"]?.data?.find(
+                ({ tag }: any) => tag === "masculino"
+              )?.value
+            )}
+          </span>
         </div>
         <div
           className="mx-2"
@@ -181,11 +186,13 @@ const TopIndicatorsContent = ({ charts }: any) => {
             alt="Mulher"
             width={60}
           />
-          <span>{formataNumero(
-                    charts?.["total-por-sexo"]?.data?.find(
-                      ({ tag }: any) => tag === "feminino"
-                    )?.value
-                  )}</span>
+          <span>
+            {formataNumero(
+              charts?.["total-por-sexo"]?.data?.find(
+                ({ tag }: any) => tag === "feminino"
+              )?.value
+            )}
+          </span>
         </div>
       </div>
     </div>
