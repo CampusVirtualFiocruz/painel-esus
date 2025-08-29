@@ -689,15 +689,8 @@ class RecordNominalListAdapter:
 
         self.registros = []
         acompanhamento = {"1": "Em acompanhamento", "0": "Não acompanhado"}
-        acompanhamento = {"1": "Em acompanhamento", "0": "Não acompanhado"}
-        self.registros.append(
-            AlertRecord(
-                data=acompanhamento[str(user["acompanhamento"])],
-                exibir_alerta=False,
-                descricao="Situação de acompanhamento",
-                tipo_alerta="acompanhamento",
-            )
-        )
+        self.acompanhamento = acompanhamento[str(user["acompanhamento"])]
+
         self.registros.append(
             AlertRecord(
                 data=user["ultima_atualizacao_fci"],
@@ -749,6 +742,7 @@ class RecordNominalListAdapter:
                 "tipoLogradouro": anonymize_data(self.tipo_logradouro),
                 "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
+                "acompanhamento": anonymize_data(self.acompanhamento),
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [

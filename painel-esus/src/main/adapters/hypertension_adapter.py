@@ -60,7 +60,6 @@ class HypertensionAdapter(BaseDashboardAdapter):
             )
 
         columns = self.columns
-        print(columns)
         result = {}
         result_map = {
             "1": "sem-solicitacao",
@@ -94,10 +93,9 @@ class HypertensionAdapter(BaseDashboardAdapter):
             key = res[0].replace("_", "-")
             if key not in imc_mapped:
                 key = "nao-informado"
-
             imc_mapped[key]['value'] = float(res[1])
-            imc_mapped[key]["data"][0]["value"] = float(res[1])
-            imc_mapped[key]["data"][1]["value"] = 1 - float(res[1])
+            imc_mapped[key]["data"][0]["value"] = float(res[2])
+            imc_mapped[key]["data"][1]["value"] = float(res[3]) - float(res[2])
 
         return list(imc_mapped.values())
 
@@ -119,8 +117,8 @@ class HypertensionAdapter(BaseDashboardAdapter):
                 key = columns[idx]
                 percent = round(float(res) / float(response[0][-1]), 3)
                 imc_mapped[key]["value"] = percent
-                imc_mapped[key]["data"][0]["value"] = percent
-                imc_mapped[key]["data"][1]["value"] = 1 - percent
+                imc_mapped[key]["data"][0]["value"] = float(res)
+                imc_mapped[key]["data"][1]["value"] = response[0][-1] - float(res)
 
         return list(imc_mapped.values())
 
