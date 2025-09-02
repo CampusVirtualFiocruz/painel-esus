@@ -231,17 +231,13 @@ export const content: any = {
     "*na data das consultas de puericultura",
 
   //hipertensao & diabetes
-
-  "hipertensao-total-faixa-atendidas":
-    "Pessoas com hipertensão por faixa etária/sexo",
+  "hipertensao-total-faixa-atendidas": "Pessoas com hipertensão por faixa etária/sexo",
   "hipertensao-por-raca-cor": "Pessoas com hipertensão por raça/cor",
-  "hipertensao-complicacoes":
-    "Frequência de complicações relacionadas à hipertensão",
+  "hipertensao-complicacoes": "Frequência de complicações relacionadas à hipertensão",
   "hipertensao-imc": "Adultos com hipertensão de acordo com o IMC",
   "hipertensao-exames": "Situação dos exames nos últimos 12 meses",
 
-  "diabetes-total-faixa-atendidas":
-    "Pessoas com diabetes por faixa etária/sexo",
+  "diabetes-total-faixa-atendidas": "Pessoas com diabetes por faixa etária/sexo",
   "diabetes-por-raca-cor": "Pessoas com diabetes por raça/cor",
   "diabetes-complicacoes": "Frequência de complicações relacionadas à diabetes",
   "diabetes-imc": "Adultos com diabetes de acordo com o IMC",
@@ -252,10 +248,10 @@ export const content: any = {
   creatinina: "Creatinina",
   colesterol: "Colesterol Total",
   "eas-equ": "EAS/EQU (urina rotina)",
-  hemograma: "Hemograma",
-  eletro: "Eletrocardiograma",
+  "hemograma": "Hemograma",
+  "eletro": "Eletrocardiograma",
   "hemob-glica": "Hemoglobina Glicada",
-  retino: "Retinografia",
+  "retino": "Retinografia",
 
   "sem-solicitacao": "Sem solicitação",
   "aguardando-resultado": "Aguardando resultado",
