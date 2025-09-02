@@ -190,11 +190,19 @@ const reportSectionsSecond: any = [
       config: {
         formatterKind: "perc",
         radiusStart: "35%",
-        sort: ["Avaliadas", "Sem avaliação"],
+        sort: [
+          "Baixo risco de \nVCF",
+          "Moderado risco de \nVCF",
+          "Alto risco de \nVCF",
+          "Sem avaliação",
+        ],
+        radiusAxis: {
+          logBase: 10,
+        },
         componentStyle: {
-          marginTop: "30px",
-          marginBottom: "-150px",
-          height: "360px",
+          width: "400px",
+          minWidth: "430px",
+          height: "250px",
         },
         colors: ["#0A406A", "#e4e4e4", "#84aaff", "#5c7ea0"],
         yAxis: {

@@ -6,7 +6,7 @@ def medical_appointments(cnes: int = None, equipe: int = None):
         if equipe is not None and equipe:
             where_clause += f" and codigo_equipe  = {equipe} "
     return f"""
-            SELECT  agg_medicos_enfermeiros, count(*)
+            SELECT  agg_classificacao_consulta_medica_enfermas, count(*)
             FROM read_parquet('./dados/output/idoso.parquet')
             {where_clause}
-            group by agg_medicos_enfermeiros """
+            group by agg_classificacao_consulta_medica_enfermas """

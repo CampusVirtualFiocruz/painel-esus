@@ -141,6 +141,7 @@ export function Donut(props: DonutChart) {
     },
     series: [
       {
+        minAngle: 5,
         name: "",
         type: "pie",
         radius: props?.config?.radius || [
