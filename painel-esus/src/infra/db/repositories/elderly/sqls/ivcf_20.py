@@ -6,7 +6,7 @@ def ivcf_20(cnes: int = None, equipe: int = None):
         if equipe is not None and equipe:
             where_clause += f" and codigo_equipe  = {equipe} "
     return f"""
-            SELECT  agg_dashboard_ivcf_aplicado, count(*)
+            SELECT  agg_classificacao_risco_vcf, count(*)
             FROM read_parquet('./dados/output/idoso.parquet')
             {where_clause}
-            group by agg_dashboard_ivcf_aplicado """
+            group by agg_classificacao_risco_vcf """

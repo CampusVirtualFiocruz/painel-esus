@@ -6,7 +6,7 @@ def acs_visits(cnes: int = None, equipe: int = None):
         if equipe is not None and equipe:
             where_clause += f" and codigo_equipe  = {equipe} "
     return f"""
-            SELECT  agg_dashboard_visitas_domiciliares_acs, count(*)
+            SELECT  agg_classificacao_visitas_domiciliares_acs, count(*)
             FROM read_parquet('./dados/output/idoso.parquet')
             {where_clause}
-            group by agg_dashboard_visitas_domiciliares_acs """
+            group by agg_classificacao_visitas_domiciliares_acs """
