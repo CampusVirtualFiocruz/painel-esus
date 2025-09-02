@@ -60,7 +60,7 @@ export const content: any = {
   "85-a-89-anos": "85 a 89 anos",
   "90-a-94-anos": "90 a 94 anos",
   "95-a-99-anos": "95 a 99 anos",
-  
+
   "60mais": "60+ anos",
   "80mais": "80+ anos",
   "100-ou-mais": "100+ anos",
@@ -72,15 +72,15 @@ export const content: any = {
   indigena: "Indígena",
   preta: "Preta",
   indeterminado: "Indeterminado",
-  "possui": "Possui",
+  possui: "Possui",
   "nao-possui": "Não possui",
 
   normal: "Normal",
 
-  "baixo-peso": "Baixo Peso\n  < 18.5" ,
+  "baixo-peso": "Baixo Peso\n  < 18.5",
   "peso-adequado": "Peso Adequado\n  >= 18.5 e <= 24.9",
   "excesso-peso": "Excesso de Peso\n  >= 25 e <= 29.9",
-  "obesidade": "Obesidade\n  >= 30",
+  obesidade: "Obesidade\n  >= 30",
   "outros-casos": "Outros Casos",
   "na-outros": "Não informado",
 
@@ -161,8 +161,14 @@ export const content: any = {
   "um-nenhum-registro": "Com um ou\nnenhum registro",
   "duas-mais-visitas": "Com duas ou\nmais visitas",
   "uma-nenhuma-visita": "Com uma ou\nnenhuma visita",
+  "uma": "Uma",
+  "duas-ou-mais": "Duas ou mais",
+  "nenhuma":"Nenhuma",
   avaliadas: "Avaliadas",
   "sem-avaliacao": "Sem avaliação",
+  "baixo-risco-de-vcf": "Baixo risco de \nVCF",
+  "moderado-risco-de-vcf": "Moderado risco de \nVCF",
+  "alto-risco-de-vcf": "Alto risco de \nVCF",
   consultadas: "Consultadas",
   "sem-consulta": "Sem consulta",
   "dois-registros-peso-altura": "Registro simultâneo de peso e altura",
@@ -226,35 +232,38 @@ export const content: any = {
 
   //hipertensao & diabetes
 
-  "hipertensao-total-faixa-atendidas": "Pessoas com hipertensão por faixa etária/sexo",
+  "hipertensao-total-faixa-atendidas":
+    "Pessoas com hipertensão por faixa etária/sexo",
   "hipertensao-por-raca-cor": "Pessoas com hipertensão por raça/cor",
-  "hipertensao-complicacoes": "Frequência de complicações relacionadas à hipertensão",
+  "hipertensao-complicacoes":
+    "Frequência de complicações relacionadas à hipertensão",
   "hipertensao-imc": "Adultos com hipertensão de acordo com o IMC",
   "hipertensao-exames": "Situação dos exames nos últimos 12 meses",
 
-  "diabetes-total-faixa-atendidas": "Pessoas com diabetes por faixa etária/sexo",
+  "diabetes-total-faixa-atendidas":
+    "Pessoas com diabetes por faixa etária/sexo",
   "diabetes-por-raca-cor": "Pessoas com diabetes por raça/cor",
   "diabetes-complicacoes": "Frequência de complicações relacionadas à diabetes",
   "diabetes-imc": "Adultos com diabetes de acordo com o IMC",
 
-  "sodio": "Sódio",
-  "glicemia": "Glicemia",
-  "potassio": "Potássio",
-  "creatinina": "Creatinina",
-  "colesterol": "Colesterol Total",
+  sodio: "Sódio",
+  glicemia: "Glicemia",
+  potassio: "Potássio",
+  creatinina: "Creatinina",
+  colesterol: "Colesterol Total",
   "eas-equ": "EAS/EQU (urina rotina)",
-  "hemograma": "Hemograma",
-  "eletro": "Eletrocardiograma",
+  hemograma: "Hemograma",
+  eletro: "Eletrocardiograma",
   "hemob-glica": "Hemoglobina Glicada",
-  "retino": "Retinografia",
+  retino: "Retinografia",
 
   "sem-solicitacao": "Sem solicitação",
   "aguardando-resultado": "Aguardando resultado",
   "resultado-registrado": "Resultado registrado",
 
   "infarto-agudo": "Infarto Agudo do Miocárdio",
-  "acidente-vascular":" Acidente Vascular",
-  "renal":"Doença Renal",
-  "coronariana": "Doença Coronariana",
-  "cerebrovascular":"Doença Cerebrovascular",
+  "acidente-vascular": " Acidente Vascular",
+  renal: "Doença Renal",
+  coronariana: "Doença Coronariana",
+  cerebrovascular: "Doença Cerebrovascular",
 };
