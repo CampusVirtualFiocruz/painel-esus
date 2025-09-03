@@ -2,46 +2,58 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Visão Geral do Projeto
 
-Acessar a **Documentação**.
+Este repositório contém dois projetos principais:
 
-## Getting Started
+- **painel-esus**: Backend Python para processamento, análise e exportação de dados de saúde pública.
+- **paineis-v2-front**: Frontend React para visualização dos dados processados, com gráficos interativos e dashboards.
 
-Get started by **creating a new site**.
+---
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+## Estrutura dos Projetos
 
-### What you'll need
+### painel-esus (Backend)
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+- **Linguagem:** Python 3
+- **Principais diretórios:**
+  - `src/`: Código principal, dividido em camadas (domain, infra, main, presentations, utils).
+  - `dados/`: Dados de entrada e saída em formato parquet.
+  - `interface/`: Scripts e interface para interação com o sistema.
+  - `setup/`, `local_ssl/`: Scripts de configuração e utilitários.
+- **Principais funcionalidades:**
+  - Processamento de dados de saúde (cadastro, atendimentos, condições clínicas).
+  - Exportação de logs e relatórios.
+  - Integração com bancos de dados e arquivos parquet.
+  - APIs para consumo pelo frontend.
 
-## Generate a new site
+### paineis-v2-front (Frontend)
 
-Generate a new Docusaurus site using the **classic template**.
+- **Linguagem:** TypeScript + React
+- **Principais diretórios:**
+  - `src/`: Componentes, páginas, hooks, serviços, estilos e utilitários.
+  - `public/`: Arquivos estáticos e HTML base.
+  - `.storybook/`: Configuração de Storybook para documentação de componentes.
+- **Principais funcionalidades:**
+  - Dashboards interativos para visualização dos dados processados.
+  - Gráficos e tabelas dinâmicas.
+  - Autenticação e seleção de perfis.
+  - Integração com APIs do painel-esus.
 
-The classic template will automatically be added to your project after you run the command:
+---
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+## Como contribuir
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+1. Faça um fork do repositório.
+2. Crie uma branch para sua feature ou correção.
+3. Envie um Pull Request detalhando as alterações.
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+Consulte os arquivos README.md de cada projeto para instruções específicas de instalação e execução.
 
-## Start your site
+---
 
-Run the development server:
+## Referências
 
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+- [Documentação Docusaurus](https://docusaurus.io/docs)
+- [Documentação React](https://react.dev/)
+- [Documentação Python](https://docs.python.org/3/)
