@@ -1,21 +1,21 @@
-import { BarChart, DonutChart, WaffleChart } from "./charts.types";
+import { BarChart, DonutChart, WaffleChart } from './charts.types';
 
 type MockRelatorioIdosoV2 = {
-  "pessoas-por-sexo": BarChart;
-  "distribuicao-pessoas-raca-cor": WaffleChart;
-  "primeira-consulta-odonto": DonutChart;
-  "concluiu-tratamento-odonto": DonutChart;
-  "realizou-exodontia": DonutChart;
-  "realizou-preventivo-odonto": DonutChart;
-  "realizou-tra-odonto": DonutChart;
-  "realizou-escovacao-supervisionada": DonutChart;
+  'pessoas-por-sexo': BarChart;
+  'distribuicao-pessoas-raca-cor': WaffleChart;
+  'primeira-consulta-odonto': DonutChart;
+  'concluiu-tratamento-odonto': DonutChart;
+  'realizou-exodontia': DonutChart;
+  'realizou-preventivo-odonto': DonutChart;
+  'realizou-tra-odonto': DonutChart;
+  'realizou-escovacao-supervisionada': DonutChart;
 };
 
 export const charts: MockRelatorioIdosoV2 = {
-  "pessoas-por-sexo": {
+  'pessoas-por-sexo': {
     data: [
       {
-        tag: "60-64-anos",
+        tag: '60-64-anos',
         value: {
           feminino: 20,
           masculino: 20,
@@ -23,7 +23,7 @@ export const charts: MockRelatorioIdosoV2 = {
         },
       },
       {
-        tag: "65-69-anos",
+        tag: '65-69-anos',
         value: {
           feminino: 20,
           masculino: 20,
@@ -32,102 +32,102 @@ export const charts: MockRelatorioIdosoV2 = {
       },
     ],
   },
-  "distribuicao-pessoas-raca-cor": {
+  'distribuicao-pessoas-raca-cor': {
     data: [
       {
-        tag: "branca",
+        tag: 'branca',
         value: 43.4,
       },
       {
-        tag: "preta",
+        tag: 'preta',
         value: 10.2,
       },
       {
-        tag: "amarela",
+        tag: 'amarela',
         value: 0.4,
       },
       {
-        tag: "parda",
+        tag: 'parda',
         value: 45.3,
       },
       {
-        tag: "indigena",
+        tag: 'indigena',
         value: 0.6,
       },
       {
-        tag: "nao-informado",
+        tag: 'nao-informado',
         value: 0.5,
       },
     ],
   },
-  "primeira-consulta-odonto": {
+  'primeira-consulta-odonto': {
     data: [
       {
-        tag: "",
+        tag: '',
         value: 87,
       },
       {
-        tag: "",
+        tag: '',
         value: 13,
       },
     ],
   },
-  "concluiu-tratamento-odonto": {
+  'concluiu-tratamento-odonto': {
     data: [
       {
-        tag: "",
+        tag: '',
         value: 82,
       },
       {
-        tag: "",
+        tag: '',
         value: 18,
       },
     ],
   },
-  "realizou-exodontia": {
+  'realizou-exodontia': {
     data: [
       {
-        tag: "",
+        tag: '',
         value: 87,
       },
       {
-        tag: "",
+        tag: '',
         value: 13,
       },
     ],
   },
-  "realizou-preventivo-odonto": {
+  'realizou-preventivo-odonto': {
     data: [
       {
-        tag: "",
+        tag: '',
         value: 87,
       },
       {
-        tag: "",
+        tag: '',
         value: 13,
       },
     ],
   },
-  "realizou-tra-odonto": {
+  'realizou-tra-odonto': {
     data: [
       {
-        tag: "",
+        tag: '',
         value: 87,
       },
       {
-        tag: "",
+        tag: '',
         value: 13,
       },
     ],
   },
-  "realizou-escovacao-supervisionada": {
+  'realizou-escovacao-supervisionada': {
     data: [
       {
-        tag: "",
+        tag: '',
         value: 87,
       },
       {
-        tag: "",
+        tag: '',
         value: 13,
       },
     ],

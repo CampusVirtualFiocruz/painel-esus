@@ -1,25 +1,25 @@
-import ReactECharts from "echarts-for-react";
-import { content } from "../../../assets/content/content";
-import { PieChart } from "../charts.types";
-import "./style.scss";
+import ReactECharts from 'echarts-for-react';
+import { content } from '../../../assets/content/content';
+import { PieChart } from '../charts.types';
+import './style.scss';
 
 export function Pie(props: PieChart) {
   const options = {
-    color: props?.config?.colors || ["#5CD2C8", "#E4E4E4"],
+    color: props?.config?.colors || ['#5CD2C8', '#E4E4E4'],
     tooltip: {
-      trigger: "item",
+      trigger: 'item',
     },
     legend: {
-      icon: "rect",
-      top: "5%",
+      icon: 'rect',
+      top: '5%',
     },
     series: [
       {
-        name: "",
-        type: "pie",
+        name: '',
+        type: 'pie',
         radius: props?.config?.radius || [
-          props?.config?.radiusStart || "40%",
-          "70%",
+          props?.config?.radiusStart || '40%',
+          '70%',
         ],
         avoidLabelOverlap: false,
         labelLine: {
@@ -27,13 +27,13 @@ export function Pie(props: PieChart) {
         },
         label: {
           show: true,
-          fontSize: "10",
+          fontSize: '10',
         },
         emphasis: {
           label: {
             show: true,
             fontSize: 16,
-            fontWeight: "bold",
+            fontWeight: 'bold',
           },
         },
         data: props.data.reduce(
@@ -47,22 +47,22 @@ export function Pie(props: PieChart) {
             ] as any,
           []
         ),
-        ...props?.config?.seriesConfigOverride
+        ...props?.config?.seriesConfigOverride,
       },
     ],
-    ...props?.config?.chartConfigOverride
+    ...props?.config?.chartConfigOverride,
   };
 
   return (
     <ReactECharts
       option={options}
       style={{
-        width: "100%",
-        minWidth: "316px",
-        height: "316px",
+        width: '100%',
+        minWidth: '316px',
+        height: '316px',
         ...props?.config?.componentStyle,
       }}
-      opts={{ renderer: "svg" }}
+      opts={{ renderer: 'svg' }}
     />
   );
 }

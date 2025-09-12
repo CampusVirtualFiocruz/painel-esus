@@ -1,5 +1,5 @@
-import ReactECharts from "echarts-for-react";
-import "./style.scss";
+import ReactECharts from 'echarts-for-react';
+import './style.scss';
 
 type Faixa = {
   NaN?: number;
@@ -13,16 +13,16 @@ type BarData = {
 };
 
 export function BarSexo({ data, titulo }: BarData) {
-  let sexo = Object.keys(data).map(function (key) {
+  const sexo = Object.keys(data).map(function (key) {
     return String(key);
   });
 
-  let arrData = Object.entries(data).map(function (obj: any) {
-    let objFaixa = obj[1];
+  const arrData = Object.entries(data).map(function (obj: any) {
+    const objFaixa = obj[1];
 
     if (
-      !objFaixa.hasOwnProperty("Feminino") ||
-      !objFaixa.hasOwnProperty("Masculino")
+      !objFaixa.hasOwnProperty('Feminino') ||
+      !objFaixa.hasOwnProperty('Masculino')
     ) {
       return {
         NaN: objFaixa.NaN,
@@ -33,17 +33,17 @@ export function BarSexo({ data, titulo }: BarData) {
 
     return objFaixa;
   });
-  let dataFeminino = arrData.map((obj: Faixa) => {
+  const dataFeminino = arrData.map((obj: Faixa) => {
     return obj.Feminino;
   });
-  let dataMasculino = arrData.map((obj: Faixa) => {
+  const dataMasculino = arrData.map((obj: Faixa) => {
     return obj.Masculino;
   });
 
   const options = {
     legend: {
-      icon: "rect",
-      bottom: "0%",
+      icon: 'rect',
+      bottom: '0%',
     },
     xAxis: {
       data: sexo,
@@ -77,13 +77,13 @@ export function BarSexo({ data, titulo }: BarData) {
       },
     },
     grid: {
-      width: "auto",
+      width: 'auto',
       left: 50,
       bottom: 150,
     },
     tooltip: {
-      trigger: "axis",
-      formatter: function (params: any) {
+      trigger: 'axis',
+      formatter(params: any) {
         let description = `${params[0].name}<hr>`;
         params.forEach((param: any) => {
           description += `${param.marker}${param.seriesName}: ${param.value}<br />`;
@@ -93,24 +93,24 @@ export function BarSexo({ data, titulo }: BarData) {
     },
     series: [
       {
-        name: "Feminino",
-        type: "bar",
-        stack: "one",
-        barWidth: "50%",
+        name: 'Feminino',
+        type: 'bar',
+        stack: 'one',
+        barWidth: '50%',
         barMinHeight: 10,
         itemStyle: {
-          color: "#02786D",
+          color: '#02786D',
         },
         data: dataFeminino,
       },
       {
-        name: "Masculino",
-        type: "bar",
-        stack: "one",
-        barWidth: "50%",
+        name: 'Masculino',
+        type: 'bar',
+        stack: 'one',
+        barWidth: '50%',
         barMinHeight: 10,
         itemStyle: {
-          color: "#9BE1D8",
+          color: '#9BE1D8',
         },
         data: dataMasculino,
       },
@@ -118,16 +118,16 @@ export function BarSexo({ data, titulo }: BarData) {
   };
 
   return (
-    <div className="bar">
-      <div className="vertical ms-1 me-4">{titulo}</div>
+    <div className='bar'>
+      <div className='vertical ms-1 me-4'>{titulo}</div>
       <ReactECharts
         option={options}
         style={{
-          width: "100%",
-          minWidth: "370px",
-          height: "484px",
+          width: '100%',
+          minWidth: '370px',
+          height: '484px',
         }}
-        opts={{ renderer: "svg" }}
+        opts={{ renderer: 'svg' }}
       />
     </div>
   );

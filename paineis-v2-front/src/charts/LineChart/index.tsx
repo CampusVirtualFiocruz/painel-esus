@@ -1,9 +1,5 @@
-import ReactECharts from "echarts-for-react";
-import "./style.scss";
-
-type ResultType = {
-  [key: string]: any;
-};
+import ReactECharts from 'echarts-for-react';
+import './style.scss';
 
 type TStackDataValues = {
   name: string;
@@ -15,11 +11,6 @@ type TStackData = {
   labels: string[];
   data: TStackDataValues[];
   setRangeData: (srgs: string[]) => void;
-};
-
-type TareaStyle = {
-  color: string;
-  opacity: number;
 };
 
 export function LineChart(props: TStackData) {
@@ -36,27 +27,27 @@ export function LineChart(props: TStackData) {
 
     series.push({
       name: item.name,
-      type: "line",
-      stack: "Total",
+      type: 'line',
+      stack: 'Total',
       data: item.data,
     });
   });
   const options = {
     title: {
-      text: "",
+      text: '',
     },
     tooltip: {
-      trigger: "axis",
+      trigger: 'axis',
     },
     legend: {
       data: legends,
       bottom: 5,
-      icon: "rect",
+      icon: 'rect',
     },
     grid: {
-      left: "3%",
-      right: "4%",
-      bottom: "10%",
+      left: '3%',
+      right: '4%',
+      bottom: '10%',
       containLabel: true,
     },
     toolbox: {
@@ -65,29 +56,25 @@ export function LineChart(props: TStackData) {
       },
     },
     xAxis: {
-      type: "category",
+      type: 'category',
       boundaryGap: false,
       data: labels,
     },
     yAxis: {
-      type: "value",
+      type: 'value',
     },
-    series: series,
+    series,
   };
-  let echartRef: any = null;
   return (
-    <div className="stack">
+    <div className='stack'>
       <ReactECharts
         option={options}
-        ref={(e) => {
-          echartRef = e;
-        }}
         style={{
-          minWidth: "200px",
-          width: "100%",
-          height: "400px",
+          minWidth: '200px',
+          width: '100%',
+          height: '400px',
         }}
-        opts={{ renderer: "svg" }}
+        opts={{ renderer: 'svg' }}
       />
     </div>
   );

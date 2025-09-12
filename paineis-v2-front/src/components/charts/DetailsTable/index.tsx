@@ -1,4 +1,4 @@
-import { content } from "../../../assets/content/content";
+import { content } from '../../../assets/content/content';
 
 const DetailsTable = ({ ...props }) => {
   if (!props || !props.data || props.data.length === 0) {
@@ -8,7 +8,7 @@ const DetailsTable = ({ ...props }) => {
   const foundColumns = props.data.reduce((acc: any, item: any) => {
     if (item) {
       const newSet = new Set(acc);
-      Object.keys(item?.value).forEach((key) => {
+      Object.keys(item?.value).forEach(key => {
         newSet.add(key);
       });
       return newSet;
@@ -18,14 +18,16 @@ const DetailsTable = ({ ...props }) => {
 
   return (
     <div>
-      <div className="painel-lateral details-table">
-        <div style={{ display: "flex", paddingTop: "30px" }}>
-          <div style={{ flex: "150px" }}>
-            <div className="tipo p-2 "></div>
+      <div className='painel-lateral details-table'>
+        <div style={{ display: 'flex', paddingTop: '30px' }}>
+          <div style={{ flex: '150px' }}>
+            <div className='tipo p-2 '></div>
           </div>
-          {Array.from(foundColumns).map((item: any) => (
-            <div style={{ flex: 1 }}>
-              <div className="coluna p-2 text-center ">{content?.[ item] || item}</div>
+          {Array.from(foundColumns).map((item: any, columnIndex: number) => (
+            <div key={columnIndex} style={{ flex: 1 }}>
+              <div className='coluna p-2 text-center '>
+                {content?.[item] || item}
+              </div>
             </div>
           ))}
         </div>
@@ -34,21 +36,25 @@ const DetailsTable = ({ ...props }) => {
             <div
               key={index}
               style={{
-                display: "flex",
-                gap: "14px",
-                marginBottom: "10px",
+                display: 'flex',
+                gap: '14px',
+                marginBottom: '10px',
               }}
             >
-              <div style={{ flex: "150px" }}>
-                <div className="tipo p-2 bordas">{content?.[ item?.tag] || item?.tag}</div>
-              </div>
-              {Array.from(foundColumns).map((colName: any) => (
-                <div style={{ flex: 1 }}>
-                  <div className="coluna p-2 text-center bordas">
-                    {item?.value?.[colName]}
-                  </div>
+              <div style={{ flex: '150px' }}>
+                <div className='tipo p-2 bordas'>
+                  {content?.[item?.tag] || item?.tag}
                 </div>
-              ))}
+              </div>
+              {Array.from(foundColumns).map(
+                (colName: any, colIndex: number) => (
+                  <div key={colIndex} style={{ flex: 1 }}>
+                    <div className='coluna p-2 text-center bordas'>
+                      {item?.value?.[colName]}
+                    </div>
+                  </div>
+                )
+              )}
             </div>
           </div>
         ))}

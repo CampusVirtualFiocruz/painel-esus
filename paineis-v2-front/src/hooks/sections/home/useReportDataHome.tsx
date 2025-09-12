@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
-import { Api } from "../../../services/api";
+import { useQuery } from 'react-query';
+import { Api } from '../../../services/api';
 
 type reportBasicInfo = {
   ubsId?: string | undefined | null;
@@ -8,57 +8,72 @@ type reportBasicInfo = {
 
 const useReportDataHome = ({ ubsId, squadId }: reportBasicInfo) => {
   return useQuery(
-    ["relatorio-home", ubsId, squadId],
+    ['relatorio-home', ubsId, squadId],
     async () => {
-      const ubsParam = ubsId ? `/${ubsId}` : "";
+      const ubsParam = ubsId ? `/${ubsId}` : '';
 
       const requests = {
-        "piramide-etaria": Api.get(`demographic/age-groups${ubsParam}`, {
+        'piramide-etaria': Api.get(`demographic/age-groups${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "total-por-sexo": Api.get(`demographic/gender${ubsParam}`, {
+        'total-por-sexo': Api.get(`demographic/gender${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tipo-localizacao": Api.get(`demographic/location-area${ubsParam}`, {
+        'tipo-localizacao': Api.get(`demographic/location-area${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tematico-diabetes": Api.get(`demographic/location-area/diabetes${ubsParam}`, {
+        'tematico-diabetes': Api.get(
+          `demographic/location-area/diabetes${ubsParam}`,
+          {
+            params: {
+              equipe: squadId,
+            },
+          }
+        ),
+        'tematico-hipertensao': Api.get(
+          `demographic/location-area/hypertension${ubsParam}`,
+          {
+            params: {
+              equipe: squadId,
+            },
+          }
+        ),
+        'tematico-idoso': Api.get(
+          `demographic/location-area/elderly${ubsParam}`,
+          {
+            params: {
+              equipe: squadId,
+            },
+          }
+        ),
+        'total-cidadaos-cadastrados': Api.get(
+          `demographic/total-people${ubsParam}`,
+          {
+            params: {
+              equipe: squadId,
+            },
+          }
+        ),
+        'tematico-qualidade': Api.get(`demographic/location-area${ubsParam}`, {
           params: {
             equipe: squadId,
           },
         }),
-        "tematico-hipertensao": Api.get(`demographic/location-area/hypertension${ubsParam}`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-        "tematico-idoso": Api.get(`demographic/location-area/elderly${ubsParam}`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-        "total-cidadaos-cadastrados": Api.get(`demographic/total-people${ubsParam}`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-        "tematico-qualidade": Api.get(`demographic/location-area${ubsParam}`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-        "tematico-infantil": Api.get(`demographic/location-area/child${ubsParam}`, {
-          params: {
-            equipe: squadId,
-          },
-        }),
-        "tematico-bucal": Api.get(`demographic/location-area${ubsParam}`, {
+        'tematico-infantil': Api.get(
+          `demographic/location-area/child${ubsParam}`,
+          {
+            params: {
+              equipe: squadId,
+            },
+          }
+        ),
+        'tematico-bucal': Api.get(`demographic/location-area${ubsParam}`, {
           params: {
             equipe: squadId,
           },

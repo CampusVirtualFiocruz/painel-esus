@@ -1,7 +1,12 @@
-import { createContext, useEffect, useState } from "react";
-import jwt from "jwt-decode";
-import { IAuthProvider, IContext, IUser } from "./types";
-import { getUserLocalStorage, LoginRequest, ProfilesRequest, setUserLocalStorage } from "./util";
+import { createContext, useEffect, useState } from 'react';
+import jwt from 'jwt-decode';
+import { IAuthProvider, IContext, IUser } from './types';
+import {
+  getUserLocalStorage,
+  LoginRequest,
+  ProfilesRequest,
+  setUserLocalStorage,
+} from './util';
 
 export const AuthContext = createContext<IContext>({} as IContext);
 
@@ -43,10 +48,10 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
     setUserLocalStorage(user);
     setProfiles(response?.profiles);
 
-    return { response, payload, user }
+    return { response, payload, user };
   }
 
-  async function chooseProfile(profileData: any){
+  async function chooseProfile(profileData: any) {
     const response = await ProfilesRequest(profileData);
     const userWithNewToken = {
       ...user,
@@ -54,8 +59,8 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
       currentProfile: {
         currentTeam: profileData?.equipe?.id,
         currentUbs: profileData?.ubs?.id,
-        info: response?.info
-      }
+        info: response?.info,
+      },
     };
 
     setUser(userWithNewToken);
@@ -69,7 +74,9 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
   }
 
   return (
-    <AuthContext.Provider value={{ ...user, authenticate, chooseProfile, profilesList, logout }}>
+    <AuthContext.Provider
+      value={{ ...user, authenticate, chooseProfile, profilesList, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

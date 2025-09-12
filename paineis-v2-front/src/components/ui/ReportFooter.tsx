@@ -1,13 +1,13 @@
-import { Button, Link } from "bold-ui";
-import { useNavigate, useParams } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
-import { userCanSelectUBS } from "../../App";
-import { ReportBasicParams } from "../../utils";
+import { Button, Link } from 'bold-ui';
+import { FaUser } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router-dom';
+import { userCanSelectUBS } from '../../App';
+import { ReportBasicParams } from '../../utils';
 
 const content = {
-  buttonViewList: "Ver lista nominal",
-  buttonBackToCity: "Visualizar dados do Município",
-  buttonBackToUbs: "Voltar página dados da UBS",
+  buttonViewList: 'Ver lista nominal',
+  buttonBackToCity: 'Visualizar dados do Município',
+  buttonBackToUbs: 'Voltar página dados da UBS',
 };
 
 export const ReportFooter = ({
@@ -15,12 +15,12 @@ export const ReportFooter = ({
   equipe,
 }: {
   chaveListaNominal?:
-    | "Hipertensão"
-    | "Diabetes"
-    | "Idosa"
-    | "Qualidade"
-    | "Bucal"
-    | "Infantil";
+    | 'Hipertensão'
+    | 'Diabetes'
+    | 'Idosa'
+    | 'Qualidade'
+    | 'Bucal'
+    | 'Infantil';
   equipe?: any;
 }) => {
   const { id } = useParams<ReportBasicParams>();
@@ -29,53 +29,53 @@ export const ReportFooter = ({
   const handleToViewList = () =>
     navigate(
       `/lista-nominal/${id}?condicao=${chaveListaNominal}${
-        equipe ? `&equipe=${equipe || "undefined"}` : ""
+        equipe ? `&equipe=${equipe || 'undefined'}` : ''
       }`
     );
 
-  const handleToPainelMunicipio = () => navigate("/home");
+  const handleToPainelMunicipio = () => navigate('/home');
 
   const handleToPainelUBS = () => navigate(-1);
 
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "20px",
-        marginTop: "30px",
-        marginBottom: "120px",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: '20px',
+        marginTop: '30px',
+        marginBottom: '120px',
       }}
     >
       <div
         style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-          gap: "20px",
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          gap: '20px',
         }}
       >
         {chaveListaNominal && id && (
           <Button
             style={{
-              backgroundColor: "#343131",
-              color: "white",
-              width: "250px",
+              backgroundColor: '#343131',
+              color: 'white',
+              width: '250px',
             }}
             onClick={handleToViewList}
           >
-            <FaUser style={{ marginRight: "10px" }} />
+            <FaUser style={{ marginRight: '10px' }} />
             {content.buttonViewList}
           </Button>
         )}
-        {id != undefined && (
+        {id !== undefined && (
           <Button
-            kind="primary"
+            kind='primary'
             onClick={handleToPainelUBS}
             style={{
-              width: "250px",
+              width: '250px',
             }}
           >
             {content.buttonBackToUbs}
@@ -85,7 +85,7 @@ export const ReportFooter = ({
       {userCanSelectUBS() && (
         <Link
           onClick={handleToPainelMunicipio}
-          style={{ color: "#343131", zIndex: 2 }}
+          style={{ color: '#343131', zIndex: 2 }}
         >
           {content.buttonBackToCity}
         </Link>

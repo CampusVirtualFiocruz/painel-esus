@@ -1,0 +1,35 @@
+# Dependências
+node_modules/
+
+# Arquivos de build
+build/
+dist/
+storybook-static/
+
+# Arquivos de configuração
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Arquivos de cache
+.eslintcache
+.stylelintcache
+
+# Arquivos de teste
+coverage/
+
+# Arquivos de log
+*.log
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos específicos do projeto
+public/
+*.min.js
+*.min.css
+
+# Arquivos temporários
+*.tmp
+*.temp

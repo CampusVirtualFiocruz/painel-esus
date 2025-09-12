@@ -3,7 +3,9 @@ footer {
   flex-direction: column;
 
   background: white;
-  box-shadow: inset 0px 6px 8px -10px #000000, inset 0 0 0 0 #fff;
+  box-shadow:
+    inset 0px 6px 8px -10px #000000,
+    inset 0 0 0 0 #fff;
 
   align-items: center;
   justify-content: center;

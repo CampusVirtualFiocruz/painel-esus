@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   useFloating,
   autoUpdate,
@@ -15,8 +15,8 @@ import {
   useDelayGroupContext,
   useMergeRefs,
   useTransitionStyles,
-} from "@floating-ui/react";
-import type { Placement } from "@floating-ui/react";
+} from '@floating-ui/react';
+import type { Placement } from '@floating-ui/react';
 
 interface TooltipOptions {
   initialOpen?: boolean;
@@ -27,7 +27,7 @@ interface TooltipOptions {
 
 export function useTooltip({
   initialOpen = false,
-  placement = "top",
+  placement = 'top',
   open: controlledOpen,
   onOpenChange: setControlledOpen,
 }: TooltipOptions = {}) {
@@ -57,7 +57,7 @@ export function useTooltip({
     enabled: controlledOpen == null,
   });
   const dismiss = useDismiss(context);
-  const role = useRole(context, { role: "tooltip" });
+  const role = useRole(context, { role: 'tooltip' });
 
   const interactions = useInteractions([hover, focus, dismiss, role]);
 
@@ -80,7 +80,7 @@ export const useTooltipState = () => {
   const context = React.useContext(TooltipContext);
 
   if (context == null) {
-    throw new Error("Tooltip components must be wrapped in <Tooltip />");
+    throw new Error('Tooltip components must be wrapped in <Tooltip />');
   }
 
   return context;
@@ -114,7 +114,7 @@ export const TooltipTrigger = React.forwardRef<
         ref,
         ...props,
         ...children.props,
-        "data-state": state.open ? "open" : "closed",
+        'data-state': state.open ? 'open' : 'closed',
       })
     );
   }
@@ -122,7 +122,7 @@ export const TooltipTrigger = React.forwardRef<
   return (
     <div
       ref={ref}
-      data-state={state.open ? "open" : "closed"}
+      data-state={state.open ? 'open' : 'closed'}
       {...state.getReferenceProps(props)}
     >
       {children}

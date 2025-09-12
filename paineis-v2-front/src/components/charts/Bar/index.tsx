@@ -1,15 +1,15 @@
-import ReactECharts from "echarts-for-react";
-import { content } from "../../../assets/content/content";
-import { getChartDescription } from "../../../utils/chartTitleUtils";
-import { BarChart } from "../charts.types";
-import "./style.scss";
+import ReactECharts from 'echarts-for-react';
+import { content } from '../../../assets/content/content';
+import { getChartDescription } from '../../../utils/chartTitleUtils';
+import { BarChart } from '../charts.types';
+import './style.scss';
 
 export function Bar(props: BarChart) {
   const series = new Set<string>();
   let inputData = props.data;
 
   inputData.forEach(({ value }) => {
-    Object.keys(value).forEach((opt) => {
+    Object.keys(value).forEach(opt => {
       series.add(String(opt));
     });
   });
@@ -40,8 +40,8 @@ export function Bar(props: BarChart) {
 
     const barChartResult: any = {
       name: content?.[s] || s,
-      type: "bar",
-      stack: "total",
+      type: 'bar',
+      stack: 'total',
       data: chartSeriesData,
       ...props?.config,
     };
@@ -63,46 +63,50 @@ export function Bar(props: BarChart) {
   });
 
   const options: any = {
-    color: props?.config?.colors || ["#77B4D0", "#2775B0"],
+    color: props?.config?.colors || ['#77B4D0', '#2775B0'],
     tooltip: {
-      trigger: "item",
+      trigger: 'item',
     },
     legend: {
-      bottom: "0%",
+      bottom: '0%',
       data: props?.config?.hideLegend ? [] : undefined,
       borderRadius: 0,
-      icon: "rect",
+      icon: 'rect',
     },
     grid: {
-      width: "auto",
+      width: 'auto',
       left: 70,
       bottom: 140,
     },
     xAxis: {
-      type: "category",
+      type: 'category',
       axisLabel: {
-        formatter: "{value}",
+        formatter: '{value}',
         rotate: 90,
-        nameTextStyle: { overflow: "break" },
+        nameTextStyle: { overflow: 'break' },
         margin: 10,
         fontSize: 14,
-        weight: "bold",
+        weight: 'bold',
       },
       ...{
         ...(props?.config?.xAxis ?? {}),
         rotate: 45,
-        nameTextStyle: { overflow: "break" },
+        nameTextStyle: { overflow: 'break' },
       },
     },
     yAxis: [
       {
-        type: "value",
+        type: 'value',
         axisLabel: {
-          formatter: "{value}",
+          formatter: '{value}',
           fontSize: 12,
         },
-        name: getChartDescription(props?.config?.yAxis?.name, props.config?.reportViewType, content),
-        nameLocation: "middle",
+        name: getChartDescription(
+          props?.config?.yAxis?.name,
+          props.config?.reportViewType,
+          content
+        ),
+        nameLocation: 'middle',
         nameGap: 40,
       },
     ],
@@ -119,12 +123,12 @@ export function Bar(props: BarChart) {
     <ReactECharts
       option={options}
       style={{
-        width: "100%",
-        minWidth: "316px",
-        height: "600px",
+        width: '100%',
+        minWidth: '316px',
+        height: '600px',
         ...(props?.config?.componentStyle || {}),
       }}
-      opts={{ renderer: "svg" }}
+      opts={{ renderer: 'svg' }}
     />
   );
 }

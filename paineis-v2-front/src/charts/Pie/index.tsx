@@ -1,6 +1,6 @@
-import ReactECharts from "echarts-for-react";
-import { formatAsPercent } from "../../utils";
-import "./style.scss";
+import ReactECharts from 'echarts-for-react';
+import { formatAsPercent } from '../../utils';
+import './style.scss';
 
 export interface TPieData {
   value: number;
@@ -9,62 +9,59 @@ export class TPieChart {
   constructor(
     public nome: string,
     public dataGraphic: TPieData[],
-    public colorActive: string = "#0069d0"
+    public colorActive: string = '#0069d0'
   ) {
     this.nome = nome;
     this.dataGraphic = dataGraphic;
     this.colorActive = colorActive;
   }
 }
-export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
-  const total = dataGraphic[1].value;
-  const ativo = (dataGraphic[0].value / total) * 100;
-
+export function PieChart({ dataGraphic }: TPieChart) {
   const options = {
-    color: ["#e4e4e4", "#0069d0", "#84aaff", "#5c7ea0"],
+    color: ['#e4e4e4', '#0069d0', '#84aaff', '#5c7ea0'],
     tooltip: {
-      trigger: "item",
-      formatter: "{b0}: {c0}({d}%)",
+      trigger: 'item',
+      formatter: '{b0}: {c0}({d}%)',
     },
     title: {
-      text: "",
-      left: "center",
-      top: "0",
-      bottom: "auto",
+      text: '',
+      left: 'center',
+      top: '0',
+      bottom: 'auto',
       textStyle: {
         fontSize: 16,
-        overflow: "break",
+        overflow: 'break',
         width: 100,
       },
     },
     series: [
       {
-        name: "",
-        type: "pie",
-        radius: "40%",
-        center: ["50%", "50%"],
+        name: '',
+        type: 'pie',
+        radius: '40%',
+        center: ['50%', '50%'],
         animationDuration: 800,
         avoidLabelOverlap: false,
         label: {
           show: true,
-          position: "outside",
-          overflow: "break",
-          fontSize: "16",
-          fontWeight: "bold",
+          position: 'outside',
+          overflow: 'break',
+          fontSize: '16',
+          fontWeight: 'bold',
           width: 120,
-          formatter: "{b|{d}%} \n\n{a|{b}}",
+          formatter: '{b|{d}%} \n\n{a|{b}}',
           rich: {
             a: {
-              color: "#262729",
-              fontWeight: "400",
+              color: '#262729',
+              fontWeight: '400',
               fontSize: 12,
-              align: "center",
+              align: 'center',
             },
             b: {
-              color: "#262729",
-              fontWeight: "bold",
+              color: '#262729',
+              fontWeight: 'bold',
               fontSize: 25,
-              align: "center",
+              align: 'center',
             },
           },
           distanceToLabelLine: -4,
@@ -72,8 +69,8 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
         emphasis: {
           label: {
             show: true,
-            fontSize: "16",
-            fontWeight: "bold",
+            fontSize: '16',
+            fontWeight: 'bold',
           },
         },
         labelLine: {
@@ -85,51 +82,51 @@ export function PieChart({ dataGraphic, nome, colorActive }: TPieChart) {
   };
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: 'center' }}>
       <ReactECharts
         option={options}
         style={{
-          minWidth: "300px",
-          height: "186px",
+          minWidth: '300px',
+          height: '186px',
         }}
-        opts={{ renderer: "svg" }}
+        opts={{ renderer: 'svg' }}
       />
     </div>
   );
 }
 
 export function Pie({ data, pallete }: any) {
-  let nome = "obstetrics-factors";
-  let comConsulta = data[1].com_consulta;
-  let semConsulta = data[1].sem_consulta;
-  let limite = data[1]?.limite;
+  const nome = 'obstetrics-factors';
+  const comConsulta = data[1].com_consulta;
+  const semConsulta = data[1].sem_consulta;
+  const limite = data[1]?.limite;
 
-  let dataGraphic = [{ value: comConsulta }, { value: semConsulta }];
+  const dataGraphic = [{ value: comConsulta }, { value: semConsulta }];
 
   const options = {
-    color: pallete ?? ["#e4e4e4", "#0069d0"],
+    color: pallete ?? ['#e4e4e4', '#0069d0'],
     tooltip: {
-      trigger: "item",
-      formatter: "({d}%)",
+      trigger: 'item',
+      formatter: '({d}%)',
     },
     legend: {
       bottom: 10,
-      left: "center",
-      data: ["CityA", "CityB"],
-      icon: "rect",
+      left: 'center',
+      data: ['CityA', 'CityB'],
+      icon: 'rect',
     },
     series: [
       {
         name: nome,
-        type: "pie",
-        radius: "80%",
-        center: ["50%", "50%"],
+        type: 'pie',
+        radius: '80%',
+        center: ['50%', '50%'],
         animationDuration: 1000,
         label: {
           show: true,
-          position: "center",
-          fontSize: "16",
-          fontWeight: "bold",
+          position: 'center',
+          fontSize: '16',
+          fontWeight: 'bold',
         },
         itemStyle: {},
         labelLine: {
@@ -141,27 +138,27 @@ export function Pie({ data, pallete }: any) {
   };
 
   return (
-    <div className="pie">
+    <div className='pie'>
       <ReactECharts
         option={options}
         style={{
-          width: "126px",
-          height: "126px",
+          width: '126px',
+          height: '126px',
         }}
-        opts={{ renderer: "svg" }}
+        opts={{ renderer: 'svg' }}
       />
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-around",
-          alignItems: "center",
-          width: "126px",
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          width: '126px',
         }}
       >
-        <span className="porcentagem">{formatAsPercent(comConsulta)}</span>
-        <span className="nomeGrafico">{data[0]}</span>
-        <span className="nomeGrafico">{limite}</span>
+        <span className='porcentagem'>{formatAsPercent(comConsulta)}</span>
+        <span className='nomeGrafico'>{data[0]}</span>
+        <span className='nomeGrafico'>{limite}</span>
       </div>
     </div>
   );

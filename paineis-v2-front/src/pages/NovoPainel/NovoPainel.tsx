@@ -1,39 +1,39 @@
-import { Button } from "bold-ui";
-import { CSSProperties, useState } from "react";
-import { useQuery } from "react-query";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import Select, { StylesConfig } from "react-select";
-import Piramide from "../../components/charts/Home/Piramide";
-import ReportCardSelector from "../../components/charts/Home/ReportCardSelector";
-import TopIndicatorsContent from "../../components/charts/Home/TopIndicatorsContent";
-import ReportWrapper from "../../components/ui/ReportWrapper";
-import useReportDataHome from "../../hooks/sections/home/useReportDataHome";
-import { Api } from "../../services/api";
-import { ReportBasicParams, navigateHome } from "../../utils";
+import { Button } from 'bold-ui';
+import { CSSProperties } from 'react';
+import { useQuery } from 'react-query';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import Select, { StylesConfig } from 'react-select';
+import Piramide from '../../components/charts/Home/Piramide';
+import ReportCardSelector from '../../components/charts/Home/ReportCardSelector';
+import TopIndicatorsContent from '../../components/charts/Home/TopIndicatorsContent';
+import ReportWrapper from '../../components/ui/ReportWrapper';
+import useReportDataHome from '../../hooks/sections/home/useReportDataHome';
+import { Api } from '../../services/api';
+import { ReportBasicParams, navigateHome } from '../../utils';
 
 type IsMulti = false;
 
 const customControlStyles: CSSProperties = {
-  width: "320px",
-  height: "40px",
+  width: '320px',
+  height: '40px',
 };
 
 const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
-  control: (provided, state) => {
+  control: provided => {
     return {
       ...provided,
       ...customControlStyles,
     };
   },
-  option: (provided, state) => ({
+  option: provided => ({
     ...provided,
     padding: 10,
   }),
   clearIndicator: () => ({
-    color: "#343131",
+    color: '#343131',
   }),
   dropdownIndicator: () => ({
-    color: "#343131",
+    color: '#343131',
   }),
 };
 
@@ -53,8 +53,8 @@ type TypeUbs = {
 const NovoPainel = () => {
   const { id } = useParams<ReportBasicParams>();
   const [params] = useSearchParams();
-  let navigate = useNavigate();
-  const squadId = params.get("equipe");
+  const navigate = useNavigate();
+  const squadId = params.get('equipe');
   const ubsId = id;
 
   type ResponseDataListUbs = {
@@ -66,11 +66,11 @@ const NovoPainel = () => {
     isLoading: isLoadingUbs,
     error: errorUbs,
   } = useQuery(
-    "ubs",
+    'ubs',
     async () => {
-      const response = await Api.get<ResponseDataListUbs>("get-units");
+      const response = await Api.get<ResponseDataListUbs>('get-units');
       const data = response.data;
-      const listData: TypeUbs[] = data.data.map((ubs) => {
+      const listData: TypeUbs[] = data.data.map(ubs => {
         return {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,
@@ -95,9 +95,9 @@ const NovoPainel = () => {
   };
 
   return (
-    <ReportWrapper title={""}>
-      <div id="novo-painel">
-        <div className="contentWrapper">
+    <ReportWrapper title={''}>
+      <div id='novo-painel'>
+        <div className='contentWrapper'>
           {!!reportData.data && (
             <>
               <TopIndicatorsContent charts={reportData.data} />
@@ -105,26 +105,26 @@ const NovoPainel = () => {
               <ReportCardSelector charts={reportData.data} />
             </>
           )}
-          <div className="my-5">
+          <div className='my-5'>
             {id ? (
-              <Button kind="primary" onClick={() => navigateHome(navigate)}>
+              <Button kind='primary' onClick={() => navigateHome(navigate)}>
                 Visualizar dados do painel do Município
               </Button>
             ) : (
               <>
                 {isLoadingUbs ? (
-                  <div className="combo-ubs d-flex align-items-center justify-content-center">
-                    Carregando lista de UBS's...
+                  <div className='combo-ubs d-flex align-items-center justify-content-center'>
+                    Carregando lista de UBS&apos;s...
                   </div>
                 ) : errorUbs ? (
-                  <div className="combo-ubs d-flex align-items-center justify-content-center">
-                    Falha ao carregar lista de UBS's
+                  <div className='combo-ubs d-flex align-items-center justify-content-center'>
+                    Falha ao carregar lista de UBS&apos;s
                   </div>
                 ) : (
                   <Select
                     isClearable
-                    placeholder="Selecione UBS"
-                    noOptionsMessage={() => "Nenhuma UBS encontrada"}
+                    placeholder='Selecione UBS'
+                    noOptionsMessage={() => 'Nenhuma UBS encontrada'}
                     options={dataUbs}
                     styles={selectStyle}
                     onChange={onChangeSelection}

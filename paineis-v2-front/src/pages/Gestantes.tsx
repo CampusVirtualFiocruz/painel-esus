@@ -1,22 +1,27 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import { Alert, Spinner } from "reactstrap";
-import { Button } from "bold-ui";
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { Alert, Spinner } from 'reactstrap';
+import { Button } from 'bold-ui';
 
-import { Modal } from "../components/Modal";
-import { ModalList } from "../components/ModalList";
-import { Footer } from "../components/Footer";
-import { getUserLocalStorage } from "../context/AuthProvider/util";
-import info from "../assets/images/info-circle.svg";
-import { Api } from "../services/api";
-import { Header } from "../components/Header";
-import { Bar } from "../charts/Bar";
-import { Donut } from "../charts/Donut";
-import { Pie } from "../charts/Pie";
-import { getNomeUbs, ReportBasicParams, showValuePerTrimester, showValuePerWeeks } from "../utils";
-import { wait } from "../utils/reports";
-import "../styles/gestantes.scss";
+import { Modal } from '../components/Modal';
+import { ModalList } from '../components/ModalList';
+import { Footer } from '../components/Footer';
+import { getUserLocalStorage } from '../context/AuthProvider/util';
+import info from '../assets/images/info-circle.svg';
+import { Api } from '../services/api';
+import { Header } from '../components/Header';
+import { Bar } from '../charts/Bar';
+import { Donut } from '../charts/Donut';
+import { Pie } from '../charts/Pie';
+import {
+  getNomeUbs,
+  ReportBasicParams,
+  showValuePerTrimester,
+  showValuePerWeeks,
+} from '../utils';
+import { wait } from '../utils/reports';
+import '../styles/gestantes.scss';
 
 type TModal = {
   loaded: number;
@@ -40,11 +45,11 @@ type ResponseDataListUbs = {
 };
 
 export function Gestantes() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const user = getUserLocalStorage();
   const { id } = useParams<ReportBasicParams>();
 
-  let paramRoute = id ? id : "all";
+  const paramRoute = id ? id : 'all';
 
   const [showModal, setShowModal] = useState(false);
   const [showModalList, setShowModalList] = useState(false);
@@ -72,9 +77,9 @@ export function Gestantes() {
 
   //get nome ubs
   const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
-    "ubs",
+    'ubs',
     async () => {
-      const response = await Api.get<ResponseDataListUbs>("get-units");
+      const response = await Api.get<ResponseDataListUbs>('get-units');
       const data = response.data;
 
       const listData: TypeUbs[] = data.data.map((ubs: any) => {
@@ -91,18 +96,18 @@ export function Gestantes() {
     }
   );
 
-  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : "-";
+  const nomeUbs = !isLoadingUbs && id ? getNomeUbs(dataUbs, id) : '-';
 
   const {
     data: dataTotalPerTrimester,
     isLoading: isLoadingTotalPerTrimester,
     error: errorTotalPerTrimester,
   } = useQuery(
-    ["pregnants-total-per-trimester", paramRoute],
+    ['pregnants-total-per-trimester', paramRoute],
     async () => {
-      let path = id
+      const path = id
         ? `pregnants/total-per-trimester/${id}`
-        : "pregnants/total-per-trimester";
+        : 'pregnants/total-per-trimester';
       const response = await Api.get(path);
       const responseData = response.data;
 
@@ -119,9 +124,9 @@ export function Gestantes() {
     isLoading: isLoadingPregnantsPerWeeks,
     error: errorPregnantsPerWeeks,
   } = useQuery(
-    ["pregnants-per-weeks", paramRoute],
+    ['pregnants-per-weeks', paramRoute],
     async () => {
-      let path = id ? `pregnants/per-weeks/${id}` : "pregnants/per-weeks";
+      const path = id ? `pregnants/per-weeks/${id}` : 'pregnants/per-weeks';
       const response = await Api.get(path);
       const responseData = response.data;
 
@@ -138,11 +143,11 @@ export function Gestantes() {
     isLoading: isLoadingPrenatalIndicators,
     error: errorPrenatalIndicators,
   } = useQuery(
-    ["pregnants-prenatal-indicators", paramRoute],
+    ['pregnants-prenatal-indicators', paramRoute],
     async () => {
-      let path = id
+      const path = id
         ? `pregnants/prenatal-indicators/${id}`
-        : "pregnants/prenatal-indicators";
+        : 'pregnants/prenatal-indicators';
       const response = await Api.get(path);
       const responseData = response.data;
 
@@ -161,11 +166,11 @@ export function Gestantes() {
     isLoading: isLoadingObstetricsFactors,
     error: errorObstetricsFactors,
   } = useQuery(
-    ["pregnants-obstetrics-factors", paramRoute],
+    ['pregnants-obstetrics-factors', paramRoute],
     async () => {
-      let path = id
+      const path = id
         ? `pregnants/obstetrics-factors/${id}`
-        : "pregnants/obstetrics-factors";
+        : 'pregnants/obstetrics-factors';
       const response = await Api.get(path);
       const responseData = response.data;
 
@@ -184,9 +189,9 @@ export function Gestantes() {
     isLoading: isLoadingExamsTable,
     error: errorExamsTable,
   } = useQuery(
-    ["pregnants-exams-table", paramRoute],
+    ['pregnants-exams-table', paramRoute],
     async () => {
-      let path = id ? `pregnants/exams-table/${id}` : "pregnants/exams-table";
+      const path = id ? `pregnants/exams-table/${id}` : 'pregnants/exams-table';
       const response = await Api.get(path);
       const data = response.data;
 
@@ -201,88 +206,88 @@ export function Gestantes() {
     if (id !== undefined) {
       navigate(`/gestantes/list/${id}`);
     } else {
-      navigate("/gestantes/list");
+      navigate('/gestantes/list');
     }
   }
 
   return (
-    <div id="page-painel">
+    <div id='page-painel'>
       <Header />
 
-      <div className="contentWrapper">
-        <hr className="linha my-4" />
+      <div className='contentWrapper'>
+        <hr className='linha my-4' />
 
         <h2>
           {id
             ? !isLoadingUbs
               ? nomeUbs
-              : "Carregando..."
-            : user.municipio + " - " + user.uf}{" "}
+              : 'Carregando...'
+            : `${user.municipio} - ${user.uf}`}{' '}
           / Painel das gestantes
         </h2>
 
-        <div className="container-fluid">
-          <div className="row gx-5">
-            <div className="col-12 col-lg-5">
-              <div className="painel-lateral">
-                <h4 className="my-5 text-center">Gestantes por faixa etária</h4>
+        <div className='container-fluid'>
+          <div className='row gx-5'>
+            <div className='col-12 col-lg-5'>
+              <div className='painel-lateral'>
+                <h4 className='my-5 text-center'>Gestantes por faixa etária</h4>
                 {isLoadingPregnantsPerWeeks ? (
-                  <div className="d-flex align-items-center justify-content-center">
-                    <Spinner size="sm" type="grow" className="me-2" />
+                  <div className='d-flex align-items-center justify-content-center'>
+                    <Spinner size='sm' type='grow' className='me-2' />
                     Carregando...
                   </div>
                 ) : errorPregnantsPerWeeks ? (
-                  <div className="d-flex align-items-center justify-content-center">
-                    <Alert color="danger">Erro ao carregar dados.</Alert>
+                  <div className='d-flex align-items-center justify-content-center'>
+                    <Alert color='danger'>Erro ao carregar dados.</Alert>
                   </div>
                 ) : (
                   <Bar
                     data={dataPregnantsPerWeeks}
-                    titulo="Total das gestantes do município"
+                    titulo='Total das gestantes do município'
                   />
                 )}
               </div>
 
-              <div className="painel-lateral situacao-exames">
-                <h3 className="my-5 text-center">Situação dos exames</h3>
+              <div className='painel-lateral situacao-exames'>
+                <h3 className='my-5 text-center'>Situação dos exames</h3>
 
-                <div className="row gx-4 my-3">
-                  <div className="col-5 col-lg-6"></div>
-                  <div className="col col-lg-3">
-                    <div className="tipo p-2 text-center">
+                <div className='row gx-4 my-3'>
+                  <div className='col-5 col-lg-6'></div>
+                  <div className='col col-lg-3'>
+                    <div className='tipo p-2 text-center'>
                       Solicitação pendente
                     </div>
                   </div>
-                  <div className="col col-lg-3">
-                    <div className="tipo p-2 text-center">
+                  <div className='col col-lg-3'>
+                    <div className='tipo p-2 text-center'>
                       Avaliação pendente
                     </div>
                   </div>
                 </div>
 
                 {isLoadingExamsTable ? (
-                  <div className="d-flex align-items-center justify-content-center">
-                    <Spinner size="sm" type="grow" className="me-2" />
+                  <div className='d-flex align-items-center justify-content-center'>
+                    <Spinner size='sm' type='grow' className='me-2' />
                     Carregando...
                   </div>
                 ) : errorExamsTable ? (
-                  <div className="d-flex align-items-center justify-content-center">
-                    <Alert color="danger">Erro ao carregar dados.</Alert>
+                  <div className='d-flex align-items-center justify-content-center'>
+                    <Alert color='danger'>Erro ao carregar dados.</Alert>
                   </div>
                 ) : (
                   <>
                     {dataExamsTable?.map((situacao: any, i: number) => (
-                      <div key={i} className="row gx-4 my-3">
-                        <div className="col-5 col-lg-6">
-                          <div className="tipo p-2 bordas">{situacao.tipo}</div>
+                      <div key={i} className='row gx-4 my-3'>
+                        <div className='col-5 col-lg-6'>
+                          <div className='tipo p-2 bordas'>{situacao.tipo}</div>
                         </div>
-                        <div className="col col-lg-3">
-                          <div className="tipo p-2 text-center bordas">
+                        <div className='col col-lg-3'>
+                          <div className='tipo p-2 text-center bordas'>
                             {situacao.solicitados}
                           </div>
                         </div>
-                        <div className="col col-lg-3">
-                          <div className="tipo p-2 text-center bordas">
+                        <div className='col col-lg-3'>
+                          <div className='tipo p-2 text-center bordas'>
                             {situacao.avaliados}
                           </div>
                         </div>
@@ -293,11 +298,11 @@ export function Gestantes() {
               </div>
             </div>
 
-            <div className="col-12 col-lg-7 d-flex flex-column justify-content-between">
-              <div className="painel-lateral">
-                <h4 className="my-5 text-center">Gestantes por trimestre</h4>
+            <div className='col-12 col-lg-7 d-flex flex-column justify-content-between'>
+              <div className='painel-lateral'>
+                <h4 className='my-5 text-center'>Gestantes por trimestre</h4>
 
-                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                <div className='d-flex flex-wrap flex-lg-nowrap justify-content-center'>
                   {showModal && (
                     <Modal data={data} setShowModal={setShowModal} />
                   )}
@@ -309,48 +314,48 @@ export function Gestantes() {
                   )}
 
                   {isLoadingTotalPerTrimester ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Spinner size="sm" type="grow" className="me-2" />
+                    <div className='d-flex align-items-center justify-content-center'>
+                      <Spinner size='sm' type='grow' className='me-2' />
                       Carregando...
                     </div>
                   ) : errorTotalPerTrimester ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Alert color="danger">Erro ao carregar dados.</Alert>
+                    <div className='d-flex align-items-center justify-content-center'>
+                      <Alert color='danger'>Erro ao carregar dados.</Alert>
                     </div>
                   ) : (
                     <>
                       <div>
                         <div
-                          className="container-trimestre"
-                          onClick={(e) => handleModalList(e, 1, "trimestre")}
+                          className='container-trimestre'
+                          onClick={e => handleModalList(e, 1, 'trimestre')}
                         >
-                          <div className="titulo d-flex align-items-center">
-                            1º. trimestre{" "}
+                          <div className='titulo d-flex align-items-center'>
+                            1º. trimestre{' '}
                             <img
                               src={info}
-                              alt="Orientações - 1º. trimestre"
-                              title="Orientações - 1º. trimestre"
-                              className="info ms-2"
+                              alt='Orientações - 1º. trimestre'
+                              title='Orientações - 1º. trimestre'
+                              className='info ms-2'
                               onClick={() => handleClick(1)}
                             />
                           </div>
-                          <hr className="separador my-4" />
-                          <span className="total-trimestre">
+                          <hr className='separador my-4' />
+                          <span className='total-trimestre'>
                             {showValuePerTrimester(
                               dataTotalPerTrimester.groupByTrimester,
-                              "primeiro"
+                              'primeiro'
                             )}
                           </span>
                         </div>
-                        <div className="mt-4">
+                        <div className='mt-4'>
                           <div
-                            className="container-semana text-center my-2"
-                            onClick={(e) => handleModalList(e, 1, "semana")}
+                            className='container-semana text-center my-2'
+                            onClick={e => handleModalList(e, 1, 'semana')}
                           >
-                            1 a 12 semanas:{" "}
+                            1 a 12 semanas:{' '}
                             {showValuePerWeeks(
                               dataTotalPerTrimester.groupByWeeks,
-                              "1 a 12 semanas"
+                              '1 a 12 semanas'
                             )}
                           </div>
                         </div>
@@ -358,56 +363,56 @@ export function Gestantes() {
 
                       <div>
                         <div
-                          className="container-trimestre"
-                          onClick={(e) => handleModalList(e, 2, "trimestre")}
+                          className='container-trimestre'
+                          onClick={e => handleModalList(e, 2, 'trimestre')}
                         >
-                          <div className="titulo d-flex align-items-center">
-                            2º. trimestre{" "}
+                          <div className='titulo d-flex align-items-center'>
+                            2º. trimestre{' '}
                             <img
                               src={info}
-                              alt="Orientações - 2º. trimestre"
-                              title="Orientações - 2º. trimestre"
-                              className="info ms-2"
+                              alt='Orientações - 2º. trimestre'
+                              title='Orientações - 2º. trimestre'
+                              className='info ms-2'
                               onClick={() => handleClick(2)}
                             />
                           </div>
-                          <hr className="separador my-4" />
-                          <span className="total-trimestre">
+                          <hr className='separador my-4' />
+                          <span className='total-trimestre'>
                             {showValuePerTrimester(
                               dataTotalPerTrimester.groupByTrimester,
-                              "segundo"
+                              'segundo'
                             )}
                           </span>
                         </div>
-                        <div className="mt-4">
+                        <div className='mt-4'>
                           <div
-                            className="container-semana text-center my-2"
-                            onClick={(e) => handleModalList(e, 2, "semana")}
+                            className='container-semana text-center my-2'
+                            onClick={e => handleModalList(e, 2, 'semana')}
                           >
-                            13 a 16 semanas:{" "}
+                            13 a 16 semanas:{' '}
                             {showValuePerWeeks(
                               dataTotalPerTrimester.groupByWeeks,
-                              "13 a 16 semanas"
+                              '13 a 16 semanas'
                             )}
                           </div>
                           <div
-                            className="container-semana text-center my-2"
-                            onClick={(e) => handleModalList(e, 3, "semana")}
+                            className='container-semana text-center my-2'
+                            onClick={e => handleModalList(e, 3, 'semana')}
                           >
-                            17 a 20 semanas:{" "}
+                            17 a 20 semanas:{' '}
                             {showValuePerWeeks(
                               dataTotalPerTrimester.groupByWeeks,
-                              "17 a 20 semanas"
+                              '17 a 20 semanas'
                             )}
                           </div>
                           <div
-                            className="container-semana text-center my-2"
-                            onClick={(e) => handleModalList(e, 4, "semana")}
+                            className='container-semana text-center my-2'
+                            onClick={e => handleModalList(e, 4, 'semana')}
                           >
-                            21 a 24 semanas:{" "}
+                            21 a 24 semanas:{' '}
                             {showValuePerWeeks(
                               dataTotalPerTrimester.groupByWeeks,
-                              "21 a 24 semanas"
+                              '21 a 24 semanas'
                             )}
                           </div>
                         </div>
@@ -415,66 +420,66 @@ export function Gestantes() {
 
                       <div>
                         <div
-                          className="container-trimestre"
-                          onClick={(e) => handleModalList(e, 3, "trimestre")}
+                          className='container-trimestre'
+                          onClick={e => handleModalList(e, 3, 'trimestre')}
                         >
-                          <div className="titulo d-flex align-items-center">
-                            3º. trimestre{" "}
+                          <div className='titulo d-flex align-items-center'>
+                            3º. trimestre{' '}
                             <img
                               src={info}
-                              alt="Orientações - 3º. trimestre"
-                              title="Orientações - 3º. trimestre"
-                              className="info ms-2"
+                              alt='Orientações - 3º. trimestre'
+                              title='Orientações - 3º. trimestre'
+                              className='info ms-2'
                               onClick={() => handleClick(3)}
                             />
                           </div>
-                          <hr className="separador my-4" />
-                          <span className="total-trimestre">
+                          <hr className='separador my-4' />
+                          <span className='total-trimestre'>
                             {showValuePerTrimester(
                               dataTotalPerTrimester.groupByTrimester,
-                              "terceiro"
+                              'terceiro'
                             )}
                           </span>
                         </div>
-                        <div className="mt-4">
+                        <div className='mt-4'>
                           <div
-                            className="container-semana text-center my-2"
-                            onClick={(e) => handleModalList(e, 5, "semana")}
+                            className='container-semana text-center my-2'
+                            onClick={e => handleModalList(e, 5, 'semana')}
                           >
-                            25 a 28 semanas:{" "}
+                            25 a 28 semanas:{' '}
                             {showValuePerWeeks(
                               dataTotalPerTrimester.groupByWeeks,
-                              "25 a 28 semanas"
+                              '25 a 28 semanas'
                             )}
                           </div>
                           <div
-                            className="container-semana text-center my-2"
-                            onClick={(e) => handleModalList(e, 6, "semana")}
+                            className='container-semana text-center my-2'
+                            onClick={e => handleModalList(e, 6, 'semana')}
                           >
-                            29 a 32 semanas:{" "}
+                            29 a 32 semanas:{' '}
                             {showValuePerWeeks(
                               dataTotalPerTrimester.groupByWeeks,
-                              "29 a 32 semanas"
+                              '29 a 32 semanas'
                             )}
                           </div>
                           <div
-                            className="container-semana text-center my-2"
-                            onClick={(e) => handleModalList(e, 7, "semana")}
+                            className='container-semana text-center my-2'
+                            onClick={e => handleModalList(e, 7, 'semana')}
                           >
-                            33 a 36 semanas:{" "}
+                            33 a 36 semanas:{' '}
                             {showValuePerWeeks(
                               dataTotalPerTrimester.groupByWeeks,
-                              "33 a 36 semanas"
+                              '33 a 36 semanas'
                             )}
                           </div>
                           <div
-                            className="container-semana text-center my-2"
-                            onClick={(e) => handleModalList(e, 8, "semana")}
+                            className='container-semana text-center my-2'
+                            onClick={e => handleModalList(e, 8, 'semana')}
                           >
                             37 a 41 semanas:
                             {showValuePerWeeks(
                               dataTotalPerTrimester.groupByWeeks,
-                              "37 a 41 semanas"
+                              '37 a 41 semanas'
                             )}
                           </div>
                         </div>
@@ -484,20 +489,20 @@ export function Gestantes() {
                 </div>
               </div>
 
-              <div className="painel-secundario my-2">
-                <h4 className="my-4 text-center">
+              <div className='painel-secundario my-2'>
+                <h4 className='my-4 text-center'>
                   Indicadores de desempenho no Pré-Natal
                 </h4>
 
-                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                <div className='d-flex flex-wrap flex-lg-nowrap justify-content-center'>
                   {isLoadingPrenatalIndicators ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Spinner size="sm" type="grow" className="me-2" />
+                    <div className='d-flex align-items-center justify-content-center'>
+                      <Spinner size='sm' type='grow' className='me-2' />
                       Carregando...
                     </div>
                   ) : errorPrenatalIndicators ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Alert color="danger">Erro ao carregar dados.</Alert>
+                    <div className='d-flex align-items-center justify-content-center'>
+                      <Alert color='danger'>Erro ao carregar dados.</Alert>
                     </div>
                   ) : (
                     <>
@@ -510,27 +515,27 @@ export function Gestantes() {
                   )}
                 </div>
 
-                <div className="mt-5">
-                  <Button kind="primary" onClick={() => handleClick(4)}>
+                <div className='mt-5'>
+                  <Button kind='primary' onClick={() => handleClick(4)}>
                     Boas práticas na assistência do Pré-Natal
                   </Button>
                 </div>
               </div>
 
-              <div className="painel-secundario">
-                <h4 className="mt-5 text-center">
+              <div className='painel-secundario'>
+                <h4 className='mt-5 text-center'>
                   Gestantes por antecedentes obstétricos/gerais
                 </h4>
 
-                <div className="d-flex flex-wrap flex-lg-nowrap justify-content-center">
+                <div className='d-flex flex-wrap flex-lg-nowrap justify-content-center'>
                   {isLoadingObstetricsFactors ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Spinner size="sm" type="grow" className="me-2" />
+                    <div className='d-flex align-items-center justify-content-center'>
+                      <Spinner size='sm' type='grow' className='me-2' />
                       Carregando...
                     </div>
                   ) : errorObstetricsFactors ? (
-                    <div className="d-flex align-items-center justify-content-center">
-                      <Alert color="danger">Erro ao carregar dados.</Alert>
+                    <div className='d-flex align-items-center justify-content-center'>
+                      <Alert color='danger'>Erro ao carregar dados.</Alert>
                     </div>
                   ) : (
                     <>
@@ -545,12 +550,12 @@ export function Gestantes() {
               </div>
             </div>
           </div>
-          <div className="row my-5 text-center">
-            <div className="col-12">
+          <div className='row my-5 text-center'>
+            <div className='col-12'>
               <button
-                type="button"
+                type='button'
                 onClick={() => handleToGestantesList()}
-                className="btn btn-secondary my-2"
+                className='btn btn-secondary my-2'
               >
                 Ver todas as gestantes da UBS
               </button>

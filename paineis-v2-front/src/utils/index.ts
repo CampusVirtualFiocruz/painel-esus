@@ -4,10 +4,10 @@ export type ReportBasicParams = {
 
 export function formataNumero(numero: number | undefined) {
   if (numero) {
-    return numero.toLocaleString("pt-BR");
+    return numero.toLocaleString('pt-BR');
   }
 
-  return "-";
+  return '-';
 }
 
 export function formataPorcentagemIbge(
@@ -17,13 +17,13 @@ export function formataPorcentagemIbge(
   if (ibge && populacaoCadastrada) {
     //let totalIbge = (populacaoCadastrada / ibge) * 100;
     //let totalIbge = (ibge / populacaoCadastrada) * 100;
-    let variacaoPercentual =
+    const variacaoPercentual =
       ((populacaoCadastrada - ibge) / populacaoCadastrada) * 100;
 
-    return variacaoPercentual.toFixed(0) + "%";
+    return `${variacaoPercentual.toFixed(0)}%`;
   }
 
-  return "-";
+  return '-';
 }
 
 export function somaIndicador(indicador: any) {
@@ -51,29 +51,29 @@ export function porcentagemIndicador(indicador: any) {
 }
 
 export function getFirstName(fullName: string | undefined) {
-  if (!fullName) return "-";
+  if (!fullName) return '-';
 
-  const [first] = fullName.toLocaleLowerCase().split(" ");
+  const [first] = fullName.toLocaleLowerCase().split(' ');
   const name = first.charAt(0).toUpperCase() + first.slice(1);
   return name;
 }
 
 export function formataNome(nome: string | undefined) {
-  if (!nome) return "-";
+  if (!nome) return '-';
   let nomeTratado = nome
     .toLowerCase()
     .replace(/(?:^|\s)\S/g, function (capitalize) {
       return capitalize.toUpperCase();
     });
 
-  let PreposM = ["Da", "Do", "Das", "Dos", "A", "E"];
-  let prepos = ["da", "do", "das", "dos", "a", "e"];
+  const PreposM = ['Da', 'Do', 'Das', 'Dos', 'A', 'E'];
+  const prepos = ['da', 'do', 'das', 'dos', 'a', 'e'];
 
-  for (var i = PreposM.length - 1; i >= 0; i--) {
+  for (let i = PreposM.length - 1; i >= 0; i--) {
     nomeTratado = nomeTratado.replace(
       RegExp(
-        "\\b" + PreposM[i].replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&") + "\\b",
-        "g"
+        `\\b${PreposM[i].replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&')}\\b`,
+        'g'
       ),
       prepos[i]
     );
@@ -91,10 +91,10 @@ export function getPorcentagemIndicador(
 
   if (total && value) {
     porcentagem = (value / total) * 100;
-    return porcentagem.toFixed(0) + "%";
+    return `${porcentagem.toFixed(0)}%`;
   }
 
-  return porcentagem + "%";
+  return `${porcentagem}%`;
 }
 
 export function formatAsPercent(value: string) {
@@ -108,17 +108,17 @@ type Ubs = {
 };
 
 export function getNomeUbs(data: any, id: string) {
-  if (data == undefined) {
-    return "-";
+  if (data === undefined) {
+    return '-';
   }
-  let ubs = Object.values(data).find(
+  const ubs = Object.values(data).find(
     (item: any) => parseInt(item.value) === parseInt(id)
   ) as Ubs;
-  return ubs ? ubs.label : "-";
+  return ubs ? ubs.label : '-';
 }
 
 export function prepareExamsTable(data: any) {
-  let retorno = Object.entries(data).map((item: any) => {
+  const retorno = Object.entries(data).map((item: any) => {
     return {
       tipo: getNameExam(item[0]),
       avaliados: item[1].avaliados,
@@ -133,13 +133,13 @@ export function showValuePerTrimester(data: any, trimestre: string) {
   let total: unknown = 0;
 
   switch (trimestre) {
-    case "primeiro":
+    case 'primeiro':
       total = Object.values(data)[0];
       break;
-    case "segundo":
+    case 'segundo':
       total = Object.values(data)[1];
       break;
-    case "terceiro":
+    case 'terceiro':
       total = Object.values(data)[2];
       break;
     default:
@@ -153,28 +153,28 @@ export function showValuePerWeeks(data: any, week: string) {
   let total: unknown = 0;
 
   switch (week) {
-    case "1 a 12 semanas":
+    case '1 a 12 semanas':
       total = Object.values(data)[0];
       break;
-    case "13 a 16 semanas":
+    case '13 a 16 semanas':
       total = Object.values(data)[1];
       break;
-    case "17 a 20 semanas":
+    case '17 a 20 semanas':
       total = Object.values(data)[2];
       break;
-    case "21 a 24 semanas":
+    case '21 a 24 semanas':
       total = Object.values(data)[3];
       break;
-    case "25 a 28 semanas":
+    case '25 a 28 semanas':
       total = Object.values(data)[4];
       break;
-    case "29 a 32 semanas":
+    case '29 a 32 semanas':
       total = Object.values(data)[5];
       break;
-    case "33 a 36 semanas":
+    case '33 a 36 semanas':
       total = Object.values(data)[6];
       break;
-    case "37 a 41 semanas":
+    case '37 a 41 semanas':
       total = Object.values(data)[7];
       break;
     default:
@@ -185,38 +185,38 @@ export function showValuePerWeeks(data: any, week: string) {
 }
 
 function getNameExam(value: any) {
-  let exam = "";
+  let exam = '';
 
   switch (value) {
-    case "glicemia":
-      exam = "Glicemia jejum";
+    case 'glicemia':
+      exam = 'Glicemia jejum';
       break;
-    case "hemograma":
-      exam = "Hemograma";
+    case 'hemograma':
+      exam = 'Hemograma';
       break;
-    case "hiv":
-      exam = "Teste rápido Anti-HIV";
+    case 'hiv':
+      exam = 'Teste rápido Anti-HIV';
       break;
-    case "taxa_igm_igg":
-      exam = "Taxa IgM e IgG";
+    case 'taxa_igm_igg':
+      exam = 'Taxa IgM e IgG';
       break;
-    case "teste_rapido_sifilis":
-      exam = "Teste rápido sífilis";
+    case 'teste_rapido_sifilis':
+      exam = 'Teste rápido sífilis';
       break;
-    case "tipo_sanguineo":
-      exam = "Tipo sanguíneo/Rh";
+    case 'tipo_sanguineo':
+      exam = 'Tipo sanguíneo/Rh';
       break;
-    case "urina":
-      exam = "Urina";
+    case 'urina':
+      exam = 'Urina';
       break;
-    case "urocultura":
-      exam = "Urocultura";
+    case 'urocultura':
+      exam = 'Urocultura';
       break;
-    case "us_obstetrica":
-      exam = "US Obstétrica";
+    case 'us_obstetrica':
+      exam = 'US Obstétrica';
       break;
     default:
-      exam = "Nenhum encontrado";
+      exam = 'Nenhum encontrado';
   }
 
   return exam;
@@ -225,30 +225,30 @@ function getNameExam(value: any) {
 export const cpfMask = (value: string | undefined) => {
   if (value) {
     return value
-      .replace(/\D/g, "")
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d{1,2})/, "$1-$2")
-      .replace(/(-\d{2})\d+?$/, "$1");
+      .replace(/\D/g, '')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+      .replace(/(-\d{2})\d+?$/, '$1');
   }
 
-  return "NÃO CADASTRADO";
+  return 'NÃO CADASTRADO';
 };
 
 export const capitalize = (s: string, lower = false) =>
-  (lower ? s.toLowerCase() : s).replace(/(?:^|\s|["'([{])+\S/g, (match) =>
+  (lower ? s.toLowerCase() : s).replace(/(?:^|\s|["'([{])+\S/g, match =>
     match.toUpperCase()
   );
 
 export const profiles = [
-  "CBO 322415: Auxiliar de saúde bucal",
-  "CBO 411010: Assistente administrativo",
+  'CBO 322415: Auxiliar de saúde bucal',
+  'CBO 411010: Assistente administrativo',
 ];
 
 export const groupBy = (input: any, key: string) => {
   return Object.entries(
     input.reduce((acc: any, currentValue: any) => {
-      let groupKey = currentValue[key];
+      const groupKey = currentValue[key];
       if (!acc[groupKey]) {
         acc[groupKey] = [];
       }
@@ -258,6 +258,6 @@ export const groupBy = (input: any, key: string) => {
   ).map(([title, content]) => ({ title, content }));
 };
 
-export const navigateHome = (navigate: any, route: string = "") => {
-  navigate("/home"+(route));
-}
+export const navigateHome = (navigate: any, route = '') => {
+  navigate(`/home${route}`);
+};

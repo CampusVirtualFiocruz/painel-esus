@@ -1,2 +1,2 @@
-import NovoPainel from "./NovoPainel";
+import NovoPainel from './NovoPainel';
 export default NovoPainel;

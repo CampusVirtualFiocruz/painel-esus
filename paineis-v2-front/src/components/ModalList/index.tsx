@@ -1,14 +1,14 @@
-import { useRef, useState } from "react";
-import { useQuery } from "react-query";
-import ReactDom from "react-dom";
-import { CgClose } from "react-icons/cg";
-import { Alert, Spinner } from "reactstrap";
+import { useRef, useState } from 'react';
+import { useQuery } from 'react-query';
+import ReactDom from 'react-dom';
+import { CgClose } from 'react-icons/cg';
+import { Alert, Spinner } from 'reactstrap';
 
-import "./style.scss";
-import { Api } from "../../services/api";
-import Pagination from "../Pagination";
+import './style.scss';
+import { Api } from '../../services/api';
+import Pagination from '../Pagination';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 interface IModal {
   params: {
@@ -27,7 +27,7 @@ type IParams = {
 
 /* MODAL DE GESTANTES */
 export const ModalList = ({ params, setShowModalList }: IModal) => {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   // close the modal when clicking outside the modal.
   const modalListRef = useRef<HTMLDivElement | null>(null);
@@ -38,60 +38,60 @@ export const ModalList = ({ params, setShowModalList }: IModal) => {
     }
   };
 
-  let titulo = "";
+  let titulo = '';
 
-  if (params.tipo === "semana") {
+  if (params.tipo === 'semana') {
     switch (params.loaded) {
       case 1:
-        titulo = "Gestantes entre 1 a 12 semanas:";
+        titulo = 'Gestantes entre 1 a 12 semanas:';
         break;
       case 2:
-        titulo = "Gestantes entre 13 a 16 semanas:";
+        titulo = 'Gestantes entre 13 a 16 semanas:';
         break;
       case 3:
-        titulo = "Gestantes entre 17 a 20 semanas:";
+        titulo = 'Gestantes entre 17 a 20 semanas:';
         break;
       case 4:
-        titulo = "Gestantes entre 21 a 24 semanas:";
+        titulo = 'Gestantes entre 21 a 24 semanas:';
         break;
       case 5:
-        titulo = "Gestantes entre 25 a 28 semanas:";
+        titulo = 'Gestantes entre 25 a 28 semanas:';
         break;
       case 6:
-        titulo = "Gestantes entre 29 a 32 semanas:";
+        titulo = 'Gestantes entre 29 a 32 semanas:';
         break;
       case 7:
-        titulo = "Gestantes entre 33 a 36 semanas:";
+        titulo = 'Gestantes entre 33 a 36 semanas:';
         break;
       case 8:
-        titulo = "Gestantes entre 37 a 41 semanas:";
+        titulo = 'Gestantes entre 37 a 41 semanas:';
         break;
       default:
-        titulo = "";
+        titulo = '';
     }
   }
 
-  if (params.tipo === "trimestre") {
+  if (params.tipo === 'trimestre') {
     titulo = `Gestantes no ${params.loaded}º trimestre:`;
   }
 
-  let pageSize = 10;
-  let queryName = params.cnes
+  const pageSize = 10;
+  const queryName = params.cnes
     ? `gestantes-${params.tipo}-ubs-${params.cnes}`
     : `gestantes-${params.tipo}-municipio`;
-  let path = "";
+  let path = '';
 
   const [currentPage, setCurrentPage] = useState<any>(1);
   const { isLoading, isFetching, error, data } = useQuery(
     [queryName, `${params.loaded}-${params.tipo}`, currentPage],
     async () => {
-      if (params.tipo === "trimestre") {
+      if (params.tipo === 'trimestre') {
         path = params.cnes
           ? `pregnants/per-trimester/${params.loaded}/${params.cnes}?page=${currentPage}`
           : `pregnants/per-trimester/${params.loaded}?page=${currentPage}`;
       }
 
-      if (params.tipo === "semana") {
+      if (params.tipo === 'semana') {
         path = params.cnes
           ? `pregnants/per-weekly-range/${params.loaded}/${params.cnes}?page=${currentPage}`
           : `pregnants/per-weekly-range/${params.loaded}?page=${currentPage}`;
@@ -100,7 +100,7 @@ export const ModalList = ({ params, setShowModalList }: IModal) => {
       const response = await Api.get(path);
       const { data, total }: any = response.data;
 
-      return { gestantes: data, total: total };
+      return { gestantes: data, total };
     },
     {
       keepPreviousData: true,
@@ -115,18 +115,18 @@ export const ModalList = ({ params, setShowModalList }: IModal) => {
   // render the modal JSX in the portal div.
   return ReactDom.createPortal(
     <div
-      className="container-modal-list"
+      className='container-modal-list'
       ref={modalListRef}
       onClick={closeModal}
     >
-      <div className="modal d-flex flex-column px-5 py-2">
-        <hr className="separador mb-3" />
+      <div className='modal d-flex flex-column px-5 py-2'>
+        <hr className='separador mb-3' />
 
-        <div className="d-flex flex-column w-100">
-          <div className="d-flex align-items-baseline">
-            <h1 className="mb-4">{titulo} </h1>
+        <div className='d-flex flex-column w-100'>
+          <div className='d-flex align-items-baseline'>
+            <h1 className='mb-4'>{titulo} </h1>
             {!isLoading && isFetching && (
-              <div className="barsLoading">
+              <div className='barsLoading'>
                 <span></span>
                 <span></span>
                 <span></span>
@@ -137,30 +137,30 @@ export const ModalList = ({ params, setShowModalList }: IModal) => {
 
           {isLoading ? (
             <div
-              className="d-flex align-items-center justify-content-center"
-              style={{ height: "290px", maxHeight: "100%" }}
+              className='d-flex align-items-center justify-content-center'
+              style={{ height: '290px', maxHeight: '100%' }}
             >
-              <Spinner className="me-2" /> Carregando...
+              <Spinner className='me-2' /> Carregando...
             </div>
           ) : error ? (
             <div
-              className="d-flex align-items-center justify-content-center"
-              style={{ height: "290px", maxHeight: "100%" }}
+              className='d-flex align-items-center justify-content-center'
+              style={{ height: '290px', maxHeight: '100%' }}
             >
-              <Alert color="danger">Erro ao carregar dados.</Alert>
+              <Alert color='danger'>Erro ao carregar dados.</Alert>
             </div>
           ) : (
             <>
-              <div style={{ height: "290px", maxHeight: "100%" }}>
-                <ul className="grid-list">
+              <div style={{ height: '290px', maxHeight: '100%' }}>
+                <ul className='grid-list'>
                   {data?.gestantes.map((gestante: IParams, i: number) => {
                     return (
                       <li
                         onClick={() => handleToGestante(gestante)}
-                        className="mb-3"
+                        className='mb-3'
                         key={i}
                       >
-                        {gestante.nome ? gestante.nome : "NOME NÃO CADASTRADO"}
+                        {gestante.nome ? gestante.nome : 'NOME NÃO CADASTRADO'}
                       </li>
                     );
                   })}
@@ -168,23 +168,23 @@ export const ModalList = ({ params, setShowModalList }: IModal) => {
               </div>
 
               <Pagination
-                className="pagination-bar"
+                className='pagination-bar'
                 currentPage={currentPage}
                 totalCount={data?.total}
                 pageSize={pageSize}
-                onPageChange={(page) => setCurrentPage(page)}
+                onPageChange={page => setCurrentPage(page)}
               />
             </>
           )}
         </div>
 
         <CgClose
-          size={"1.5rem"}
+          size={'1.5rem'}
           onClick={() => setShowModalList(false)}
-          className="closeButton"
+          className='closeButton'
         />
       </div>
     </div>,
-    document.getElementById("modal")!
+    document.getElementById('modal')!
   );
 };

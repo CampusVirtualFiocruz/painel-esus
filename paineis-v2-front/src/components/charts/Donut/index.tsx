@@ -1,21 +1,21 @@
-import ReactECharts from "echarts-for-react";
-import { content } from "../../../assets/content/content";
-import { DonutChart } from "../charts.types";
-import "./style.scss";
+import ReactECharts from 'echarts-for-react';
+import { content } from '../../../assets/content/content';
+import { DonutChart } from '../charts.types';
+import './style.scss';
 
 const formatters = {
-  full: ["{a|{b}}", "{b|{@2012}}", "{b|({d}%)}"].join("\n"),
-  undefined: ["{a|{b}}", "{b|{@2012}}", "{b|({d}%)}"].join("\n"),
-  perc: ["{b|{d}%}", "{a|{b}}"].join("\n"),
+  full: ['{a|{b}}', '{b|{@2012}}', '{b|({d}%)}'].join('\n'),
+  undefined: ['{a|{b}}', '{b|{@2012}}', '{b|({d}%)}'].join('\n'),
+  perc: ['{b|{d}%}', '{a|{b}}'].join('\n'),
 };
 
 const removeDuplicatesByKey = <T, K extends keyof T>(arr: T[], key: K): T[] =>
-  Array.from(new Map(arr.map((item) => [item[key], item])).values());
+  Array.from(new Map(arr.map(item => [item[key], item])).values());
 
 const ClassificationFooter = ({ data, rangedLegend }: any) => {
   let percentage: any = undefined;
-  let hasHighlightConfig =
-    data && Array.isArray(data) && data?.[1]?.tag === "realizado";
+  const hasHighlightConfig =
+    data && Array.isArray(data) && data?.[1]?.tag === 'realizado';
 
   if (hasHighlightConfig) {
     const mainValue = data?.[1]?.value;
@@ -24,37 +24,42 @@ const ClassificationFooter = ({ data, rangedLegend }: any) => {
   }
 
   return (
-    <div className="donut-footer">
+    <div className='donut-footer'>
       {removeDuplicatesByKey<typeof rangedLegend, string>(
         rangedLegend,
-        "title"
-      ).map(({ color, title, text, window }: any, index: number) => {
-        const shouldHighlight = Boolean(window.find(({ min, max }: { min: number, max: number }) => percentage >= min && percentage < max));
+        'title'
+      ).map(({ color, window }: any, index: number) => {
+        const shouldHighlight = Boolean(
+          window.find(
+            ({ min, max }: { min: number; max: number }) =>
+              percentage >= min && percentage < max
+          )
+        );
 
-        if(!shouldHighlight){
+        if (!shouldHighlight) {
           return null;
         }
 
         return (
-          <div key={index} className="legend-item">
+          <div key={index} className='legend-item'>
             <span
-              className="legend-color"
+              className='legend-color'
               style={{
                 backgroundColor: color,
               }}
             />
-            <span className="legend-text">Realizado</span>
+            <span className='legend-text'>Realizado</span>
           </div>
         );
       })}
-      <div className="legend-item">
+      <div className='legend-item'>
         <span
-          className="legend-color"
+          className='legend-color'
           style={{
-            backgroundColor: "#d6d6d6",
+            backgroundColor: '#d6d6d6',
           }}
         />
-        <span className="legend-text">Não Realizado</span>
+        <span className='legend-text'>Não Realizado</span>
       </div>
     </div>
   );
@@ -62,6 +67,7 @@ const ClassificationFooter = ({ data, rangedLegend }: any) => {
 
 export function Donut(props: DonutChart) {
   const f = String(props?.config?.formatterKind) as keyof typeof formatters;
+  console.log(formatters[f && f !== 'undefined' ? f : 'full']);
 
   let donutData = props.data.reduce(
     (prev, curr) =>
@@ -71,18 +77,18 @@ export function Donut(props: DonutChart) {
           value: curr?.value ?? 0,
           name: content?.[curr?.tag] || curr?.tag,
           label: {
-            formatter: formatters[f && f !== "undefined" ? f : "full"],
+            formatter: formatters[f && f !== 'undefined' ? f : 'full'],
             rich: {
               a: {
-                color: "black",
+                color: 'black',
                 fontSize: 10,
                 marginBottom: 16,
                 padding: [0, 0],
               },
               b: {
-                color: "black",
+                color: 'black',
                 fontSize: 20,
-                fontWeight: "bold",
+                fontWeight: 'bold',
                 padding: [0, 0],
               },
             },
@@ -103,14 +109,14 @@ export function Donut(props: DonutChart) {
     donutData = sortedDataList;
   }
 
-  let chartColor = props?.config?.colors || ["#09406A", "#5CD2C8"];
+  let chartColor = props?.config?.colors || ['#09406A', '#5CD2C8'];
 
   if (props?.config?.rangedLegend) {
     let percentage: any = undefined;
-    let hasHighlightConfig =
+    const hasHighlightConfig =
       props.data &&
       Array.isArray(props.data) &&
-      props.data?.[1]?.tag === "realizado";
+      props.data?.[1]?.tag === 'realizado';
 
     if (hasHighlightConfig) {
       const data: any = props.data;
@@ -120,9 +126,14 @@ export function Donut(props: DonutChart) {
     }
 
     props?.config?.rangedLegend.forEach(({ color, window }) => {
-      const shouldHighlight = Boolean(window.find(({ min, max }: { min: number, max: number }) => percentage >= min && percentage < max));
+      const shouldHighlight = Boolean(
+        window.find(
+          ({ min, max }: { min: number; max: number }) =>
+            percentage >= min && percentage < max
+        )
+      );
       if (shouldHighlight) {
-        chartColor = [color, "#E4E4E4"];
+        chartColor = [color, '#E4E4E4'];
       }
     });
   }
@@ -130,23 +141,23 @@ export function Donut(props: DonutChart) {
   const options = {
     color: chartColor,
     tooltip: {
-      trigger: "item",
+      trigger: 'item',
       label: {
-        formatter: "testes",
+        formatter: 'testes',
       },
     },
     legend: {
-      icon: "rect",
+      icon: 'rect',
       data: [],
     },
     series: [
       {
         minAngle: 5,
-        name: "",
-        type: "pie",
+        name: '',
+        type: 'pie',
         radius: props?.config?.radius || [
-          props?.config?.radiusStart || "40%",
-          "70%",
+          props?.config?.radiusStart || '40%',
+          '70%',
         ],
         roseType: props?.config?.roseType,
         avoidLabelOverlap: true,
@@ -155,11 +166,11 @@ export function Donut(props: DonutChart) {
         },
         label: {
           show: true,
-          fontSize: "10",
+          fontSize: '10',
         },
         emphasis: {
           label: {
-            fontWeight: "bold",
+            fontWeight: 'bold',
           },
         },
         data: donutData,
@@ -176,17 +187,17 @@ export function Donut(props: DonutChart) {
   }
 
   return (
-    <div className="donut-chart-container">
+    <div className='donut-chart-container'>
       <ReactECharts
         option={options}
         style={{
-          width: "316px",
-          minWidth: "316px",
-          height: "316px",
-          maxWidth: "100%",
+          width: '316px',
+          minWidth: '316px',
+          height: '316px',
+          maxWidth: '100%',
           ...(props?.config?.componentStyle || {}),
         }}
-        opts={{ renderer: "svg" }}
+        opts={{ renderer: 'svg' }}
       />
       {props?.config?.rangedLegend && (
         <ClassificationFooter
@@ -195,7 +206,7 @@ export function Donut(props: DonutChart) {
         />
       )}
       {props?.config?.subtitle && (
-        <div className="subtitle">
+        <div className='subtitle'>
           <span>{props?.config?.subtitle}</span>
         </div>
       )}

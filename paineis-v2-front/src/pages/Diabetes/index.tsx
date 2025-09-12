@@ -1,2 +1,2 @@
-import Diabetes from "./Diabetes";
+import Diabetes from './Diabetes';
 export default Diabetes;

@@ -1,47 +1,47 @@
-import { content } from "../assets/content/content";
-import { Bar, Pie, Donut } from "../components/charts";
-import { tabagismoCharts } from "../components/charts/tabagismo.mock";
-import ReportWrapper from "../components/ui/ReportWrapper";
+import { content } from '../assets/content/content';
+import { Bar, Donut, Pie } from '../components/charts';
+import { tabagismoCharts } from '../components/charts/tabagismo.mock';
+import ReportWrapper from '../components/ui/ReportWrapper';
 
 const reportSections = [
   {
-    "proporcao-tabagistas-acompanhadas": {
+    'proporcao-tabagistas-acompanhadas': {
       Chart: Donut,
     },
-    "tabagistas-faixa-etaria": {
+    'tabagistas-faixa-etaria': {
       Chart: Bar,
       config: {
         yAxis: {
-          name: content?.["total-pessoas-acompanhadas"],
+          name: content?.['total-pessoas-acompanhadas'],
         },
       },
     },
-    "pessoas-tabagistas-sexo": {
+    'pessoas-tabagistas-sexo': {
       Chart: Bar,
       config: {
         yAxis: {
-          name: content?.["total-pessoas-acompanhadas"],
+          name: content?.['total-pessoas-acompanhadas'],
         },
       },
     },
   },
   {
-    "proporcao-fatores-riscos-por-dant": {
+    'proporcao-fatores-riscos-por-dant': {
       Chart: Bar,
       config: {
         yAxis: {
-          name: content?.["total-pessoas-acompanhadas"],
+          name: content?.['total-pessoas-acompanhadas'],
         },
       },
     },
-    "consulta-odontologica-tabagistas": {
+    'consulta-odontologica-tabagistas': {
       Chart: Pie,
     },
-    "pessoas-tabagistas-escolaridade": {
+    'pessoas-tabagistas-escolaridade': {
       Chart: Bar,
       config: {
         yAxis: {
-          name: content?.["total-pessoas"],
+          name: content?.['total-pessoas'],
         },
       },
     },
@@ -50,13 +50,10 @@ const reportSections = [
 
 const Tabagismo = () => {
   return (
-    <ReportWrapper
-      title="Tabagismo"
-      subtitle="(últimos 12 meses)"
-    >
-      {reportSections.map((chartList: any) => (
-        <div className="col-12 col-md-6">
-          {Object.keys(chartList).map((chartKey) => {
+    <ReportWrapper title='Tabagismo' subtitle='(últimos 12 meses)'>
+      {reportSections.map((chartList: any, sectionIndex: number) => (
+        <div key={sectionIndex} className='col-12 col-md-6'>
+          {Object.keys(chartList).map(chartKey => {
             const CustomChart = chartList?.[chartKey]?.Chart;
             const chartConfigs = chartList?.[chartKey]?.config;
             const data = (tabagismoCharts as any)?.[chartKey]?.data;
@@ -70,8 +67,8 @@ const Tabagismo = () => {
             }
 
             return (
-              <div style={{ marginBottom: "70px" }}>
-                <h4 style={{ fontWeight: "bold", textAlign: "center" }}>
+              <div key={chartKey} style={{ marginBottom: '70px' }}>
+                <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>
                   {content?.[chartKey] || chartKey}
                 </h4>
                 <CustomChart data={data} config={chartConfigs} />

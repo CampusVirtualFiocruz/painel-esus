@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
-import { Api } from "../../../services/api";
+import { useQuery } from 'react-query';
+import { Api } from '../../../services/api';
 
 type reportBasicInfo = {
   ubsId?: string | undefined;
@@ -7,25 +7,25 @@ type reportBasicInfo = {
   recorte?: string | undefined;
 };
 
-const reportQueryKey = "relatorio-hipertensao--";
-const reportRoute = "/arterial-hypertension/";
+const reportQueryKey = 'relatorio-hipertensao--';
+const reportRoute = '/arterial-hypertension/';
 const config = {
   staleTime: 1000 * 60 * 10,
 };
 
 const useReportDataHipertensao = ({ ubsId, equipe }: reportBasicInfo) => {
-  const ubsParam = ubsId ? `/${ubsId}` : "";
+  const ubsParam = ubsId ? `/${ubsId}` : '';
   const defaultParam = {
     params: {
-      equipe: equipe,
+      equipe,
     },
   };
 
   const totalQuery = useQuery(
-    [reportQueryKey + "total", ubsId, equipe],
+    [`${reportQueryKey}total`, ubsId, equipe],
     async () => {
       const response = await Api.get(
-        reportRoute + `total${ubsParam}`,
+        `${reportRoute}total${ubsParam}`,
         defaultParam
       );
       return response?.data?.data || response.data;
@@ -34,10 +34,10 @@ const useReportDataHipertensao = ({ ubsId, equipe }: reportBasicInfo) => {
   );
 
   const byGenderQuery = useQuery(
-    [reportQueryKey + "by-gender", ubsId, equipe],
+    [`${reportQueryKey}by-gender`, ubsId, equipe],
     async () => {
       const response = await Api.get(
-        reportRoute + `by-gender${ubsParam}`,
+        `${reportRoute}by-gender${ubsParam}`,
         defaultParam
       );
       return response?.data?.data || response.data;
@@ -46,10 +46,10 @@ const useReportDataHipertensao = ({ ubsId, equipe }: reportBasicInfo) => {
   );
 
   const byRaceQuery = useQuery(
-    [reportQueryKey + "by-race", ubsId, equipe],
+    [`${reportQueryKey}by-race`, ubsId, equipe],
     async () => {
       const response = await Api.get(
-        reportRoute + `by-race${ubsParam}`,
+        `${reportRoute}by-race${ubsParam}`,
         defaultParam
       );
       return response?.data?.data || response.data;
@@ -58,10 +58,10 @@ const useReportDataHipertensao = ({ ubsId, equipe }: reportBasicInfo) => {
   );
 
   const examsQuery = useQuery(
-    [reportQueryKey + "exams", ubsId, equipe],
+    [`${reportQueryKey}exams`, ubsId, equipe],
     async () => {
       const response = await Api.get(
-        reportRoute + `exams${ubsParam}`,
+        `${reportRoute}exams${ubsParam}`,
         defaultParam
       );
       return response?.data?.data || response.data;
@@ -70,10 +70,10 @@ const useReportDataHipertensao = ({ ubsId, equipe }: reportBasicInfo) => {
   );
 
   const complicationsQuery = useQuery(
-    [reportQueryKey + "complications", ubsId, equipe],
+    [`${reportQueryKey}complications`, ubsId, equipe],
     async () => {
       const response = await Api.get(
-        reportRoute + `complications${ubsParam}`,
+        `${reportRoute}complications${ubsParam}`,
         defaultParam
       );
       return response?.data?.data || response.data;
@@ -82,10 +82,10 @@ const useReportDataHipertensao = ({ ubsId, equipe }: reportBasicInfo) => {
   );
 
   const imcQuery = useQuery(
-    [reportQueryKey + "imc", ubsId, equipe],
+    [`${reportQueryKey}imc`, ubsId, equipe],
     async () => {
       const response = await Api.get(
-        reportRoute + `imc${ubsParam}`,
+        `${reportRoute}imc${ubsParam}`,
         defaultParam
       );
       return response?.data?.data || response.data;
@@ -95,8 +95,8 @@ const useReportDataHipertensao = ({ ubsId, equipe }: reportBasicInfo) => {
 
   const loadings = {
     total: totalQuery.isLoading,
-    "por-sexo": byGenderQuery.isLoading,
-    "por-raca-cor": byRaceQuery.isLoading,
+    'por-sexo': byGenderQuery.isLoading,
+    'por-raca-cor': byRaceQuery.isLoading,
     exames: examsQuery.isLoading,
     complicacoes: complicationsQuery.isLoading,
     imc: imcQuery.isLoading,
@@ -104,8 +104,8 @@ const useReportDataHipertensao = ({ ubsId, equipe }: reportBasicInfo) => {
 
   const errors = {
     total: totalQuery.error,
-    "por-sexo": byGenderQuery.error,
-    "por-raca-cor": byRaceQuery.error,
+    'por-sexo': byGenderQuery.error,
+    'por-raca-cor': byRaceQuery.error,
     exames: examsQuery.error,
     complicacoes: complicationsQuery.error,
     imc: imcQuery.error,
@@ -114,8 +114,8 @@ const useReportDataHipertensao = ({ ubsId, equipe }: reportBasicInfo) => {
   // Dados organizados
   const data = {
     total: totalQuery.data,
-    "por-sexo": byGenderQuery.data,
-    "por-raca-cor": byRaceQuery.data,
+    'por-sexo': byGenderQuery.data,
+    'por-raca-cor': byRaceQuery.data,
     exames: examsQuery.data,
     complicacoes: complicationsQuery.data,
     imc: imcQuery.data,

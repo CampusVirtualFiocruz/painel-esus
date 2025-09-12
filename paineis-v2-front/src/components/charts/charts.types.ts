@@ -2,7 +2,7 @@
 // Tipos de suporte
 //
 
-import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
+import { ReportViewTypeEnum } from '../../utils/viewTypeEnum';
 
 export type groupedValuesInput = Array<{
   value: {
@@ -12,9 +12,9 @@ export type groupedValuesInput = Array<{
 }>;
 
 type valueInput = Array<{
-  value: Number;
+  value: number;
   tag: string;
-  percent?: Number;
+  percent?: number;
 }>;
 
 type MultipleGroupedValuesInput = {
@@ -32,7 +32,10 @@ type generalConfigs = {
   componentStyle?: object;
   chartConfigOverride?: object;
   seriesConfigOverride?: object;
-  reportViewType?: ReportViewTypeEnum.EQUIPE | ReportViewTypeEnum.UBS |  ReportViewTypeEnum.MUNICIPIO;
+  reportViewType?:
+    | ReportViewTypeEnum.EQUIPE
+    | ReportViewTypeEnum.UBS
+    | ReportViewTypeEnum.MUNICIPIO;
 };
 
 type LinearChart = {
@@ -88,7 +91,7 @@ export type BarChart = LinearChart;
 export type LineChart = LinearChart;
 
 export type PieChart = PercentualChart;
-export type PieChartGroup = { list: Array<PercentualChart>};
+export type PieChartGroup = { list: Array<PercentualChart> };
 export type ProgressListChart = PercentualChart;
 export type DonutChart = PercentualChart & {
   config?: generalConfigs & {
@@ -98,7 +101,7 @@ export type DonutChart = PercentualChart & {
     halfDonut?: boolean;
     roseType?: string;
     sort?: any;
-    rangedLegend?: Array<any>
+    rangedLegend?: Array<any>;
   };
 };
 export type DonutGroupChart = PercentualGroupChart;

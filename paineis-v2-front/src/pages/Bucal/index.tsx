@@ -1,2 +1,2 @@
-import Bucal from "./Bucal";
+import Bucal from './Bucal';
 export default Bucal;

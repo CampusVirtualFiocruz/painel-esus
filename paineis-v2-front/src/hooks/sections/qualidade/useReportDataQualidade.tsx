@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
-import { Api } from "../../../services/api";
+import { useQuery } from 'react-query';
+import { Api } from '../../../services/api';
 
 type reportBasicInfo = {
   ubsId?: string | undefined;
@@ -7,7 +7,7 @@ type reportBasicInfo = {
 };
 
 const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
-  const ubsParam = ubsId ? `/${ubsId}` : "";
+  const ubsParam = ubsId ? `/${ubsId}` : '';
   const defaultParam = {
     params: {
       equipe: squadId,
@@ -16,9 +16,12 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
 
   // Chamadas individuais para cada endpoint
   const indicadoresQuery = useQuery(
-    ["relatorio-qualidade-indicadores", ubsId, squadId],
+    ['relatorio-qualidade-indicadores', ubsId, squadId],
     async () => {
-      const response = await Api.get(`/cadastros/total${ubsParam}`, defaultParam);
+      const response = await Api.get(
+        `/cadastros/total${ubsParam}`,
+        defaultParam
+      );
       return response?.data?.data || response.data;
     },
     {
@@ -27,9 +30,12 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
   );
 
   const cpfCnsRateQuery = useQuery(
-    ["relatorio-qualidade-cpf-cns-rate", ubsId, squadId],
+    ['relatorio-qualidade-cpf-cns-rate', ubsId, squadId],
     async () => {
-      const response = await Api.get(`/cadastros/cpf_cns_rate${ubsParam}`, defaultParam);
+      const response = await Api.get(
+        `/cadastros/cpf_cns_rate${ubsParam}`,
+        defaultParam
+      );
       return response?.data?.data || response.data;
     },
     {
@@ -38,9 +44,12 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
   );
 
   const groupByStatusQuery = useQuery(
-    ["relatorio-qualidade-group-by-status", ubsId, squadId],
+    ['relatorio-qualidade-group-by-status', ubsId, squadId],
     async () => {
-      const response = await Api.get(`/cadastros/group-by-status${ubsParam}`, defaultParam);
+      const response = await Api.get(
+        `/cadastros/group-by-status${ubsParam}`,
+        defaultParam
+      );
       return response?.data?.data || response.data;
     },
     {
@@ -49,9 +58,12 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
   );
 
   const groupByLocationQuery = useQuery(
-    ["relatorio-qualidade-group-by-location", ubsId, squadId],
+    ['relatorio-qualidade-group-by-location', ubsId, squadId],
     async () => {
-      const response = await Api.get(`/cadastros/group-by-location${ubsParam}`, defaultParam);
+      const response = await Api.get(
+        `/cadastros/group-by-location${ubsParam}`,
+        defaultParam
+      );
       return response?.data?.data || response.data;
     },
     {
@@ -60,9 +72,12 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
   );
 
   const peopleWhoGetCareQuery = useQuery(
-    ["relatorio-qualidade-people-who-get-care", ubsId, squadId],
+    ['relatorio-qualidade-people-who-get-care', ubsId, squadId],
     async () => {
-      const response = await Api.get(`/cadastros/people-who-get-care${ubsParam}`, defaultParam);
+      const response = await Api.get(
+        `/cadastros/people-who-get-care${ubsParam}`,
+        defaultParam
+      );
       return response?.data?.data || response.data;
     },
     {
@@ -71,9 +86,12 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
   );
 
   const groupByRaceQuery = useQuery(
-    ["relatorio-qualidade-group-by-race", ubsId, squadId],
+    ['relatorio-qualidade-group-by-race', ubsId, squadId],
     async () => {
-      const response = await Api.get(`/cadastros/group-by-race${ubsParam}`, defaultParam);
+      const response = await Api.get(
+        `/cadastros/group-by-race${ubsParam}`,
+        defaultParam
+      );
       return response?.data?.data || response.data;
     },
     {
@@ -109,11 +127,11 @@ const useReportDataQualidade = ({ ubsId, squadId }: reportBasicInfo) => {
     peopleWhoGetCare: peopleWhoGetCareQuery.data,
     groupByRace: groupByRaceQuery.data,
     // Mantém compatibilidade com o formato anterior
-    "total-cadastros-cidadaos-por-tipo-identificacao": cpfCnsRateQuery.data,
-    "total-cidadaos-conforme-situação-cadastral": groupByStatusQuery.data,
-    "localizacao-imoveis-cadastrados": groupByLocationQuery.data,
-    "total-cidadaos-acompanhados": peopleWhoGetCareQuery.data,
-    "total-cadastros-pessoas-raca-cor": groupByRaceQuery.data,
+    'total-cadastros-cidadaos-por-tipo-identificacao': cpfCnsRateQuery.data,
+    'total-cidadaos-conforme-situação-cadastral': groupByStatusQuery.data,
+    'localizacao-imoveis-cadastrados': groupByLocationQuery.data,
+    'total-cidadaos-acompanhados': peopleWhoGetCareQuery.data,
+    'total-cadastros-pessoas-raca-cor': groupByRaceQuery.data,
     ...indicadoresQuery.data,
   };
 

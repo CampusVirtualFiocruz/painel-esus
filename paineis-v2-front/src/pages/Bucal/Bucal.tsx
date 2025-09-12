@@ -1,19 +1,19 @@
-import { Button } from "bold-ui";
-import { CSSProperties, memo, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Button } from 'bold-ui';
+import { CSSProperties, memo, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 
-import { content } from "../../assets/content/content";
-import People from "../../assets/images/people.svg";
-import ErrorMessage from "../../components/ui/ErrorMessage";
-import LoadingSpinner from "../../components/ui/LoadingSpinner";
-import { ReportFooter } from "../../components/ui/ReportFooter";
-import ReportWrapper from "../../components/ui/ReportWrapper";
-import useReportDataBucal from "../../hooks/sections/bucal/useReportDataBucal";
-import "../../styles/idosa.scss";
-import { formataNumero, ReportBasicParams } from "../../utils";
-import { getChartDescription } from "../../utils/chartTitleUtils";
-import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
-import { reportCharts, reportSections } from "./Bucal.utils";
+import { content } from '../../assets/content/content';
+import People from '../../assets/images/people.svg';
+import ErrorMessage from '../../components/ui/ErrorMessage';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import { ReportFooter } from '../../components/ui/ReportFooter';
+import ReportWrapper from '../../components/ui/ReportWrapper';
+import useReportDataBucal from '../../hooks/sections/bucal/useReportDataBucal';
+import '../../styles/idosa.scss';
+import { formataNumero, ReportBasicParams } from '../../utils';
+import { getChartDescription } from '../../utils/chartTitleUtils';
+import { ReportViewTypeEnum } from '../../utils/viewTypeEnum';
+import { reportCharts, reportSections } from './Bucal.utils';
 
 const RenderChartGroup = ({
   report,
@@ -25,12 +25,12 @@ const RenderChartGroup = ({
   errors,
   refetchAll,
 }: any) => {
-  return Object.keys(chartList).map((chartKey) => {
+  return Object.keys(chartList).map(chartKey => {
     const CustomChart = chartList?.[chartKey]?.Chart;
     const chartConfigs = chartList?.[chartKey]?.config;
     const data = (report as any)?.[chartKey]?.data;
-    const isRow = chartKey === "row" || chartKey.indexOf("Row") !== -1;
-    const isSecondRow = chartKey === "secondRow";
+    const isRow = chartKey === 'row' || chartKey.indexOf('Row') !== -1;
+    const isSecondRow = chartKey === 'secondRow';
 
     // Verificar loading para esta seção
     if (loadings[chartKey as keyof typeof loadings]) {
@@ -75,10 +75,10 @@ const RenderChartGroup = ({
       return (
         <div
           key={chartKey}
-          className="is-row"
+          className='is-row'
           style={{
-            gap: "60px",
-            justifyContent: isSecondRow ? "space-evenly" : "initial",
+            gap: '60px',
+            justifyContent: isSecondRow ? 'space-evenly' : 'initial',
           }}
         >
           <RenderChartGroup
@@ -96,21 +96,21 @@ const RenderChartGroup = ({
     }
 
     const containerStyle: CSSProperties = {
-      position: "relative",
-      marginBottom: "40px",
+      position: 'relative',
+      marginBottom: '40px',
     };
 
     if (alignMiddle) {
-      containerStyle.maxWidth = "400px";
+      containerStyle.maxWidth = '400px';
     }
 
     return (
       <div key={chartKey} style={containerStyle}>
         <h5
           style={{
-            fontWeight: "bold",
-            textAlign: "center",
-            paddingTop: renderSmall ? "30px" : "initial",
+            fontWeight: 'bold',
+            textAlign: 'center',
+            paddingTop: renderSmall ? '30px' : 'initial',
           }}
         >
           {content?.[chartConfigs?.overrideTitle] ||
@@ -120,8 +120,8 @@ const RenderChartGroup = ({
         {Boolean(chartList?.[chartKey]?.subtitle) && (
           <p
             style={{
-              textAlign: "center",
-              padding: renderSmall ? "30px" : "initial",
+              textAlign: 'center',
+              padding: renderSmall ? '30px' : 'initial',
             }}
           >
             {content?.[chartList?.[chartKey]?.subtitle] ??
@@ -133,12 +133,12 @@ const RenderChartGroup = ({
           <center>
             <p
               style={{
-                width: "100%",
-                position: "absolute",
-                bottom: "-70px",
-                textAlign: "center",
-                fontSize: "12px",
-                padding: renderSmall ? "20px" : "initial",
+                width: '100%',
+                position: 'absolute',
+                bottom: '-70px',
+                textAlign: 'center',
+                fontSize: '12px',
+                padding: renderSmall ? '20px' : 'initial',
               }}
             >
               {content?.[chartList?.[chartKey]?.footerNote] ??
@@ -153,22 +153,26 @@ const RenderChartGroup = ({
 
 const Bucal = () => {
   const [params] = useSearchParams();
-  const equipe = params.get("equipe") as any;
-  const [recorte, setRecorte] = useState<"atendidas" | "cadastradas">(
-    "atendidas"
+  const equipe = params.get('equipe') as any;
+  const [recorte, setRecorte] = useState<'atendidas' | 'cadastradas'>(
+    'atendidas'
   );
 
   const { id } = useParams<ReportBasicParams>();
-  const { data, loadings, errors, refetchAll } = useReportDataBucal({ ubsId: id, equipe, recorte });
+  const { data, loadings, errors, refetchAll } = useReportDataBucal({
+    ubsId: id,
+    equipe,
+    recorte,
+  });
 
   const reportViewType = !!equipe
     ? ReportViewTypeEnum.EQUIPE
     : !!id
-    ? ReportViewTypeEnum.UBS
-    : ReportViewTypeEnum.MUNICIPIO;
+      ? ReportViewTypeEnum.UBS
+      : ReportViewTypeEnum.MUNICIPIO;
 
   const footerNote =
-    recorte === "atendidas" ? (
+    recorte === 'atendidas' ? (
       <>
         A <b>População Atendida</b> se refere à todas as pessoas vinculadas à
         uma equipe que tenham realizado algum atendimento odontológico nos
@@ -192,33 +196,33 @@ const Bucal = () => {
   return (
     <>
       <ReportWrapper
-        title={"Saúde Bucal"}
-        footer={<ReportFooter chaveListaNominal="Bucal" equipe={equipe} />}
+        title={'Saúde Bucal'}
+        footer={<ReportFooter chaveListaNominal='Bucal' equipe={equipe} />}
         footerNote={footerNote}
         preheader={
           <div
             style={{
-              display: "flex",
-              alignItems: "end",
-              justifyContent: "end",
-              margin: "20px 20px",
-              gap: "10px",
+              display: 'flex',
+              alignItems: 'end',
+              justifyContent: 'end',
+              margin: '20px 20px',
+              gap: '10px',
             }}
           >
             <Button
-              style={{ height: "36px" }}
-              kind={recorte === "atendidas" ? "primary" : "normal"}
+              style={{ height: '36px' }}
+              kind={recorte === 'atendidas' ? 'primary' : 'normal'}
               onClick={() => {
-                setRecorte("atendidas");
+                setRecorte('atendidas');
               }}
             >
               Atendidas
             </Button>
             <Button
-              style={{ height: "36px" }}
-              kind={recorte === "cadastradas" ? "primary" : "normal"}
+              style={{ height: '36px' }}
+              kind={recorte === 'cadastradas' ? 'primary' : 'normal'}
               onClick={() => {
-                setRecorte("cadastradas");
+                setRecorte('cadastradas');
               }}
             >
               Cadastradas
@@ -228,13 +232,13 @@ const Bucal = () => {
       >
         <div
           style={{
-            display: "flex",
-            width: "100%",
-            maxWidth: "600px",
-            marginTop: "60px",
-            marginBottom: "30px",
-            gap: "40px",
-            fontWeight: "bold",
+            display: 'flex',
+            width: '100%',
+            maxWidth: '600px',
+            marginTop: '60px',
+            marginBottom: '30px',
+            gap: '40px',
+            fontWeight: 'bold',
           }}
         >
           <div
@@ -245,19 +249,19 @@ const Bucal = () => {
             <div
               style={{
                 flex: 1,
-                padding: "20px",
-                backgroundColor: recorte === "atendidas" ? "#0069D0" : "",
-                border: recorte === "atendidas" ? "white" : "1px solid black",
-                color: recorte === "atendidas" ? "white" : "black",
-                textAlign: "center",
+                padding: '20px',
+                backgroundColor: recorte === 'atendidas' ? '#0069D0' : '',
+                border: recorte === 'atendidas' ? 'white' : '1px solid black',
+                color: recorte === 'atendidas' ? 'white' : 'black',
+                textAlign: 'center',
               }}
             >
               {loadings.total ? (
-                <LoadingSpinner size="sm" text="Carregando total..." />
+                <LoadingSpinner size='sm' text='Carregando total...' />
               ) : errors.total ? (
                 <ErrorMessage
                   error={errors.total}
-                  title="Erro ao carregar total de atendidas"
+                  title='Erro ao carregar total de atendidas'
                   showRetry={true}
                   onRetry={refetchAll}
                 />
@@ -265,25 +269,25 @@ const Bucal = () => {
                 <>
                   <span
                     style={{
-                      display: "block",
-                      fontSize: "16px",
-                      marginBottom: "8px",
+                      display: 'block',
+                      fontSize: '16px',
+                      marginBottom: '8px',
                     }}
                   >
                     Total de pessoas
                     <br />
-                    atendidas {getChartDescription("", reportViewType, [])}
+                    atendidas {getChartDescription('', reportViewType, [])}
                   </span>
                   <img
                     src={People}
-                    alt="Icone de pessoas"
-                    width={"30px"}
+                    alt='Icone de pessoas'
+                    width={'30px'}
                     style={{
-                      filter: recorte === "atendidas" ? "brightness(10)" : "",
-                      transform: "translate(-10px, -5px)",
+                      filter: recorte === 'atendidas' ? 'brightness(10)' : '',
+                      transform: 'translate(-10px, -5px)',
                     }}
                   />
-                  <span style={{ fontSize: "26px" }}>
+                  <span style={{ fontSize: '26px' }}>
                     {formataNumero(data?.total?.data?.atendidas)}
                   </span>
                 </>
@@ -299,19 +303,19 @@ const Bucal = () => {
             <div
               style={{
                 flex: 1,
-                padding: "20px",
-                backgroundColor: recorte !== "atendidas" ? "#0069D0" : "",
-                border: recorte !== "atendidas" ? "white" : "1px solid black",
-                color: recorte !== "atendidas" ? "white" : "black",
-                textAlign: "center",
+                padding: '20px',
+                backgroundColor: recorte !== 'atendidas' ? '#0069D0' : '',
+                border: recorte !== 'atendidas' ? 'white' : '1px solid black',
+                color: recorte !== 'atendidas' ? 'white' : 'black',
+                textAlign: 'center',
               }}
             >
               {loadings.total ? (
-                <LoadingSpinner size="sm" text="Carregando total..." />
+                <LoadingSpinner size='sm' text='Carregando total...' />
               ) : errors.total ? (
                 <ErrorMessage
                   error={errors.total}
-                  title="Erro ao carregar total de cadastradas"
+                  title='Erro ao carregar total de cadastradas'
                   showRetry={true}
                   onRetry={refetchAll}
                 />
@@ -319,25 +323,25 @@ const Bucal = () => {
                 <>
                   <span
                     style={{
-                      display: "block",
-                      fontSize: "16px",
-                      marginBottom: "8px",
+                      display: 'block',
+                      fontSize: '16px',
+                      marginBottom: '8px',
                     }}
                   >
                     Total de pessoas
                     <br />
-                    cadastradas {getChartDescription("", reportViewType, [])}*
+                    cadastradas {getChartDescription('', reportViewType, [])}*
                   </span>
                   <img
                     src={People}
-                    alt="Icone de pessoas"
-                    width={"30px"}
+                    alt='Icone de pessoas'
+                    width={'30px'}
                     style={{
-                      filter: recorte !== "atendidas" ? "brightness(10)" : "",
-                      transform: "translate(-10px, -5px)",
+                      filter: recorte !== 'atendidas' ? 'brightness(10)' : '',
+                      transform: 'translate(-10px, -5px)',
                     }}
                   />
-                  <span style={{ fontSize: "26px" }}>
+                  <span style={{ fontSize: '26px' }}>
                     {formataNumero(data?.total?.data?.cadastradas)}
                   </span>
                 </>
@@ -345,11 +349,11 @@ const Bucal = () => {
             </div>
             <div
               style={{
-                marginTop: "2px",
-                width: "100%",
-                textAlign: "right",
-                fontWeight: "initial",
-                fontSize: "14px",
+                marginTop: '2px',
+                width: '100%',
+                textAlign: 'right',
+                fontWeight: 'initial',
+                fontSize: '14px',
               }}
             >
               *nos últimos 24 meses
@@ -367,12 +371,12 @@ const Bucal = () => {
             refetchAll={refetchAll}
           />
         ))}
-        <center style={{ marginTop: "60px", marginBottom: "30px" }}>
+        <center style={{ marginTop: '60px', marginBottom: '30px' }}>
           <h2>
             <b>
-              Proporção referente a quantidade de pessoas{" "}
-              {recorte === "atendidas" ? "atendidas" : "cadastradas"}{" "}
-              {getChartDescription("", reportViewType, [])}:
+              Proporção referente a quantidade de pessoas{' '}
+              {recorte === 'atendidas' ? 'atendidas' : 'cadastradas'}{' '}
+              {getChartDescription('', reportViewType, [])}:
             </b>
           </h2>
           <p>(Dados referentes aos últimos 24 meses)</p>
