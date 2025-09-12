@@ -22,8 +22,9 @@ def send_download_request(message, id, request):
     ApiLog().send_download_log(token, extra_info)
 
 def send_login_log(request, body):
-    logging.login(
-        "Efetuando login",
-        extra={"username": body["username"]}
-    )
-    ApiLog().send_authentication_logs(body)
+    if "username" in body:
+        logging.login(
+            "Efetuando login",
+            extra={"username": body["username"]}
+        )
+        ApiLog().send_authentication_logs(body)

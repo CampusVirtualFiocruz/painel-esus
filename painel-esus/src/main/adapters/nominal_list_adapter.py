@@ -678,6 +678,7 @@ class RecordNominalListAdapter:
         self.status_cadastro = user["status_cadastro"]
 
         self.alerta = user["alerta"]
+        self.raca_cor = user["raca_cor"]
 
         ultima_atualizacao_cidadao, ultima_atualizacao_fcd = True, True
 
@@ -743,6 +744,7 @@ class RecordNominalListAdapter:
                 "cep": anonymize_data_cep(self.cep),
                 "telefone": anonymize_data(self.telefone),
                 "acompanhamento": anonymize_data(self.acompanhamento),
+                "racaCor": anonymize_data(self.raca_cor ),
                 "detalhesCondicaoSaude": [
                     {
                         "registros": [
