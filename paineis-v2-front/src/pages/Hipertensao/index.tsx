@@ -1,2 +1,2 @@
-import Hipertensao from "./Hipertensao";
+import Hipertensao from './Hipertensao';
 export default Hipertensao;

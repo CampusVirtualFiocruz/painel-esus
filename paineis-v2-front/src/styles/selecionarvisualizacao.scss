@@ -1,6 +1,5 @@
 @import "./_exports.module.scss";
 .container-escolher {
-  
   .container-icone {
     display: flex;
     flex-direction: column;
@@ -34,7 +33,6 @@
     width: 100%;
     padding: 6px;
   }
-
 }
 
 .container-entrar {
@@ -51,7 +49,9 @@
     }
 
     &:focus {
-      box-shadow: 0 0 0 2px #F0F0F5, 0 0 0 4px #343131
+      box-shadow:
+        0 0 0 2px #f0f0f5,
+        0 0 0 4px #343131;
     }
 
     &:active {
@@ -59,4 +59,3 @@
     }
   }
 }
-

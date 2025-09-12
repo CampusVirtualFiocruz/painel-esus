@@ -1,25 +1,24 @@
-import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FormEvent, useState } from 'react';
 
-import { Spinner } from "reactstrap";
+import { Spinner } from 'reactstrap';
 
-import "../styles/login.scss";
+import '../styles/login.scss';
 
-import logoImg from "../assets/images/logo.svg";
-import iconUser from "../assets/images/user.svg";
-import iconPassword from "../assets/images/password.svg";
+import logoImg from '../assets/images/logo.svg';
+import iconPassword from '../assets/images/password.svg';
+import iconUser from '../assets/images/user.svg';
 
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
-import { useAuth } from "../context/AuthProvider/useAuth";
-import { Footer } from "../components/Footer";
-import { Snackbar } from "../components/Snackbar";
+import { Footer } from '../components/Footer';
+import { Snackbar } from '../components/Snackbar';
+import { useAuth } from '../context/AuthProvider/useAuth';
 
-import { useQuery } from "react-query";
-import { Api } from "../services/api";
-import { useInfo } from "../context/infoProvider/useInfo";
-import { Button } from "bold-ui";
-import ProfileSelector from "../components/ui/ProfileSelector";
+import { Button } from 'bold-ui';
+import { useQuery } from 'react-query';
+import ProfileSelector from '../components/ui/ProfileSelector';
+import { useInfo } from '../context/infoProvider/useInfo';
+import { Api } from '../services/api';
 
 interface CityResponse {
   cep: string;
@@ -33,11 +32,10 @@ type CityInformationResponse = CityResponse;
 
 export function Login() {
   const auth = useAuth();
-  let navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [city, setCity] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [city, setCity] = useState('');
   const infoContext = useInfo();
 
   const [passwordShown, setPasswordShown] = useState(false);
@@ -46,10 +44,9 @@ export function Login() {
   const [loading, setLoading] = useState(false);
   const [someStateOpen, setSomeStateOpen] = useState(false);
 
-  useQuery("city-informations", async () => {
-    const response = await Api.get<CityInformationResponse>(
-      "city-informations"
-    );
+  useQuery('city-informations', async () => {
+    const response =
+      await Api.get<CityInformationResponse>('city-informations');
     const data: CityResponse = response.data;
     setCity(`${data.municipio} - ${data.uf}`);
     infoContext.setCityInformation(data);
@@ -73,12 +70,12 @@ export function Login() {
       } catch (error) {
         setSomeStateOpen(true);
         setLoading(false);
-        setPassword("");
+        setPassword('');
       }
     } else {
       setSomeStateOpen(true);
       setLoading(false);
-      setPassword("");
+      setPassword('');
     }
   }
 
@@ -87,38 +84,38 @@ export function Login() {
   };
 
   return (
-    <div id="page-login">
+    <div id='page-login'>
       {showProfileSelector && <ProfileSelector />}
-      <div id="main">
+      <div id='main'>
         <aside>
-          <div className="header-content mb-5">
-            <div className="logo-content">
+          <div className='header-content mb-5'>
+            <div className='logo-content'>
               <img
                 src={logoImg}
-                alt="Painel e-SUS APS"
-                title="Painel e-SUS APS"
+                alt='Painel e-SUS APS'
+                title='Painel e-SUS APS'
               />
               <div>
                 <h1>Painel e-SUS APS</h1>
-                <h2 className="text-end">{city}</h2>
+                <h2 className='text-end'>{city}</h2>
               </div>
             </div>
           </div>
-          <div className="container px-0">
-            <div className="row gx-5">
-              <div className="col-12 col-md-8 order-2 order-md-1">
-                <div className="separator mt-4"></div>
+          <div className='container px-0'>
+            <div className='row gx-5'>
+              <div className='col-12 col-md-8 order-2 order-md-1'>
+                <div className='separator mt-4'></div>
                 <div>
-                  <div className="subtitle my-4">O QUE É:</div>
+                  <div className='subtitle my-4'>O QUE É:</div>
                   <p>
                     O Painel e-SUS APS é um software livre nativo para o Windows
                     e Linux, criado para ajudar gestores e profissionais da
                     saúde na tomada de decisão e gestão do cuidado em saúde.
                   </p>
                 </div>
-                <div className="separator mt-4"></div>
+                <div className='separator mt-4'></div>
                 <div>
-                  <div className="subtitle my-4">PARA QUÊ:</div>
+                  <div className='subtitle my-4'>PARA QUÊ:</div>
                   <p>
                     O Painel se conecta ao banco local do e-SUS APS. Portanto,
                     você tem acesso a informações de forma estruturada e a
@@ -129,71 +126,71 @@ export function Login() {
                     Atenção Primária.
                   </p>
                 </div>
-                <div className="mt-5">
+                <div className='mt-5'>
                   <p>
                     * Esta é uma ferramenta gratuita e essencial para a tomada
                     de decisão em Atenção e Vigilância à Saúde.
                   </p>
                 </div>
               </div>
-              <div className="col-12 col-md-4 order-1 order-md-2">
+              <div className='col-12 col-md-4 order-1 order-md-2'>
                 <div
-                  className="formCenter"
+                  className='formCenter'
                   style={loading ? { opacity: 0.2 } : { opacity: 1 }}
                 >
-                  <form className="formFields" onSubmit={handleSubmit}>
-                    <div className="formField">
-                      <label className="formFieldLabel" htmlFor="username">
-                        <img src={iconUser} alt="Usuário" /> Usuário
+                  <form className='formFields' onSubmit={handleSubmit}>
+                    <div className='formField'>
+                      <label className='formFieldLabel' htmlFor='username'>
+                        <img src={iconUser} alt='Usuário' /> Usuário
                       </label>
-                      <div className="container-field">
+                      <div className='container-field'>
                         <input
-                          type="text"
-                          id="username"
-                          className="formFieldInput"
-                          placeholder="Digite seu usuário"
-                          name="username"
+                          type='text'
+                          id='username'
+                          className='formFieldInput'
+                          placeholder='Digite seu usuário'
+                          name='username'
                           value={username}
-                          autoComplete="off"
-                          onChange={(e) => setUsername(e.target.value)}
+                          autoComplete='off'
+                          onChange={e => setUsername(e.target.value)}
                         />
                       </div>
                     </div>
-                    <div className="formField">
-                      <label className="formFieldLabel" htmlFor="password">
-                        <img src={iconPassword} alt="Senha" /> Senha
+                    <div className='formField'>
+                      <label className='formFieldLabel' htmlFor='password'>
+                        <img src={iconPassword} alt='Senha' /> Senha
                       </label>
-                      <div className="container-field">
+                      <div className='container-field'>
                         <input
-                          type={passwordShown ? "text" : "password"}
-                          id="password"
-                          className="formFieldInput"
-                          placeholder="Digite sua senha"
-                          name="password"
+                          type={passwordShown ? 'text' : 'password'}
+                          id='password'
+                          className='formFieldInput'
+                          placeholder='Digite sua senha'
+                          name='password'
                           value={password}
-                          onChange={(e) => setPassword(e.target.value)}
+                          onChange={e => setPassword(e.target.value)}
                         />
                         {passwordShown ? (
                           <AiOutlineEye
-                            size={"1.5rem"}
+                            size={'1.5rem'}
                             onClick={togglePassword}
-                            className="password-toggle"
+                            className='password-toggle'
                           />
                         ) : (
                           <AiOutlineEyeInvisible
-                            size={"1.5rem"}
+                            size={'1.5rem'}
                             onClick={togglePassword}
-                            className="password-toggle"
+                            className='password-toggle'
                           />
                         )}
                       </div>
                     </div>
-                    <div className="formField mt-5">
-                      <Button kind="primary" type="submit" disabled={loading}>
+                    <div className='formField mt-5'>
+                      <Button kind='primary' type='submit' disabled={loading}>
                         {loading ? (
-                          <Spinner size="sm">Carregando...</Spinner>
+                          <Spinner size='sm'>Carregando...</Spinner>
                         ) : (
-                          "ENTRAR"
+                          'ENTRAR'
                         )}
                       </Button>
                     </div>
@@ -204,7 +201,7 @@ export function Login() {
           </div>
         </aside>
         <Snackbar
-          type="error"
+          type='error'
           open={someStateOpen}
           onClose={() => setSomeStateOpen(false)}
         >

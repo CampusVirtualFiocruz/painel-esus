@@ -1,29 +1,29 @@
-import { useLayoutEffect } from "react";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
-import BarraBrasil from "./components/BarraBrasil";
-import { ProtectedLayout } from "./components/ProtectedLayout";
-import { AuthProvider } from "./context/AuthProvider";
-import { getUserLocalStorage } from "./context/AuthProvider/util";
-import { InfoProvider } from "./context/infoProvider";
+import { useLayoutEffect } from 'react';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import BarraBrasil from './components/BarraBrasil';
+import { ProtectedLayout } from './components/ProtectedLayout';
+import { AuthProvider } from './context/AuthProvider';
+import { getUserLocalStorage } from './context/AuthProvider/util';
+import { InfoProvider } from './context/infoProvider';
 
-import Bucal from "./pages/Bucal";
-import Diabetes from "./pages/Diabetes";
-import FeridaVascular from "./pages/FeridaVascular";
-import { Gestante } from "./pages/Gestante";
-import { Gestantes } from "./pages/Gestantes";
-import { GestantesList } from "./pages/GestantesList";
-import Hipertensao from "./pages/Hipertensao";
-import Idosa from "./pages/Idosa";
-import Infantil from "./pages/Infantil";
-import ListaNominal from "./pages/ListaNominal";
-import { Login } from "./pages/Login";
-import NovoPainel from "./pages/NovoPainel";
-import { Painel } from "./pages/Painel";
-import Qualidade from "./pages/Qualidade";
-import { SelecionarUbs } from "./pages/SelecionarUbs";
-import { SelecionarVisualizacao } from "./pages/SelecionarVisualizacao";
-import { SindromesAgudas } from "./pages/SindromesAgudas/SindromesAgudas";
-import Tabagismo from "./pages/Tabagismo";
+import Bucal from './pages/Bucal';
+import Diabetes from './pages/Diabetes';
+import FeridaVascular from './pages/FeridaVascular';
+import { Gestante } from './pages/Gestante';
+import { Gestantes } from './pages/Gestantes';
+import { GestantesList } from './pages/GestantesList';
+import Hipertensao from './pages/Hipertensao';
+import Idosa from './pages/Idosa';
+import Infantil from './pages/Infantil';
+import ListaNominal from './pages/ListaNominal';
+import { Login } from './pages/Login';
+import NovoPainel from './pages/NovoPainel';
+import { Painel } from './pages/Painel';
+import Qualidade from './pages/Qualidade';
+import { SelecionarUbs } from './pages/SelecionarUbs';
+import { SelecionarVisualizacao } from './pages/SelecionarVisualizacao';
+import { SindromesAgudas } from './pages/SindromesAgudas/SindromesAgudas';
+import Tabagismo from './pages/Tabagismo';
 
 const Wrapper = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
@@ -36,9 +36,9 @@ const Wrapper = ({ children }: { children: JSX.Element }) => {
 
 export function getProfile() {
   const user = getUserLocalStorage();
-  const parts = user?.token.split(".");
+  const parts = user?.token.split('.');
   if (parts.length !== 3) {
-    console.error("Token JWT inválido");
+    console.error('Token JWT inválido');
     return;
   }
   const payload = parts?.[1];
@@ -53,10 +53,10 @@ export function getProfile() {
 
 export function getUBS() {
   const user = getUserLocalStorage();
-  const parts = user?.token.split(".");
+  const parts = user?.token.split('.');
 
   if (parts && parts.length !== 3) {
-    console.error("Token JWT inválido");
+    console.error('Token JWT inválido');
     return;
   }
   const payload = parts?.[1];
@@ -71,10 +71,10 @@ export function getUBS() {
 
 export function userCanSelectUBS() {
   const user = getUserLocalStorage();
-  const parts = user?.token.split(".");
+  const parts = user?.token.split('.');
 
   if (parts && parts.length !== 3) {
-    console.error("Token JWT inválido");
+    console.error('Token JWT inválido');
     return;
   }
   const payload = parts?.[1];
@@ -86,15 +86,15 @@ export function userCanSelectUBS() {
   const decodedPayload = atob(payload);
 
   return (
-    String(JSON.parse(decodedPayload)?.profiles[0]).toUpperCase() === "ADMIN"
+    String(JSON.parse(decodedPayload)?.profiles[0]).toUpperCase() === 'ADMIN'
   );
 }
 
 export function isUserFromUBS() {
   const user = getUserLocalStorage();
-  const parts = user?.token.split(".");
+  const parts = user?.token.split('.');
   if (parts.length !== 3) {
-    console.error("Token JWT inválido");
+    console.error('Token JWT inválido');
     return;
   }
   const payload = parts?.[1];
@@ -116,9 +116,9 @@ function App() {
           <BarraBrasil />
           <Wrapper>
             <Routes>
-              <Route path="/" element={<Login />} />
+              <Route path='/' element={<Login />} />
               <Route
-                path="/selecionarubs"
+                path='/selecionarubs'
                 element={
                   <ProtectedLayout>
                     <SelecionarUbs />
@@ -126,7 +126,7 @@ function App() {
                 }
               />
               <Route
-                path="/selecionarvisualizacao"
+                path='/selecionarvisualizacao'
                 element={
                   <ProtectedLayout>
                     <SelecionarVisualizacao />
@@ -134,7 +134,7 @@ function App() {
                 }
               />
               <Route
-                path="/antigo-painelx"
+                path='/antigo-painelx'
                 element={
                   <ProtectedLayout>
                     <Painel />
@@ -142,7 +142,7 @@ function App() {
                 }
               />
               <Route
-                path="/antigo-painel/:id"
+                path='/antigo-painel/:id'
                 element={
                   <ProtectedLayout>
                     <Painel />
@@ -150,7 +150,7 @@ function App() {
                 }
               />
               <Route
-                path="/home"
+                path='/home'
                 element={
                   <ProtectedLayout>
                     <NovoPainel />
@@ -158,7 +158,7 @@ function App() {
                 }
               />
               <Route
-                path="/home/:id"
+                path='/home/:id'
                 element={
                   <ProtectedLayout>
                     <NovoPainel />
@@ -166,7 +166,7 @@ function App() {
                 }
               />
               <Route
-                path="/gestantes"
+                path='/gestantes'
                 element={
                   <ProtectedLayout>
                     <Gestantes />
@@ -174,7 +174,7 @@ function App() {
                 }
               />
               <Route
-                path="/tabagismo"
+                path='/tabagismo'
                 element={
                   <ProtectedLayout>
                     <Tabagismo />
@@ -182,7 +182,7 @@ function App() {
                 }
               />
               <Route
-                path="/ferida-vascular"
+                path='/ferida-vascular'
                 element={
                   <ProtectedLayout>
                     <FeridaVascular />
@@ -190,7 +190,7 @@ function App() {
                 }
               />
               <Route
-                path="/gestantes/:id"
+                path='/gestantes/:id'
                 element={
                   <ProtectedLayout>
                     <Gestantes />
@@ -198,7 +198,7 @@ function App() {
                 }
               />
               <Route
-                path="/gestante/:id"
+                path='/gestante/:id'
                 element={
                   <ProtectedLayout>
                     <Gestante />
@@ -206,7 +206,7 @@ function App() {
                 }
               />
               <Route
-                path="/gestantes/list"
+                path='/gestantes/list'
                 element={
                   <ProtectedLayout>
                     <GestantesList />
@@ -214,7 +214,7 @@ function App() {
                 }
               />
               <Route
-                path="/qualidade"
+                path='/qualidade'
                 element={
                   <ProtectedLayout>
                     <Qualidade />
@@ -222,7 +222,7 @@ function App() {
                 }
               />
               <Route
-                path="/qualidade/:id"
+                path='/qualidade/:id'
                 element={
                   <ProtectedLayout>
                     <Qualidade />
@@ -230,7 +230,7 @@ function App() {
                 }
               />
               <Route
-                path="/infantil"
+                path='/infantil'
                 element={
                   <ProtectedLayout>
                     <Infantil />
@@ -238,7 +238,7 @@ function App() {
                 }
               />
               <Route
-                path="/infantil/:id"
+                path='/infantil/:id'
                 element={
                   <ProtectedLayout>
                     <Infantil />
@@ -246,7 +246,7 @@ function App() {
                 }
               />
               <Route
-                path="/idosa"
+                path='/idosa'
                 element={
                   <ProtectedLayout>
                     <Idosa />
@@ -254,7 +254,7 @@ function App() {
                 }
               />
               <Route
-                path="/idosa/:id"
+                path='/idosa/:id'
                 element={
                   <ProtectedLayout>
                     <Idosa />
@@ -262,7 +262,7 @@ function App() {
                 }
               />
               <Route
-                path="/gestantes/list/:id"
+                path='/gestantes/list/:id'
                 element={
                   <ProtectedLayout>
                     <GestantesList />
@@ -270,7 +270,7 @@ function App() {
                 }
               />
               <Route
-                path="/diabetes"
+                path='/diabetes'
                 element={
                   <ProtectedLayout>
                     <Diabetes />
@@ -278,15 +278,15 @@ function App() {
                 }
               />
               <Route
-                path="/diabetes/:id"
+                path='/diabetes/:id'
                 element={
                   <ProtectedLayout>
                     <Diabetes />
                   </ProtectedLayout>
                 }
               />
-               <Route
-                path="/hipertensao"
+              <Route
+                path='/hipertensao'
                 element={
                   <ProtectedLayout>
                     <Hipertensao />
@@ -294,7 +294,7 @@ function App() {
                 }
               />
               <Route
-                path="/hipertensao/:id"
+                path='/hipertensao/:id'
                 element={
                   <ProtectedLayout>
                     <Hipertensao />
@@ -302,7 +302,7 @@ function App() {
                 }
               />
               <Route
-                path="/lista-nominal/:id"
+                path='/lista-nominal/:id'
                 element={
                   <ProtectedLayout>
                     <ListaNominal />
@@ -310,7 +310,7 @@ function App() {
                 }
               />
               <Route
-                path="/sindromes-agudas"
+                path='/sindromes-agudas'
                 element={
                   <ProtectedLayout>
                     <SindromesAgudas />
@@ -318,7 +318,7 @@ function App() {
                 }
               />
               <Route
-                path="/sindromes-agudas/:id"
+                path='/sindromes-agudas/:id'
                 element={
                   <ProtectedLayout>
                     <SindromesAgudas />
@@ -326,7 +326,7 @@ function App() {
                 }
               />
               <Route
-                path="/saude-bucal"
+                path='/saude-bucal'
                 element={
                   <ProtectedLayout>
                     <Bucal />
@@ -334,7 +334,7 @@ function App() {
                 }
               />
               <Route
-                path="/saude-bucal/:id"
+                path='/saude-bucal/:id'
                 element={
                   <ProtectedLayout>
                     <Bucal />

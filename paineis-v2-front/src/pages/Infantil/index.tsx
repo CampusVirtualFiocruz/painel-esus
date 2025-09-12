@@ -1,2 +1,2 @@
-import Infantil from "./Infantil";
+import Infantil from './Infantil';
 export default Infantil;

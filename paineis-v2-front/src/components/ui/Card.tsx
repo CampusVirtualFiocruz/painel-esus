@@ -1,4 +1,4 @@
-import { HTMLProps } from "react";
+import { HTMLProps } from 'react';
 
 const Card = ({
   children,
@@ -8,10 +8,10 @@ const Card = ({
     <div
       {...props}
       style={{
-        borderRadius: "4px",
-        border: "1px solid rgb(211, 212, 221)",
-        padding: "1.2rem",
-        width: "100%",
+        borderRadius: '4px',
+        border: '1px solid rgb(211, 212, 221)',
+        padding: '1.2rem',
+        width: '100%',
         ...props?.style,
       }}
     >

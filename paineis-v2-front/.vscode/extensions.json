@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "ms-vscode.vscode-typescript-next",
+    "bradlc.vscode-tailwindcss",
+    "ms-vscode.vscode-json",
+    "formulahendry.auto-rename-tag",
+    "christian-kohler.path-intellisense",
+    "ms-vscode.vscode-css-peek",
+    "zignd.html-css-class-completion",
+    "steoates.autoimport-es6-ts",
+    "ms-vscode.vscode-react-native",
+    "ms-vscode.vscode-react-snippets"
+  ]
+}

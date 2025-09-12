@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 
 const usePortal = (el: any) => {
   const [portal, setPortal] = React.useState({
@@ -7,9 +8,10 @@ const usePortal = (el: any) => {
   });
 
   const createPortal = React.useCallback((el: any) => {
+    const root = createRoot(el);
     const Portal = ({ children }: any) => ReactDOM.createPortal(children, el);
 
-    const remove = () => ReactDOM.unmountComponentAtNode(el);
+    const remove = () => root.unmount();
 
     return { render: Portal, remove };
   }, []);

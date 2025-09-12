@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useParams, useLocation, useSearchParams } from "react-router-dom";
-import { PagedTable, TextField, LocaleContext, Button } from "bold-ui";
-import ptBr from "bold-ui/lib/i18n/locales/pt-BR";
-import { Modal } from "../../components/Modal";
-import ReportWrapper from "../../components/ui/ReportWrapper";
-import usePaginatedList from "./usePaginatedList";
-import { columns, Footer, footerNotes } from "./ListaNominal.utils";
-import "../../styles/gestanteList.scss";
-import "../../styles/listaNominal.scss";
-import { ReportBasicParams } from "../../utils";
+import { useState } from 'react';
+import { useParams, useLocation, useSearchParams } from 'react-router-dom';
+import { PagedTable, TextField, LocaleContext, Button } from 'bold-ui';
+import ptBr from 'bold-ui/lib/i18n/locales/pt-BR';
+import { Modal } from '../../components/Modal';
+import ReportWrapper from '../../components/ui/ReportWrapper';
+import usePaginatedList from './usePaginatedList';
+import { columns, Footer, footerNotes } from './ListaNominal.utils';
+import '../../styles/gestanteList.scss';
+import '../../styles/listaNominal.scss';
+import { ReportBasicParams } from '../../utils';
 
 interface RowType {
   nome: string;
@@ -29,9 +29,9 @@ const ListaNominal = () => {
   const { id } = useParams<ReportBasicParams>();
   const [showModal, setShowModal] = useState(false);
   const [data, setData] = useState<any>({ loaded: 7 });
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [params] = useSearchParams();
-  const equipe = params.get("equipe");
+  const equipe = params.get('equipe');
 
   const handleClick = (item: any) => {
     setData({ loaded: 7, ...item });
@@ -40,10 +40,10 @@ const ListaNominal = () => {
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const condicao = String(queryParams.get("condicao"));
+  const condicao = String(queryParams.get('condicao'));
   const footerNote = footerNotes?.[condicao];
-  const [recorte, setRecorte] = useState<"" | "atendidas" | "cadastradas">(
-    condicao === "Bucal" ? "atendidas" : ""
+  const [recorte, setRecorte] = useState<'' | 'atendidas' | 'cadastradas'>(
+    condicao === 'Bucal' ? 'atendidas' : ''
   );
 
   const {
@@ -58,7 +58,7 @@ const ListaNominal = () => {
     id,
     searchTerm,
     config: {
-      possuiRecorte: condicao === "Bucal",
+      possuiRecorte: condicao === 'Bucal',
       recorte,
     },
   });
@@ -80,20 +80,20 @@ const ListaNominal = () => {
   const alertMessage = `
     Os sinais de alertas correspondem à não
     conformidade com as orientações de boas
-    práticas, dentro de um período de ${condicao === "Infantil" ? 36 : condicao === "Bucal" ? 24 : 12} meses,
+    práticas, dentro de um período de ${condicao === 'Infantil' ? 36 : condicao === 'Bucal' ? 24 : 12} meses,
     preconizadas pelo Ministério da Saúde
   `;
 
   const alertBeforeDetails =
-    condicao === "Bucal" ? "DADOS REFERENTES AOS ÚLTIMOS 30 MESES" : "";
+    condicao === 'Bucal' ? 'DADOS REFERENTES AOS ÚLTIMOS 30 MESES' : '';
 
   const footerInfo =
-    condicao === "Infantil"
-      ? "Não se aplica: Crianças que ainda não atingiram idade mínima para inclusão no critério correspondente às diretrizes preconizadas pelo Ministério da Saúde"
+    condicao === 'Infantil'
+      ? 'Não se aplica: Crianças que ainda não atingiram idade mínima para inclusão no critério correspondente às diretrizes preconizadas pelo Ministério da Saúde'
       : undefined;
 
   return (
-    <div id="page-painel">
+    <div id='page-painel'>
       {showModal && (
         <Modal
           data={data}
@@ -102,45 +102,44 @@ const ListaNominal = () => {
         />
       )}
       <ReportWrapper
-        title={
-          "Lista Nominal / " +
-          (condicao === "Bucal"
-            ? "Saúde Bucal"
-            : condicao === "Qualidade"
-            ? "Qualidade de Cadastro"
-            : condicao === "Idosa"
-            ? "Cuidado da Pessoa Idosa"
-            : condicao === "Infantil"
-            ? "Desenvolvimento Infantil"
-            : condicao)
-        }
-        subtitle=""
+        title={`Lista Nominal / ${
+          condicao === 'Bucal'
+            ? 'Saúde Bucal'
+            : condicao === 'Qualidade'
+              ? 'Qualidade de Cadastro'
+              : condicao === 'Idosa'
+                ? 'Cuidado da Pessoa Idosa'
+                : condicao === 'Infantil'
+                  ? 'Desenvolvimento Infantil'
+                  : condicao
+        }`}
+        subtitle=''
         footerNote={footerNote}
         preheader={
-          condicao === "Bucal" ? (
+          condicao === 'Bucal' ? (
             <div
               style={{
-                display: "flex",
-                alignItems: "end",
-                justifyContent: "end",
-                margin: "20px 20px",
-                gap: "10px",
+                display: 'flex',
+                alignItems: 'end',
+                justifyContent: 'end',
+                margin: '20px 20px',
+                gap: '10px',
               }}
             >
               <Button
-                style={{ height: "36px" }}
-                kind={recorte === "atendidas" ? "primary" : "normal"}
+                style={{ height: '36px' }}
+                kind={recorte === 'atendidas' ? 'primary' : 'normal'}
                 onClick={() => {
-                  setRecorte("atendidas");
+                  setRecorte('atendidas');
                 }}
               >
                 Atendidas
               </Button>
               <Button
-                style={{ height: "36px" }}
-                kind={recorte === "cadastradas" ? "primary" : "normal"}
+                style={{ height: '36px' }}
+                kind={recorte === 'cadastradas' ? 'primary' : 'normal'}
                 onClick={() => {
-                  setRecorte("cadastradas");
+                  setRecorte('cadastradas');
                 }}
               >
                 Cadastradas
@@ -149,12 +148,12 @@ const ListaNominal = () => {
           ) : null
         }
       >
-        <div className="search">
+        <div className='search'>
           <TextField
-            name="iconized"
-            id="iconized"
-            placeholder="Busca por CPF, CNS, Nome"
-            icon="zoomOutline"
+            name='iconized'
+            id='iconized'
+            placeholder='Busca por CPF, CNS, Nome'
+            icon='zoomOutline'
             required
             value={searchTerm}
             onChange={(e: any) => setSearchTerm(e.target.value)}

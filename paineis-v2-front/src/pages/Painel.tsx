@@ -1,38 +1,44 @@
-import { Button } from "bold-ui";
-import { CSSProperties, useEffect, useState } from "react";
-import { MdInfoOutline } from "react-icons/md";
-import { useQuery } from "react-query";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import Select, { StylesConfig } from "react-select";
-import { Spinner } from "reactstrap";
+import { Button } from 'bold-ui';
+import { CSSProperties, useEffect, useState } from 'react';
+import { MdInfoOutline } from 'react-icons/md';
+import { useQuery } from 'react-query';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import Select, { StylesConfig } from 'react-select';
+import { Spinner } from 'reactstrap';
 
-import { Condicao } from "../charts/Condicao";
-import Piramide from "../charts/Piramide";
-import { Zonas } from "../charts/Zonas";
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
-import Card from "../components/ui/Card";
+import { Condicao } from '../charts/Condicao';
+import Piramide from '../charts/Piramide';
+import { Zonas } from '../charts/Zonas';
+import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
+import Card from '../components/ui/Card';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "../components/ui/Tooltip";
-import { Typography } from "../components/ui/Typography";
-import { useInfo } from "../context/infoProvider/useInfo";
-import { Api } from "../services/api";
-import "../styles/painel.scss";
-import { ReportBasicParams, formataNumero, getNomeUbs, navigateHome, somaIndicador } from "../utils";
+} from '../components/ui/Tooltip';
+import { Typography } from '../components/ui/Typography';
+import { useInfo } from '../context/infoProvider/useInfo';
+import { Api } from '../services/api';
+import '../styles/painel.scss';
+import {
+  ReportBasicParams,
+  formataNumero,
+  getNomeUbs,
+  navigateHome,
+  somaIndicador,
+} from '../utils';
 
-import feminino from "../assets/images/feminino.svg";
-import homem from "../assets/images/homem.svg";
-import masculino from "../assets/images/masculino.svg";
-import bucal from "../assets/images/menu/bucal.png";
-import children from "../assets/images/menu/children.png";
-import diabetes from "../assets/images/menu/diabetes.png";
-import hipertensao from "../assets/images/menu/hipertensao.png";
-import old from "../assets/images/menu/old.png";
-import quality from "../assets/images/menu/quality.png";
-import mulher from "../assets/images/mulher.svg";
+import feminino from '../assets/images/feminino.svg';
+import homem from '../assets/images/homem.svg';
+import masculino from '../assets/images/masculino.svg';
+import bucal from '../assets/images/menu/bucal.png';
+import children from '../assets/images/menu/children.png';
+import diabetes from '../assets/images/menu/diabetes.png';
+import hipertensao from '../assets/images/menu/hipertensao.png';
+import old from '../assets/images/menu/old.png';
+import quality from '../assets/images/menu/quality.png';
+import mulher from '../assets/images/mulher.svg';
 
 type Indicator = {
   rural: number;
@@ -46,34 +52,34 @@ type TypeUbs = {
 };
 
 const customControlStyles: CSSProperties = {
-  width: "320px",
-  height: "40px",
+  width: '320px',
+  height: '40px',
 };
 
 type IsMulti = false;
 
 const selectStyle: StylesConfig<TypeUbs, IsMulti> = {
-  control: (provided, state) => {
+  control: provided => {
     return {
       ...provided,
       ...customControlStyles,
     };
   },
-  option: (provided, state) => ({
+  option: provided => ({
     ...provided,
     padding: 10,
   }),
   clearIndicator: () => ({
-    color: "#343131",
+    color: '#343131',
   }),
   dropdownIndicator: () => ({
-    color: "#343131",
+    color: '#343131',
   }),
 };
 
 interface IPainel {
   ibgePopulation: number;
-  ageGroups: {};
+  ageGroups: Record<string, unknown>;
   gender: {
     feminino: number;
     masculino: number;
@@ -111,19 +117,19 @@ type ResponseDataListUbs = {
 };
 
 export function Painel() {
-  let navigate = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams<ReportBasicParams>();
   const [params] = useSearchParams();
-  const equipe = params.get("equipe");
+  const equipe = params.get('equipe');
   const { cityInformation } = useInfo();
   const [dadosPainel, setDadosPainel] = useState<IPainel>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getDados = async () => {
-      let rota = id
-        ? `get-demographic-info/${id}${equipe ? `?equipe=${equipe}` : ""}`
-        : `get-demographic-info${equipe ? `?equipe=${equipe}` : ""}`;
+      const rota = id
+        ? `get-demographic-info/${id}${equipe ? `?equipe=${equipe}` : ''}`
+        : `get-demographic-info${equipe ? `?equipe=${equipe}` : ''}`;
 
       try {
         const response = await Api.get<ResponseData>(rota);
@@ -146,11 +152,11 @@ export function Painel() {
     isLoading: isLoadingUbs,
     error: errorUbs,
   } = useQuery(
-    "ubs",
+    'ubs',
     async () => {
-      const response = await Api.get<ResponseDataListUbs>("get-units");
+      const response = await Api.get<ResponseDataListUbs>('get-units');
       const data = response.data;
-      const listData: TypeUbs[] = data.data.map((ubs) => {
+      const listData: TypeUbs[] = data.data.map(ubs => {
         return {
           label: ubs.no_unidade_saude,
           value: ubs.co_seq_dim_unidade_saude,
@@ -165,7 +171,7 @@ export function Painel() {
     }
   );
 
-  const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : "-";
+  const nomeUbs = id && !isLoadingUbs ? getNomeUbs(dataUbs, id) : '-';
 
   function handleToPainelMunicipio() {
     setLoading(true);
@@ -178,56 +184,63 @@ export function Painel() {
   };
 
   type availableRoutesToThemedReport =
-    | "diabetes"
-    | "hipertensao"
-    | "infantil"
-    | "qualidade"
-    | "idosa"
-    | "saude-bucal";
+    | 'diabetes'
+    | 'hipertensao'
+    | 'infantil'
+    | 'qualidade'
+    | 'idosa'
+    | 'saude-bucal';
 
   const handleToThemedReport = (key: availableRoutesToThemedReport) => {
     if (id) {
-      navigate(`/${key}/${id}${equipe ? `?equipe=${equipe}` : ""}`);
+      navigate(`/${key}/${id}${equipe ? `?equipe=${equipe}` : ''}`);
     } else {
-      navigate(`/${key}${equipe ? `?equipe=${equipe}` : ""}`);
+      navigate(`/${key}${equipe ? `?equipe=${equipe}` : ''}`);
     }
   };
 
   return (
-    <div id="page-painel">
+    <div id='page-painel'>
       <Header />
 
       {loading ? (
-        <div className="contentWrapperLoading">
-          <Spinner color="#343131" />
+        <div className='contentWrapperLoading'>
+          <Spinner color='#343131' />
         </div>
       ) : (
-        <div className="contentWrapper">
-          <hr className="linha my-4" />
+        <div className='contentWrapper'>
+          <hr className='linha my-4' />
 
           <h2>
             {id
               ? !isLoadingUbs
                 ? nomeUbs
-                : "Carregando..."
-              : cityInformation?.municipio + " - " + cityInformation?.uf}
+                : 'Carregando...'
+              : `${cityInformation?.municipio} - ${cityInformation?.uf}`}
           </h2>
 
           <div
-            className="container container-cards-principal"
-            style={{ overflow: "visible" }}
+            className='container container-cards-principal'
+            style={{ overflow: 'visible' }}
           >
-            <div className="row align-items-start">
-              <div className="col-xl-3">
-                <div className="container-card d-flex flex-column flex-md-row align-items-center justify-content-center my-2 py-2 px-4">
-                  <div className="w-50 d-flex flex-column align-items-center justify-content-center">
-                    <h4 className="text-center">Cidadãos Cadastrados</h4>
+            <div className='row align-items-start'>
+              <div className='col-xl-3'>
+                <div className='container-card d-flex flex-column flex-md-row align-items-center justify-content-center my-2 py-2 px-4'>
+                  <div className='w-50 d-flex flex-column align-items-center justify-content-center'>
+                    <h4 className='text-center'>Cidadãos Cadastrados</h4>
                     <span>{formataNumero(dadosPainel?.total)}</span>
                   </div>
-                  <div className="mx-2" style={{ height: '100px', width: '1px', backgroundColor: '#FFFFFF' }} />
-                  <div className="w-50 d-flex flex-column align-items-center justify-content-center">
+                  <div
+                    className='mx-2'
+                    style={{
+                      height: '100px',
+                      width: '1px',
+                      backgroundColor: '#FFFFFF',
+                    }}
+                  />
+                  <div className='w-50 d-flex flex-column align-items-center justify-content-center'>
                     <Tooltip>
-                      <TooltipContent className="Tooltip">
+                      <TooltipContent className='Tooltip'>
                         <div>
                           Informação extraída da Relação da População Municipal
                           enviada ao TCU em 2023,
@@ -236,17 +249,17 @@ export function Painel() {
                         </div>
                       </TooltipContent>
                       <a
-                        target="_blank"
-                        href="https://www.ibge.gov.br/estatisticas/sociais/populacao/37734-relacao-da-populacao-dos-municipios-para-publicacao-no-dou.html?=&t=resultados"
-                        rel="noreferrer"
+                        target='_blank'
+                        href='https://www.ibge.gov.br/estatisticas/sociais/populacao/37734-relacao-da-populacao-dos-municipios-para-publicacao-no-dou.html?=&t=resultados'
+                        rel='noreferrer'
                       >
-                        <h4 className="text-center">
+                        <h4 className='text-center'>
                           <TooltipTrigger>
                             População Apurada&nbsp;
                             <MdInfoOutline
                               style={{
-                                cursor: "pointer",
-                                color: "#ffffff",
+                                cursor: 'pointer',
+                                color: '#ffffff',
                                 height: 20,
                                 width: 20,
                               }}
@@ -260,13 +273,13 @@ export function Painel() {
                 </div>
               </div>
 
-              <div className="col-xl-6" style={{ overflow: "visible" }}>
+              <div className='col-xl-6' style={{ overflow: 'visible' }}>
                 <Card
-                  className="container-card-alt"
-                  style={{ padding: 0, marginTop: "8px" }}
+                  className='container-card-alt'
+                  style={{ padding: 0, marginTop: '8px' }}
                 >
-                  <div className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2">
-                    <div className="me-2">
+                  <div className='d-flex flex-column flex-md-row align-items-center justify-content-center my-2'>
+                    <div className='me-2'>
                       <Zonas data={dadosPainel?.locationArea} />
                     </div>
                     <div>
@@ -276,16 +289,16 @@ export function Painel() {
                             Tipo de localização&nbsp;
                             <MdInfoOutline
                               style={{
-                                cursor: "pointer",
-                                color: "#222222",
+                                cursor: 'pointer',
+                                color: '#222222',
                                 height: 20,
                                 width: 20,
                               }}
                             />
                           </TooltipTrigger>
-                          <TooltipContent className="Tooltip">
-                            "Não informado" refere-se aos cadastros realizados
-                            em
+                          <TooltipContent className='Tooltip'>
+                            &quot;Não informado&quot; refere-se aos cadastros
+                            realizados em
                             <br />
                             Ficha de Cadastro Individual sem associação com uma
                             <br />
@@ -294,30 +307,30 @@ export function Painel() {
                         </Typography.Details>
                       </Tooltip>
                       <div
-                        className="d-flex flex-column flex-md-row align-items-center justify-content-center my-2"
-                        style={{ gap: "15px" }}
+                        className='d-flex flex-column flex-md-row align-items-center justify-content-center my-2'
+                        style={{ gap: '15px' }}
                       >
-                        <div className="container-dados-zona">
-                          <div className="d-flex align-items-center mb-2">
-                            <div className="box-container-light me-2"></div>
+                        <div className='container-dados-zona'>
+                          <div className='d-flex align-items-center mb-2'>
+                            <div className='box-container-light me-2'></div>
                             <h4>Zona Urbana</h4>
                           </div>
                           <span>
                             {formataNumero(dadosPainel?.locationArea.urbano)}
                           </span>
                         </div>
-                        <div className="container-dados-zona">
-                          <div className="d-flex align-items-center mb-2">
-                            <div className="box-container-dark me-2"></div>
+                        <div className='container-dados-zona'>
+                          <div className='d-flex align-items-center mb-2'>
+                            <div className='box-container-dark me-2'></div>
                             <h4>Zona Rural</h4>
                           </div>
                           <span>
                             {formataNumero(dadosPainel?.locationArea.rural)}
                           </span>
                         </div>
-                        <div className="container-dados-zona">
-                          <div className="d-flex align-items-center mb-2">
-                            <div className="box-container-nonactive me-2"></div>
+                        <div className='container-dados-zona'>
+                          <div className='d-flex align-items-center mb-2'>
+                            <div className='box-container-nonactive me-2'></div>
                             <h4>Não informado</h4>
                           </div>
                           <span>
@@ -331,23 +344,30 @@ export function Painel() {
                   </div>
                 </Card>
               </div>
-              <div className="col-xl-3">
-                <div className="container-card d-flex align-items-center justify-content-center my-2 py-1">
-                  <div className="d-flex flex-column align-items-center ms-2 me-4">
+              <div className='col-xl-3'>
+                <div className='container-card d-flex align-items-center justify-content-center my-2 py-1'>
+                  <div className='d-flex flex-column align-items-center ms-2 me-4'>
                     <img
-                      className="my-2 force-white"
+                      className='my-2 force-white'
                       src={homem}
-                      alt="Homem"
+                      alt='Homem'
                       width={60}
                     />
                     <span>{formataNumero(dadosPainel?.gender.masculino)}</span>
                   </div>
-                  <div className="mx-2" style={{ height: '100px', width: '1px', backgroundColor: '#FFFFFF' }} />
-                  <div className="d-flex flex-column align-items-center ms-4 me-2">
+                  <div
+                    className='mx-2'
+                    style={{
+                      height: '100px',
+                      width: '1px',
+                      backgroundColor: '#FFFFFF',
+                    }}
+                  />
+                  <div className='d-flex flex-column align-items-center ms-4 me-2'>
                     <img
-                      className="my-2 force-white"
+                      className='my-2 force-white'
                       src={mulher}
-                      alt="Mulher"
+                      alt='Mulher'
                       width={60}
                     />
                     <span>{formataNumero(dadosPainel?.gender.feminino)}</span>
@@ -357,7 +377,7 @@ export function Painel() {
             </div>
           </div>
 
-          <div className="my-5">
+          <div className='my-5'>
             <Typography.Subtitle>
               Proporção de indivíduos cadastrados por sexo e idade
             </Typography.Subtitle>
@@ -365,104 +385,104 @@ export function Painel() {
           {dadosPainel !== undefined &&
           dadosPainel.ageGroups &&
           Object.keys(dadosPainel.ageGroups).length !== 4 ? (
-            <div className="graficoPiramide">
-              <div className="w-100 painel-demografico">
-                <div className="d-flex justify-content-center">
-                  <div className="mx-2">
+            <div className='graficoPiramide'>
+              <div className='w-100 painel-demografico'>
+                <div className='d-flex justify-content-center'>
+                  <div className='mx-2'>
                     <img
                       src={masculino}
-                      className="img-fluid"
-                      alt="Masculino"
+                      className='img-fluid'
+                      alt='Masculino'
                     />
                   </div>
-                  <div className="mx-2">
-                    <img src={feminino} className="img-fluid" alt="Feminino" />
+                  <div className='mx-2'>
+                    <img src={feminino} className='img-fluid' alt='Feminino' />
                   </div>
                 </div>
                 <Piramide data={dadosPainel.ageGroups} />
               </div>
-              <div className="d-flex align-items-center justify-content-between mt-5">
-                <div className="d-flex align-items-center mx-3">
-                  <div className="box-container-light me-2"></div>
-                  <h5 className="mb-0">Zona Urbana</h5>
+              <div className='d-flex align-items-center justify-content-between mt-5'>
+                <div className='d-flex align-items-center mx-3'>
+                  <div className='box-container-light me-2'></div>
+                  <h5 className='mb-0'>Zona Urbana</h5>
                 </div>
-                <div className="d-flex align-items-center mx-3">
-                  <div className="box-container-dark me-2"></div>
-                  <h5 className="mb-0">Zona Rural</h5>
+                <div className='d-flex align-items-center mx-3'>
+                  <div className='box-container-dark me-2'></div>
+                  <h5 className='mb-0'>Zona Rural</h5>
                 </div>
-                <div className="d-flex align-items-center mx-3">
-                  <div className="box-container-nonactive me-2"></div>
-                  <h5 className="mb-0">Não Informado</h5>
+                <div className='d-flex align-items-center mx-3'>
+                  <div className='box-container-nonactive me-2'></div>
+                  <h5 className='mb-0'>Não Informado</h5>
                 </div>
               </div>
             </div>
           ) : (
-            <h6 className="text-danger">
+            <h6 className='text-danger'>
               Sem dados de proporção de indivíduos cadastrados.
             </h6>
           )}
-          <div style={{ marginTop: "60px", marginBottom: "20px" }}>
+          <div style={{ marginTop: '60px', marginBottom: '20px' }}>
             <Typography.Subtitle>Relatórios Temáticos</Typography.Subtitle>
           </div>
-          <div className="container">
-            <div className="row container-cards-condicoes">
+          <div className='container'>
+            <div className='row container-cards-condicoes'>
               {Boolean(dadosPainel?.indicators?.diabetes) && (
                 <div
-                  className="card-condicao p-2"
-                  onClick={() => handleToThemedReport("diabetes")}
+                  className='card-condicao p-2'
+                  onClick={() => handleToThemedReport('diabetes')}
                 >
-                  <span className="nome-condicao">Diabetes</span>
+                  <span className='nome-condicao'>Diabetes</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.diabetes)}</h4>
-                  <div className="d-flex align-items-center">
-                    <img src={diabetes} alt="Diabetes" className="mx-2" />
+                  <div className='d-flex align-items-center'>
+                    <img src={diabetes} alt='Diabetes' className='mx-2' />
                     <Condicao data={dadosPainel?.indicators?.diabetes} />
                   </div>
                 </div>
               )}
               {Boolean(dadosPainel?.indicators?.hipertensao) && (
                 <div
-                  className="card-condicao p-2"
-                  onClick={() => handleToThemedReport("hipertensao")}
+                  className='card-condicao p-2'
+                  onClick={() => handleToThemedReport('hipertensao')}
                 >
-                  <span className="nome-condicao">Hipertensão</span>
+                  <span className='nome-condicao'>Hipertensão</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.hipertensao)}</h4>
-                  <div className="d-flex align-items-center">
-                    <img src={hipertensao} alt="Hipertensão" className="mx-2" />
+                  <div className='d-flex align-items-center'>
+                    <img src={hipertensao} alt='Hipertensão' className='mx-2' />
                     <Condicao data={dadosPainel?.indicators?.hipertensao} />
                   </div>
                 </div>
               )}
               {Boolean(dadosPainel?.indicators?.qualidade) && (
                 <div
-                  className="card-condicao p-2"
-                  onClick={() => handleToThemedReport("qualidade")}
+                  className='card-condicao p-2'
+                  onClick={() => handleToThemedReport('qualidade')}
                 >
-                  <span className="nome-condicao">Qualidade de Cadastros</span>
+                  <span className='nome-condicao'>Qualidade de Cadastros</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.qualidade)}</h4>
-                  <div className="d-flex align-items-center">
-                    <img src={quality} alt="Qualidade" className="mx-2" />
+                  <div className='d-flex align-items-center'>
+                    <img src={quality} alt='Qualidade' className='mx-2' />
                     <Condicao data={dadosPainel?.indicators?.qualidade} />
                   </div>
                 </div>
               )}
             </div>
             <div
-              className="row container-cards-condicoes"
-              style={{ marginTop: "20px" }}
+              className='row container-cards-condicoes'
+              style={{ marginTop: '20px' }}
             >
               {Boolean(dadosPainel?.indicators?.idosa) && (
                 <div
-                  className="card-condicao p-2"
-                  onClick={() => handleToThemedReport("idosa")}
+                  className='card-condicao p-2'
+                  onClick={() => handleToThemedReport('idosa')}
                 >
-                  <span className="nome-condicao">Cuidado da Pessoa Idosa</span>
+                  <span className='nome-condicao'>Cuidado da Pessoa Idosa</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.idosa)}</h4>
-                  <div className="d-flex align-items-center">
+                  <div className='d-flex align-items-center'>
                     <img
-                      width={"30%"}
+                      width={'30%'}
                       src={old}
-                      alt="Pessoa Idosa"
-                      className="mx-2"
+                      alt='Pessoa Idosa'
+                      className='mx-2'
                     />
                     <Condicao data={dadosPainel?.indicators?.idosa} />
                   </div>
@@ -470,17 +490,17 @@ export function Painel() {
               )}
               {Boolean(dadosPainel?.indicators?.saude_bucal) && (
                 <div
-                  className="card-condicao p-2"
-                  onClick={() => handleToThemedReport("saude-bucal")}
+                  className='card-condicao p-2'
+                  onClick={() => handleToThemedReport('saude-bucal')}
                 >
-                  <span className="nome-condicao">Saúde Bucal</span>
+                  <span className='nome-condicao'>Saúde Bucal</span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.saude_bucal)}</h4>
-                  <div className="d-flex align-items-center">
+                  <div className='d-flex align-items-center'>
                     <img
-                      width={"34%"}
+                      width={'34%'}
                       src={bucal}
-                      alt="Saude Bucal"
-                      className="mx-2"
+                      alt='Saude Bucal'
+                      className='mx-2'
                     />
                     <Condicao data={dadosPainel?.indicators?.saude_bucal} />
                   </div>
@@ -488,60 +508,60 @@ export function Painel() {
               )}
               {Boolean(dadosPainel?.indicators?.crianca) && (
                 <div
-                  className="card-condicao p-2"
-                  onClick={() => handleToThemedReport("infantil")}
+                  className='card-condicao p-2'
+                  onClick={() => handleToThemedReport('infantil')}
                 >
-                  <span className="nome-condicao">
+                  <span className='nome-condicao'>
                     Desenvolvimento Infantil
                   </span>
                   <h4>{somaIndicador(dadosPainel?.indicators?.crianca)}</h4>
-                  <div className="d-flex align-items-center">
+                  <div className='d-flex align-items-center'>
                     <img
-                      width={"30%"}
+                      width={'30%'}
                       src={children}
-                      alt="Desenvolvimento Infantil"
-                      className="mx-2"
+                      alt='Desenvolvimento Infantil'
+                      className='mx-2'
                     />
                     <Condicao data={dadosPainel?.indicators?.crianca} />
                   </div>
                 </div>
               )}
             </div>
-            <div className="d-flex my-5 justify-content-center">
-              <div className="container-areas d-flex align-items-center me-4">
-                <div className="box-container-light me-2"></div>
+            <div className='d-flex my-5 justify-content-center'>
+              <div className='container-areas d-flex align-items-center me-4'>
+                <div className='box-container-light me-2'></div>
                 <h4>Zona Urbana</h4>
               </div>
-              <div className="container-areas d-flex align-items-center ms-4">
-                <div className="box-container-dark me-2"></div>
+              <div className='container-areas d-flex align-items-center ms-4'>
+                <div className='box-container-dark me-2'></div>
                 <h4>Zona Rural</h4>
               </div>
-              <div className="container-areas d-flex align-items-center ms-4">
-                <div className="box-container-nonactive me-2"></div>
+              <div className='container-areas d-flex align-items-center ms-4'>
+                <div className='box-container-nonactive me-2'></div>
                 <h4>Não Informado</h4>
               </div>
             </div>
           </div>
-          <div className="my-5">
+          <div className='my-5'>
             {id ? (
-              <Button kind="primary" onClick={handleToPainelMunicipio}>
+              <Button kind='primary' onClick={handleToPainelMunicipio}>
                 Visualizar dados do painel do Município
               </Button>
             ) : (
               <>
                 {isLoadingUbs ? (
-                  <div className="combo-ubs d-flex align-items-center justify-content-center">
-                    <Spinner size="sm me-1" /> Carregando lista de UBS's
+                  <div className='combo-ubs d-flex align-items-center justify-content-center'>
+                    <Spinner size='sm me-1' /> Carregando lista de UBS&apos;s
                   </div>
                 ) : errorUbs ? (
-                  <div className="combo-ubs d-flex align-items-center justify-content-center">
-                    Falha ao carregar lista de UBS's
+                  <div className='combo-ubs d-flex align-items-center justify-content-center'>
+                    Falha ao carregar lista de UBS&apos;s
                   </div>
                 ) : (
                   <Select
                     isClearable
-                    placeholder="Selecione UBS"
-                    noOptionsMessage={() => "Nenhuma UBS encontrada"}
+                    placeholder='Selecione UBS'
+                    noOptionsMessage={() => 'Nenhuma UBS encontrada'}
                     options={dataUbs}
                     styles={selectStyle}
                     onChange={onChangeSelection}

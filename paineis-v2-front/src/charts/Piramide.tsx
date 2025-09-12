@@ -1,18 +1,18 @@
-import ReactECharts from "echarts-for-react";
-import { ageGroupParser } from "../services/demographicParser";
+import ReactECharts from 'echarts-for-react';
+import { ageGroupParser } from '../services/demographicParser';
 
 export default function Piramide({ data }: any) {
-  const waterMarkText = "ECHARTS";
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
+  const waterMarkText = 'ECHARTS';
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
 
   canvas.width = canvas.height = 100;
 
   if (ctx) {
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
     ctx.globalAlpha = 0.08;
-    ctx.font = "18px Microsoft Yahei";
+    ctx.font = '18px Microsoft Yahei';
     ctx.translate(50, 50);
     ctx.rotate(-Math.PI / 4);
     ctx.fillText(waterMarkText, 0, 0);
@@ -21,37 +21,37 @@ export default function Piramide({ data }: any) {
   const result: any = ageGroupParser({ ageGroups: data });
   const options = {
     tooltip: {
-      trigger: "item",
-      formatter: function (params: any) {
+      trigger: 'item',
+      formatter(params: any) {
         return `${params.name}<br />${params.marker}${params.data.label}: ${params.value}`;
       },
     },
     legend: {
       // Try 'horizontal'
-      orient: "horizontal",
+      orient: 'horizontal',
       right: 10,
-      top: "center",
-      icon: "rect",
+      top: 'center',
+      icon: 'rect',
     },
     grid: [
       {
         top: 0,
-        width: "35%",
+        width: '35%',
         bottom: 0,
-        right: "51%",
+        right: '51%',
         containLabel: false,
       },
       {
         top: 0,
-        width: "35%",
+        width: '35%',
         bottom: 0,
-        left: "51%",
+        left: '51%',
         containLabel: false,
       },
     ],
     xAxis: [
       {
-        type: "value",
+        type: 'value',
         //max: builderJson.all,
         splitLine: {
           show: false,
@@ -59,7 +59,7 @@ export default function Piramide({ data }: any) {
         inverse: true,
       },
       {
-        type: "value",
+        type: 'value',
         //max: builderJson.all,
         gridIndex: 1,
         splitLine: {
@@ -70,14 +70,14 @@ export default function Piramide({ data }: any) {
     yAxis: [
       {
         gridIndex: 0,
-        type: "category",
+        type: 'category',
         data: Object.keys(result[0].areaUrbana),
         inverse: true,
         axisLabel: {
           show: true,
           fontSize: 16,
           margin: 8,
-          width: "10%",
+          width: '10%',
           //formatter: '        ',
         },
         axisLine: {
@@ -89,10 +89,10 @@ export default function Piramide({ data }: any) {
       },
       {
         gridIndex: 1,
-        type: "category",
+        type: 'category',
         data: Object.keys(result[0].areaUrbana),
         inverse: true,
-        position: "right",
+        position: 'right',
         offset: 0,
         axisLine: {
           show: false,
@@ -108,9 +108,9 @@ export default function Piramide({ data }: any) {
     ],
     series: [
       {
-        type: "bar",
-        barWidth: "18px",
-        stack: "masculino",
+        type: 'bar',
+        barWidth: '18px',
+        stack: 'masculino',
         z: 3,
         xAxisIndex: 0,
         yAxisIndex: 0,
@@ -119,12 +119,12 @@ export default function Piramide({ data }: any) {
         }),
       },
       {
-        type: "bar",
-        barWidth: "18px",
-        stack: "masculino",
+        type: 'bar',
+        barWidth: '18px',
+        stack: 'masculino',
         z: 3,
         style: {
-          font: "28px sans-serif",
+          font: '28px sans-serif',
         },
         xAxisIndex: 0,
         yAxisIndex: 0,
@@ -133,9 +133,9 @@ export default function Piramide({ data }: any) {
         }),
       },
       {
-        type: "bar",
-        barWidth: "18px",
-        stack: "masculino",
+        type: 'bar',
+        barWidth: '18px',
+        stack: 'masculino',
         z: 3,
         xAxisIndex: 0,
         yAxisIndex: 0,
@@ -145,9 +145,9 @@ export default function Piramide({ data }: any) {
       },
 
       {
-        type: "bar",
-        barWidth: "18px",
-        stack: "feminino",
+        type: 'bar',
+        barWidth: '18px',
+        stack: 'feminino',
         z: 3,
         xAxisIndex: 1,
         yAxisIndex: 1,
@@ -156,9 +156,9 @@ export default function Piramide({ data }: any) {
         }),
       },
       {
-        type: "bar",
-        barWidth: "18px",
-        stack: "feminino",
+        type: 'bar',
+        barWidth: '18px',
+        stack: 'feminino',
         z: 3,
         xAxisIndex: 1,
         yAxisIndex: 1,
@@ -167,9 +167,9 @@ export default function Piramide({ data }: any) {
         }),
       },
       {
-        type: "bar",
-        barWidth: "18px",
-        stack: "feminino",
+        type: 'bar',
+        barWidth: '18px',
+        stack: 'feminino',
         z: 3,
         xAxisIndex: 1,
         yAxisIndex: 1,
@@ -185,11 +185,11 @@ export default function Piramide({ data }: any) {
       <ReactECharts
         option={options}
         style={{
-          width: "100%",
-          height: "600px",
+          width: '100%',
+          height: '600px',
         }}
-        className="my-5"
-        opts={{ renderer: "svg" }}
+        className='my-5'
+        opts={{ renderer: 'svg' }}
       />
     </>
   );

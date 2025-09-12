@@ -1,4 +1,4 @@
-import { HTMLProps } from "react";
+import { HTMLProps } from 'react';
 
 const Subtitle = ({
   children,
@@ -7,8 +7,8 @@ const Subtitle = ({
   <h5
     {...props}
     style={{
-      width: "100%",
-      textAlign: "center",
+      width: '100%',
+      textAlign: 'center',
       padding: 0,
       margin: 0,
       ...props?.style,
@@ -25,8 +25,8 @@ const Details = ({
   <h6
     {...props}
     style={{
-      width: "100%",
-      textAlign: "center",
+      width: '100%',
+      textAlign: 'center',
       padding: 0,
       margin: 0,
       ...props?.style,

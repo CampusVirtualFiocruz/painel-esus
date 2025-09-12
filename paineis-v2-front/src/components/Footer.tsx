@@ -1,19 +1,19 @@
-import { memo } from "react";
-import FooterImage from "../assets/images/ReguaLogosPainel.png";
-import "../styles/footer.scss";
+import { memo } from 'react';
+import FooterImage from '../assets/images/ReguaLogosPainel.png';
+import '../styles/footer.scss';
 
 export function Footer() {
   return (
-    <footer id="footer">
-      <div className="grid-sponsors">
+    <footer id='footer'>
+      <div className='grid-sponsors'>
         <img
           src={FooterImage}
-          className="img-fluid"
-          alt="Rodapé com logomarca da Fiocruz"
-          style={{ width: "100%", maxWidth: "870px" }}
+          className='img-fluid'
+          alt='Rodapé com logomarca da Fiocruz'
+          style={{ width: '100%', maxWidth: '870px' }}
         />
       </div>
-      <div className="version">
+      <div className='version'>
         <div>Versão {process.env.REACT_APP_VERSION}</div>
         <br />
         <div>

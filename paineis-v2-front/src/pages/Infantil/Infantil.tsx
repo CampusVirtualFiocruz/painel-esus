@@ -1,36 +1,34 @@
-import { CSSProperties, memo } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { CSSProperties, memo } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
 
-import { content } from "../../assets/content/content";
-import Medkit from "../../assets/images/medkit.png";
-import People from "../../assets/images/people.svg";
-import ErrorMessage from "../../components/ui/ErrorMessage";
-import LoadingSpinner from "../../components/ui/LoadingSpinner";
-import { ReportFooter } from "../../components/ui/ReportFooter";
-import ReportWrapper from "../../components/ui/ReportWrapper";
-import useReportDataInfantil from "../../hooks/sections/infantil/useReportDataInfantil";
-import "../../styles/idosa.scss";
-import { formataNumero, ReportBasicParams } from "../../utils";
-import { getChartDescription } from "../../utils/chartTitleUtils";
-import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
-import { reportCharts, reportSections } from "./Infantil.utils";
+import { content } from '../../assets/content/content';
+import Medkit from '../../assets/images/medkit.png';
+import People from '../../assets/images/people.svg';
+import ErrorMessage from '../../components/ui/ErrorMessage';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import { ReportFooter } from '../../components/ui/ReportFooter';
+import ReportWrapper from '../../components/ui/ReportWrapper';
+import useReportDataInfantil from '../../hooks/sections/infantil/useReportDataInfantil';
+import '../../styles/idosa.scss';
+import { formataNumero, ReportBasicParams } from '../../utils';
+import { getChartDescription } from '../../utils/chartTitleUtils';
+import { ReportViewTypeEnum } from '../../utils/viewTypeEnum';
+import { reportCharts, reportSections } from './Infantil.utils';
 
 const RenderChartGroup = ({
   report,
   chartList,
   renderSmall,
-  alignMiddle,
   reportViewType,
   loadings,
   errors,
   refetchAll,
 }: any) => {
-  return Object.keys(chartList).map((chartKey) => {
+  return Object.keys(chartList).map(chartKey => {
     const CustomChart = chartList?.[chartKey]?.Chart;
     const chartConfigs = chartList?.[chartKey]?.config;
     const data = (report as any)?.[chartKey];
-    const isRow = chartKey === "row" || chartKey.indexOf("Row") !== -1;
-    const isSecondRow = chartKey === "secondRow";
+    const isRow = chartKey === 'row' || chartKey.indexOf('Row') !== -1;
 
     // Verificar loading para esta seção
     if (loadings[chartKey as keyof typeof loadings]) {
@@ -75,10 +73,10 @@ const RenderChartGroup = ({
       return (
         <div
           key={chartKey}
-          className="is-row"
+          className='is-row'
           style={{
-            gap: "10px",
-            justifyContent: "center",
+            gap: '10px',
+            justifyContent: 'center',
           }}
         >
           <RenderChartGroup
@@ -96,22 +94,22 @@ const RenderChartGroup = ({
     }
 
     const containerStyle: CSSProperties = {
-      position: "relative",
-      marginBottom: "40px",
-      textAlign: "center",
+      position: 'relative',
+      marginBottom: '40px',
+      textAlign: 'center',
     };
 
-   // containerStyle.maxWidth = "400px";
+    // containerStyle.maxWidth = "400px";
 
     return (
       <div key={chartKey} style={containerStyle}>
         <center>
           <h5
             style={{
-              fontWeight: "bold",
-              textAlign: "center",
-              paddingTop: renderSmall ? "30px" : "initial",
-              maxWidth: "336px",
+              fontWeight: 'bold',
+              textAlign: 'center',
+              paddingTop: renderSmall ? '30px' : 'initial',
+              maxWidth: '336px',
             }}
           >
             {content?.[chartConfigs?.overrideTitle] ||
@@ -122,8 +120,8 @@ const RenderChartGroup = ({
         {Boolean(chartList?.[chartKey]?.subtitle) && (
           <p
             style={{
-              textAlign: "center",
-              padding: renderSmall ? "30px" : "initial",
+              textAlign: 'center',
+              padding: renderSmall ? '30px' : 'initial',
             }}
           >
             {content?.[chartList?.[chartKey]?.subtitle] ??
@@ -135,12 +133,12 @@ const RenderChartGroup = ({
           <center>
             <p
               style={{
-                width: "100%",
-                position: "absolute",
-                bottom: "-70px",
-                textAlign: "center",
-                fontSize: "12px",
-                padding: renderSmall ? "20px" : "initial",
+                width: '100%',
+                position: 'absolute',
+                bottom: '-70px',
+                textAlign: 'center',
+                fontSize: '12px',
+                padding: renderSmall ? '20px' : 'initial',
               }}
             >
               {content?.[chartList?.[chartKey]?.footerNote] ??
@@ -155,16 +153,19 @@ const RenderChartGroup = ({
 
 const Infantil = () => {
   const [params] = useSearchParams();
-  const equipe = params.get("equipe") as any;
+  const equipe = params.get('equipe') as any;
 
   const { id } = useParams<ReportBasicParams>();
-  const { data, loadings, errors, refetchAll } = useReportDataInfantil({ ubsId: id, equipe });
+  const { data, loadings, errors, refetchAll } = useReportDataInfantil({
+    ubsId: id,
+    equipe,
+  });
 
   const reportViewType = !!equipe
     ? ReportViewTypeEnum.EQUIPE
     : !!id
-    ? ReportViewTypeEnum.UBS
-    : ReportViewTypeEnum.MUNICIPIO;
+      ? ReportViewTypeEnum.UBS
+      : ReportViewTypeEnum.MUNICIPIO;
 
   const footerNote = (
     <div>
@@ -176,20 +177,20 @@ const Infantil = () => {
   return (
     <>
       <ReportWrapper
-        title={"Desenvolvimento Infantil"}
-        subtitle="Crianças até 36 meses"
-        footer={<ReportFooter chaveListaNominal="Infantil" equipe={equipe} />}
+        title={'Desenvolvimento Infantil'}
+        subtitle='Crianças até 36 meses'
+        footer={<ReportFooter chaveListaNominal='Infantil' equipe={equipe} />}
         footerNote={footerNote}
       >
         <div
           style={{
-            display: "flex",
-            width: "100%",
-            maxWidth: "600px",
-            marginTop: "60px",
-            marginBottom: "30px",
-            gap: "40px",
-            fontWeight: "bold",
+            display: 'flex',
+            width: '100%',
+            maxWidth: '600px',
+            marginTop: '60px',
+            marginBottom: '30px',
+            gap: '40px',
+            fontWeight: 'bold',
           }}
         >
           <div
@@ -200,19 +201,19 @@ const Infantil = () => {
             <div
               style={{
                 flex: 1,
-                padding: "20px",
-                backgroundColor: "",
-                border: "1px solid black",
-                color: "black",
-                textAlign: "center",
+                padding: '20px',
+                backgroundColor: '',
+                border: '1px solid black',
+                color: 'black',
+                textAlign: 'center',
               }}
             >
               {loadings.total ? (
-                <LoadingSpinner size="sm" text="Carregando total..." />
+                <LoadingSpinner size='sm' text='Carregando total...' />
               ) : errors.total ? (
                 <ErrorMessage
                   error={errors.total}
-                  title="Erro ao carregar total de crianças"
+                  title='Erro ao carregar total de crianças'
                   showRetry={true}
                   onRetry={refetchAll}
                 />
@@ -220,25 +221,25 @@ const Infantil = () => {
                 <>
                   <span
                     style={{
-                      display: "block",
-                      fontSize: "16px",
-                      marginBottom: "8px",
+                      display: 'block',
+                      fontSize: '16px',
+                      marginBottom: '8px',
                     }}
                   >
                     Total de crianças
                     <br />
-                    {getChartDescription("", reportViewType, [])}
+                    {getChartDescription('', reportViewType, [])}
                   </span>
                   <img
                     src={People}
-                    alt="Icone de pessoas"
-                    width={"30px"}
+                    alt='Icone de pessoas'
+                    width={'30px'}
                     style={{
-                      filter: "",
-                      transform: "translate(-10px, -5px)",
+                      filter: '',
+                      transform: 'translate(-10px, -5px)',
                     }}
                   />
-                  <span style={{ fontSize: "26px" }}>
+                  <span style={{ fontSize: '26px' }}>
                     {formataNumero(data?.total?.['total-cadastros']?.data ?? 0)}
                   </span>
                 </>
@@ -254,19 +255,19 @@ const Infantil = () => {
             <div
               style={{
                 flex: 1,
-                padding: "20px",
-                backgroundColor: "",
-                border: "1px solid black",
-                color: "black",
-                textAlign: "center",
+                padding: '20px',
+                backgroundColor: '',
+                border: '1px solid black',
+                color: 'black',
+                textAlign: 'center',
               }}
             >
-              {loadings["total-atendimentos"] ? (
-                <LoadingSpinner size="sm" text="Carregando atendimentos..." />
-              ) : errors["total-atendimentos"] ? (
+              {loadings['total-atendimentos'] ? (
+                <LoadingSpinner size='sm' text='Carregando atendimentos...' />
+              ) : errors['total-atendimentos'] ? (
                 <ErrorMessage
-                  error={errors["total-atendimentos"]}
-                  title="Erro ao carregar total de atendimentos"
+                  error={errors['total-atendimentos']}
+                  title='Erro ao carregar total de atendimentos'
                   showRetry={true}
                   onRetry={refetchAll}
                 />
@@ -274,24 +275,24 @@ const Infantil = () => {
                 <>
                   <span
                     style={{
-                      display: "block",
-                      fontSize: "16px",
-                      marginBottom: "8px",
+                      display: 'block',
+                      fontSize: '16px',
+                      marginBottom: '8px',
                     }}
                   >
                     Total de crianças atendidas nos últimos 12 meses
                   </span>
                   <img
                     src={Medkit}
-                    alt="Icone de pessoas"
-                    width={"30px"}
+                    alt='Icone de pessoas'
+                    width={'30px'}
                     style={{
-                      filter: "",
-                      transform: "translate(-10px, -5px)",
+                      filter: '',
+                      transform: 'translate(-10px, -5px)',
                     }}
                   />
-                  <span style={{ fontSize: "26px" }}>
-                    {formataNumero(data?.["total-atendimentos"] ?? [])}
+                  <span style={{ fontSize: '26px' }}>
+                    {formataNumero(data?.['total-atendimentos'] ?? [])}
                   </span>
                 </>
               )}
@@ -309,7 +310,7 @@ const Infantil = () => {
             refetchAll={refetchAll}
           />
         ))}
-        <center style={{ marginTop: "60px", marginBottom: "30px" }}>
+        <center style={{ marginTop: '60px', marginBottom: '30px' }}>
           <h2>
             <b>Proporção de crianças com:</b>
           </h2>

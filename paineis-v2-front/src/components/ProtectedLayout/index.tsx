@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthProvider/useAuth";
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthProvider/useAuth';
 
 export const ProtectedLayout = ({ children }: { children: JSX.Element }) => {
   const auth = useAuth();
@@ -8,7 +8,7 @@ export const ProtectedLayout = ({ children }: { children: JSX.Element }) => {
     return (
       <>
         <h1>Você não tem permissão para acessar esta página.</h1>
-        <Link to="/">Fazer login</Link>
+        <Link to='/'>Fazer login</Link>
       </>
     );
   }

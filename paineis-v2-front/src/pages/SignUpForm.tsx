@@ -1,14 +1,13 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 export function SignUpForm() {
-    return (
-        <>
-            <h1>Novo usuário</h1>
+  return (
+    <>
+      <h1>Novo usuário</h1>
 
-            <div>Formulário para cadastro de usuário</div>
+      <div>Formulário para cadastro de usuário</div>
 
-            <Link to="/">authenticate</Link>
-
-        </>
-    )
+      <Link to='/'>authenticate</Link>
+    </>
+  );
 }

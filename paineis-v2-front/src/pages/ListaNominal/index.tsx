@@ -1,2 +1,2 @@
-import ListaNominal from "./ListaNominal";
+import ListaNominal from './ListaNominal';
 export default ListaNominal;

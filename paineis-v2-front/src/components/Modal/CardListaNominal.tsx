@@ -1,23 +1,23 @@
-import moment from "moment";
-import { BsInfoCircle } from "react-icons/bs";
-import { capitalizeName } from "../../utils/stringUtils";
-import { groupBy } from "../../utils";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/Tooltip";
+import moment from 'moment';
+import { BsInfoCircle } from 'react-icons/bs';
+import { groupBy } from '../../utils';
+import { capitalizeName } from '../../utils/stringUtils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/Tooltip';
 
 function parseDate(str: string) {
   let dateStr;
   try {
-    dateStr = str ? moment.utc(str).format("DD/MM/YYYY") : "";
-    return dateStr.indexOf("Invalid") != -1
-      ? str.split("-").reverse().join("/")
+    dateStr = str ? moment.utc(str).format('DD/MM/YYYY') : '';
+    return dateStr.indexOf('Invalid') !== -1
+      ? str.split('-').reverse().join('/')
       : dateStr;
   } catch (e) {
-    return str.split("-").reverse().join("/");
+    return str.split('-').reverse().join('/');
   }
 }
 export function parseText(text: string | number): number | string {
-  if (text === null || text === 0 || text === "" || text === "0") {
-    return "-";
+  if (text === null || text === 0 || text === '' || text === '0') {
+    return '-';
   }
 
   const parsedNumber = Number(text);
@@ -27,7 +27,7 @@ export function parseText(text: string | number): number | string {
 
   const parsedDate = new Date(new Date(String(text)));
   if (!isNaN(parsedDate.getTime())) {
-    return parsedDate.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+    return parsedDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
   }
 
   return text;
@@ -52,59 +52,59 @@ export const CardListaNominal = ({
   };
 }) => {
   return (
-    <div className="d-flex flex-column mb-4">
-      <div className="user-details">
+    <div className='d-flex flex-column mb-4'>
+      <div className='user-details'>
         <div
           style={{
-            display: "flex",
-            justifyContent: "start",
-            alignItems: "center",
-            gap: "6px",
-            marginBottom: "10px",
+            display: 'flex',
+            justifyContent: 'start',
+            alignItems: 'center',
+            gap: '6px',
+            marginBottom: '10px',
           }}
         >
-          {String(item.gestante).toUpperCase() === "SIM" && (
-            <span className="iconCircle iconGestante" title="Alertas">
+          {String(item.gestante).toUpperCase() === 'SIM' && (
+            <span className='iconCircle iconGestante' title='Alertas'>
               G
             </span>
           )}
-          <h1 style={{ padding: "0px", margin: "0px" }}>
+          <h1 style={{ padding: '0px', margin: '0px' }}>
             {capitalizeName(
-              item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== "-"
+              item?.nomeSocialSelecionado && item?.nomeSocialSelecionado !== '-'
                 ? item?.nomeSocialSelecionado
                 : item?.nome
             )}
           </h1>
         </div>
-        <div className="address">
+        <div className='address'>
           <p>
             <>
-              {" "}
-              <strong>Idade:</strong> {item?.idade} | DN:{" "}
+              {' '}
+              <strong>Idade:</strong> {item?.idade} | DN:{' '}
               {parseDate(item?.dataNascimento)}
               <br />
             </>
             <strong>CPF:</strong> {item?.cpf} <br />
             {item?.cns && (
               <>
-                {" "}
+                {' '}
                 <strong>CNS:</strong> {item?.cns} <br />
               </>
             )}
             <strong>Endereço:</strong> {item.tipoLogradouro} &nbsp;
-            {item?.endereco && item.endereco !== "None None"
-              ? capitalizeName(item.endereco).replace("S/n", "S/N")
-              : "-"}{" "}
-            | CEP: {item?.cep ? item?.cep : "-"}
+            {item?.endereco && item.endereco !== 'None None'
+              ? capitalizeName(item.endereco).replace('S/n', 'S/N')
+              : '-'}{' '}
+            | CEP: {item?.cep ? item?.cep : '-'}
             <br />
-            <strong>Complemento:</strong>{" "}
-            {item?.complemento ? capitalizeName(item?.complemento) : "-"} <br />
-            <strong>Telefone de contato:</strong>{" "}
-            {item?.telefone ? item?.telefone : "-"} <br />
+            <strong>Complemento:</strong>{' '}
+            {item?.complemento ? capitalizeName(item?.complemento) : '-'} <br />
+            <strong>Telefone de contato:</strong>{' '}
+            {item?.telefone ? item?.telefone : '-'} <br />
             {Boolean(item?.acompanhamento) && (
               <>
                 <Tooltip>
-                  <TooltipContent className="Tooltip">
+                  <TooltipContent className='Tooltip'>
                     <div>
                       Em acompanhamento: com ao menos um atendimento e um
                       procedimento ou com dois ou mais atendimentos nos últimos
@@ -112,9 +112,9 @@ export const CardListaNominal = ({
                     </div>
                   </TooltipContent>
                   <TooltipTrigger>
-                    <span style={{ cursor: "help" }}>
-                    <strong>Acompanhamento:</strong>{" "}
-                    {item?.acompanhamento || "-"}{" "}<BsInfoCircle />
+                    <span style={{ cursor: 'help' }}>
+                      <strong>Acompanhamento:</strong>{' '}
+                      {item?.acompanhamento || '-'} <BsInfoCircle />
                     </span>
                   </TooltipTrigger>
                 </Tooltip>
@@ -124,7 +124,7 @@ export const CardListaNominal = ({
           </p>
         </div>
         {Boolean(config?.alertBeforeDetails) ? (
-          <b style={{ lineHeight: "40px" }}>{config?.alertBeforeDetails}</b>
+          <b style={{ lineHeight: '40px' }}>{config?.alertBeforeDetails}</b>
         ) : null}
         {Array.isArray(item?.detalhesCondicaoSaude) &&
           item?.detalhesCondicaoSaude.map((condicao: any) => {
@@ -133,22 +133,22 @@ export const CardListaNominal = ({
                 {Boolean(
                   condicao?.cidCondicaoSaude || condicao?.primeiroDiagnostico
                 ) ? (
-                  <div className="health-condition">
+                  <div className='health-condition'>
                     {condicao?.cidCondicaoSaude && (
                       <>
                         <p>
-                          Condição de saúde:{" "}
-                          {item.diagnostico == "autoreferido"
-                            ? "AUTORREFERIDO "
-                            : "CID "}
-                          {condicao?.cidCondicaoSaude.join(", ")}
+                          Condição de saúde:{' '}
+                          {item.diagnostico === 'autoreferido'
+                            ? 'AUTORREFERIDO '
+                            : 'CID '}
+                          {condicao?.cidCondicaoSaude.join(', ')}
                         </p>
                       </>
                     )}
                     {condicao?.primeiroDiagnostico && (
                       <>
                         <p>
-                          Data do primeiro registro da condição:{" "}
+                          Data do primeiro registro da condição:{' '}
                           {parseText(condicao?.primeiroDiagnostico)}
                         </p>
                       </>
@@ -157,37 +157,38 @@ export const CardListaNominal = ({
                 ) : (
                   <br />
                 )}
-                {groupBy(condicao?.registros, "classificacao").map(
-                  ({ content: registerContent }: any) => {
+                {groupBy(condicao?.registros, 'classificacao').map(
+                  ({ content: registerContent }: any, index: number) => {
                     return (
                       <div
+                        key={index}
                         style={{
-                          marginLeft: "30px",
-                          maxWidth: "500px",
-                          cursor: "help",
+                          marginLeft: '30px',
+                          maxWidth: '500px',
+                          cursor: 'help',
                         }}
                       >
                         {registerContent.map((registro: any) => (
                           <>
                             <Tooltip>
-                              <TooltipContent className="Tooltip">
+                              <TooltipContent className='Tooltip'>
                                 <div>
                                   {config?.alertMessage ?? defaultMessage}
                                 </div>
                               </TooltipContent>
                               <TooltipTrigger>
-                                <div className="latest-checkups">
-                                  <p style={{ position: "relative" }}>
+                                <div className='latest-checkups'>
+                                  <p style={{ position: 'relative' }}>
                                     {registro?.descricao !==
-                                      "data-da-ultima-glicemia-capilar" && (
+                                      'data-da-ultima-glicemia-capilar' && (
                                       <>
                                         {Boolean(registro?.exibirAlerta) && (
                                           <span
-                                            className="iconCircle iconAlerta ms-2"
-                                            title="Alertas"
+                                            className='iconCircle iconAlerta ms-2'
+                                            title='Alertas'
                                             style={{
-                                              position: "absolute",
-                                              left: "-35px",
+                                              position: 'absolute',
+                                              left: '-35px',
                                             }}
                                           >
                                             !
@@ -197,9 +198,13 @@ export const CardListaNominal = ({
                                         <span>
                                           {Array.isArray(registro?.data) ? (
                                             registro.data?.map(
-                                              (registerItem: any) => (
+                                              (
+                                                registerItem: any,
+                                                itemIndex: number
+                                              ) => (
                                                 <div
-                                                  style={{ display: "block" }}
+                                                  key={itemIndex}
+                                                  style={{ display: 'block' }}
                                                 >
                                                   &nbsp;
                                                   {parseText(registerItem)}
@@ -231,12 +236,12 @@ export const CardListaNominal = ({
         {Boolean(config?.footerInfo) && (
           <div
             style={{
-              maxWidth: "600px",
-              margin: "0 auto",
-              marginTop: "10px",
-              padding: "20px",
-              backgroundColor: "#ECF3F9",
-              borderRadius: "8px",
+              maxWidth: '600px',
+              margin: '0 auto',
+              marginTop: '10px',
+              padding: '20px',
+              backgroundColor: '#ECF3F9',
+              borderRadius: '8px',
             }}
           >
             {config?.footerInfo}

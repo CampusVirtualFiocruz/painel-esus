@@ -1,11 +1,11 @@
-import ReactECharts from "echarts-for-react";
-import "./style.scss";
+import ReactECharts from 'echarts-for-react';
+import './style.scss';
 
 type Faixa = {
   NaN?: number;
   Rural?: string;
   Urbano?: number;
-  "Nao Informado"?: number;
+  'Nao Informado'?: number;
 };
 
 type BarData = {
@@ -14,46 +14,46 @@ type BarData = {
 };
 
 export function Bar({ data, titulo }: BarData) {
-  let faixaEtaria = Object.keys(data).map(function (key) {
+  const faixaEtaria = Object.keys(data).map(function (key) {
     return String(key);
   });
 
-  let arrData = Object.entries(data).map(function (obj: any) {
-    let objFaixa = obj[1];
+  const arrData = Object.entries(data).map(function (obj: any) {
+    const objFaixa = obj[1];
 
     if (
-      !objFaixa.hasOwnProperty("Rural") ||
-      !objFaixa.hasOwnProperty("Urbano") ||
-      !objFaixa.hasOwnProperty("Nao Informado")
+      !objFaixa.hasOwnProperty('Rural') ||
+      !objFaixa.hasOwnProperty('Urbano') ||
+      !objFaixa.hasOwnProperty('Nao Informado')
     ) {
       return {
         NaN: objFaixa.NaN,
         Rural: 0,
         Urbano: 0,
-        "Nao Informado": 0,
+        'Nao Informado': 0,
       };
     }
 
     return objFaixa;
   });
-  let dataRural = arrData.map((obj: Faixa) => {
+  const dataRural = arrData.map((obj: Faixa) => {
     return obj.Rural;
   });
-  let dataUrbano = arrData.map((obj: Faixa) => {
+  const dataUrbano = arrData.map((obj: Faixa) => {
     return obj.Urbano;
   });
-  let dataNaoInformado = arrData.map((obj: Faixa) => {
-    return obj["Nao Informado"];
+  const dataNaoInformado = arrData.map((obj: Faixa) => {
+    return obj['Nao Informado'];
   });
 
   const options = {
     legend: {
-      bottom: "0%",
-      icon: "rect",
+      bottom: '0%',
+      icon: 'rect',
     },
     tooltip: {
-      trigger: "axis",
-      formatter: function (params: any) {
+      trigger: 'axis',
+      formatter(params: any) {
         let description = `${params[0].name}<hr>`;
         params.forEach((param: any) => {
           description += `${param.marker}${param.seriesName}: ${param.value}<br />`;
@@ -77,7 +77,7 @@ export function Bar({ data, titulo }: BarData) {
       },
     },
     yAxis: {
-      type: "value",
+      type: 'value',
       axisLabel: {
         show: true,
         fontSize: 14,
@@ -94,41 +94,41 @@ export function Bar({ data, titulo }: BarData) {
       },
     },
     grid: {
-      width: "auto",
+      width: 'auto',
       left: 50,
       bottom: 150,
     },
     series: [
       {
-        name: "Zona Rural",
-        type: "bar",
-        stack: "one",
+        name: 'Zona Rural',
+        type: 'bar',
+        stack: 'one',
         barMinHeight: 10,
-        barWidth: "33%",
+        barWidth: '33%',
         itemStyle: {
-          color: "#84aaff",
+          color: '#84aaff',
         },
         data: dataRural,
       },
       {
-        name: "Zona Urbana",
-        type: "bar",
-        stack: "one",
+        name: 'Zona Urbana',
+        type: 'bar',
+        stack: 'one',
         barMinHeight: 10,
-        barWidth: "33%",
+        barWidth: '33%',
         itemStyle: {
-          color: "#0069d0",
+          color: '#0069d0',
         },
         data: dataUrbano,
       },
       {
-        name: "Não Informado",
-        type: "bar",
-        stack: "one",
+        name: 'Não Informado',
+        type: 'bar',
+        stack: 'one',
         barMinHeight: 10,
-        barWidth: "33%",
+        barWidth: '33%',
         itemStyle: {
-          color: "#e9ecef",
+          color: '#e9ecef',
         },
         data: dataNaoInformado,
       },
@@ -136,17 +136,17 @@ export function Bar({ data, titulo }: BarData) {
   };
 
   return (
-    <div className="bar">
-      <div className="vertical ms-1 me-4">{titulo}</div>
+    <div className='bar'>
+      <div className='vertical ms-1 me-4'>{titulo}</div>
 
       <ReactECharts
         option={options}
         style={{
-          width: "100%",
-          minWidth: "370px",
-          height: "484px",
+          width: '100%',
+          minWidth: '370px',
+          height: '484px',
         }}
-        opts={{ renderer: "svg" }}
+        opts={{ renderer: 'svg' }}
       />
     </div>
   );

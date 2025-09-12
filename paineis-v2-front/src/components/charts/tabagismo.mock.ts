@@ -1,52 +1,52 @@
-import { BarChart, DonutChart, PieChart } from "./charts.types";
+import { BarChart, DonutChart, PieChart } from './charts.types';
 
 type MockRelatorioTabagismo = {
-  "proporcao-tabagistas-acompanhadas": DonutChart;
-  "proporcao-fatores-riscos-por-dant": BarChart;
-  "tabagistas-faixa-etaria": BarChart;
-  "consulta-odontologica-tabagistas": PieChart;
-  "pessoas-tabagistas-sexo": BarChart;
-  "pessoas-tabagistas-escolaridade": BarChart;
+  'proporcao-tabagistas-acompanhadas': DonutChart;
+  'proporcao-fatores-riscos-por-dant': BarChart;
+  'tabagistas-faixa-etaria': BarChart;
+  'consulta-odontologica-tabagistas': PieChart;
+  'pessoas-tabagistas-sexo': BarChart;
+  'pessoas-tabagistas-escolaridade': BarChart;
 };
 
 export const tabagismoCharts: MockRelatorioTabagismo = {
-  "proporcao-tabagistas-acompanhadas": {
+  'proporcao-tabagistas-acompanhadas': {
     data: [
       {
-        tag: "acompanhadas-ubs-nao-tabagistas",
+        tag: 'acompanhadas-ubs-nao-tabagistas',
         value: 5861,
       },
       {
-        tag: "acompanhadas-ubs-tabagistas",
+        tag: 'acompanhadas-ubs-tabagistas',
         value: 4451,
       },
     ],
   },
-  "proporcao-fatores-riscos-por-dant": {
+  'proporcao-fatores-riscos-por-dant': {
     data: [
       {
-        tag: "doenca-cardiovascular",
+        tag: 'doenca-cardiovascular',
         value: {
           urbana: 10,
           rural: 12,
         },
       },
       {
-        tag: "cancer",
+        tag: 'cancer',
         value: {
           urbana: 10,
           rural: 12,
         },
       },
       {
-        tag: "diabetes-melitus",
+        tag: 'diabetes-melitus',
         value: {
           urbana: 10,
           rural: 12,
         },
       },
       {
-        tag: "doenca-respiratoria-cronica",
+        tag: 'doenca-respiratoria-cronica',
         value: {
           urbana: 10,
           rural: 12,
@@ -54,24 +54,24 @@ export const tabagismoCharts: MockRelatorioTabagismo = {
       },
     ],
   },
-  "tabagistas-faixa-etaria": {
+  'tabagistas-faixa-etaria': {
     data: [
       {
-        tag: "ate-30",
+        tag: 'ate-30',
         value: {
           urbana: 10,
           rural: 12,
         },
       },
       {
-        tag: "ate-40",
+        tag: 'ate-40',
         value: {
           urbana: 10,
           rural: 12,
         },
       },
       {
-        tag: "ate-50",
+        tag: 'ate-50',
         value: {
           urbana: 10,
           rural: 12,
@@ -80,36 +80,36 @@ export const tabagismoCharts: MockRelatorioTabagismo = {
       // etc
     ],
   },
-  "consulta-odontologica-tabagistas": {
+  'consulta-odontologica-tabagistas': {
     data: [
       {
-        tag: "sim",
+        tag: 'sim',
         value: 71,
       },
       {
-        tag: "nao",
+        tag: 'nao',
         value: 39,
       },
     ],
   },
-  "pessoas-tabagistas-sexo": {
+  'pessoas-tabagistas-sexo': {
     data: [
       {
-        tag: "ate-30",
+        tag: 'ate-30',
         value: {
           masc: 10,
           fem: 12,
         },
       },
       {
-        tag: "ate-40",
+        tag: 'ate-40',
         value: {
           masc: 10,
           fem: 12,
         },
       },
       {
-        tag: "ate-50",
+        tag: 'ate-50',
         value: {
           masc: 10,
           fem: 12,
@@ -118,24 +118,24 @@ export const tabagismoCharts: MockRelatorioTabagismo = {
       // etc
     ],
   },
-  "pessoas-tabagistas-escolaridade": {
+  'pessoas-tabagistas-escolaridade': {
     data: [
       {
-        tag: "analfabeto",
+        tag: 'analfabeto',
         value: {
           urbana: 10,
           rural: 12,
         },
       },
       {
-        tag: "primeiro-grau-completo",
+        tag: 'primeiro-grau-completo',
         value: {
           urbana: 10,
           rural: 12,
         },
       },
       {
-        tag: "primeiro-grau-incompleto",
+        tag: 'primeiro-grau-incompleto',
         value: {
           urbana: 10,
           rural: 12,

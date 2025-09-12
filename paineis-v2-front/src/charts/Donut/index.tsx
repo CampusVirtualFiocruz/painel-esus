@@ -1,37 +1,37 @@
-import ReactECharts from "echarts-for-react";
-import { formatAsPercent } from "../../utils";
-import "./style.scss";
+import ReactECharts from 'echarts-for-react';
+import { formatAsPercent } from '../../utils';
+import './style.scss';
 
 export function Donut({ data }: any) {
-  let nome = "prenatal-indicators";
-  let comConsulta = data[1].com_consulta;
-  let semConsulta = data[1].sem_consulta;
+  const nome = 'prenatal-indicators';
+  const comConsulta = data[1].com_consulta;
+  const semConsulta = data[1].sem_consulta;
 
-  let dataGraphic = [{ value: comConsulta }, { value: semConsulta }];
+  const dataGraphic = [{ value: comConsulta }, { value: semConsulta }];
 
   const options = {
-    color: ["#84aaff", "#0069d0"],
+    color: ['#84aaff', '#0069d0'],
     tooltip: {
-      trigger: "item",
-      formatter: "({d}%)",
+      trigger: 'item',
+      formatter: '({d}%)',
     },
     series: [
       {
         name: nome,
-        type: "pie",
-        radius: ["30", "52"],
+        type: 'pie',
+        radius: ['30', '52'],
         avoidLabelOverlap: false,
         label: {
           show: true,
-          position: "center",
-          fontSize: "16",
-          fontWeight: "bold",
+          position: 'center',
+          fontSize: '16',
+          fontWeight: 'bold',
         },
         emphasis: {
           label: {
             show: true,
-            fontSize: "16",
-            fontWeight: "bold",
+            fontSize: '16',
+            fontWeight: 'bold',
           },
         },
         labelLine: {
@@ -43,26 +43,26 @@ export function Donut({ data }: any) {
   };
 
   return (
-    <div className="donut">
+    <div className='donut'>
       <ReactECharts
         option={options}
         style={{
-          width: "116px",
-          height: "116px",
+          width: '116px',
+          height: '116px',
         }}
-        opts={{ renderer: "svg" }}
+        opts={{ renderer: 'svg' }}
       />
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "116px",
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          width: '116px',
         }}
       >
-        <span className="porcentagem">{formatAsPercent(comConsulta)}</span>
-        <span className="nomeGrafico">{data[0]}</span>
+        <span className='porcentagem'>{formatAsPercent(comConsulta)}</span>
+        <span className='nomeGrafico'>{data[0]}</span>
       </div>
     </div>
   );
@@ -76,52 +76,49 @@ export class TDonutChart {
   constructor(
     public nome: string,
     public dataGraphic: TPieData[],
-    public colorActive: string = "#5cd2c8"
+    public colorActive: string = '#5cd2c8'
   ) {
     this.nome = nome;
     this.dataGraphic = dataGraphic;
     this.colorActive = colorActive;
   }
 }
-export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
-  const total = dataGraphic[0].value + dataGraphic[1].value;
-  const ativo = (dataGraphic[0].value / total) * 100;
-
+export function DonutChart({ dataGraphic, nome }: TDonutChart) {
   const options = {
-    color: ["#84aaff", "#0069d0", "#e9ecef", "#08315b"],
+    color: ['#84aaff', '#0069d0', '#e9ecef', '#08315b'],
     tooltip: {
-      trigger: "item",
-      formatter: "{b0}: {c0}({d}%)",
+      trigger: 'item',
+      formatter: '{b0}: {c0}({d}%)',
     },
     series: [
       {
         name: nome,
-        type: "pie",
-        radius: ["30%", "60%"],
+        type: 'pie',
+        radius: ['30%', '60%'],
         avoidLabelOverlap: false,
         label: {
           show: true,
-          overflow: "break",
+          overflow: 'break',
           width: 110,
-          formatter: "{b|{d}%}\n\n{a|{b}}",
+          formatter: '{b|{d}%}\n\n{a|{b}}',
           rich: {
             a: {
-              color: "#262729",
-              fontWeight: "400",
+              color: '#262729',
+              fontWeight: '400',
               fontSize: 10,
-              align: "center",
+              align: 'center',
             },
             b: {
-              color: "#262729",
-              fontWeight: "bold",
+              color: '#262729',
+              fontWeight: 'bold',
               fontSize: 22,
-              align: "center",
+              align: 'center',
             },
             c: {
-              color: "#262729",
-              fontWeight: "bold",
+              color: '#262729',
+              fontWeight: 'bold',
               fontSize: 10,
-              align: "center",
+              align: 'center',
             },
             distanceToLabelLine: 50,
           },
@@ -129,7 +126,7 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
         emphasis: {
           label: {
             show: true,
-            fontSize: "14",
+            fontSize: '14',
           },
         },
         labelLine: {
@@ -142,9 +139,9 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
 
   return (
     <div
-      className="donut"
+      className='donut'
       style={{
-        width: "100%",
+        width: '100%',
         margin: 10,
         padding: 10,
       }}
@@ -152,13 +149,13 @@ export function DonutChart({ dataGraphic, nome, colorActive }: TDonutChart) {
       <ReactECharts
         option={options}
         style={{
-          width: "100%",
-          minWidth: "316px",
-          height: "316px",
+          width: '100%',
+          minWidth: '316px',
+          height: '316px',
         }}
-        opts={{ renderer: "svg" }}
+        opts={{ renderer: 'svg' }}
       />
-      <div className="w-50 d-flex flex-column justify-content-center align-items-center">
+      <div className='w-50 d-flex flex-column justify-content-center align-items-center'>
         {/* <span className='porcentagem'>{formatAsPercent(ativo.toString())}</span> */}
         {/* <span className='nomeGrafico'>{data[0]}</span> */}
       </div>

@@ -1,35 +1,33 @@
-import { CSSProperties, memo } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import { content } from "../../assets/content/content";
-import ErrorMessage from "../../components/ui/ErrorMessage";
-import LoadingSpinner from "../../components/ui/LoadingSpinner";
-import { ReportFooter } from "../../components/ui/ReportFooter";
-import ReportWrapper from "../../components/ui/ReportWrapper";
-import useReportDataHipertensao from "../../hooks/sections/hipertensao/useReportDataHipertensao";
-import { formataNumero, ReportBasicParams } from "../../utils";
-import { getChartDescription } from "../../utils/chartTitleUtils";
-import { ReportViewTypeEnum } from "../../utils/viewTypeEnum";
-import { Card, RenderSingleValue } from "../../components/ui";
-import { reportLeftSections, reportRightSections } from "./Hipertensao.utils";
-import "../../styles/idosa.scss";
-import "./Hipertensao.scss";
+import { CSSProperties, memo } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { content } from '../../assets/content/content';
+import { Card, RenderSingleValue } from '../../components/ui';
+import ErrorMessage from '../../components/ui/ErrorMessage';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import { ReportFooter } from '../../components/ui/ReportFooter';
+import ReportWrapper from '../../components/ui/ReportWrapper';
+import useReportDataHipertensao from '../../hooks/sections/hipertensao/useReportDataHipertensao';
+import '../../styles/idosa.scss';
+import { ReportBasicParams, formataNumero } from '../../utils';
+import { getChartDescription } from '../../utils/chartTitleUtils';
+import { ReportViewTypeEnum } from '../../utils/viewTypeEnum';
+import './Hipertensao.scss';
+import { reportLeftSections, reportRightSections } from './Hipertensao.utils';
 
 const RenderChartGroup = ({
   report,
   chartList,
   renderSmall,
-  alignMiddle,
   reportViewType,
   loadings,
   errors,
   refetchAll,
 }: any) => {
-  return Object.keys(chartList).map((chartKey) => {
+  return Object.keys(chartList).map(chartKey => {
     const CustomChart = chartList?.[chartKey]?.Chart;
     const chartConfigs = chartList?.[chartKey]?.config;
     const data = (report as any)?.[chartKey];
-    const isRow = chartKey === "row" || chartKey.indexOf("Row") !== -1;
-    const isSecondRow = chartKey === "secondRow";
+    const isRow = chartKey === 'row' || chartKey.indexOf('Row') !== -1;
 
     // Verificar loading para esta seção
     if (loadings[chartKey as keyof typeof loadings]) {
@@ -76,8 +74,8 @@ const RenderChartGroup = ({
           key={chartKey}
           //className="is-row"
           style={{
-            gap: "10px",
-            justifyContent: "center",
+            gap: '10px',
+            justifyContent: 'center',
           }}
         >
           <RenderChartGroup
@@ -95,9 +93,9 @@ const RenderChartGroup = ({
     }
 
     const containerStyle: CSSProperties = {
-      position: "relative",
-      marginBottom: "60px",
-      textAlign: "center",
+      position: 'relative',
+      marginBottom: '60px',
+      textAlign: 'center',
     };
 
     // containerStyle.maxWidth = "400px";
@@ -107,9 +105,9 @@ const RenderChartGroup = ({
         <center>
           <h5
             style={{
-              fontWeight: "bold",
-              textAlign: "center",
-              paddingTop: renderSmall ? "30px" : "initial",
+              fontWeight: 'bold',
+              textAlign: 'center',
+              paddingTop: renderSmall ? '30px' : 'initial',
             }}
           >
             {content?.[chartConfigs?.overrideTitle] ||
@@ -120,9 +118,9 @@ const RenderChartGroup = ({
         {Boolean(chartList?.[chartKey]?.subtitle) && (
           <p
             style={{
-              textAlign: "center",
+              textAlign: 'center',
               paddingTop: 0,
-              paddingBottom: renderSmall ? "30px" : "initial",
+              paddingBottom: renderSmall ? '30px' : 'initial',
             }}
           >
             {content?.[chartList?.[chartKey]?.subtitle] ??
@@ -134,12 +132,12 @@ const RenderChartGroup = ({
           <center>
             <p
               style={{
-                width: "100%",
-                position: "absolute",
-                bottom: "-70px",
-                textAlign: "center",
-                fontSize: "12px",
-                padding: renderSmall ? "20px" : "initial",
+                width: '100%',
+                position: 'absolute',
+                bottom: '-70px',
+                textAlign: 'center',
+                fontSize: '12px',
+                padding: renderSmall ? '20px' : 'initial',
               }}
             >
               {content?.[chartList?.[chartKey]?.footerNote] ??
@@ -154,7 +152,7 @@ const RenderChartGroup = ({
 
 const Hipertensao = () => {
   const [params] = useSearchParams();
-  const equipe = params.get("equipe") as any;
+  const equipe = params.get('equipe') as any;
 
   const { id } = useParams<ReportBasicParams>();
   const { data, loadings, errors, refetchAll } = useReportDataHipertensao({
@@ -165,8 +163,8 @@ const Hipertensao = () => {
   const reportViewType = !!equipe
     ? ReportViewTypeEnum.EQUIPE
     : !!id
-    ? ReportViewTypeEnum.UBS
-    : ReportViewTypeEnum.MUNICIPIO;
+      ? ReportViewTypeEnum.UBS
+      : ReportViewTypeEnum.MUNICIPIO;
 
   const footerNote = (
     <div>
@@ -181,81 +179,81 @@ const Hipertensao = () => {
   return (
     <>
       <ReportWrapper
-        title={"Painel Hipertensão"}
+        title={'Painel Hipertensão'}
         footer={
-          <ReportFooter chaveListaNominal="Hipertensão" equipe={equipe} />
+          <ReportFooter chaveListaNominal='Hipertensão' equipe={equipe} />
         }
         footerNote={footerNote}
       >
         <div
           style={{
-            display: "flex",
-            width: "100%",
-            maxWidth: "600px",
-            marginTop: "60px",
-            marginBottom: "30px",
-            gap: "40px",
-            fontWeight: "bold",
+            display: 'flex',
+            width: '100%',
+            maxWidth: '600px',
+            marginTop: '60px',
+            marginBottom: '30px',
+            gap: '40px',
+            fontWeight: 'bold',
           }}
         >
-          <div style={{ display: "flex", flexDirection: "row", gap: "6px" }}>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '6px' }}>
             <Card style={{ flex: 1 }}>
               <RenderSingleValue
-                icon="medkit"
-                title="Total de atendimentos nos últimos 12 meses"
+                icon='medkit'
+                title='Total de atendimentos nos últimos 12 meses'
                 value={formataNumero(
-                  data?.["total"]?.["total-atendimentos-12-meses"]?.data ?? []
+                  data?.['total']?.['total-atendimentos-12-meses']?.data ?? []
                 )}
               />
             </Card>
             <Card style={{ flex: 2 }}>
               <div
-                style={{ display: "flex", flexDirection: "row", gap: "20px" }}
+                style={{ display: 'flex', flexDirection: 'row', gap: '20px' }}
               >
                 <RenderSingleValue
-                  icon="people"
-                  title="Nº de pessoas com hipertensão (CID/CIAP)¹"
-                  value={data?.["total"]?.[
-                    "total-pessoas-cid-ciap"
-                  ]?.data?.toLocaleString("pt-BR")}
+                  icon='people'
+                  title='Nº de pessoas com hipertensão (CID/CIAP)¹'
+                  value={data?.['total']?.[
+                    'total-pessoas-cid-ciap'
+                  ]?.data?.toLocaleString('pt-BR')}
                 />
                 <RenderSingleValue
-                  icon="people"
-                  title="Nº de pessoas com hipertensão (autorreferida)¹"
-                  value={data?.["total"]?.[
-                    "total-pessoas-auto"
-                  ]?.data?.toLocaleString("pt-BR")}
+                  icon='people'
+                  title='Nº de pessoas com hipertensão (autorreferida)¹'
+                  value={data?.['total']?.[
+                    'total-pessoas-auto'
+                  ]?.data?.toLocaleString('pt-BR')}
                 />
               </div>
             </Card>
           </div>
         </div>
-        <div style={{ display: "flex", flex: "row", gap: "80px" }}>
-        <div>
-          {reportLeftSections().map((chartList: any, index: number) => (
-            <RenderChartGroup
-              key={index}
-              report={data}
-              chartList={chartList}
-              reportViewType={reportViewType}
-              loadings={loadings}
-              errors={errors}
-              refetchAll={refetchAll}
-            />
-          ))}
+        <div style={{ display: 'flex', flex: 'row', gap: '80px' }}>
+          <div>
+            {reportLeftSections().map((chartList: any, index: number) => (
+              <RenderChartGroup
+                key={index}
+                report={data}
+                chartList={chartList}
+                reportViewType={reportViewType}
+                loadings={loadings}
+                errors={errors}
+                refetchAll={refetchAll}
+              />
+            ))}
           </div>
-          <div style={{ paddingTop: "0"}}>
-          {reportRightSections().map((chartList: any, index: number) => (
-            <RenderChartGroup
-              key={index}
-              report={data}
-              chartList={chartList}
-              reportViewType={reportViewType}
-              loadings={loadings}
-              errors={errors}
-              refetchAll={refetchAll}
-            />
-          ))}
+          <div style={{ paddingTop: '0' }}>
+            {reportRightSections().map((chartList: any, index: number) => (
+              <RenderChartGroup
+                key={index}
+                report={data}
+                chartList={chartList}
+                reportViewType={reportViewType}
+                loadings={loadings}
+                errors={errors}
+                refetchAll={refetchAll}
+              />
+            ))}
           </div>
         </div>
       </ReportWrapper>

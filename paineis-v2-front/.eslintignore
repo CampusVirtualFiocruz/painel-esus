@@ -1,0 +1,36 @@
+# Dependências
+node_modules/
+build/
+dist/
+
+# Arquivos de configuração
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Arquivos de build
+*.min.js
+*.min.css
+
+# Arquivos de cache
+.eslintcache
+.stylelintcache
+
+# Arquivos de Storybook
+storybook-static/
+
+# Arquivos de teste
+coverage/
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Arquivos de log
+*.log
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db

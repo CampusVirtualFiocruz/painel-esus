@@ -1,11 +1,11 @@
-import { HTMLProps, ReactNode } from "react";
-import { Header } from "../Header";
-import { Footer } from "../Footer";
-import { getNomeUbs, ReportBasicParams } from "../../utils";
-import { useInfo } from "../../context/infoProvider/useInfo";
-import { useQuery } from "react-query";
-import { Api } from "../../services/api";
-import { useParams, useSearchParams } from "react-router-dom";
+import { HTMLProps, ReactNode } from 'react';
+import { Header } from '../Header';
+import { Footer } from '../Footer';
+import { getNomeUbs, ReportBasicParams } from '../../utils';
+import { useInfo } from '../../context/infoProvider/useInfo';
+import { useQuery } from 'react-query';
+import { Api } from '../../services/api';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 type Lista = {
   nome_equipe: string;
@@ -45,12 +45,12 @@ const ReportWrapper = ({
   const { city } = useInfo();
 
   const [params] = useSearchParams();
-  const equipe = params.get("equipe");
+  const equipe = params.get('equipe');
 
   const { data: dataUbs, isLoading: isLoadingUbs } = useQuery(
-    "ubs",
+    'ubs',
     async () => {
-      const response = await Api.get<any>("get-units");
+      const response = await Api.get<any>('get-units');
       const data = response.data;
 
       const listData: any[] = data.data.map((ubs: any) => {
@@ -70,17 +70,17 @@ const ReportWrapper = ({
   );
 
   const { data: teamsData, isLoading: isLoadingTeam } = useQuery(
-    "get-teams/" + id,
+    `get-teams/${id}`,
     async () => {
       let listData: TypeUbs[] = [];
 
       if (id) {
-        const response = await Api.get<ResponseData>("get-teams/" + id);
+        const response = await Api.get<ResponseData>(`get-teams/${id}`);
         const data = response.data;
         listData = data.data.map((i: any) => {
           return {
             ...i,
-            label: i.nome_equipe + " (" + i.codigo_equipe + ")",
+            label: `${i.nome_equipe} (${i.codigo_equipe})`,
             value: i.codigo_equipe,
           };
         });
@@ -98,24 +98,24 @@ const ReportWrapper = ({
     if (equipe) {
       return equipe
         ? !isLoadingTeam && teamsData
-          ? teamsData.find((t) => String(t?.codigo_equipe) === String(equipe))
+          ? teamsData.find(t => String(t?.codigo_equipe) === String(equipe))
               ?.nome_equipe
-          : "Carregando nome equipe..."
+          : 'Carregando nome equipe...'
         : equipe;
     }
 
-    return id ? (!isLoadingUbs ? nomeUbs : "Carregando nome UBS...") : nomeUbs;
+    return id ? (!isLoadingUbs ? nomeUbs : 'Carregando nome UBS...') : nomeUbs;
   })();
 
-  const titleWithDetails = `${prefix} ${(prefix && title) ? "/" : ""} ${title}`;
+  const titleWithDetails = `${prefix} ${prefix && title ? '/' : ''} ${title}`;
 
   return (
     <div
       style={{
-        display: "flex",
+        display: 'flex',
         flex: 1,
-        flexDirection: "column",
-        minHeight: "100vh",
+        flexDirection: 'column',
+        minHeight: '100vh',
       }}
       {...props}
     >
@@ -123,36 +123,36 @@ const ReportWrapper = ({
       <div
         style={{
           flex: 1,
-          color: "#24252E",
-          backgroundColor: "white",
+          color: '#24252E',
+          backgroundColor: 'white',
         }}
       >
         {preheader}
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
           <div
             style={{
-              marginTop: "50px",
-              display: "block",
-              width: "40px",
-              height: "4px",
-              backgroundColor: "black",
-              content: " ",
+              marginTop: '50px',
+              display: 'block',
+              width: '40px',
+              height: '4px',
+              backgroundColor: 'black',
+              content: ' ',
             }}
           />
           <h1
             style={{
-              display: "inline-block",
-              textAlign: "center",
-              marginTop: "20px",
-              fontWeight: "bold",
-              marginRight: "10px",
+              display: 'inline-block',
+              textAlign: 'center',
+              marginTop: '20px',
+              fontWeight: 'bold',
+              marginRight: '10px',
             }}
           >
             {titleWithDetails}
@@ -160,24 +160,24 @@ const ReportWrapper = ({
           {Boolean(subtitle) && (
             <p
               style={{
-                display: "inline-block",
+                display: 'inline-block',
               }}
             >
               {subtitle}
             </p>
           )}
         </div>
-        <div style={{ width: "100%" }}>{header}</div>
-        <div className="container" style={{ marginTop: "20px" }}>
-          <div className="row justify-content-center">{children}</div>
+        <div style={{ width: '100%' }}>{header}</div>
+        <div className='container' style={{ marginTop: '20px' }}>
+          <div className='row justify-content-center'>{children}</div>
           {Boolean(footerNote) && (
             <div
               style={{
-                backgroundColor: "#edf3f8",
-                borderRadius: "10px",
-                padding: "16px 20px",
-                marginBottom: "26px",
-                marginTop: "40px"
+                backgroundColor: '#edf3f8',
+                borderRadius: '10px',
+                padding: '16px 20px',
+                marginBottom: '26px',
+                marginTop: '40px',
               }}
             >
               {footerNote}

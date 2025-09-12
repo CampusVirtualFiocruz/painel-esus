@@ -1,9 +1,5 @@
-import ReactECharts from "echarts-for-react";
-import "./style.scss";
-
-type ResultType = {
-  [key: string]: any;
-};
+import ReactECharts from 'echarts-for-react';
+import './style.scss';
 
 type TStackDataValues = {
   name: string;
@@ -40,8 +36,8 @@ export function StackedArea(props: TStackData) {
     legends.push(item.name);
     series.push({
       name: item.name,
-      type: "line",
-      stack: "Total",
+      type: 'line',
+      stack: 'Total',
       areaStyle: {
         opacity: 0.8,
         color: item.color,
@@ -55,7 +51,7 @@ export function StackedArea(props: TStackData) {
         color: item.color,
       },
       emphasis: {
-        focus: "series",
+        focus: 'series',
       },
       data: item.data,
     });
@@ -63,15 +59,15 @@ export function StackedArea(props: TStackData) {
 
   const options = {
     tooltip: {
-      trigger: "axis",
+      trigger: 'axis',
       axisPointer: {
-        type: "cross",
+        type: 'cross',
         label: {},
       },
     },
     legend: {
       data: legends,
-      icon: "rect",
+      icon: 'rect',
     },
     toolbox: {
       feature: {
@@ -90,7 +86,7 @@ export function StackedArea(props: TStackData) {
       },
       {
         height: 40,
-        type: "inside",
+        type: 'inside',
         realtime: false,
         start: 30,
         end: 70,
@@ -99,31 +95,31 @@ export function StackedArea(props: TStackData) {
       },
     ],
     grid: {
-      left: "3%",
-      right: "4%",
+      left: '3%',
+      right: '4%',
       bottom: 100,
       containLabel: true,
     },
     xAxis: [
       {
-        type: "category",
+        type: 'category',
         boundaryGap: false,
         data: labels,
       },
     ],
     yAxis: [
       {
-        type: "value",
+        type: 'value',
       },
     ],
-    series: series,
+    series,
   };
   let echartRef: any = null;
   let timer: any = null;
   const onEvents = {
-    datazoom: (params: any) => {
-      let starttime: string = `0`;
-      let endtime: string = `0`;
+    datazoom: () => {
+      let starttime = `0`;
+      let endtime = `0`;
       try {
         const isntance = echartRef.getEchartsInstance();
         const axis = isntance.getOption().xAxis[0];
@@ -131,38 +127,38 @@ export function StackedArea(props: TStackData) {
         starttime = axis.data[startValue];
         endtime = axis.data[endValue];
       } catch (e) {
-        starttime = "0";
-        endtime = "0";
+        starttime = '0';
+        endtime = '0';
       }
       clearTimeout(timer);
       // armazenamos o timer novamente
       timer = setTimeout(function () {
         if (
-          sessionStorage.getItem("starttime") == starttime &&
-          sessionStorage.getItem("endtime") == endtime
+          sessionStorage.getItem('starttime') === starttime &&
+          sessionStorage.getItem('endtime') === endtime
         ) {
-          starttime = "0";
-          endtime = "0";
+          starttime = '0';
+          endtime = '0';
         }
-        sessionStorage.setItem("starttime", starttime.toString());
-        sessionStorage.setItem("endtime", endtime.toString());
+        sessionStorage.setItem('starttime', starttime.toString());
+        sessionStorage.setItem('endtime', endtime.toString());
         props.setRangeData([starttime, endtime]);
       }, 500);
     },
   };
   return (
-    <div className="stack">
+    <div className='stack'>
       <ReactECharts
         option={options}
-        ref={(e) => {
+        ref={e => {
           echartRef = e;
         }}
         style={{
-          minWidth: "100%",
-          width: "200px",
-          height: "400px",
+          minWidth: '100%',
+          width: '200px',
+          height: '400px',
         }}
-        opts={{ renderer: "svg" }}
+        opts={{ renderer: 'svg' }}
         onEvents={onEvents}
       />
     </div>

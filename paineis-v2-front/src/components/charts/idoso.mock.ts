@@ -1,128 +1,133 @@
-import { BarChart, DonutChart, TreemapShallowChart, ValueChart } from "./charts.types";
+import {
+  BarChart,
+  DonutChart,
+  TreemapShallowChart,
+  ValueChart,
+} from './charts.types';
 
 type MockRelatorioTabagismo = {
-  "total-ubs": ValueChart;
-  "total-atendidas": ValueChart;
-  "total-raca-cor": TreemapShallowChart;
-  "total-imc": DonutChart;
-  "total-proporcao-vacina-influenza": DonutChart;
-  "total-proporcao-atendimento-odonto": DonutChart;
-  "pessoas-por-faixa-etaria": BarChart,
-  "pessoas-por-sexo": BarChart,
-  "pessoas-por-diagnostico": BarChart,
+  'total-ubs': ValueChart;
+  'total-atendidas': ValueChart;
+  'total-raca-cor': TreemapShallowChart;
+  'total-imc': DonutChart;
+  'total-proporcao-vacina-influenza': DonutChart;
+  'total-proporcao-atendimento-odonto': DonutChart;
+  'pessoas-por-faixa-etaria': BarChart;
+  'pessoas-por-sexo': BarChart;
+  'pessoas-por-diagnostico': BarChart;
 };
 
 export const charts: MockRelatorioTabagismo = {
-  "total-ubs": {
+  'total-ubs': {
     data: 768,
   },
-  "total-atendidas": {
+  'total-atendidas': {
     data: 83,
   },
-  "total-raca-cor": {
+  'total-raca-cor': {
     data: [
       {
-        tag: "parda",
+        tag: 'parda',
         value: 40,
       },
       {
-        tag: "amarela",
+        tag: 'amarela',
         value: 60,
       },
     ],
   },
-  "total-imc": {
+  'total-imc': {
     data: [
       {
-        tag: "baixo-peso",
+        tag: 'baixo-peso',
         value: 40,
       },
       {
-        tag: "normal",
+        tag: 'normal',
         value: 60,
       },
     ],
   },
-  "total-proporcao-vacina-influenza": {
+  'total-proporcao-vacina-influenza': {
     data: [
       {
-        tag: "vacinadas",
+        tag: 'vacinadas',
         value: 40,
       },
       {
-        tag: "nao-vacinadas",
+        tag: 'nao-vacinadas',
         value: 60,
       },
     ],
   },
-  "total-proporcao-atendimento-odonto": {
+  'total-proporcao-atendimento-odonto': {
     data: [
       {
-        tag: "atendidas",
+        tag: 'atendidas',
         value: 40,
       },
       {
-        tag: "nao-atendidas",
+        tag: 'nao-atendidas',
         value: 60,
       },
     ],
   },
-  "pessoas-por-faixa-etaria": {
+  'pessoas-por-faixa-etaria': {
     data: [
       {
-        tag: "60-64-anos",
+        tag: '60-64-anos',
         value: {
-          "urbana": 260,
-          "rural": 260,
-          "nao-informado": 260,
+          urbana: 260,
+          rural: 260,
+          'nao-informado': 260,
         },
       },
       {
-        tag: "65-69-anos",
+        tag: '65-69-anos',
         value: {
-          "urbana": 260,
-          "rural": 260,
-          "nao-informado": 260,
+          urbana: 260,
+          rural: 260,
+          'nao-informado': 260,
         },
       },
     ],
   },
-  "pessoas-por-sexo": {
+  'pessoas-por-sexo': {
     data: [
       {
-        tag: "60-64-anos",
+        tag: '60-64-anos',
         value: {
-          "feminino": 20,
-          "masculino": 20,
+          feminino: 20,
+          masculino: 20,
         },
       },
       {
-        tag: "65-69-anos",
+        tag: '65-69-anos',
         value: {
-          "feminino": 20,
-          "masculino": 20,
+          feminino: 20,
+          masculino: 20,
         },
       },
     ],
   },
-  "pessoas-por-diagnostico": {
+  'pessoas-por-diagnostico': {
     data: [
       {
-        tag: "hipertensao",
+        tag: 'hipertensao',
         value: {
-          "total": 219,
+          total: 219,
         },
       },
       {
-        tag: "diabetes",
+        tag: 'diabetes',
         value: {
-          "total": 154,
+          total: 154,
         },
       },
       {
-        tag: "hipertensao-diabetes-associadas",
+        tag: 'hipertensao-diabetes-associadas',
         value: {
-          "total": 281,
+          total: 281,
         },
       },
     ],

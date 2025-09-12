@@ -1,12 +1,12 @@
-import { Api } from "../../services/api";
-import { IUser } from "./types";
+import { Api } from '../../services/api';
+import { IUser } from './types';
 
 export function setUserLocalStorage(user: IUser | null) {
-  localStorage.setItem("u", JSON.stringify(user));
+  localStorage.setItem('u', JSON.stringify(user));
 }
 
 export function getUserLocalStorage() {
-  const json = localStorage.getItem("u");
+  const json = localStorage.getItem('u');
 
   if (!json) {
     return null;
@@ -19,7 +19,7 @@ export function getUserLocalStorage() {
 
 export async function LoginRequest(username: string, password: string) {
   try {
-    const response = await Api.post("auth", { username, password });
+    const response = await Api.post('auth', { username, password });
 
     return response.data;
   } catch (error) {
@@ -29,11 +29,11 @@ export async function LoginRequest(username: string, password: string) {
 
 export async function ProfilesRequest(profileData: any) {
   try {
-    if(typeof profileData === "object"){
-      const response = await Api.post("auth/profile", profileData);
-      return { ...response.data, info: "success" };
-    }else{
-      return { info: "not-configured" }
+    if (typeof profileData === 'object') {
+      const response = await Api.post('auth/profile', profileData);
+      return { ...response.data, info: 'success' };
+    } else {
+      return { info: 'not-configured' };
     }
   } catch (error) {
     return null;
