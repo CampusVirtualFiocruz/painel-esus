@@ -1,7 +1,9 @@
 # pylint: disable=W0613,line-too-long
 from flask import Blueprint, jsonify, request
+from sqlalchemy import text
 from src.env.conf import is_installed_ok
 from src.errors.error_handler import handle_errors
+from src.infra.db.settings.connection import DBConnectionHandler
 from src.main.adapters.request_adapter import request_adapter
 from src.presentations.controllers.create_bases.instalation_status import (
     InstalationStatus,
@@ -15,6 +17,7 @@ class SettingsPath:
     urls = {
         "instalation-status": "/instalation-status",
         "check-instalation": "/check-instalation",
+        "test-connection": "/test-connection",
     }
 
 
@@ -62,6 +65,35 @@ def check_instalation():
             return jsonify({
                         "showSetupWizardOnLaunch": False
                     }), 200
+    except Exception as exception:
+        http_response = handle_errors(exception)
+        return jsonify(http_response.body), 400
+
+
+@settings_bp.route(
+    urls["test-connection"],
+    methods=["POST"],
+    endpoint="test-connection",
+)
+def test_connection():
+    http_response = None
+    response = None
+    try:
+        body = request.json
+        DB_HOST = body.get("DB_HOST", "")
+        DB_DATABASE= body.get('DB_DATABASE','')
+        DB_USER= body.get('DB_USER','')
+        DB_PASSWORD = body.get('DB_PASSWORD','')
+        DB_PORT= body.get('DB_PORT','0')
+        try:
+            with DBConnectionHandler(
+                DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_DATABASE
+            ) as db_con:
+                db_con.session.connection().execute(text("select * from information_schema.tables"))
+                return jsonify({}), 200
+        except Exception as e:
+            return jsonify({ "message": f"Erro: {str(e)}"}), 400
+
     except Exception as exception:
         http_response = handle_errors(exception)
         return jsonify(http_response.body), 400
