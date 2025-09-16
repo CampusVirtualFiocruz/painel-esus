@@ -1,3 +1,4 @@
+import threading
 from datetime import datetime, timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -52,10 +53,14 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
         else:
             logging.info("skipping base Cache generation.")
 
+    def run_init_in_thread():
+        thread = threading.Thread(target=init)
+        thread.start()
+
     if weekly == "True":
         logging.info("Atualizacao semanal agendada.")
         scheduler.add_job(
-            init,
+            run_init_in_thread,
             trigger="cron",
             hour=hour,
             minute=minute,
@@ -69,7 +74,7 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
             hour=hour,
             minute=minute,
         )
-    init()
+    run_init_in_thread()
     if "GENERATE_CACHE" in env and env["GENERATE_CACHE"] == "True":
         logging.info("Scheduling chache generator")
         now = datetime.now()

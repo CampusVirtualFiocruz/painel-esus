@@ -1,12 +1,12 @@
 # pylint: disable=C0301, W0611
 import os
+
 # from src.main.server.decorators.check_access import check_access
 import sys
 
 import blueprint_decr
 from flask import Flask, send_from_directory
 from flask_cors import CORS
-
 from src.env import env as config
 from src.main.routes.city_informations_route import CityInfoPath, city_informations_bp
 from src.main.routes.demographic_route import DemographicPath, demographics_bp
@@ -17,6 +17,7 @@ from src.main.routes.infantil_routes import ChildrenPath, children_bp
 from src.main.routes.login_route import login_bp
 from src.main.routes.oral_health import OralHealthPath, oral_health_bp
 from src.main.routes.records_routes import RecordsPath, records_bp
+from src.main.routes.settings import SettingsPath, settings_bp, settings_path
 from src.main.routes.units_route import TeamsPath, UnitsPath, teams_bp, units_bp
 from src.main.server.cache import cache
 from src.main.server.decorators.token_required import token_required
@@ -131,6 +132,13 @@ register_blueprint(
     app,
     (elderly_bp, elderly.root_path),
     [token_required, cache.cached(timeout=24 * 60 * 60, query_string=True)],
+)
+
+settings = SettingsPath()
+register_blueprint(
+    app,
+    (settings_bp, settings.root_path),
+    [token_required],
 )
 
 

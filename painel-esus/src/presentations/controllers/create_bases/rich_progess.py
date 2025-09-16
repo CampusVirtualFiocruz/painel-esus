@@ -9,6 +9,8 @@ from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
 
+from .instalation_status import InstalationStatus
+
 console= Console(stderr=True)
 
 class InstallJobs:
@@ -29,6 +31,7 @@ class StartGeneration:
         self.text_logs = []
         self.total = 0
         self.total_proccess_time = datetime.now()
+        self.instalacao_status = InstalationStatus()
 
     def add_log(self, _text):
         self.logs.set_length(0)
@@ -63,6 +66,9 @@ class StartGeneration:
         )
 
         total = sum(task.total for task in job_progress.tasks)
+        self.instalacao_status.set_total(total)
+        self.instalacao_status.next()
+
         overall_progress = Progress()
 
         overall_task = overall_progress.add_task("Instalando", total=int(total))
@@ -102,7 +108,7 @@ class StartGeneration:
             )
         )
 
-        def start_proccess(context, job_progress, overall_progress):
+        def start_proccess(context, job_progress, overall_progress, instalacao, key):
             start_time = datetime.now()
             context.create_base()
             end_time = datetime.now()
@@ -122,20 +128,38 @@ class StartGeneration:
                     ),
                 ]
             )
+            self.instalacao_status.add_log(str(context._base), (end_time - start_time))
             # sleep(0.3)
             completed = sum(task.completed for task in job_progress.tasks)
+            if key == 0:
+                instalacao.update_base_progress()
+            else:
+                instalacao.update_indicators_progress()
             overall_progress.update(overall_task, completed=completed)
 
         with Live(layout, refresh_per_second=4) as live:
             while not overall_progress.finished:
                 for key, job in enumerate(job_progress.tasks):
+
                     if not job.finished:
                         if key == 0:
                             for context in self.jobs.creation:
-                                start_proccess(context, job_progress, overall_progress)
+                                start_proccess(
+                                    context,
+                                    job_progress,
+                                    overall_progress,
+                                    self.instalacao_status,
+                                    key
+                                )
                         if key == 1:
                             for context in self.jobs.key_factors:
-                                start_proccess(context, job_progress, overall_progress)
+                                start_proccess(
+                                    context,
+                                    job_progress,
+                                    overall_progress,
+                                    self.instalacao_status,
+                                    key
+                                )
             self.add_log(
                 [
                     (f"Geração da Base concluída.", "bold blue"),
@@ -154,3 +178,4 @@ class StartGeneration:
                     ),
                 ]
             )
+            self.instalacao_status.next()
