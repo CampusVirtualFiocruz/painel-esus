@@ -1,10 +1,18 @@
+"""Adapters de agregação e transformação para Cadastros.
+
+Converte respostas de consultas SQL em estruturas prontas para o frontend,
+incluindo totais, percentuais e listas nominais com anonimização.
+"""
+
 import datetime
 import json
 
 from src.main.adapters.nominal_list_adapter import RecordNominalListAdapter
 
 class RecordsAdapter:
+    """Utilitários para montar respostas de Cadastros."""
     def get_total_group(self, response):
+        """Agrupa total de cadastros e percentual de atualizados."""
         result = {
             "total-cadastros-ubs": {
                 "data": 0,
@@ -23,6 +31,7 @@ class RecordsAdapter:
         return result
 
     def get_cpf_cns_rate(self, response):
+        """Percentual de cadastros identificados por CPF/CNS e não identificados."""
         result = [
             {
                 "tag": "sem-cpf-cnf",
@@ -41,6 +50,7 @@ class RecordsAdapter:
         return result
 
     def group_localidade(self, response):
+        """Distribuição por localidade (urbana/rural/não informado)."""
         result = []
         for resp in response:
             if resp[0] is None:
@@ -54,6 +64,7 @@ class RecordsAdapter:
         return result
 
     def group_raca_cor(self, response):
+        """Distribuição por raça/cor com percentuais e valores absolutos."""
         result = []
         for resp in response:
             tag = "indefinido"
@@ -70,6 +81,7 @@ class RecordsAdapter:
         return result
 
     def group_records_by_origin(self, response):
+        """Totais por origem do cadastro (FCI/PEC/recusa)."""
         result = []
         response = response.pop()
         result = [
@@ -96,6 +108,7 @@ class RecordsAdapter:
         return result
 
     def records_status(self, response):
+        """Distribuição por status de cadastro."""
         result = []
         label_map = {
             "cadastro_completo": "Cadastro Completo",
@@ -112,6 +125,7 @@ class RecordsAdapter:
         ]
 
     def people_who_get_care(self, response):
+        """Percentual de acompanhados e não acompanhados."""
         result = []
         label_map = {
             "0": "Não Acompanhados",
@@ -126,6 +140,7 @@ class RecordsAdapter:
         ]
 
     def nominal_list(self, response):
+        """Transforma itens de saída em dicionários anonimizados."""
         response["items"] = [
             RecordNominalListAdapter(r).to_dict() for r in response["items"]
         ]

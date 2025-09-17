@@ -1,7 +1,13 @@
+"""Adapter para o módulo Crianças.
+
+Formata respostas de repositórios em estruturas consumíveis pelo frontend:
+totais, distribuiçoes por raça/idade/indicadores e lista nominal.
+"""
 from src.main.adapters.nominal_list_adapter import CriancaNominalListAdapter
 
 
 class ChildrenAdapter:
+    """Converte respostas do domínio Crianças em objetos prontos para UI."""
 
     def _init_object(self,tag):
         return {
@@ -19,7 +25,7 @@ class ChildrenAdapter:
         return {
             "sim": self._init_object("avaliados"),
             "nao": self._init_object("nao-avaliados"),
-            
+
         }
 
     def _race_labels(self):
@@ -33,10 +39,12 @@ class ChildrenAdapter:
     }
 
     def total_count_children(self, response):
+        """Extrai total de crianças de uma consulta agregada."""
         total = response[0][0] if response else 0
         return {"data": total}
 
     def total_and_12_months_adapter(self, response):
+        """Retorna total acumulado e total dos últimos 12 meses."""
         total = response[0][0] if response else 0
         total_12_meses = response[0][1] if response else 0
         return {
@@ -45,6 +53,7 @@ class ChildrenAdapter:
         }
 
     def total_ubs(self, response):
+        """Total de UBS relacionadas ao módulo Crianças."""
         total = 0
         if response is not None and len(response) > 0:
             total = response[0][0]
@@ -57,6 +66,7 @@ class ChildrenAdapter:
         return {"data": [{"tag": tag, "value": value} for tag, value in response]}
 
     def total_medical_cares(self, response):
+        """Total de atendimentos médicos."""
         total = 0
         if response is not None and len(response) > 0:
             total = response[0][0]
@@ -81,6 +91,7 @@ class ChildrenAdapter:
         return self._to_tag_value_from_dict(response, self._sim_nao_labels())
 
     def by_age_children(self, response):
+        """Distribuição por faixas etárias e sexo."""
         data = {}
         def _init(i):
             return {

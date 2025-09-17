@@ -1,14 +1,28 @@
+"""Interfaces de repositório para informações do município.
+
+Define o contrato que os repositórios concretos de informações da cidade
+devem implementar.
+"""
 from abc import ABC
 from abc import abstractmethod
 from typing import Dict
 
 
 class CityInformationRepository(ABC):
+    """Contrato para recuperação de informações municipais, unidades e equipes."""
     @abstractmethod
-    def get_city_info(self, cnes: int = None) -> Dict: pass
+    def get_city_info(self, cnes: int = None) -> Dict:
+        """Retorna informações gerais do município (IBGE, CEP, UF etc.), opcionalmente filtradas por CNES."""
+        pass
     @abstractmethod
-    def get_units(self) -> Dict: pass
+    def get_units(self) -> Dict:
+        """Lista unidades de saúde do município."""
+        pass
     @abstractmethod
-    def get_units_with_patients(self) -> Dict: pass
+    def get_units_with_patients(self) -> Dict:
+        """Lista unidades com agregações de pacientes."""
+        pass
     @abstractmethod
-    def get_teams(self, cnes:int = None) -> Dict: pass
+    def get_teams(self, cnes:int = None) -> Dict:
+        """Lista equipes de saúde, opcionalmente filtradas por CNES."""
+        pass

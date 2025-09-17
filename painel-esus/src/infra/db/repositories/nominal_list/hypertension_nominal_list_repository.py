@@ -1,3 +1,9 @@
+"""Criação/atualização da base nominal de Hipertensão.
+
+Consolidar e gravar a base nominal de hipertensos a partir de
+diversas fontes (atendimentos, procedimentos, autoreferidos).
+"""
+
 import os
 from datetime import datetime
 
@@ -19,6 +25,7 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
     _base = "hipertensao_nominal"
 
     def get_query(self, sql):
+        """Executa consulta via SQLAlchemy/Polars retornando DataFrame Polars."""
         result = None
         with DBConnectionHandler() as con:
             engine = con.get_engine()
@@ -35,6 +42,7 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
         return result if not None else []
 
     def get_autorreferidos(self):
+        """Obtém pacientes autoreferidos com hipertensão da base de cadastro."""
         working_directory = os.getcwd()
         input_path = os.path.join(working_directory, "dados", "input")
         cad = pl.read_parquet(input_path + os.sep + "tb_fat_cad_individual.parquet")
@@ -48,23 +56,25 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
         return result
 
     def visita_acs(self):
+        """Última visita de ACS e meses desde a última visita por cidadão."""
         sql = f"""select distinct
                             tfvd.co_fat_cidadao_pec cidadao_pec,
                             max(tcfvd.dt_ficha::text::date) as data_ultima_visita_acs,
                             (
-                                extract(year from age(now(), max(tcfvd.dt_ficha::text::date) ))*12 + extract(month from age(now(), max(tcfvd.dt_ficha::text::date) )) 
+                                extract(year from age(now(), max(tcfvd.dt_ficha::text::date) ))*12 + extract(month from age(now(), max(tcfvd.dt_ficha::text::date) ))
                             ) meses_desde_ultima_visita
-                        from tb_cds_ficha_visita_domiciliar tcfvd 
-                        left join tb_cds_prof tcp  on tcfvd.co_cds_prof = tcp.co_seq_cds_prof 
-                        left join tb_fat_visita_domiciliar tfvd on tcfvd.co_unico_ficha = tfvd.nu_uuid_ficha 
-                        left join tb_dim_equipe tde on tde.co_seq_dim_equipe = tfvd.co_dim_equipe 
+                        from tb_cds_ficha_visita_domiciliar tcfvd
+                        left join tb_cds_prof tcp  on tcfvd.co_cds_prof = tcp.co_seq_cds_prof
+                        left join tb_fat_visita_domiciliar tfvd on tcfvd.co_unico_ficha = tfvd.nu_uuid_ficha
+                        left join tb_dim_equipe tde on tde.co_seq_dim_equipe = tfvd.co_dim_equipe
                         left join tb_equipe te  on tde.nu_ine = te.nu_ine
                         left join tb_tipo_equipe tte  on te.tp_equipe = tte.co_seq_tipo_equipe
-                        where 
+                        where
                             tcp.nu_cbo_2002 like any(array['5151%', '3233%']) and  tte.nu_ms in ('70', '76') group by 1"""
         return self.get_query(sql)
 
     def get_atendimento_odonto(self):
+        """Data do último atendimento odontológico e meses decorridos."""
         sql = """select
                     tfao.co_fat_cidadao_pec cidadao_pec,
                     max(co_dim_tempo::text::date) ultimo_atendimento_odonto,
@@ -75,7 +85,7 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
                     max(co_dim_tempo::text::date) ))* 12 + extract(month
                 from
                     age(now(),
-                    max(co_dim_tempo::text::date) )) 
+                    max(co_dim_tempo::text::date) ))
                     ) meses_desde_ultima_visita_odontologica
                 from
                     tb_fat_atendimento_odonto tfao
@@ -84,6 +94,7 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
         return self.get_query(sql)
 
     def get_afericao_pa(self):
+        """Data da última aferição de PA e meses decorridos."""
         sql = """select
                         co_fat_cidadao_pec cidadao_pec,
                         max(co_dim_tempo::text::date) as ultima_data_afericao_pa,
@@ -94,7 +105,7 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
                     from
                         age(now(),
                         max(co_dim_tempo::text::date) )) as meses_ultima_data_afericao_pa
-                    from 
+                    from
                         tb_fat_proced_atend
                     where
                         ds_filtro_procedimento like '%|0301100039|%'
@@ -103,23 +114,29 @@ class HypertensionNominalListRepository(CreateBasesRepositoryInterface):
         return self.get_query(sql)
 
     def get_creatinina(self):
+        """Data da última creatinina e meses decorridos."""
         sql = """select distinct on (cidadao_pec) * from (
-		select 
+		select
 			co_fat_cidadao_pec cidadao_pec, max(co_dim_tempo::text::date) as ultima_data_creatinina,
 			extract(year from age(now(), max(co_dim_tempo::text::date) ))*12 + extract(month from age(now(), max(co_dim_tempo::text::date) )) as meses_ultima_data_creatinina
-		from 
+		from
 			tb_fat_proced_atend where ds_filtro_procedimento like any(array['%|0202010317|%', '%|ABEX003|%'])  group by 1
-		union all 	
-		select 
+		union all
+		select
 			co_fat_cidadao_pec cidadao_pec, max(co_dim_tempo::text::date) as ultima_data_creatinina,
 			extract(year from age(now(), max(co_dim_tempo::text::date) ))*12 + extract(month from age(now(), max(co_dim_tempo::text::date) )) as meses_ultima_data_creatinina
-		from 
-			tb_fat_atendimento_individual where 
+		from
+			tb_fat_atendimento_individual where
 			ds_filtro_proced_avaliados like  any(array['%|0202010317|%', '%|ABEX003|%'])  group by 1
 	) lista_procedimentos;"""
         return self.get_query(sql)
 
     def create_base(self):
+        """Constrói e persiste a base nominal consolidada de hipertensos.
+
+        Integra autoreferidos, atendimentos (médico/enfermagem/odonto),
+        aferições e creatinina, derivando colunas de alerta e datas-chave.
+        """
         working_directory = os.getcwd()
         input_path = os.path.join(working_directory, "dados", "input")
 

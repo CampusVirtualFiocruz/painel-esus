@@ -1,3 +1,17 @@
+"""Cadastro Individual.
+
+Consultas relacionadas ao cadastro de pessoas (equipe,
+localidade, raça/cor, status e outras agregações).
+
+Responsabilidades principais:
+- Agregar totais e indicadores do cadastro.
+- Agrupar cadastros por localidade, raça/cor, origem e status.
+- Fornecer listas nominais paginadas e exportação anonimizadas.
+
+Observações:
+- Quando a variável de ambiente ``MOCK=True`` estiver definida, alguns
+  fluxos podem retornar dados simulados.
+"""
 # pylint: disable=R0913,W0611
 import json
 
@@ -24,52 +38,65 @@ from src.infra.db.repositories.utils.str_utils import anonymize_data_frame
 
 
 class RecordsRepository:
+    """Implementa operações de leitura de dados cadastrais."""
     def __init__(self):
         self.mock_data = getenv("MOCK", False, False) == 'True'
 
     def get_total_group(self, cnes: int = None, equipe: int = None):
+        """Retorna total de pessoas cadastradas por agrupamento padrão.
+
+        Parâmetros opcionais cnes e equipe permitem filtrar por
+        unidade e equipe.
+        """
         con = duckdb.connect()
         sql = get_total_cadastros(cnes, equipe)
         result = con.sql(sql).fetchall()
         return result
 
     def get_cpf_cns_rate(self, cnes: int = None, equipe: int = None):
+        """Retorna taxa de preenchimento de CPF/CNS entre os cadastrados."""
         con = duckdb.connect()
         sql = get_cpf_cns_rate(cnes, equipe)
         result = con.sql(sql).fetchall()
         return result
 
     def group_localidade(self, cnes: int = None, equipe: int = None):
+        """Agrupa cadastros por tipo de localidade."""
         sql = group_localidade(cnes, equipe)
         con = duckdb.connect()
         result = con.sql(sql).fetchall()
         return result
 
     def group_raca_cor(self, cnes: int = None, equipe: int = None):
+        """Agrupa cadastros por raça/cor."""
         sql = group_raca_cor(cnes, equipe)
         con = duckdb.connect()
         result = con.sql(sql).fetchall()
         return result
 
     def group_records_by_origin(self, cnes: int = None, equipe: int = None):
+        """Agrupa registros pela origem (ex.: e-SUS, importações)."""
         sql = group_records_by_origin(cnes, equipe)
         con = duckdb.connect()
         result = con.sql(sql).fetchall()
         return result
 
     def group_records_status(self, cnes: int = None, equipe: int = None):
+        """Agrupa cadastros por status (ativo, atualizado, desatualizado etc.)."""
         sql = group_records_by_status(cnes, equipe)
         con = duckdb.connect()
         result = con.sql(sql).fetchall()
         return result
 
     def people_who_get_care(self, cnes: int = None, equipe: int = None):
+        """Retorna agregações de pessoas que recebem atendimento."""
         sql = people_who_get_care(cnes, equipe)
         con = duckdb.connect()
         result = con.sql(sql).fetchall()
         return result
 
     def nominal_list(self, cnes: int = None, equipe: int = None):
+        """Lista nominal baseada na origem dos registros."""
         sql = group_records_by_origin(cnes, equipe)
         con = duckdb.connect()
         result = con.sql(sql).fetchall()
@@ -86,6 +113,15 @@ class RecordsRepository:
         query:str=None,
         sort=[]
     ):
+        """Retorna lista nominal (items e metadados de paginação).
+
+        Parâmetros:
+        - cnes, equipe: filtros por unidade e equipe.
+        - page, pagesize: paginação.
+        - nome, cpf, query: filtros de busca textual (query aplica em
+          múltiplas colunas como nome/CPF/CNS).
+        - sort: lista de dicts com chaves field e direction.
+        """
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
 
@@ -165,10 +201,14 @@ class RecordsRepository:
             }
 
     def find_all_download(self, cnes: int = None, equipe: int = None):
+        """Gera DataFrame para exportação da lista nominal.
+
+        Os dados sensíveis são anonimizados.
+        """
         sql_pessoas = get_pessoas(cnes, equipe)
         sql = f"""
             with pessoas as ({sql_pessoas})
-            select 
+            select
                 cidadao_pec,
                 co_cidadao,
                 raca_cor,
@@ -180,13 +220,13 @@ class RecordsRepository:
                 sexo,
                 telefone,
                 STRFTIME( '%d-%m-%Y',  cast(ultima_atualizacao_fci as DATE) ) as ultima_atualizacao_fci,
-                case 
+                case
                     when fci_att_2anos = 0 then 'NÃO'
                     when fci_att_2anos is null then 'NÃO'
                     when fci_att_2anos =1 then 'SIM'
                 end as fci_atualizada,
                 STRFTIME( '%d-%m-%Y', cast( ultima_atualizacao_fcd as DATE)) as ultima_atualizacao_fcd,
-                case 
+                case
                     when fci_att_2anos = 0 then 'NÃO'
                     when fci_att_2anos is null then 'NÃO'
                     when fci_att_2anos = 1 then 'SIM'
@@ -201,7 +241,7 @@ class RecordsRepository:
                 nome_unidade_saude,
                 nome_equipe,
                 micro_area,
-                case 
+                case
                     when acompanhamento = 1 then 'SIM'
                     when acompanhamento = 0 then 'NÃO'
                 end as acompanhamento,

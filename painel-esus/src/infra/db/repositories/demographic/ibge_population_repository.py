@@ -1,3 +1,10 @@
+"""Demografia: População do IBGE.
+
+Lê um CSV local com colunas "IBGE" e "POPULACAO" e retorna a população
+formatada (ex.: 123.456) do município configurado via variável de ambiente
+"CIDADE_IBGE".
+"""
+
 import os
 from pathlib import Path
 
@@ -9,9 +16,15 @@ from src.errors.logging import logging
 class IBGEPopulationRepository:
 
     def __init__(self, csv_path: str = None):
+        """Define o caminho do CSV do IBGE. Usa "ibge.csv" no diretório atual
+        por padrão."""
         self.csv_path = csv_path or os.path.join(Path(os.getcwd()), "ibge.csv")
 
     def get_ibge_population(self):
+        """Retorna população do município (a partir de "CIDADE_IBGE").
+
+        Em falhas ou IBGE não configurado, retorna 0.
+        """
         df = pd.read_csv(self.csv_path, sep=";")
 
         ibge = int(env.get("CIDADE_IBGE", 0))

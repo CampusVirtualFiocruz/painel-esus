@@ -1,3 +1,8 @@
+"""Adapters base para formatar respostas para o frontend.
+
+Os adapters aqui definidos transformam resultados brutos em estruturas
+padronizadas, reduzindo acoplamento entre as camadas de dados e apresentação.
+"""
 from abc import ABC, abstractmethod
 from typing import TypedDict
 
@@ -8,6 +13,7 @@ class TypeTotal(TypedDict):
     data: int = 0
 
 class AbstractAdapter(ABC):
+    """Base para adapters com utilitários de hidratação/formatação."""
 
     def _total_hydrate(self):
         return {
@@ -61,6 +67,7 @@ class AbstractAdapter(ABC):
         pass
 
 class DemographicAdapter(AbstractAdapter):
+    """Adapter de Demografia para totais, tipos de localidade, pirâmide etária e sexo."""
 
     def total_adapter(self, response) -> TypeTotal:
         result = self._total_hydrate()

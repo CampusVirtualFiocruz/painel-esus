@@ -1,3 +1,10 @@
+
+"""Adapter para o módulo Saúde Bucal.
+
+Formata respostas de repositórios em estruturas consumíveis pelo frontend:
+contagens binárias, distribuições e lista nominal.
+"""
+
 from src.main.adapters.base.base_dashboard_adapter import BaseDashboardAdapter
 from src.main.adapters.nominal_list_adapter import OralHealtNominalListAdapter
 

@@ -1,3 +1,14 @@
+"""Indicadores de Hipertensão/Diabetes.
+
+Recebe a condição-alvo ("disease") e expõe métodos para
+indicadores (totais, exames, IMC, complicações, distribuição por localidade/raça/
+sexo) e listas nominais com filtros/ordenação/exportação.
+
+Observações:
+- Quando a variável de ambiente ``MOCK=True`` estiver definida, alguns
+  fluxos podem retornar dados simulados.
+"""
+
 import json
 from typing import Dict
 
@@ -23,11 +34,13 @@ from .sqls.hipertension_diabetes_queries import (
 class HypertensionDiabetesRepository:
 
     def __init__(self, disease: str):
+        """Inicializa o repositório com a condição-alvo ("hipertensão"/"diabetes")."""
         self.disease = disease
         self.session = DuckDbHandler()
         self.mock_data = getenv("MOCK", False, False) == "True"
 
     def _validate(self, cnes: int, equipe: int):
+        """Valida tipos de CNES e equipe."""
         if cnes and not isinstance(cnes, int):
             raise InvalidArgument("CNES must be int")
 
@@ -35,6 +48,7 @@ class HypertensionDiabetesRepository:
             raise InvalidArgument("Equipe must be int")
 
     def get_total(self, cnes: int = None, equipe: int = None, debug=False):
+        """Retorna totais: atendimentos 12 meses, pessoas por CID/CIAP e autoreferidos."""
         self._validate(cnes, equipe)
         total_12 = self.session.fetchone(get_total(self.disease, cnes, equipe))
         total = self.session.fetchone(get_number_of_patients(self.disease, cnes, equipe))
@@ -45,22 +59,24 @@ class HypertensionDiabetesRepository:
             },
             "total-pessoas-cid-ciap": {
                 "data": total_cid_ciap
-            },            
+            },
             "total-pessoas-auto": {
                 "data": total_auto
-            }        
+            }
         }
         return result
 
     def get_exams_count(self, cnes: int = None, equipe: int = None, debug=False):
+        """Exames por condição (colunas dinâmicas)."""
         self._validate(cnes, equipe)
         cares_sql = exams_table(self.disease, cnes, equipe)
         result =  self.session.fetchall(cares_sql)
         if debug:
-            print(self.session.columns)        
+            print(self.session.columns)
         return result
 
     def get_imc(self, cnes: int = None, equipe: int = None, debug=False):
+        """Distribuição de IMC para a população-alvo."""
         self._validate(cnes, equipe)
         sql = imc(self.disease, cnes, equipe)
         result = self.session.fetchall(sql)
@@ -69,6 +85,7 @@ class HypertensionDiabetesRepository:
         return result
 
     def get_complications(self, cnes: int = None, equipe: int = None, debug=False):
+        """Complicações associadas à condição (retorna agregações)."""
         self._validate(cnes, equipe)
         sql = complications(self.disease, cnes, equipe)
         result = self.session.fetchall(sql)
@@ -77,18 +94,21 @@ class HypertensionDiabetesRepository:
         return result
 
     def get_by_location(self, cnes: int = None, equipe: int = None, debug=False):
+        """Distribuição por localidade."""
         self._validate(cnes, equipe)
         sql = by_location(self.disease, cnes, equipe)
         result = self.session.fetchall(sql)
         return result
 
     def get_by_race(self, cnes: int = None, equipe: int = None, debug=False):
+        """Distribuição por raça/cor."""
         self._validate(cnes, equipe)
         sql = by_race(self.disease, cnes, equipe)
         result = self.session.fetchall(sql)
         return result
 
     def get_by_gender(self, cnes: int = None, equipe: int = None, debug=False):
+        """Distribuição por sexo."""
         self._validate(cnes, equipe)
         sql = by_gender(self.disease, cnes, equipe)
         result = self.session.fetchall(sql)
@@ -105,6 +125,15 @@ class HypertensionDiabetesRepository:
         query: str = None,
         sort=[],
     ):
+        """Retorna lista nominal (items e metadados de paginação).
+
+        Parâmetros:
+        - cnes, equipe: filtros por unidade e equipe.
+        - page, pagesize: paginação.
+        - query: filtros de busca textual (query aplica em
+          múltiplas colunas como nome/CPF/CNS).
+        - sort: lista de dicts com chaves field e direction.
+        """
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
         con = duckdb.connect()
@@ -184,6 +213,7 @@ class HypertensionDiabetesRepository:
         }
 
     def get_nominal_list_download(self, cnes: int = None, equipe: int = None) -> Dict:
+        """Gera DataFrame para exportação com anonimização de dados."""
         con = duckdb.connect()
         pessoas_sql = get_sql_base_export(self.disease, cnes, equipe)
         result = con.sql(pessoas_sql).df()

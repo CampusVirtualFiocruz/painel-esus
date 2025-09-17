@@ -1,3 +1,9 @@
+"""Lista nominal de Diabetes.
+
+Listas nominais, filtros, ordenação e exportações com
+anonimização.
+"""
+
 # pylint: disable=R0913
 import json
 from typing import Dict
@@ -20,6 +26,8 @@ from src.infra.db.settings.connection_local import DBConnectionHandler
 
 
 class DiabetesNominalListRepository:
+    """Operações de leitura e exportação da base nominal de Diabetes."""
+
     def __init__(self):
         self.mock_data = getenv("MOCK", False, False) == 'True'
     def find_all(self, cnes: int = None) -> Dict:
@@ -42,6 +50,7 @@ class DiabetesNominalListRepository:
             return users
 
     def find_all_download(self, cnes: int = None, equipe:int=None) -> Dict:
+        """Retorna DataFrame para exportação anonimizando dados sensíveis."""
         con = duckdb.connect()
         pessoas_sql = get_diabetes_base_export(cnes, equipe)
 
@@ -50,6 +59,7 @@ class DiabetesNominalListRepository:
         return result
 
     def find_by_nome(self, nome: str):
+        """Busca registros pelo nome via ORM."""
         with DBConnectionHandler() as db_con:
             users = (
                 db_con.session.query(DiabetesNominal)
@@ -73,6 +83,15 @@ class DiabetesNominalListRepository:
         query: str = None,
         sort=[]
     ):
+        """Retorna lista nominal (items e metadados de paginação).
+
+        Parâmetros:
+        - cnes, equipe: filtros por unidade e equipe.
+        - page, pagesize: paginação.
+        - nome, cpf, query: filtros de busca textual (query aplica em
+          múltiplas colunas como nome/CPF/CNS).
+        - sort: lista de dicts com chaves field e direction.
+        """
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
         con = duckdb.connect()

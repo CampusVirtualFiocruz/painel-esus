@@ -1,3 +1,8 @@
+"""Adapters para listas nominais (Crianças, Idosos, Hipertensão, Diabetes).
+
+Transformam bases nominais em estruturas tipadas para exibição no
+frontend, aplicando anonimização e compondo registros/alertas quando necessário.
+"""
 # pylint: disable=R0902, W4901, W0611, C0103
 import math
 import re
@@ -22,10 +27,12 @@ from src.infra.db.repositories.utils.str_utils import (
 
 
 def is_sequence(obj):
+    """Verifica se o objeto é uma estrutura NumPy (array ou escalar)."""
     return isinstance(obj, (np.ndarray, np.generic))
 
 
 class AlertRecord:
+    """Representa um registro de alerta exibido na lista nominal."""
     def __init__(
         self,
         descricao: str,
@@ -41,6 +48,7 @@ class AlertRecord:
         self.classificacao = classificacao
 
     def to_dict(self):
+        """Converte o alerta para dicionário serializável."""
         response = {
             "descricao": self.descricao,
             "data": self.data,
@@ -53,7 +61,9 @@ class AlertRecord:
 
 
 class BaseNominalAdapter:
+    """Campos e utilidades comuns às listas nominais de diferentes módulos."""
     def __init__(self, user):
+        """Inicializa campos comuns da lista nominal a partir do registro de entrada."""
         endereco = self.get(user, "endereco")
         endereco += " " + self.get(user, "numero")
         endereco += " " + self.get(user, "bairro")
@@ -76,15 +86,18 @@ class BaseNominalAdapter:
         self.registros = []
         self.primeiro_registro = self.get(user, "dt_primeiro_reg_condicao")
         self.raca_cor = self.get(user, "raca_cor")
-        
+
 
     def get(self, item, field):
+        """Leitura segura de campo opcional no item de entrada."""
         return item[field] if field in item and item[field] is not None else ""
 
 
 class HypertensionNominalListAdapter(BaseNominalAdapter):
+    """Adapter de lista nominal de Hipertensão com composição de alertas."""
 
     def __init__(self, user):
+        """Monta estrutura e alertas para um hipertenso."""
         super().__init__(user)
 
 
@@ -158,6 +171,7 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
         )
 
     def to_dict(self):
+        """Retorna dicionário anonimizando dados sensíveis."""
         return dict(
             {
                 "nome": anonymize_data_name(self.nome),
@@ -194,8 +208,10 @@ class HypertensionNominalListAdapter(BaseNominalAdapter):
 
 
 class DiabetesNominalListAdapter(BaseNominalAdapter):
+    """Adapter de lista nominal de Diabetes com composição de alertas."""
 
     def __init__(self, user: DiabetesNominal):
+        """Monta estrutura e alertas para uma pessoa com diabetes."""
         super().__init__(user)
 
         self.possui_alertas = (
@@ -278,6 +294,7 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
         )
 
     def to_dict(self):
+        """Retorna dicionário anonimizando dados sensíveis."""
         return dict(
             {
                 "nome": anonymize_data_name(self.nome),
@@ -314,8 +331,10 @@ class DiabetesNominalListAdapter(BaseNominalAdapter):
 
 
 class CriancaNominalListAdapter:
+    """Adapter de lista nominal de Crianças com regras específicas de alerta."""
 
     def __init__(self, user: Crianca):
+        """Inicializa campos e compõe alertas específicos da lista nominal de crianças."""
         self.nome = user["nome"]
         self.nome_social = "-"
         self.tipo_localidade = user["tipo_localizacao_domicilio"]
@@ -425,6 +444,7 @@ class CriancaNominalListAdapter:
         )
 
     def get_last_height_weight_measure(self, user):
+        """Retorna última medida de peso/altura com classificação, ou 'Não se aplica'."""
         if (
             self.select_column(user, "nu_peso_recentes") is None
             and self.select_column(user, "nu_altura_recentes") is None
@@ -435,20 +455,25 @@ class CriancaNominalListAdapter:
             return f'{self.select_column(user, "nu_peso_recentes")} kg/{self.select_column(user, "nu_altura_recentes")} cm ({descricao})'
 
     def convert_nan(self, dt):
+        """Converte NaN/None para 0 para exibição numérica."""
         if dt is None or math.isnan(dt):
             return 0
         return dt
 
     def select_column(self, user, column):
+        """Seleciona coluna do dicionário de entrada."""
         return user[f"{column}"]
 
     def get_numeric_data(self, user, column):
+        """Lê coluna numérica tratando NaN/None."""
         return self.convert_nan(self.select_column(user, column))
 
     def check_alert(self, user, column):
+        """Indica se há alerta (valor igual a 0)."""
         return self.get_numeric_data(user, column) == 0
 
     def get_yes_no_data(self, user, column):
+        """Converte flags 0/1/99 para 'Não'/'Sim'/'Não se aplica'."""
         condition = {
             "0": "Não",
             "1": "Sim",
@@ -457,6 +482,7 @@ class CriancaNominalListAdapter:
         return condition[str(self.get_numeric_data(user, column))]
 
     def check_card_alert(self, user):
+        """Consolida presença de alertas do cartão da criança."""
         return (
             user["agg_card_puericultura_ate_8_dias"] == 0
             or user["agg_card_puericultura_9_consultas_ate_2_anos"] == 0
@@ -470,6 +496,7 @@ class CriancaNominalListAdapter:
         )
 
     def to_dict(self):
+        """Retorna dicionário anonimizando dados sensíveis."""
         return dict(
             {
                 "nome": anonymize_data_name(self.nome),
@@ -502,6 +529,7 @@ class CriancaNominalListAdapter:
 
 
 class IdosoNominalListAdapter:
+    """Adapter de lista nominal de Idosos com formatação de registros/alertas."""
 
     def __init__(self, user: Crianca):
         self.nome = user["nome"]
@@ -610,16 +638,19 @@ class IdosoNominalListAdapter:
         )
 
     def convert_date(self, dt):
+        """Normaliza datas, retornando None para NaT."""
         if issubclass(type(dt), type(pd.NaT)):
             return None
         return dt
 
     def convert_nan(self, dt):
+        """Converte NaN para 0 para contagens."""
         if math.isnan(dt):
             return 0
         return dt
 
     def to_dict(self):
+        """Retorna dicionário anonimizando dados sensíveis."""
         return dict(
             {
                 "racaCor": anonymize_data(self.raca_cor),
@@ -652,6 +683,7 @@ class IdosoNominalListAdapter:
 
 
 class RecordNominalListAdapter:
+    """Adapter de lista nominal de Cadastros (Cadastro Individual)."""
 
     def __init__(self, user):
 
@@ -730,6 +762,7 @@ class RecordNominalListAdapter:
         )
 
     def to_dict(self):
+        """Retorna dicionário anonimizando dados sensíveis."""
         return dict(
             {
                 "nome": anonymize_data_name(self.nome),
@@ -761,8 +794,10 @@ class RecordNominalListAdapter:
 
 
 class OralHealtNominalListAdapter:
+    """Adapter para lista nominal de Saúde Bucal."""
 
     def __init__(self, user, category: str = "atendidas"):
+        """Inicializa campos e prepara lista de alertas odontológicos."""
         self.category = category
         self.nome = user["nome"]
         self.nome_social = "-"
@@ -844,6 +879,7 @@ class OralHealtNominalListAdapter:
         )
 
     def check_alert(self, user):
+        """Avalia se há alertas conforme categoria selecionada."""
 
         if self.category == "cadastradas":
             return (
@@ -865,23 +901,28 @@ class OralHealtNominalListAdapter:
             )
 
     def extract_procedures(self, user, column):
+        """Extrai lista de procedimentos separados por '|' para a categoria."""
         data = user[f"{column}_{self.category}"]
         return data.split("|") if data is not None else []
 
     def select_column(self, user, column):
+        """Seleciona coluna ajustada pela categoria."""
         return user[f"{column}_{self.category}"]
 
     def convert_date(self, dt):
+        """Normaliza datas, retornando None para NaT."""
         if issubclass(type(dt), type(pd.NaT)):
             return None
         return dt
 
     def convert_nan(self, dt):
+        """Converte NaN para 0 para contagens."""
         if math.isnan(dt):
             return 0
         return dt
 
     def to_dict(self):
+        """Retorna dicionário anonimizando dados sensíveis."""
         return dict(
             {
                 "nome": anonymize_data_name(self.nome),

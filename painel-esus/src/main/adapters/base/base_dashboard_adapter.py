@@ -1,3 +1,7 @@
+"""Utilitários comuns para adapters de dashboard.
+
+Fornece agrupamentos e formatações padrão (binárias, por sexo/idade, por raça).
+"""
 from collections import defaultdict
 
 

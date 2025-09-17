@@ -1,9 +1,16 @@
+"""Adapters para hipertensão e diabetes.
+
+Formata respostas de repositórios em estruturas consumíveis pelo frontend:
+totais, IMC, complicações, por sexo/raça.
+"""
+
 from collections import defaultdict
 
 from src.main.adapters.base.base_dashboard_adapter import BaseDashboardAdapter
 
 
 class HypertensionAdapter(BaseDashboardAdapter):
+    """Adapter de Hipertensão."""
     def __init__(self):
         super().__init__()
         self.columns = [
@@ -17,6 +24,7 @@ class HypertensionAdapter(BaseDashboardAdapter):
             "eletro",
         ]
     def __init(self, tag):
+        """Cria estrutura padrão de bloco com rótulo e valores binários."""
         return ({
                     tag: {
                         "tag": tag,
@@ -35,17 +43,19 @@ class HypertensionAdapter(BaseDashboardAdapter):
                 })
 
     def get_total(self, response):
-
+        """Repasse direto do agregado de totais já estruturado no repositório."""
         return response
 
     def get_by_gender(self, response):
+        """Agrupamento por sexo e faixa etária."""
         return self.group_gender_age(response)
 
     def get_by_race(self, response):
-
+        """Agrupamento por raça/cor."""
         return self.group_race(response)
 
     def get_exams_count(self, response):
+        """Contagem do status de exames solicitados/pendentes/registrados por tipo."""
         def __init(tag):
             return ({
                 tag: {
@@ -78,6 +88,7 @@ class HypertensionAdapter(BaseDashboardAdapter):
         return list(result.values())
 
     def get_imc(self, response):
+        """Distribuição de IMC com valores percentuais e binários por classe."""
         imc_mapped = {}
         for i in [
             "baixo-peso",
@@ -102,6 +113,7 @@ class HypertensionAdapter(BaseDashboardAdapter):
         return list(imc_mapped.values())
 
     def get_complications(self, response):
+        """Percentual de complicações associadas dividido em blocos binários."""
         imc_mapped = {}
         columns = [
             "infarto-agudo",

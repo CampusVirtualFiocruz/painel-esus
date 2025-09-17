@@ -1,3 +1,10 @@
+"""Saúde Bucal.
+
+Distribuiçao por sexo/raça, primeiros atendimentos, extrações,
+procedimentos preventivos, tratamentos atraumáticos e escovação supervisionada,
+além de lista nominal com filtros/ordenação/exportação.
+"""
+
 import json
 
 import duckdb
@@ -29,11 +36,12 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         self.mock_data = getenv("MOCK", False, False) == "True"
 
     def total_card(self, cnes: int = None, equipe: int = None, category: str = 'atentidas'):
+        """Retorna totais de atendimentos para Odontologia."""
         sql = get_total_card(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
     def total_ubs(self, cnes: int = None, equipe: int = None):
-
+        """Retorna totais de atendimentos por UBS para Odontologia."""
         cadastradas = self.session.execute(get_total_ubs(cnes,equipe,'cadastradas')).fetchall()
         atendidas = self.session.execute(
             get_total_ubs(cnes, equipe, "atendidas")
@@ -50,44 +58,52 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
     def get_oral_health_cares_by_gender(
         self, cnes=None, equipe=None, category: str = None
     ):
+        """Distribuiçao de atendimentos de Odontologia por sexo."""
         sql = by_gender(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
     def get_oral_health_cares_by_race(
         self, cnes=None, equipe=None, category: str = None
     ):
+        """Distribuiçao de atendimentos de Odontologia por raça/cor."""
         sql = by_race(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
     def get_oral_health_first_appointment(
         self, cnes=None, equipe=None, category: str = None
     ):
+        """Primeiro atendimento odontológico."""
         sql = first_appointment(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
     def get_oral_health_conclued_treatment(self, cnes=None, equipe=None, category=None):
+        """Tratamentos concluídos em Odontologia."""
         sql = conclued_treatment(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
     def get_oral_health_extraction(self, cnes=None, equipe=None, category=None):
+        """Procedimentos de extração dentária."""
         sql = extraction(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
     def get_oral_health_prevention_procedures(
         self, cnes=None, equipe=None, category=None
     ):
+        """Procedimentos preventivos em Odontologia."""
         sql = prevention_procedures(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
     def oral_health_get_atraumatic_treatment(
         self, cnes=None, equipe=None, category=None
     ):
+        """Tratamento restaurador atraumático."""
         sql = atraumatic_treatment(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
     def oral_health_get_supervised_brushing(
         self, cnes=None, equipe=None, category=None
     ):
+        """Escovação supervisionada."""
         sql = supervised_brushing(cnes, equipe, category)
         return self.session.execute(sql).fetchall()
 
@@ -103,6 +119,15 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         sort=[],
         category: str = 'atendidas'
     ):
+        """Retorna lista nominal (items e metadados de paginação).
+
+        Parâmetros:
+        - cnes, equipe: filtros por unidade e equipe.
+        - page, pagesize: paginação.
+        - query: filtros de busca textual (query aplica em
+          múltiplas colunas como nome/CPF/CNS).
+        - sort: lista de dicts com chaves field e direction.
+        """
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
         con = duckdb.connect()
@@ -198,7 +223,7 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
     def donwload_nominal_list(
         self, cnes: int = None, equipe: int = None, category=None
     ):
-
+        """Gera DataFrame para exportação com anonimização de dados."""
         sql = donwload_nominal_list(cnes, equipe, category)
         con = duckdb.connect()
         response = con.sql(sql).df()
