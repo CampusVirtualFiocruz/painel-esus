@@ -33,7 +33,7 @@ variables = [
             {"name":'ADMIN_USERNAME'},
             {"name":'ADMIN_PASSWORD'},
             {"name":'BRIDGE_LOGIN_URL'},
-            {"name":'RELOAD_BASE_SCHELDULE'},
+            {"name":'RELOAD_BASE_SCHEDULE'},
             {"name":'PORT'},
         ]
     },

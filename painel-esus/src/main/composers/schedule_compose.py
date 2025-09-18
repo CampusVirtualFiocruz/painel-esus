@@ -23,8 +23,8 @@ DAY_OF_WEEK = 5
 
 
 def generate_base_scheduled(scheduler: BackgroundScheduler):
-    env_time = env.get("RELOAD_BASE_SCHELDULE", "4:00").split(":")
-    weekly = env.get("RELOAD_BASE_SCHELDULE_WEEKLY", "False")
+    env_time = env.get("RELOAD_BASE_SCHEDULE", "4:00").split(":")
+    weekly = env.get("RELOAD_BASE_SCHEDULE_WEEKLY", "False")
     hour = int(env_time[0])
     minute = int(env_time[1])
 

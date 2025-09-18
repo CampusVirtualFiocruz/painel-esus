@@ -3,4 +3,4 @@ from src.env.conf import env
 if __name__ == '__main__':
     # create_cache = CreateCacheUseCase()
     # create_cache.generate_cache()
-    # print(env.get('RELOAD_BASE_SCHELDULE1', 13))
+    # print(env.get('RELOAD_BASE_SCHEDULE1', 13))

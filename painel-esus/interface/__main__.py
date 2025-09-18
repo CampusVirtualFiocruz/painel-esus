@@ -282,7 +282,7 @@ def create_env(
             "ADMIN_PASSWORD='" + build_env_str(input_password_admin.get()) + "'\n",
             "PASSWORD_SALT='" + "painel" + "'\n",
             "BRIDGE_LOGIN_URL='" + build_env_str(input_bridge_login_url.get()) + "'\n",
-            "RELOAD_BASE_SCHELDULE='4:00'" + "\n",
+            "RELOAD_BASE_SCHEDULE='4:00'" + "\n",
             "ARTEFACT=" + "web" + "\n",
             "ENV=" + "instalador" + "\n",
             "SECRET_TOKEN=" + "111111111111111111111" + "\n",

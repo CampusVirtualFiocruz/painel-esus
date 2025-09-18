@@ -46,7 +46,7 @@ ENV = [
                 "label": "Url de login:",
             },
             {
-                "name": "RELOAD_BASE_SCHELDULE",
+                "name": "RELOAD_BASE_SCHEDULE",
             },
             {"name": "PRIVATE_KEY", "label": "Chave privada (server.key):"},
             {"name": "CERTIFICATE", "label": "Certificado (server.crt):"},

@@ -1,14 +1,26 @@
 import os
 
-from dotenv import dotenv_values
+from dotenv import dotenv_values, load_dotenv, set_key
+from src.errors.types import HttpUnprocessableEntityError
+
+from .env_inputs import ENV_INPUTS
 
 VERSION_PAINEL = "${VERSION}"
 
+env_path = os.path.abspath(".env")
 env = {
-    **dotenv_values(os.path.abspath(".env")),  # load shared development variables
+    **dotenv_values(env_path),  # load shared development variables
     **os.environ,  # override loaded values with environment variables
     "APPLICATION_VERSION": VERSION_PAINEL,
 }
+
+def update_env( input_dict):
+    for item in input_dict.items():
+        if item[0] in ENV_INPUTS:
+            set_key(env_path, item[0], item[1])
+        else:
+            raise HttpUnprocessableEntityError(f'The key {item[0]} is forbidden for this context.')
+    load_dotenv(override=True)
 
 def getenv(key, default, numeric=True):
     if key in env:
