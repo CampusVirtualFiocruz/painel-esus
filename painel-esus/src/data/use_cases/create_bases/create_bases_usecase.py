@@ -11,7 +11,6 @@ from src.presentations.controllers.create_bases.rich_progess import (
     StartGeneration,
 )
 
-# from tqdm import tqdm
 
 class CreateBasesUseCase(CreateBasesUsecasesInterface):
 
@@ -27,23 +26,9 @@ class CreateBasesUseCase(CreateBasesUsecasesInterface):
             creation=self.__bases_generators[0], 
             key_factors=self.__bases_generators[1],
         )
-        
+
         generation = StartGeneration(jobs)
         generation.run()
-
-        # for base in tqdm(
-        #     self.__bases_generators,
-        #     ascii="░▒█",
-        #     desc="Geração das Bases: ",
-        #     colour="blue",
-        #     leave=False,
-        # ):
-        #     if isinstance(base, CreateBasesRepositoryInterface):
-        #         base.create_base()
-        #     else:
-        #         raise InvalidArgument(
-        #             "Base is no instance of CreateBasesRepositoryInterface."
-        #         )
 
     def destroy_bases(self):
         pass

@@ -1,5 +1,5 @@
+import time
 from datetime import datetime
-from time import sleep
 
 from rich.console import Console
 from rich.layout import Layout
@@ -8,6 +8,8 @@ from rich.panel import Panel
 from rich.progress import BarColumn, Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.text import Text
+from src.errors.logging import logging
+from src.presentations.controllers.create_bases.generate_base_thread import GenerateBase
 
 from .instalation_status import InstalationStatus
 
@@ -43,7 +45,7 @@ class StartGeneration:
         [self.logs.append_tokens(l) for l in self.text_logs]
 
     def run(self):
-
+        thread = GenerateBase()
         layout = Layout()
         layout.split(
             Layout(name="header"), 
@@ -66,6 +68,10 @@ class StartGeneration:
         )
 
         total = sum(task.total for task in job_progress.tasks)
+
+        self.instalacao_status.set_base_generator_len(len(self.jobs.creation))
+        self.instalacao_status.set_indicators_len(len(self.jobs.key_factors))
+
         self.instalacao_status.set_total(total)
         self.instalacao_status.next()
 
@@ -108,39 +114,45 @@ class StartGeneration:
             )
         )
 
-        def start_proccess(context, job_progress, overall_progress, instalacao, key):
-            start_time = datetime.now()
-            context.create_base()
-            end_time = datetime.now()
-            job_progress.advance(job.id)
-            if self.total == 0:
-                self.total = end_time - start_time
-            else:
-                self.total += end_time - start_time
-            self.add_log(
-                [
-                    (f"{context._base}", "bold blue"),
-                    ("\tConcluído.",None),
-                    ("\t{}.\n".format(
-                            end_time - start_time
+        def start_proccess(
+            context, job_progress, overall_progress, instalacao, key, thread
+        ):
+            if not thread.get_event().is_set():
+                start_time = datetime.now()
+                context.create_base()
+                end_time = datetime.now()
+                job_progress.advance(job.id)
+                if self.total == 0:
+                    self.total = end_time - start_time
+                else:
+                    self.total += end_time - start_time
+                self.add_log(
+                    [
+                        (f"{context._base}", "bold blue"),
+                        ("\tConcluído.",None),
+                        ("\t{}.\n".format(
+                                end_time - start_time
+                            ),
+                            None,
                         ),
-                        None,
-                    ),
-                ]
-            )
-            self.instalacao_status.add_log(str(context._base), (end_time - start_time))
-            # sleep(0.3)
-            completed = sum(task.completed for task in job_progress.tasks)
-            if key == 0:
-                instalacao.update_base_progress()
+                    ]
+                )
+                self.instalacao_status.add_log(str(context._base), (end_time - start_time))
+                # sleep(0.3)
+                completed = sum(task.completed for task in job_progress.tasks)
+                if key == 0:
+                    instalacao.update_base_progress()
+                else:
+                    instalacao.update_indicators_progress()
+                overall_progress.update(overall_task, completed=completed)
             else:
-                instalacao.update_indicators_progress()
-            overall_progress.update(overall_task, completed=completed)
+                job_progress.advance(job.id)
+                completed = sum(task.completed for task in job_progress.tasks)
+                overall_progress.update(overall_task, completed=completed)
 
         with Live(layout, refresh_per_second=4) as live:
             while not overall_progress.finished:
                 for key, job in enumerate(job_progress.tasks):
-
                     if not job.finished:
                         if key == 0:
                             for context in self.jobs.creation:
@@ -149,8 +161,10 @@ class StartGeneration:
                                     job_progress,
                                     overall_progress,
                                     self.instalacao_status,
-                                    key
+                                    key,
+                                    thread,
                                 )
+
                         if key == 1:
                             for context in self.jobs.key_factors:
                                 start_proccess(
@@ -158,24 +172,34 @@ class StartGeneration:
                                     job_progress,
                                     overall_progress,
                                     self.instalacao_status,
-                                    key
+                                    key,
+                                    thread,
                                 )
-            self.add_log(
-                [
-                    (f"Geração da Base concluída.", "bold blue"),
-                    (
-                        "\tDuração total {}.\n".format(self.total),
-                        "bold red",
-                    ),
-                ]
-            )
-            self.add_log(
-                [
-                    (f"Tempo de processamento.", "bold blue"),
-                    (
-                        "\tDuração total {}.\n".format((datetime.now() - self.total_proccess_time)),
-                        "bold red",
-                    ),
-                ]
-            )
-            self.instalacao_status.next()
+
+            if thread.get_event().is_set():
+                self.instalacao_status.cancel()
+                self.add_log(
+                    [
+                        (f"Geração da Base Terminada pelo usuário.", "bold red"),
+                    ]
+                )
+            else:
+                self.instalacao_status.next()
+                self.add_log(
+                    [
+                        (f"Geração da Base concluída.", "bold blue"),
+                        (
+                            "\tDuração total {}.\n".format(self.total),
+                            "bold red",
+                        ),
+                    ]
+                )
+                self.add_log(
+                    [
+                        (f"Tempo de processamento.", "bold blue"),
+                        (
+                            "\tDuração total {}.\n".format((datetime.now() - self.total_proccess_time)),
+                            "bold red",
+                        ),
+                    ]
+                )

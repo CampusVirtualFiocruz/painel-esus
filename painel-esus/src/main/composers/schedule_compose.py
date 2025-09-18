@@ -1,4 +1,3 @@
-import threading
 from datetime import datetime, timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -9,6 +8,7 @@ from src.main.server.cache import cache
 from src.presentations.controllers.create_bases.create_base_controller import (
     CreateBasesController,
 )
+from src.presentations.controllers.create_bases.generate_base_thread import GenerateBase
 
 """Replace '3' with:
 
@@ -38,7 +38,7 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
         except Exception:
             logging.info("Server not running yet.")
 
-    def init():
+    def init(_):
 
         start_time = datetime.now()
         logging.info("Start base generator.")
@@ -54,8 +54,8 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
             logging.info("skipping base Cache generation.")
 
     def run_init_in_thread():
-        thread = threading.Thread(target=init)
-        thread.start()
+        thread = GenerateBase()
+        thread.start(target=init)
 
     if weekly == "True":
         logging.info("Atualizacao semanal agendada.")
@@ -69,7 +69,7 @@ def generate_base_scheduled(scheduler: BackgroundScheduler):
     else:
         logging.info("Atualizacao diária agendada.")
         scheduler.add_job(
-            init,
+            run_init_in_thread,
             trigger="cron",
             hour=hour,
             minute=minute,

@@ -6,10 +6,12 @@ class InstalationStatus:
 
     total = 0
     progress = 0
-    status: Literal["Não iniciado", "Instalando", "Instalado"] = "Não iniciado"
+    status: Literal["Cancelado", "Não iniciado", "Instalando", "Instalado"] = "Não iniciado"
 
+    base_generator_len = 0
     base_generator = 0
     indicators = 0
+    indicators_len = 0
     logs = []
 
     def __new__(cls, *args, **kwargs):
@@ -17,6 +19,12 @@ class InstalationStatus:
             cls._instance = super().__new__(cls)
             cls._instance.reset()
         return cls._instance
+
+    def set_indicators_len(self, total):
+        self.indicators_len = total
+
+    def set_base_generator_len(self, total):
+        self.base_generator_len = total
 
     def set_total(self, total):
         self.total = total
@@ -30,26 +38,41 @@ class InstalationStatus:
         self._update_progress()
 
     def _update_progress(self):
-        self.progress = round(
-            (
-                self.base_generator + self.indicators
-            )/self.total,
-            2
-        )
+        num = self.base_generator + self.indicators
+        if num > 0 and self.total > 0: 
+            self.progress = round(
+                (
+                    num
+                )/self.total,
+                2
+            )
+        else:
+            self.progress = 0
 
     def _calc_base_progress(self):
-        return round((
-            self.base_generator/self.total
-        ),2)
+        if self.base_generator > 0 and self.total > 0:
+            return round((
+                self.base_generator/self.base_generator_len
+            ),2)
+        else:
+            return 0
 
     def _calc_indicators_progress(self):
-        return round((
-            self.indicators/self.total
-        ),
-        2)
+        if self.indicators > 0 and self.total > 0:
+            return round((
+                self.indicators/self.indicators_len
+            ),
+            2)
+        else:
+            return 0
+
+    def cancel(self):
+        self.status = "Cancelado"
 
     def next(self):
-        if self.status == 'Não iniciado':
+        if self.status == "Cancelado":
+            self.status = "Instalando"
+        elif self.status == 'Não iniciado':
             self.status = "Instalando"
         elif self.status == "Instalando":
             self.status = "Instalado"
