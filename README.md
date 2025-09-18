@@ -68,7 +68,7 @@ Na prática isso significa que todos podem utilizar, adaptar e criar versões de
 Se for citar esse software:
 
 ```
-Fundação Oswado Cruz; Araújo-Oliveira, Vinícius; David, Renata; et al. Painel e-SUS APS. Recurso educacional aberto. Disponível em: https://educare.fiocruz.br/resource/show?id=pJbPo7EU
+Fundação Oswaldo Cruz; Araújo-Oliveira, Vinícius; David, Renata; et al. Painel e-SUS APS. Recurso educacional aberto. Disponível em: https://educare.fiocruz.br/resource/show?id=pJbPo7EU
 ```
 
 Se for fazer uma obra derivada fora do GitHub basta descrever no texto e fazer a citação como acima.
