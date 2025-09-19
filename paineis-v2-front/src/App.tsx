@@ -7,6 +7,7 @@ import { getUserLocalStorage } from "./context/AuthProvider/util";
 import { InfoProvider } from "./context/infoProvider";
 
 import Bucal from "./pages/Bucal";
+import { Configuracao } from "./pages/Configuracao";
 import Diabetes from "./pages/Diabetes";
 import FeridaVascular from "./pages/FeridaVascular";
 import { Gestante } from "./pages/Gestante";
@@ -15,6 +16,7 @@ import { GestantesList } from "./pages/GestantesList";
 import Hipertensao from "./pages/Hipertensao";
 import Idosa from "./pages/Idosa";
 import Infantil from "./pages/Infantil";
+import { Instalacao } from "./pages/Instalacao";
 import ListaNominal from "./pages/ListaNominal";
 import { Login } from "./pages/Login";
 import NovoPainel from "./pages/NovoPainel";
@@ -117,6 +119,22 @@ function App() {
           <Wrapper>
             <Routes>
               <Route path="/" element={<Login />} />
+              <Route
+                path="/configuracao"
+                element={
+                  <ProtectedLayout>
+                    <Configuracao />
+                  </ProtectedLayout>
+                }
+              />
+              <Route
+                path="/instalacao"
+                element={
+                  <ProtectedLayout>
+                    <Instalacao />
+                  </ProtectedLayout>
+                }
+              />
               <Route
                 path="/selecionarubs"
                 element={
