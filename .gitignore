@@ -58,3 +58,4 @@ docker-compose.yaml
 **.jsonl*
 **/**.jsonl*
 **/painel_esus_log*.csv
+*.http
