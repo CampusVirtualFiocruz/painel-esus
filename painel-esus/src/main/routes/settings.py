@@ -10,6 +10,7 @@ from src.main.composers.settings_composer import (
     start_instalation_composer,
     stop_instalation_settings_composer,
     test_connection_composer,
+    instalation_ready_composer,
 )
 from src.presentations.controllers.settings.settings_controller import (
     SettingsController,
@@ -31,6 +32,7 @@ class SettingsPath:
         "term-acceptance": "/term-acceptance",
         "stop-instalation": "/stop-instalation",
         "start-instalation": "/start-instalation",
+        "instalation-ready": "/instalation-ready",
     }
 
 
@@ -110,3 +112,12 @@ def stop_instalation():
 )
 def start_instalation():
     return handle_request(start_instalation_composer)
+
+
+@settings_bp.route(
+    urls["instalation-ready"],
+    methods=["GET"],
+    endpoint="instalation-ready",
+)
+def instalation_ready():
+    return handle_request(instalation_ready_composer)

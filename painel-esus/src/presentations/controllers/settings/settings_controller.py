@@ -1,4 +1,4 @@
-from re import S
+import os
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import text
@@ -115,7 +115,7 @@ class SettingsController:
         )
 
     def stop_instalation_settings(self, request: HttpRequest) -> HttpResponse:
-        
+
         thread = GenerateBase()
         thread.stop()
         s = InstalationStatus()
@@ -135,4 +135,33 @@ class SettingsController:
         return HttpResponse(
             status_code=200,
             body={},
+        )
+
+    def instalation_ready(self, request: HttpRequest) -> HttpResponse:
+        working_directory = os.getcwd()
+        input_path = os.path.join(working_directory, "dados", "output")
+        files = [
+            "crianca.parquet",
+            "cadastro_db.parquet",
+            "diabetes.parquet",
+            "hipertensao.parquet",
+            "idoso.parquet",
+            "saude_bucal.parquet",
+        ]
+        completed = True
+        total_files = 0
+        for file in files:
+            file_path = os.path.join(working_directory, "dados", "output", file)
+            if not os.path.exists(file_path):
+                completed = False
+            else:
+                total_files += 1
+
+        percentual = round((total_files / len(files)), 2)
+        return HttpResponse(
+            status_code=200,
+            body={
+                "completed": completed,
+                "percentual": percentual,
+            },
         )

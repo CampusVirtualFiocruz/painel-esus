@@ -37,3 +37,7 @@ def stop_instalation_settings_composer():
 
 def start_instalation_composer():
     return settings_factory().start_instalation
+
+
+def instalation_ready_composer():
+    return settings_factory().instalation_ready
