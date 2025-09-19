@@ -1,4 +1,6 @@
 import os
+import threading
+import webbrowser
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import text
@@ -15,6 +17,7 @@ from src.presentations.controllers.create_bases.instalation_status import (
 )
 from src.presentations.http_types import HttpRequest, HttpResponse
 from src.presentations.validators.dashboard_validator import acceptance_term_validation
+from typing_extensions import Literal
 
 
 class SettingsController:
@@ -137,9 +140,8 @@ class SettingsController:
             body={},
         )
 
-    def instalation_ready(self, request: HttpRequest) -> HttpResponse:
+    def instalation_ready(self, request: HttpRequest = None) -> HttpResponse:
         working_directory = os.getcwd()
-        input_path = os.path.join(working_directory, "dados", "output")
         files = [
             "crianca.parquet",
             "cadastro_db.parquet",
@@ -165,3 +167,22 @@ class SettingsController:
                 "percentual": percentual,
             },
         )
+    def redirect(self, protocol: Literal['http','https'], port):
+        result = self.instalation_ready()
+        completed = result.body['completed']
+        url = f'localhost:{port}'
+        if protocol == 'https':
+            url = f'https://{url}'
+        else:
+            url = f"http://{url}"
+
+        status, _ = is_installed_ok()
+        if not status:
+            url = f"{url}/configuracao"
+        elif not completed:
+            url = f"{url}/instalacao"
+
+        thread = threading.Thread(
+            target=lambda: webbrowser.open(url)
+        )
+        thread.start()
