@@ -4,6 +4,7 @@ from .schema.age_groups_location_schema import age_groups_location_schema
 from .schema.hypertension_complications_schema import \
     hypertension_complications_schema
 from .schema.professionals_count_schema import professionals_count_schema
+from .schema.acceptance_term import schema as acceptance_term
 
 
 def age_group_gender_validator(entry):
@@ -20,3 +21,6 @@ def professionals_count(entry):
 
 def hypertension_complications(entry):
     return _validation(entry, hypertension_complications_schema)
+
+def acceptance_term_validation(entry):
+    return _validation(entry, acceptance_term)

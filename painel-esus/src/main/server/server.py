@@ -53,10 +53,15 @@ app.json.sort_keys = False
 
 
 def register_blueprint(_app, blueprint, decorators_list):
-    for idx, decorator in enumerate(decorators_list):
-        decorated = blueprint_decr.attach(blueprint[0], decorator)
+    if len(decorators_list) > 0:
+        for idx, decorator in enumerate(decorators_list):
+            decorated = blueprint_decr.attach(blueprint[0], decorator)
+            _app.register_blueprint(
+                decorated, url_prefix=blueprint[1], name=f"{blueprint[1]}-{idx}"
+            )
+    else:
         _app.register_blueprint(
-            decorated, url_prefix=blueprint[1], name=f"{blueprint[1]}-{idx}"
+            blueprint[0], url_prefix=blueprint[1], name=f"{blueprint[1]}"
         )
 
 
@@ -138,7 +143,7 @@ settings = SettingsPath()
 register_blueprint(
     app,
     (settings_bp, settings.root_path),
-    [token_required],
+    [],
 )
 
 
