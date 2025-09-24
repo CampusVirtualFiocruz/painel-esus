@@ -20,6 +20,12 @@
   }
 }
 
+.header-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
 .configuracao-button {
   background-color: #6c757d;
   color: white;
@@ -42,6 +48,37 @@
 
   &:active {
     transform: translateY(0);
+  }
+}
+
+.finalizar-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:hover:not(:disabled) {
+    background-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 }
 
@@ -232,14 +269,30 @@
     }
   }
 
-  .configuracao-button {
-    padding: 0.6rem 1rem;
-    font-size: 0.85rem;
+  .header-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
     width: 100%;
-    justify-content: center;
+    
+    .configuracao-button,
+    .finalizar-button {
+      width: 100%;
+      justify-content: center;
+      padding: 0.8rem 1rem;
+    }
   }
 
   .progress-section, .jobs-section, .logs-section {
     padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-buttons {
+    .configuracao-button,
+    .finalizar-button {
+      font-size: 0.85rem;
+      padding: 0.7rem 0.9rem;
+    }
   }
 }

@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button, TextField, Alert, Spinner } from 'bold-ui';
-import { Api } from '../services/api';
-import '../styles/configuracao.scss';
+import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, TextField, Alert, Spinner } from "bold-ui";
+import { Api } from "../services/api";
+import { useInstalationReady } from "../hooks/useInstalationReady";
+import "../styles/configuracao.scss";
 
-interface ConfiguracaoData {
+export interface ConfiguracaoData {
   showSetupWizardOnLaunch: boolean;
   env: {
     DB_HOST: string;
@@ -21,7 +22,7 @@ interface ConfiguracaoData {
   };
 }
 
-export function Configuracao() {
+export function   Configuracao() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -31,38 +32,40 @@ export function Configuracao() {
   const [connectionStatus, setConnectionStatus] = useState<string | null>(null);
   const [submitErrors, setSubmitErrors] = useState<string[]>([]);
 
+  useInstalationReady();
+
   const [formData, setFormData] = useState({
-    DB_HOST: '',
-    DB_DATABASE: '',
-    DB_USER: '',
-    DB_PASSWORD: '',
-    DB_PORT: '',
-    CIDADE_IBGE: '',
-    ADMIN_USERNAME: '',
-    ADMIN_PASSWORD: '',
-    ADMIN_EMAIL: '',
-    ADMIN_NAME: '',
-    BRIDGE_LOGIN_URL: '',
+    DB_HOST: "",
+    DB_DATABASE: "",
+    DB_USER: "",
+    DB_PASSWORD: "",
+    DB_PORT: "",
+    CIDADE_IBGE: "",
+    ADMIN_USERNAME: "",
+    ADMIN_PASSWORD: "",
+    ADMIN_EMAIL: "",
+    ADMIN_NAME: "",
+    BRIDGE_LOGIN_URL: "",
   });
 
   const fetchConfiguracao = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      
-      const response = await Api.get<ConfiguracaoData>('/settings/check-instalation');
+
+      const response = await Api.get<ConfiguracaoData>(
+        "/settings/check-instalation"
+      );
       const data = response.data;
-      
+
       if (!data.showSetupWizardOnLaunch) {
-        navigate('/instalacao');
+        navigate("/instalacao");
         return;
       }
-      
       setFormData(data.env);
-      
     } catch (err: any) {
-      console.error('Erro ao buscar configuração:', err);
-      setError('Erro ao carregar configurações. Tente novamente.');
+      console.error("Erro ao buscar configuração:", err);
+      setError("Erro ao carregar configurações. Tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -72,12 +75,12 @@ export function Configuracao() {
     fetchConfiguracao();
   }, [fetchConfiguracao]);
 
-    const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
-    
+
     if (error) setError(null);
     if (connectionStatus) setConnectionStatus(null);
     if (submitErrors.length > 0) setSubmitErrors([]);
@@ -85,70 +88,85 @@ export function Configuracao() {
 
   const validateForm = () => {
     const requiredFields = [
-      'DB_HOST', 'DB_DATABASE', 'DB_USER', 'DB_PASSWORD', 
-      'DB_PORT', 'CIDADE_IBGE', 'ADMIN_USERNAME', 'ADMIN_PASSWORD'
+      "DB_HOST",
+      "DB_DATABASE",
+      "DB_USER",
+      "DB_PASSWORD",
+      "DB_PORT",
+      "CIDADE_IBGE",
+      "ADMIN_USERNAME",
+      "ADMIN_PASSWORD",
     ];
-    
+
     for (const field of requiredFields) {
       if (!formData[field as keyof typeof formData].trim()) {
-        setError(`O campo ${field.replace('_', ' ')} é obrigatório.`);
+        setError(`O campo ${field.replace("_", " ")} é obrigatório.`);
         return false;
       }
     }
-    
+
     const port = parseInt(formData.DB_PORT);
     if (isNaN(port) || port < 1 || port > 65535) {
-      setError('A porta do banco deve ser um número válido entre 1 e 65535.');
+      setError("A porta do banco deve ser um número válido entre 1 e 65535.");
       return false;
     }
-    
-    if (formData.ADMIN_EMAIL && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.ADMIN_EMAIL)) {
-      setError('O email do administrador deve ter um formato válido.');
+
+    if (
+      formData.ADMIN_EMAIL &&
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.ADMIN_EMAIL)
+    ) {
+      setError("O email do administrador deve ter um formato válido.");
       return false;
     }
-    
+
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     try {
       setSaving(true);
       setError(null);
       setSuccess(null);
       setSubmitErrors([]);
-      
+
       const configData = {
         ...formData,
-        port: String(formData.DB_PORT),
+        DB_PORT: String(formData.DB_PORT),
       };
-      
-      await Api.post('/settings/instalation-settings', configData);
-      
-      setSuccess('Configurações salvas com sucesso! Redirecionando para a instalação...');
-      
+
+      await Api.post("/settings/instalation-settings", configData);
+
+      setSuccess(
+        "Configurações salvas com sucesso! Redirecionando para a instalação..."
+      );
+
       setTimeout(() => {
-        navigate('/instalacao');
+        navigate("/instalacao");
       }, 2000);
-      
     } catch (err: any) {
-      console.error('Erro ao salvar configuração:', err);
-      
-      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+      console.error("Erro ao salvar configuração:", err);
+
+      if (
+        err.response?.data?.errors &&
+        Array.isArray(err.response.data.errors)
+      ) {
         const errorMessages = err.response.data.errors.map((error: any) => {
           if (error.detail) {
             return error.detail;
           }
-          return error.title || 'Erro desconhecido';
+          return error.title || "Erro desconhecido";
         });
         setSubmitErrors(errorMessages);
       } else {
-        const errorMessage = err.response?.data?.message || 'Erro ao salvar configurações. Tente novamente.';
+        const errorMessage =
+          err.response?.data?.message ||
+          "Erro ao salvar configurações. Tente novamente.";
         setError(errorMessage);
       }
     } finally {
@@ -157,7 +175,7 @@ export function Configuracao() {
   };
 
   const handlePularConfiguracao = () => {
-    navigate('/instalacao');
+    navigate("/instalacao");
   };
 
   const testDatabaseConnection = async () => {
@@ -165,7 +183,7 @@ export function Configuracao() {
       setTestingConnection(true);
       setConnectionStatus(null);
       setError(null);
-      
+
       const connectionData = {
         DB_HOST: formData.DB_HOST,
         DB_DATABASE: formData.DB_DATABASE,
@@ -173,14 +191,14 @@ export function Configuracao() {
         DB_PASSWORD: formData.DB_PASSWORD,
         DB_PORT: formData.DB_PORT,
       };
-      
-      await Api.post('/settings/test-connection', connectionData);
-      
-      setConnectionStatus('Conexão com o banco de dados bem-sucedida!');
-      
+
+      await Api.post("/settings/test-connection", connectionData);
+
+      setConnectionStatus("Conexão com o banco de dados bem-sucedida!");
     } catch (err: any) {
-      console.error('Erro ao testar conexão:', err);
-      const errorMessage = err.response?.data?.message || 'Erro ao conectar com o banco de dados.';
+      console.error("Erro ao testar conexão:", err);
+      const errorMessage =
+        err.response?.data?.message || "Erro ao conectar com o banco de dados.";
       setConnectionStatus(`Erro na conexão: ${errorMessage}`);
     } finally {
       setTestingConnection(false);
@@ -193,18 +211,21 @@ export function Configuracao() {
         <Spinner>Carregando configurações...</Spinner>
       </div>
     );
-  };
+  }
 
   return (
     <div className="configuracao-container">
       <div className="configuracao-header">
         <div className="header-content">
           <h1>Configuração do Sistema</h1>
-          <p>Configure as informações do sistema antes de prosseguir com a instalação.</p>
+          <p>
+            Configure as informações do sistema antes de prosseguir com a
+            instalação.
+          </p>
         </div>
-        <button 
+        <button
           className="voltar-button"
-          onClick={() => navigate('/instalacao')}
+          onClick={() => navigate("/instalacao")}
           title="Voltar para Instalação"
         >
           ← Verificar status da Instalação
@@ -228,28 +249,30 @@ export function Configuracao() {
               <TextField
                 label="Host do Banco"
                 value={formData.DB_HOST}
-                onChange={(e) => handleInputChange('DB_HOST', e.target.value)}
+                onChange={(e) => handleInputChange("DB_HOST", e.target.value)}
                 placeholder="Ex: localhost"
                 required
               />
               <TextField
                 label="Porta do Banco"
                 value={formData.DB_PORT}
-                onChange={(e) => handleInputChange('DB_PORT', e.target.value)}
+                onChange={(e) => handleInputChange("DB_PORT", e.target.value)}
                 placeholder="Ex: 5432"
                 required
               />
               <TextField
                 label="Nome do Banco"
                 value={formData.DB_DATABASE}
-                onChange={(e) => handleInputChange('DB_DATABASE', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("DB_DATABASE", e.target.value)
+                }
                 placeholder="Nome do banco de dados"
                 required
               />
               <TextField
                 label="Usuário do Banco"
                 value={formData.DB_USER}
-                onChange={(e) => handleInputChange('DB_USER', e.target.value)}
+                onChange={(e) => handleInputChange("DB_USER", e.target.value)}
                 placeholder="Usuário do banco"
                 required
               />
@@ -257,7 +280,9 @@ export function Configuracao() {
                 label="Senha do Banco"
                 type="password"
                 value={formData.DB_PASSWORD}
-                onChange={(e) => handleInputChange('DB_PASSWORD', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("DB_PASSWORD", e.target.value)
+                }
                 placeholder="Senha do banco"
                 required
               />
@@ -267,7 +292,9 @@ export function Configuracao() {
                 type="button"
                 kind="normal"
                 onClick={testDatabaseConnection}
-                disabled={testingConnection || !formData.DB_HOST || !formData.DB_PORT}
+                disabled={
+                  testingConnection || !formData.DB_HOST || !formData.DB_PORT
+                }
               >
                 {testingConnection ? (
                   <>
@@ -275,11 +302,15 @@ export function Configuracao() {
                     Testando Conexão...
                   </>
                 ) : (
-                  'Testar Conexão'
+                  "Testar Conexão"
                 )}
               </Button>
               {connectionStatus && (
-                <div className={`connection-status ${connectionStatus.includes('Erro') ? 'error' : 'success'}`}>
+                <div
+                  className={`connection-status ${
+                    connectionStatus.includes("Erro") ? "error" : "success"
+                  }`}
+                >
                   {connectionStatus}
                 </div>
               )}
@@ -293,20 +324,26 @@ export function Configuracao() {
               <TextField
                 label="Nome do Administrador"
                 value={formData.ADMIN_NAME}
-                onChange={(e) => handleInputChange('ADMIN_NAME', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("ADMIN_NAME", e.target.value)
+                }
                 placeholder="Nome completo"
               />
               <TextField
                 label="Email do Administrador"
                 type="email"
                 value={formData.ADMIN_EMAIL}
-                onChange={(e) => handleInputChange('ADMIN_EMAIL', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("ADMIN_EMAIL", e.target.value)
+                }
                 placeholder="email@exemplo.com"
               />
               <TextField
                 label="Usuário Administrador"
                 value={formData.ADMIN_USERNAME}
-                onChange={(e) => handleInputChange('ADMIN_USERNAME', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("ADMIN_USERNAME", e.target.value)
+                }
                 placeholder="Nome de usuário"
                 required
               />
@@ -314,7 +351,9 @@ export function Configuracao() {
                 label="Senha do Administrador"
                 type="password"
                 value={formData.ADMIN_PASSWORD}
-                onChange={(e) => handleInputChange('ADMIN_PASSWORD', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("ADMIN_PASSWORD", e.target.value)
+                }
                 placeholder="Senha"
                 required
               />
@@ -328,14 +367,18 @@ export function Configuracao() {
               <TextField
                 label="Código IBGE da Cidade"
                 value={formData.CIDADE_IBGE}
-                onChange={(e) => handleInputChange('CIDADE_IBGE', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("CIDADE_IBGE", e.target.value)
+                }
                 placeholder="Código IBGE"
                 required
               />
               <TextField
                 label="URL de Login Bridge"
                 value={formData.BRIDGE_LOGIN_URL}
-                onChange={(e) => handleInputChange('BRIDGE_LOGIN_URL', e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("BRIDGE_LOGIN_URL", e.target.value)
+                }
                 placeholder="http://exemplo.com"
               />
             </div>
@@ -359,18 +402,14 @@ export function Configuracao() {
           >
             Pular Configuração
           </Button>
-          <Button
-            type="submit"
-            kind="primary"
-            disabled={saving}
-          >
+          <Button type="submit" kind="primary" disabled={saving}>
             {saving ? (
               <>
                 <Spinner />
                 Salvando...
               </>
             ) : (
-              'Salvar e Continuar'
+              "Salvar e Continuar"
             )}
           </Button>
         </div>

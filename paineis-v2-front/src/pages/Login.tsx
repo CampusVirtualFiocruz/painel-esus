@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Spinner } from "reactstrap";
@@ -20,6 +20,7 @@ import { Api } from "../services/api";
 import { useInfo } from "../context/infoProvider/useInfo";
 import { Button } from "bold-ui";
 import ProfileSelector from "../components/ui/ProfileSelector";
+import { useInstalationReady } from "../hooks/useInstalationReady";
 
 interface CityResponse {
   cep: string;
@@ -34,6 +35,13 @@ type CityInformationResponse = CityResponse;
 export function Login() {
   const auth = useAuth();
   let navigate = useNavigate();
+  const { isReady, loading: isInstalationCheckLoading } = useInstalationReady();
+
+  useEffect(() => {
+    if (!isReady && !isInstalationCheckLoading) {
+      navigate("/configuracao");
+    }
+  }, [isReady, navigate, isInstalationCheckLoading]);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

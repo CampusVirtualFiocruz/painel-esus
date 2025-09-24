@@ -119,6 +119,16 @@ function App() {
           <Wrapper>
             <Routes>
               <Route path="/" element={<Login />} />
+              <Route path="/configuracao" element={<Configuracao />} />
+              <Route path="/instalacao" element={<Instalacao />} />
+              <Route
+                path="/selecionarubs"
+                element={
+                  <ProtectedLayout>
+                    <SelecionarUbs />
+                  </ProtectedLayout>
+                }
+              />
               <Route
                 path="/configuracao"
                 element={
@@ -132,14 +142,6 @@ function App() {
                 element={
                   <ProtectedLayout>
                     <Instalacao />
-                  </ProtectedLayout>
-                }
-              />
-              <Route
-                path="/selecionarubs"
-                element={
-                  <ProtectedLayout>
-                    <SelecionarUbs />
                   </ProtectedLayout>
                 }
               />
@@ -303,7 +305,7 @@ function App() {
                   </ProtectedLayout>
                 }
               />
-               <Route
+              <Route
                 path="/hipertensao"
                 element={
                   <ProtectedLayout>
