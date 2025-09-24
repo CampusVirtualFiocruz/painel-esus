@@ -8,6 +8,11 @@ import blueprint_decr
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from src.env import env as config
+from src.main.routes.admin_settings import (
+    AdminSettingsPath,
+    admin_settings_bp,
+    admin_settings_path,
+)
 from src.main.routes.city_informations_route import CityInfoPath, city_informations_bp
 from src.main.routes.demographic_route import DemographicPath, demographics_bp
 from src.main.routes.diabetes_routes import DiabetesPath, diabetes_bp
@@ -143,6 +148,12 @@ settings = SettingsPath()
 register_blueprint(
     app,
     (settings_bp, settings.root_path),
+    [],
+)
+admin_settings = AdminSettingsPath()
+register_blueprint(
+    app,
+    (admin_settings_bp, admin_settings.root_path),
     [],
 )
 
