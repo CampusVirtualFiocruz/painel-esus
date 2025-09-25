@@ -1,6 +1,6 @@
 # pylint: disable=W0613,line-too-long
 
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from src.main.composers.settings_composer import (
     check_instalation_composer,
     get_term_acceptance_settings_composer,

@@ -15,6 +15,6 @@ def handle_request(composer, **path_args):
         args.update(path_args)
         http_response = request_adapter(request, composer())
         return jsonify(http_response.body), http_response.status_code
-    except Exception as exception:
+    except (Exception) as exception:
         http_response = handle_errors(exception)
         return jsonify(http_response.body), http_response.status_code

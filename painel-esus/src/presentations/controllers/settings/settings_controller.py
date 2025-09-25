@@ -38,6 +38,7 @@ class SettingsController:
 
     def check_instalation(self, request: HttpRequest) -> HttpResponse:
         status, response = is_installed_ok()
+        print(f"{status=}")
         if not status:
             return HttpResponse(
                 status_code=200,
@@ -130,16 +131,23 @@ class SettingsController:
 
     def start_instalation(self, request: HttpRequest) -> HttpResponse:
         scheduler = BackgroundScheduler()
-        status, _ = is_installed_ok()
+        status, env = is_installed_ok()
         if status:
             s = InstalationStatus()
             s.reset()
             generate_base_scheduled(scheduler)
-        return HttpResponse(
-            status_code=200,
-            body={},
-        )
-
+            return HttpResponse(
+                status_code=200,
+                body={},
+            )
+        else:
+            null_list = list(filter(lambda x: x[1] is None, env.items()))
+            keys = [k[0] for k in null_list]
+            keys = ", ".join(keys)
+            return HttpResponse(
+                status_code=400,
+                body={ "message": f"The keys are not configured: {keys}"},
+            )
     def instalation_ready(self, request: HttpRequest = None) -> HttpResponse:
         working_directory = os.getcwd()
         files = [

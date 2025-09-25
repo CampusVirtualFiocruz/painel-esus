@@ -1,4 +1,5 @@
 import os
+from typing import Dict, Literal
 
 from dotenv import dotenv_values, load_dotenv, set_key
 from src.errors.types import HttpUnprocessableEntityError
@@ -29,8 +30,42 @@ def getenv(key, default, numeric=True):
         return int(env[key].strip())
     return default
 
-def is_installed_ok():
+
+def is_installed_ok() -> Dict[
+    bool,
+    Dict[
+        Literal[
+            "DB_HOST"
+            "DB_DATABASE"
+            "DB_USER"
+            "DB_PASSWORD"
+            "DB_PORT"
+            "CIDADE_IBGE"
+            "ADMIN_USERNAME"
+            "ADMIN_PASSWORD"
+            "ADMIN_EMAIL"
+            "ADMIN_NAME"
+            "BRIDGE_LOGIN_URL"
+        ],
+        str,
+    ],
+]:
     try:
+        print(
+            {
+                "DB_HOST": env["DB_HOST"],
+                "DB_DATABASE": env["DB_DATABASE"],
+                "DB_USER": env["DB_USER"],
+                "DB_PASSWORD": env["DB_PASSWORD"],
+                "DB_PORT": env["DB_PORT"],
+                "CIDADE_IBGE": env["CIDADE_IBGE"],
+                "ADMIN_USERNAME": env["ADMIN_USERNAME"],
+                "ADMIN_PASSWORD": env["ADMIN_PASSWORD"],
+                "ADMIN_EMAIL": env["ADMIN_EMAIL"],
+                "ADMIN_NAME": env["ADMIN_NAME"],
+                "BRIDGE_LOGIN_URL": env["BRIDGE_LOGIN_URL"],
+            }
+        )
         return (
             env["DB_HOST"] is not None
             and env["DB_DATABASE"] is not None
