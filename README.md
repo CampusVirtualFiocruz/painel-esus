@@ -1,8 +1,7 @@
-<p align="center">
-    <svg xmlns="http://www.w3.org/2000/svg" width="62.487" height="62.487" viewBox="0 0 62.487 62.487">
-        <path d="M4.5,39.215H32.272V4.5H4.5Zm0,27.772H32.272V46.158H4.5Zm34.715,0H66.987V32.272H39.215Zm0-62.487V25.329H66.987V4.5Z" transform="translate(-4.5 -4.5)" fill="#1351b4"/>
-    </svg>
-</p>
+<div align="center">
+  <img src="paineis-v2-front/public/favicon.svg" alt="Ícone do Painel e-SUS APS" width="100">
+</div>
+
 
 # Painel e-SUS APS
 
