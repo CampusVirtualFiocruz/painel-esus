@@ -20,7 +20,7 @@ Foi inspirado em dezenas de sistemas de informação paralelos que os profission
 
 A principal inovação consiste em utilizar métodos de ciência de dados que utilizamos em nossas pesquisas na Fiocruz para possibilitar às próprias equipes de atenção primária a avaliação de como está a saúde da população atendida, e onde é preciso concentrar esforços, atingindo assim uma maior continuidade do cuidado e qualidade da atenção primária.
 
-## Integração a estratégia e-SUS APS (2024-2026)
+## Integração a estratégia e-SUS APS (2024-2025)
 
 Atualmente o desenvolvimento é realizado em colaboração direta com a SAPS/MS, na perspectiva de apoiar a gestão clínica e do cuidado no dia a dia das equipes de Saúde da Família, Atenção Primária e Saúde Bucal. A parceria tem como visão a integração completa da solução à estratégia e-SUS APS.
 
@@ -118,13 +118,13 @@ O Campus Virtual Fiocruz tornou possível a publicação deste website e a disse
 
 **Coordenação**: Renata Bernardes David, fisioterapeuta, sanitarista, Fiocruz Brasília
 
-Daniela Fontinelle Botelho, especialista em UI e UX, Fiocruz Brasília
+Ana Cristina da Matta Furniel, cientista social, tecnologista em saúde pública da Fiocruz, Campus Virtual Fiocruz
 
-Ulysses de Barros Panisset, médico sanitarista, expert em tradução do conhecimento em saúde, professor da UFMG
+Daniela Fontinelle Botelho, especialista em UI e UX, Fiocruz Brasília
 
 Leonardo Cançado Monteiro Savassi, médico de família e comunidade, professor da UFOP
 
-Ana Cristina da Matta Furniel, cientista social, tecnologista em saúde pública da Fiocruz, Campus Virtual Fiocruz
+Ulysses de Barros Panisset, médico sanitarista, expert em tradução do conhecimento em saúde, professor da UFMG
 
 Vinícius de Araújo Oliveira, médico sanitarista, tecnologista em saúde pública da Fiocruz, pesquisador do CIDACS/Fiocruz Bahia.
 
@@ -136,16 +136,68 @@ Adriano Neves de Paula e Souza, cientista da computação
 
 Clarissa Rodrigues Mendes, desenvolvedora de software
 
+Francisco Jerônimo da Silva Júnior, estudante de Ciência da Computação
+
 Igor Caldeira Brandão da Silveira, engenheiro da computação
+
+Manoel Ramos Pereira Neto, técnico em mecatrônica
+
+Relyson Lima de Magalhães Ramos, analista de sistemas
 
 Tales Mota Machado, cientista da computação, cientista de dados, UFOP
 
 ### Equipe de Ciência de Dados e Estatística
 
-**Coordenação**: Pilar Veras Florentino
+**Coordenação**: Pilar Veras Florentino, bióloga
 
 Alberto Pietro Sironi, cientista de dados, UFBA
 
+Daniel Cesário Baesso, geógrafo
+
+George Caique Gouveia Barbosa, analista de sistemas
+
+Joana Natalia Cella, cientista social
+
+Juliana Lucatelli Dória Santana, bióloga
+
+Juracy Bertoldo Santos Junior, analista de sistemas
+
+Marcos Cavalcante de Araújo Filho,  estudante de Ciência de Dados
+
+Maria Borges Rabêlo de Santana, biotecnologista
+
+Renzo Joel Flores Ortiz, estatístico
+
+Samila Silva Santos, analista de sistemas
+
 Wanessa da Silva Almeida, estatística, ICICT
 
+### Equipe Júrídica e de Gestão
+
+Ana Clara Araujo Caires, advogada
+
+Eduardo Padilha Antonio, farmacêutico-bioquímico
+
+Sinuhe Nascimento e Cruz, advogado
+
+### Integrantes anteriores
+
 Álisson Oliveira dos Santos, médico de família e comunidade, cientista de dados, UFSJ
+
+Allan Bontempo Taveira Siqueira, analista de sistemas
+
+Bruna Carolina de Araújo, fisioterapeuta
+
+Helena Mariana Pitangueira Teixeira, biotecnologista/bióloga
+
+Juliana Perrone Bezerra de Menezes Fullam, bióloga
+
+Laura Gris Mota, jornalista
+
+Marcos Bernardes Rosa, advogado
+
+Patricia Veras, médica
+
+Rejane Santos-Silva, bióloga
+
+Roberta Crevelário de Melo, gerontóloga
