@@ -57,15 +57,16 @@ export default function HomepageFeatures(): JSX.Element {
     <section className={styles.features}>
       <div className="container">
         <div className={`${styles.containerCenter} col col--6 padding-vert--md`}>
+          <h2 className="text--center">Documentação técnica</h2>
+          <p>Nesta documentação você encontrará instruções para instalação em ambiente local e configuração do Painel e-SUS APS, além de orientações para o desenvolvimento e colaboração. Também estão descritos os principais conceitos da arquitetura do sistema, visando facilitar o entendimento e a manutenção do projeto.</p>
+        </div>
+        <div className={`${styles.containerCenter} col col--6 padding-vert--md`}>
           <h2 className="text--center">O que é o Painel e-SUS APS?</h2>
           <p>Com funcionalidades que facilitam o acompanhamento de indicadores, a gestão do cuidado e a promoção de boas práticas, o Painel e-SUS APS é uma ferramenta essencial para profissionais da assistência e da gestão em saúde.</p>
           <p>
             Integrado à base de dados do Prontuário Eletrônico e-SUS APS, ele oferece suporte direto à tomada de decisão, permitindo intervenções precisas e oportunas que impulsionam resultados concretos na atenção primária.
           </p>
-        </div>
-        <div className={`${styles.containerCenter} col col--6 padding-vert--md`}>
-          <h2 className="text--center">Tipos de visualização</h2>
-          <p>Os relatórios são apresentados em três níveis de visualização: Município, Unidade Básica de Saúde (UBS) e Equipe. Os diferentes níveis de visualização apresentados no Painel dialogam com o conceito de território.</p>
+          <p>O Painel oferece relatórios apresentados em três níveis de visualização: Município, Unidade Básica de Saúde (UBS) e Equipe. Os diferentes níveis de visualização apresentados no Painel dialogam com o conceito de território.</p>
         </div>
         <div className="row">
           {FeatureList.map((props, idx) => (

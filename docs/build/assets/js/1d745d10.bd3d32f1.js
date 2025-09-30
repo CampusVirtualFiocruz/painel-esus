@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkmy_website=self.webpackChunkmy_website||[]).push([[7049],{1875:e=>{e.exports=JSON.parse('{"label":"facebook","permalink":"/painel-esus/blog/tags/facebook","allTagsPath":"/painel-esus/blog/tags","count":1,"unlisted":false}')}}]);

@@ -1,0 +1,8 @@
+{
+  "label": "Arquitetura",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "A arquitetura de software do Painel e-SUS APS"
+  }
+}

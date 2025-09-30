@@ -4,18 +4,18 @@ sidebar_position: 1
 
 # Visão Geral do Projeto
 
-Este repositório contém dois projetos principais:
+O repositório no GitHub contém dois projetos principais:
 
-- **painel-esus**: Backend Python para processamento, análise e exportação de dados de saúde pública.
-- **paineis-v2-front**: Frontend React para visualização dos dados processados, com gráficos interativos e dashboards.
+- **`painel-esus`**: Backend em Flask para processamento, análise e exportação de dados de saúde pública.
+- **`paineis-v2-front`**: Frontend em React para visualização dos dados processados, com gráficos interativos e dashboards.
 
 ---
 
 ## Estrutura dos Projetos
 
-### painel-esus (Backend)
+### `painel-esus` (Backend)
 
-- **Linguagem:** Python 3
+- **Linguagem:** Python 3.10 + Flask
 - **Principais diretórios:**
   - `src/`: Código principal, dividido em camadas (domain, infra, main, presentations, utils).
   - `dados/`: Dados de entrada e saída em formato parquet.
@@ -27,7 +27,7 @@ Este repositório contém dois projetos principais:
   - Integração com bancos de dados e arquivos parquet.
   - APIs para consumo pelo frontend.
 
-### paineis-v2-front (Frontend)
+### `paineis-v2-front` (Frontend)
 
 - **Linguagem:** TypeScript + React
 - **Principais diretórios:**
@@ -38,7 +38,7 @@ Este repositório contém dois projetos principais:
   - Dashboards interativos para visualização dos dados processados.
   - Gráficos e tabelas dinâmicas.
   - Autenticação e seleção de perfis.
-  - Integração com APIs do painel-esus.
+  - Integração com APIs do `painel-esus`.
 
 ---
 
@@ -48,12 +48,14 @@ Este repositório contém dois projetos principais:
 2. Crie uma branch para sua feature ou correção.
 3. Envie um Pull Request detalhando as alterações.
 
-Consulte os arquivos README.md de cada projeto para instruções específicas de instalação e execução.
+Consulte a [documentação de instalação](/docs/category/instalação) e os arquivos README.md de cada projeto para instruções específicas de instalação e execução.
 
 ---
 
 ## Referências
 
-- [Documentação Docusaurus](https://docusaurus.io/docs)
 - [Documentação React](https://react.dev/)
 - [Documentação Python](https://docs.python.org/3/)
+- [Documentação Flask](https://flask.palletsprojects.com/en/stable/)
+- [Documentação Docusaurus](https://docusaurus.io/docs)
+
