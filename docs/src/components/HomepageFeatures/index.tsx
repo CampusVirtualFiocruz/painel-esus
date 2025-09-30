@@ -10,32 +10,29 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Município',
+    Svg: require('../../../../paineis-v2-front/src/assets/images/visualizacao/Icone_Municipio.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Oferece uma visão geral, sendo útil principalmente para o gestor de saúde municipal, que poderá identificar o cenário atual do município.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Unidade Básica de Saúde',
+    Svg: require('../../../../paineis-v2-front/src/assets/images/visualizacao/Icone_UBS.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Apresenta informações sobre regras de processamento e visualização do relatório de Indicadores de cofinanciamento federal do Piso de Atenção Primária à Saúde - APS, no âmbito do Sistema Único de Saúde - SUS.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Equipe',
+    Svg: require('../../../../paineis-v2-front/src/assets/images/visualizacao/Icone_Equipe.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Tem como principal objetivo apresentar o cenário da população acompanhada pela equipe.
       </>
     ),
   },
@@ -59,6 +56,17 @@ export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
+        <div className={`${styles.containerCenter} col col--6 padding-vert--md`}>
+          <h2 className="text--center">O que é o Painel e-SUS APS?</h2>
+          <p>Com funcionalidades que facilitam o acompanhamento de indicadores, a gestão do cuidado e a promoção de boas práticas, o Painel e-SUS APS é uma ferramenta essencial para profissionais da assistência e da gestão em saúde.</p>
+          <p>
+            Integrado à base de dados do Prontuário Eletrônico e-SUS APS, ele oferece suporte direto à tomada de decisão, permitindo intervenções precisas e oportunas que impulsionam resultados concretos na atenção primária.
+          </p>
+        </div>
+        <div className={`${styles.containerCenter} col col--6 padding-vert--md`}>
+          <h2 className="text--center">Tipos de visualização</h2>
+          <p>Os relatórios são apresentados em três níveis de visualização: Município, Unidade Básica de Saúde (UBS) e Equipe. Os diferentes níveis de visualização apresentados no Painel dialogam com o conceito de território.</p>
+        </div>
         <div className="row">
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
