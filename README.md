@@ -56,7 +56,7 @@ Dessa forma, o canal de suporte oficial do e-SUS APS não contempla o suporte a 
 
 # DOCUMENTAÇÃO TÉCNICA
 
-A documentação do código fonte do Painel e-SUS APS, com informações sobre arquitetura, desenvolvimento e instalação está disponível em [https://campusvirtualfiocruz.github.io/painel-esus](https://campusvirtualfiocruz.github.io/painel-esus/).
+A documentação do código fonte do Painel e-SUS APS, com informações sobre arquitetura, desenvolvimento e instalação em ambiente local está disponível em [https://campusvirtualfiocruz.github.io/painel-esus](https://campusvirtualfiocruz.github.io/painel-esus/).
 
 # LICENÇA DE USO
 
