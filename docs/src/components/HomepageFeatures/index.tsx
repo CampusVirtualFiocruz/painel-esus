@@ -1,46 +1,53 @@
-import clsx from 'clsx';
-import Heading from '@theme/Heading';
-import styles from './styles.module.css';
+import clsx from "clsx";
+import Heading from "@theme/Heading";
+import styles from "./styles.module.css";
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  Svg: React.ComponentType<React.ComponentProps<"svg">>;
   description: JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Município',
-    Svg: require('../../../../paineis-v2-front/src/assets/images/visualizacao/Icone_Municipio.svg').default,
+    title: "Município",
+    Svg: require("../../../../paineis-v2-front/src/assets/images/visualizacao/Icone_Municipio.svg")
+      .default,
     description: (
       <>
-        Oferece uma visão geral, sendo útil principalmente para o gestor de saúde municipal, que poderá identificar o cenário atual do município.
+        Oferece uma visão geral, sendo útil principalmente para o gestor de
+        saúde municipal, que poderá identificar o cenário atual do município.
       </>
     ),
   },
   {
-    title: 'Unidade Básica de Saúde',
-    Svg: require('../../../../paineis-v2-front/src/assets/images/visualizacao/Icone_UBS.svg').default,
+    title: "Unidade Básica de Saúde",
+    Svg: require("../../../../paineis-v2-front/src/assets/images/visualizacao/Icone_UBS.svg")
+      .default,
     description: (
       <>
-        Apresenta informações sobre regras de processamento e visualização do relatório de Indicadores de cofinanciamento federal do Piso de Atenção Primária à Saúde - APS, no âmbito do Sistema Único de Saúde - SUS.
+        Apresenta informações sobre regras de processamento e visualização do
+        relatório de Indicadores de cofinanciamento federal do Piso de Atenção
+        Primária à Saúde - APS, no âmbito do Sistema Único de Saúde - SUS.
       </>
     ),
   },
   {
-    title: 'Equipe',
-    Svg: require('../../../../paineis-v2-front/src/assets/images/visualizacao/Icone_Equipe.svg').default,
+    title: "Equipe",
+    Svg: require("../../../../paineis-v2-front/src/assets/images/visualizacao/Icone_Equipe.svg")
+      .default,
     description: (
       <>
-        Tem como principal objetivo apresentar o cenário da população acompanhada pela equipe.
+        Tem como principal objetivo apresentar o cenário da população
+        acompanhada pela equipe.
       </>
     ),
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({ title, Svg, description }: FeatureItem) {
   return (
-    <div className={clsx('col col--4')}>
+    <div className={clsx("col col--4")}>
       <div className="text--center">
         <Svg className={styles.featureSvg} role="img" />
       </div>
@@ -56,17 +63,40 @@ export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
-        <div className={`${styles.containerCenter} col col--6 padding-vert--md`}>
+        <div
+          className={`${styles.containerCenter} col col--6 padding-vert--md`}
+        >
           <h2 className="text--center">Documentação técnica</h2>
-          <p>Nesta documentação você encontrará instruções para instalação em ambiente local e configuração do Painel e-SUS APS, além de orientações para o desenvolvimento e colaboração. Também estão descritos os principais conceitos da arquitetura do sistema, visando facilitar o entendimento e a manutenção do projeto.</p>
-        </div>
-        <div className={`${styles.containerCenter} col col--6 padding-vert--md`}>
-          <h2 className="text--center">O que é o Painel e-SUS APS?</h2>
-          <p>Com funcionalidades que facilitam o acompanhamento de indicadores, a gestão do cuidado e a promoção de boas práticas, o Painel e-SUS APS é uma ferramenta essencial para profissionais da assistência e da gestão em saúde.</p>
           <p>
-            Integrado à base de dados do Prontuário Eletrônico e-SUS APS, ele oferece suporte direto à tomada de decisão, permitindo intervenções precisas e oportunas que impulsionam resultados concretos na atenção primária.
+            Instruções para instalação em ambiente local e configuração do
+            Painel e-SUS APS, além de orientações para o desenvolvimento e
+            colaboração. Também estão descritos os principais conceitos da
+            arquitetura do sistema e principais módulos, visando facilitar o
+            entendimento e a manutenção do projeto.
           </p>
-          <p>O Painel oferece relatórios apresentados em três níveis de visualização: Município, Unidade Básica de Saúde (UBS) e Equipe. Os diferentes níveis de visualização apresentados no Painel dialogam com o conceito de território.</p>
+        </div>
+        <div
+          className={`${styles.containerCenter} col col--6 padding-vert--md`}
+        >
+          <h2 className="text--center">O que é o Painel e-SUS APS?</h2>
+          <p>
+            Com funcionalidades que facilitam o acompanhamento de indicadores, a
+            gestão do cuidado e a promoção de boas práticas, o Painel e-SUS APS
+            é uma ferramenta essencial para profissionais da assistência e da
+            gestão em saúde.
+          </p>
+          <p>
+            Integrado à base de dados do Prontuário Eletrônico e-SUS APS, ele
+            oferece suporte direto à tomada de decisão, permitindo intervenções
+            precisas e oportunas que impulsionam resultados concretos na atenção
+            primária.
+          </p>
+          <p>
+            O Painel oferece relatórios apresentados em três níveis de
+            visualização: Município, Unidade Básica de Saúde (UBS) e Equipe. Os
+            diferentes níveis de visualização apresentados no Painel dialogam
+            com o conceito de território.
+          </p>
         </div>
         <div className="row">
           {FeatureList.map((props, idx) => (

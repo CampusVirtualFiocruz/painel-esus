@@ -3,6 +3,6 @@
   "position": 4,
   "link": {
     "type": "generated-index",
-    "description": "Principais módulos do backend do Painel e-SUS APS"
+    "description": "Principais módulos do backend do Painel e-SUS APS. Os arquivos são gerados automaticamente a partir de docstrings de cada módulo."
   }
 }

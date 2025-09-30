@@ -26,4 +26,4 @@ sidebar_position: 1
 
 - Se necessário, atualize `.dockerignore` comentando o glob pattern `**/.env`.
 
-> *Para acesso ao banco de dados remoto
+> *Para acesso ao banco de dados remoto.

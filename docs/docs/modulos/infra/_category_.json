@@ -1,0 +1,8 @@
+{
+  "label": "infra/db/repositories",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Módulos dos repositories do diretório /infra/db"
+  }
+}

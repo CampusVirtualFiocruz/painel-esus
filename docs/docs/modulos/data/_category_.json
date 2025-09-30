@@ -1,0 +1,8 @@
+{
+  "label": "data/interfaces",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Módulos dos contratos do diretório /data"
+  }
+}

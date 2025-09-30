@@ -36,6 +36,7 @@ sidebar_position: 3
 **Implementações concretas dos contratos de `data/interfaces/` e integrações externas. Depende de frameworks/bibliotecas.**
 
 - `db/`: acesso a banco de dados, queries, conexões.
+    - `repositories/`: implementação do Repository Pattern. Encapsula SQL e mapeia resultados para DTOs/entidades, sem regra de negócio. Está agrupado por domínios.
 - `requests/`: clientes HTTP/REST para provedores externos.
 - `bridge_provider/`: camadas de ponte para serviços/SDKs externos.
 - `create_base/`: rotinas de preparação/criação de bases.
