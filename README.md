@@ -171,7 +171,7 @@ Samila Silva Santos, analista de sistemas
 
 Wanessa da Silva Almeida, estatística, ICICT
 
-### Equipe Júrídica e de Gestão
+### Equipe Jurídica e de Gestão
 
 Ana Clara Araujo Caires, advogada
 
