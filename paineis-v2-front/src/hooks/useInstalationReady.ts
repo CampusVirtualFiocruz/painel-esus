@@ -20,11 +20,10 @@ export function useInstalationReady() {
         const data = response.data;
         setIsReady(data.completed);
         setPercentual(data.percentual);
+        setLoading(false);
       } catch (error) {
         console.error("Error checking instalation readiness:", error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
   useEffect(() => {

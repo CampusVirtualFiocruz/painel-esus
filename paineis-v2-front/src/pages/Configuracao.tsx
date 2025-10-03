@@ -22,7 +22,7 @@ export interface ConfiguracaoData {
   };
 }
 
-export function   Configuracao() {
+export function Configuracao() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -62,7 +62,7 @@ export function   Configuracao() {
         navigate("/instalacao");
         return;
       }
-      setFormData(data.env);
+      setFormData(data.env || {});
     } catch (err: any) {
       console.error("Erro ao buscar configuração:", err);
       setError("Erro ao carregar configurações. Tente novamente.");

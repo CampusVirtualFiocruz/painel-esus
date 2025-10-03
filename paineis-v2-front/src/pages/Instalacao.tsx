@@ -54,9 +54,13 @@ export function Instalacao() {
       setError(null);
       const response = await Api.get("/settings/instalation-status");
       setInstalacaoStatus(response.data);
-    } catch (err) {
-      console.error("Erro ao buscar status da instalação:", err);
-      setError("Erro ao carregar o status da instalação");
+    } catch (err: any) {
+      if (err.response.status === 403) {
+        navigate("/");
+        return;
+      } else {
+        setError("Erro ao carregar o status da instalação");
+      }
     }
   };
 
