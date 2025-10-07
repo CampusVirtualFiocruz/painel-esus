@@ -1,0 +1,41 @@
+{
+  "title": "Termos de Uso do Sistema",
+  "sections": [
+    {
+      "title": "1. Aceitação dos Termos",
+      "content": "Ao acessar e usar o Painel e-SUS APS, você aceita e concorda em cumprir estes Termos de Uso. Se você não concordar com qualquer parte destes termos, não deve usar este sistema."
+    },
+    {
+      "title": "2. Descrição do Serviço",
+      "content": "O Painel e-SUS APS é uma ferramenta desenvolvida para auxiliar profissionais de saúde na visualização e análise de dados da Atenção Primária à Saúde, proporcionando informações estratégicas para a gestão e melhoria dos serviços de saúde."
+    },
+    {
+      "title": "3. Responsabilidades do Usuário",
+      "content": "Você se compromete a:",
+      "list": [
+        "Usar o sistema apenas para fins profissionais relacionados à saúde pública",
+        "Manter a confidencialidade das informações acessadas",
+        "Não compartilhar suas credenciais de acesso com terceiros",
+        "Respeitar a privacidade dos dados dos cidadãos",
+        "Utilizar as informações em conformidade com a LGPD"
+      ]
+    },
+    {
+      "title": "4. Privacidade e Proteção de Dados",
+      "content": "O sistema processa dados pessoais em conformidade com a Lei Geral de Proteção de Dados (LGPD). Os dados são utilizados exclusivamente para fins de gestão em saúde pública e são protegidos por medidas de segurança adequadas."
+    },
+    {
+      "title": "5. Limitações de Responsabilidade",
+      "content": "O sistema é fornecido \"como está\" e não garantimos que estará sempre disponível ou livre de erros. Os usuários devem verificar a precisão das informações antes de tomar decisões baseadas nos dados."
+    },
+    {
+      "title": "6. Modificações",
+      "content": "Estes termos podem ser atualizados periodicamente. Recomendamos que você revise regularmente esta página para estar ciente de quaisquer alterações."
+    },
+    {
+      "title": "7. Contato",
+      "content": "Para dúvidas sobre estes termos ou sobre o sistema, entre em contato com o suporte técnico através dos canais oficiais."
+    }
+  ],
+  "checkboxLabel": "Eu li e aceito os Termos de Uso do sistema"
+}
