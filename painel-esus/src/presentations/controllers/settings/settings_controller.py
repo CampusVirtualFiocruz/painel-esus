@@ -4,7 +4,7 @@ import webbrowser
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from sqlalchemy import text
-from src.env.conf import is_installed_ok, update_env
+from src.env.conf import is_installed_ok, update_env, getenv
 from src.errors import HttpForbiddenError
 from src.infra.db.repositories.settings.acceptance_term_repository import (
     AcceptanceTermRepository,
@@ -93,7 +93,7 @@ class SettingsController:
         repo = AcceptanceTermRepository()
         result = repo.find_username_ibge_version(
             body["username"],
-            body["codIbge"],
+            getenv("CIDADE_IBGE", "", False),
             body["version"],
         )
         return HttpResponse(
@@ -102,13 +102,12 @@ class SettingsController:
         )
 
     def save_term_acceptance_settings(self, request: HttpRequest) -> HttpResponse:
-        self._check_instalation()
         body = request.body
         acceptance_term_validation(body)
         repo = AcceptanceTermRepository()
         repo.save(
             {
-                "cod_ibge": body["codIbge"],
+                "cod_ibge": getenv("CIDADE_IBGE", "", False),
                 "username": body["username"],
                 "version": body["version"],
             }

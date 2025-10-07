@@ -8,6 +8,12 @@ interface TermsAcceptanceParams {
   version?: string;
 }
 
+interface TermsAcceptanceRecord {
+  cod_ibge: string;
+  username: string;
+  version: string;
+}
+
 interface UseTermsAcceptanceReturn {
   checkTermsAcceptance: (params?: TermsAcceptanceParams) => Promise<boolean>;
   acceptTerms: (params?: TermsAcceptanceParams) => Promise<void>;
@@ -21,8 +27,6 @@ export const useTermsAcceptance = (): UseTermsAcceptanceReturn => {
 
   const getDefaultParams = (): TermsAcceptanceParams => {
     const user = getUserLocalStorage();
-
-    console.log("User from local storage:", user);
 
     return {
       username: user?.username,
@@ -44,9 +48,16 @@ export const useTermsAcceptance = (): UseTermsAcceptanceReturn => {
         params: finalParams
       });
       
-      return Array.isArray(response.data) && response.data.length > 0;
+      if (!Array.isArray(response.data)) {
+        return false;
+      }
+
+      return response.data.some((item: TermsAcceptanceRecord) => 
+        item.username === finalParams.username && 
+        item.version === finalParams.version
+      );
     } catch (error) {
-      console.error("Error checking term acceptance:", error);
+      console.info("Error checking term acceptance:", error);
       setError("Erro ao verificar aceite dos termos");
       return false;
     }
@@ -61,7 +72,7 @@ export const useTermsAcceptance = (): UseTermsAcceptanceReturn => {
     try {
       await Api.post("/settings/term-acceptance", finalParams);
     } catch (error) {
-      console.error("Error saving term acceptance:", error);
+      console.info("Error saving term acceptance:", error);
       setError("Erro ao salvar aceite dos termos");
       throw error;
     } finally {
