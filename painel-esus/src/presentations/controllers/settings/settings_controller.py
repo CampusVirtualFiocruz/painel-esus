@@ -89,6 +89,7 @@ class SettingsController:
 
     def get_term_acceptance_settings(self, request: HttpRequest) -> HttpResponse:
         body = request.query_params
+        body = request.query_params
         acceptance_term_validation(body)
         repo = AcceptanceTermRepository()
         result = repo.find_username_ibge_version(
@@ -102,6 +103,7 @@ class SettingsController:
         )
 
     def save_term_acceptance_settings(self, request: HttpRequest) -> HttpResponse:
+        # self._check_instalation()
         body = request.body
         acceptance_term_validation(body)
         repo = AcceptanceTermRepository()

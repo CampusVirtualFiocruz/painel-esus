@@ -47,7 +47,6 @@ controller = SettingsController()
     methods=["GET"],
     endpoint="instalation-status",
 )
-@is_not_installed()
 def instalation_status():
     return handle_request(instalation_status_composer)
 

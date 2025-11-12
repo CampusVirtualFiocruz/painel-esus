@@ -2,26 +2,31 @@ import os
 from typing import Dict, Literal
 
 from dotenv import dotenv_values, load_dotenv, set_key
+from src.errors.logging import logging
 from src.errors.types import HttpUnprocessableEntityError
 
 from .env_inputs import ENV_INPUTS
 
 VERSION_PAINEL = "${VERSION}"
 
+
 env_path = os.path.abspath(".env")
+
 env = {
-    **dotenv_values(env_path),  # load shared development variables
-    **os.environ,  # override loaded values with environment variables
-    "APPLICATION_VERSION": VERSION_PAINEL,
-}
+        **dotenv_values(env_path),  # load shared development variables
+        **os.environ,  # override loaded values with environment variables
+        "APPLICATION_VERSION": VERSION_PAINEL,
+    }
 
 def update_env( input_dict):
     for item in input_dict.items():
         if item[0] in ENV_INPUTS:
             set_key(env_path, item[0], item[1])
+            env[item[0]] = item[1]
         else:
             raise HttpUnprocessableEntityError(f'The key {item[0]} is forbidden for this context.')
     load_dotenv(override=True)
+
 
 def getenv(key, default, numeric=True):
     if key in env:
@@ -91,7 +96,8 @@ def is_installed_ok() -> Dict[
             "ADMIN_NAME": env["ADMIN_NAME"],
             "BRIDGE_LOGIN_URL": env["BRIDGE_LOGIN_URL"],
         }
-    except:
+    except Exception as e:
+        logging.exception(e)
         return (False, 
             {
                 "DB_HOST": env.get("DB_HOST", ""),
