@@ -21,12 +21,23 @@ class ApiLog:
 
     def extract_basic_info(self):
         cod_ibge = getenv("CIDADE_IBGE", "n/a", False)
-        cidade = self._get_ibge_data(cod_ibge)        
+        cidade = self._get_ibge_data(cod_ibge)
+        share_data_months = getenv("SHARE_DATA_MONTHS", "0", False)
+        
+        # Calcular data de expiração baseada nos meses configurados
+        try:
+            months = int(share_data_months)
+            expiration_date = datetime.datetime.utcnow() + datetime.timedelta(days=months * 30)
+            expiration_date_str = expiration_date.strftime("%Y-%m-%d")
+        except (ValueError, TypeError):
+            expiration_date_str = None
+        
         return {
             "cod_ibge": cod_ibge,
             "estado": getenv("ESTADO", "n/a", False),
             "version": getenv("APPLICATION_VERSION", "n/a", False),
             "base_url": getenv("LOG_API", "", False),
+            "expiration_date": expiration_date_str,
             **cidade
         }
     async def _send_request(self, api_url, payload, headers):
@@ -67,6 +78,12 @@ class ApiLog:
 
     def send_authentication_logs(self, body):
         try:
+            # Verificar se o compartilhamento de dados está habilitado
+            share_data = getenv("SHARE_DATA", "False", False)
+            if share_data != "True":
+                logging.logapi("Compartilhamento de dados desabilitado. Log não será enviado.")
+                return
+            
             basic_info = self.extract_basic_info()
             api_url = f"{basic_info['base_url']}/auth-log"
             username = body["username"]
@@ -95,6 +112,12 @@ class ApiLog:
 
     def send_exception_logs(self, error, token):
         try:
+            # Verificar se o compartilhamento de dados está habilitado
+            share_data = getenv("SHARE_DATA", "False", False)
+            if share_data != "True":
+                logging.logapi("Compartilhamento de dados desabilitado. Log de exceção não será enviado.")
+                return
+            
             logging.error(f"Enviando erro para o log: {error}")
             basic_info = self.extract_basic_info()
             api_url = f"{basic_info['base_url']}/auth-log"
@@ -131,6 +154,12 @@ class ApiLog:
 
     def send_download_log(self, token, extra_info):
         try:
+            # Verificar se o compartilhamento de dados está habilitado
+            share_data = getenv("SHARE_DATA", "False", False)
+            if share_data != "True":
+                logging.logapi("Compartilhamento de dados desabilitado. Log de download não será enviado.")
+                return
+            
             logging.info(f"Enviando registro de download para o servidor de log.")
             basic_info = self.extract_basic_info()
             api_url = f"{basic_info['base_url']}/auth-log"
@@ -144,8 +173,24 @@ class ApiLog:
 
             payload = {
                 **basic_info,
-                **extra_info
+                **extra_info,
+                "username": username,
             }
+            
+            token = self._gerar_jwt(
+                basic_info["cod_ibge"],
+                basic_info["version"],
+                basic_info['estado'],
+            )
+
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {token}",
+            }
+
+            logging.info(f"Enviando post para {api_url}\n{payload}")
+
+            asyncio.run(self._send_request(api_url, payload, headers))
            
         except Exception as e:
             logging.exception(f"Erro no envio do erro: {e}")

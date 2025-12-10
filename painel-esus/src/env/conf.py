@@ -51,6 +51,8 @@ def is_installed_ok() -> Dict[
             "ADMIN_EMAIL"
             "ADMIN_NAME"
             "BRIDGE_LOGIN_URL"
+            "SHARE_DATA"
+            "SHARE_DATA_MONTHS"
         ],
         str,
     ],
@@ -69,6 +71,8 @@ def is_installed_ok() -> Dict[
                 "ADMIN_EMAIL": env["ADMIN_EMAIL"],
                 "ADMIN_NAME": env["ADMIN_NAME"],
                 "BRIDGE_LOGIN_URL": env["BRIDGE_LOGIN_URL"],
+                "SHARE_DATA": env["SHARE_DATA"],
+                "SHARE_DATA_MONTHS": env["SHARE_DATA_MONTHS"],
             }
         )
         return (
@@ -83,6 +87,8 @@ def is_installed_ok() -> Dict[
             and env["ADMIN_EMAIL"] is not None
             and env["ADMIN_NAME"] is not None
             and env["BRIDGE_LOGIN_URL"] is not None
+            and env["SHARE_DATA"] is not None
+            and env["SHARE_DATA_MONTHS"] is not None
         ), {
             "DB_HOST": env["DB_HOST"],
             "DB_DATABASE": env["DB_DATABASE"],
@@ -95,6 +101,8 @@ def is_installed_ok() -> Dict[
             "ADMIN_EMAIL": env["ADMIN_EMAIL"],
             "ADMIN_NAME": env["ADMIN_NAME"],
             "BRIDGE_LOGIN_URL": env["BRIDGE_LOGIN_URL"],
+            "SHARE_DATA": env["SHARE_DATA"],
+            "SHARE_DATA_MONTHS": env["SHARE_DATA_MONTHS"],
         }
     except Exception as e:
         logging.exception(e)
@@ -111,4 +119,6 @@ def is_installed_ok() -> Dict[
                 "ADMIN_EMAIL": env.get("ADMIN_EMAIL", ""),
                 "ADMIN_NAME": env.get("ADMIN_NAME", ""),
                 "BRIDGE_LOGIN_URL": env.get("BRIDGE_LOGIN_URL", ""),
+                "SHARE_DATA": env.get("SHARE_DATA", ""),
+                "SHARE_DATA_MONTHS": env.get("SHARE_DATA_MONTHS", ""),
             })

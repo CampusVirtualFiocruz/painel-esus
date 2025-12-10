@@ -19,6 +19,9 @@ export interface ConfiguracaoData {
     ADMIN_EMAIL: string;
     ADMIN_NAME: string;
     BRIDGE_LOGIN_URL: string;
+    SHARE_DATA: string;
+    SHARE_DATA_MONTHS: string,
+
   };
 }
 
@@ -31,6 +34,8 @@ export function Configuracao() {
   const [success, setSuccess] = useState<string | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<string | null>(null);
   const [submitErrors, setSubmitErrors] = useState<string[]>([]);
+  const [compartilharDados, setCompartilharDados] = useState(false);
+  const [mesesRetencao, setMesesRetencao] = useState("12");
 
   useInstalationReady();
 
@@ -46,6 +51,8 @@ export function Configuracao() {
     ADMIN_EMAIL: "",
     ADMIN_NAME: "",
     BRIDGE_LOGIN_URL: "",
+    SHARE_DATA: "False",
+    SHARE_DATA_MONTHS: "0",
   });
 
   const fetchConfiguracao = useCallback(async () => {
@@ -63,6 +70,14 @@ export function Configuracao() {
         return;
       }
       setFormData(data.env || {});
+      
+      // Sincronizar estados locais com os dados carregados
+      if (data.env?.SHARE_DATA === "True") {
+        setCompartilharDados(true);
+      }
+      if (data.env?.SHARE_DATA_MONTHS) {
+        setMesesRetencao(data.env.SHARE_DATA_MONTHS);
+      }
     } catch (err: any) {
       console.error("Erro ao buscar configuração:", err);
       setError("Erro ao carregar configurações. Tente novamente.");
@@ -76,12 +91,16 @@ export function Configuracao() {
   }, [fetchConfiguracao]);
 
   const handleInputChange = (field: string, value: string) => {
+    console.log('VALOR: ', value)
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
 
-    if (error) setError(null);
+    if (error) {
+      console.log('ERROR: ', error)
+      setError(null);
+    }      
     if (connectionStatus) setConnectionStatus(null);
     if (submitErrors.length > 0) setSubmitErrors([]);
   };
@@ -138,6 +157,9 @@ export function Configuracao() {
       const configData = {
         ...formData,
         DB_PORT: String(formData.DB_PORT),
+        // Garantir que se o toggle não estiver marcado, os valores sejam False e 0
+        SHARE_DATA: compartilharDados ? "True" : "False",
+        SHARE_DATA_MONTHS: compartilharDados ? mesesRetencao : "0",
       };
 
       await Api.post("/settings/instalation-settings", configData);
@@ -382,6 +404,59 @@ export function Configuracao() {
                 placeholder="http://exemplo.com"
               />
             </div>
+          </div>
+        </div>
+        <div className="configuracao-card mb-4">
+          <div className="configuracao-card-body">
+            <h3>Compartilhamento de Dados</h3>
+            <div className="toggle-section">
+              <label className="toggle-switch">
+                <input
+                type="checkbox"
+                  checked={compartilharDados}
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setCompartilharDados(isChecked);
+                    
+                    // Atualizar SHARE_DATA no formData
+                    setFormData((prev) => ({
+                      ...prev,
+                      SHARE_DATA: isChecked ? "True" : "False",
+                      SHARE_DATA_MONTHS: isChecked ? mesesRetencao : "0",
+                    }));
+                  }}
+                />
+                <span className="toggle-slider"></span>
+                <span className="toggle-label">
+                  Desejo compartilhar meus dados de acesso com a Fiocruz
+                </span>
+              </label>
+            </div>
+            {compartilharDados && (
+              <div className="retencao-section">
+                <div className="retencao-input-wrapper">
+                  <TextField
+                    label="Selecione a quantidade de meses para a retenção:"
+                    type="number"
+                    value={mesesRetencao}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === "" || (parseInt(value) > 0 && !isNaN(parseInt(value)))) {
+                        setMesesRetencao(value);
+                        
+                        // Atualizar SHARE_DATA_MONTHS no formData
+                        setFormData((prev) => ({
+                          ...prev,
+                          SHARE_DATA_MONTHS: value,
+                        }));
+                      }
+                    }}
+                    placeholder="12"
+                    min="1"
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
         {submitErrors.length > 0 && (
