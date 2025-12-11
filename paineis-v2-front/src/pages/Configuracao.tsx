@@ -18,6 +18,7 @@ export interface ConfiguracaoData {
     ADMIN_PASSWORD: string;
     ADMIN_EMAIL: string;
     ADMIN_NAME: string;
+    ADMIN_CPF: string;
     BRIDGE_LOGIN_URL: string;
     SHARE_DATA: string;
     SHARE_DATA_MONTHS: string,
@@ -39,6 +40,26 @@ export function Configuracao() {
 
   useInstalationReady();
 
+  // Função para aplicar máscara de CPF
+  const formatCPF = (value: string) => {
+    // Remove tudo que não é dígito
+    const numbers = value.replace(/\D/g, '');
+    
+    // Limita a 11 dígitos
+    const limitedNumbers = numbers.slice(0, 11);
+    
+    // Aplica a máscara
+    if (limitedNumbers.length <= 3) {
+      return limitedNumbers;
+    } else if (limitedNumbers.length <= 6) {
+      return `${limitedNumbers.slice(0, 3)}.${limitedNumbers.slice(3)}`;
+    } else if (limitedNumbers.length <= 9) {
+      return `${limitedNumbers.slice(0, 3)}.${limitedNumbers.slice(3, 6)}.${limitedNumbers.slice(6)}`;
+    } else {
+      return `${limitedNumbers.slice(0, 3)}.${limitedNumbers.slice(3, 6)}.${limitedNumbers.slice(6, 9)}-${limitedNumbers.slice(9)}`;
+    }
+  };
+
   const [formData, setFormData] = useState({
     DB_HOST: "",
     DB_DATABASE: "",
@@ -50,6 +71,7 @@ export function Configuracao() {
     ADMIN_PASSWORD: "",
     ADMIN_EMAIL: "",
     ADMIN_NAME: "",
+    ADMIN_CPF: "",
     BRIDGE_LOGIN_URL: "",
     SHARE_DATA: "False",
     SHARE_DATA_MONTHS: "0",
@@ -92,9 +114,13 @@ export function Configuracao() {
 
   const handleInputChange = (field: string, value: string) => {
     console.log('VALOR: ', value)
+    
+    // Aplicar máscara de CPF se o campo for ADMIN_CPF
+    const processedValue = field === 'ADMIN_CPF' ? formatCPF(value) : value;
+    
     setFormData((prev) => ({
       ...prev,
-      [field]: value,
+      [field]: processedValue,
     }));
 
     if (error) {
@@ -341,7 +367,7 @@ export function Configuracao() {
         </div>
         <div className="configuracao-card mb-4">
           <div className="configuracao-card-body">
-            <h3>Configurações do Administrador</h3>
+            <h3>Configurações do Administrador - Pessoa Física Responsável</h3>
             <div className="form-grid">
               <TextField
                 label="Nome do Administrador"
@@ -352,6 +378,15 @@ export function Configuracao() {
                 placeholder="Nome completo"
               />
               <TextField
+                label="CPF do Administrador"
+                value={formData.ADMIN_CPF}
+                onChange={(e) =>
+                  handleInputChange("ADMIN_CPF", e.target.value)
+                }
+                placeholder="000.000.000-00"
+                maxLength={14}
+              />
+              <TextField
                 label="Email do Administrador"
                 type="email"
                 value={formData.ADMIN_EMAIL}
@@ -360,8 +395,15 @@ export function Configuracao() {
                 }
                 placeholder="email@exemplo.com"
               />
+            </div>
+          </div>
+        </div>
+        <div className="configuracao-card mb-4">
+          <div className="configuracao-card-body">
+            <h3>Configurações de acesso ao Painel e-SUS</h3>
+            <div className="form-grid">
               <TextField
-                label="Usuário Administrador"
+                label="Usuário de acesso ao Painel e-SUS"
                 value={formData.ADMIN_USERNAME}
                 onChange={(e) =>
                   handleInputChange("ADMIN_USERNAME", e.target.value)
@@ -370,7 +412,7 @@ export function Configuracao() {
                 required
               />
               <TextField
-                label="Senha do Administrador"
+                label="Senha de acesso ao Painel e-SUS"
                 type="password"
                 value={formData.ADMIN_PASSWORD}
                 onChange={(e) =>
@@ -428,7 +470,7 @@ export function Configuracao() {
                 />
                 <span className="toggle-slider"></span>
                 <span className="toggle-label">
-                  Desejo compartilhar meus dados de acesso com a Fiocruz
+                  Desejo que a Fiocruz retenha e mantenha disponíveis os dados referentes a logs de acesso e logs de aceite dos termos de uso do Painel, que podem incluir dados pessoais de usuários cadastrados na plataforma, pelo prazo de retenção definido a seguir, para atendimento exclusivo às finalidades definidas pelo Controlador.
                 </span>
               </label>
             </div>

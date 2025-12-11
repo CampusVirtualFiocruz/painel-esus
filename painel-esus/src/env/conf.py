@@ -108,6 +108,7 @@ def is_installed_ok() -> Dict[
         logging.exception(e)
         return (False, 
             {
+                "ADMIN_CPF": env.get("ADMIN_CPF", ""),
                 "DB_HOST": env.get("DB_HOST", ""),
                 "DB_DATABASE": env.get("DB_DATABASE", ""),
                 "DB_USER": env.get("DB_USER", ""),

@@ -9,6 +9,7 @@ ENV_INPUTS = [
     "ADMIN_PASSWORD",
     "ADMIN_EMAIL",
     "ADMIN_NAME",
+    "ADMIN_CPF",
     "BRIDGE_LOGIN_URL",
     "RELOAD_BASE_SCHEDULE",
     "PORT",
