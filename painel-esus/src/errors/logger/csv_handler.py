@@ -176,7 +176,7 @@ class CsvFormatter(logging.Formatter):
     def __init__(
         self,
         *,
-        fmt_keys: dict[str, str] | None = None,
+        fmt_keys,
     ):
         super().__init__()
         self.fmt_keys = fmt_keys if fmt_keys is not None else {}

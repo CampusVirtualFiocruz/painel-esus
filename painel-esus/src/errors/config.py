@@ -4,13 +4,63 @@ import logging.config
 import os
 import pathlib
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-config_json_path = os.path.join(ROOT_DIR, "logger","config.json")
-config_file = pathlib.Path(config_json_path)
+config = {
+  "version": 1,
+  "disable_existing_loggers": False,
+  "formatters": {
+    "simple": {
+      "format": "%(asctime)s - %(name)s - %(pathname)s.%(funcName)s:%(lineno)d - %(levelname)s - %(message)s",
+      "datefmt": "%Y-%m-%d %H:%M:%S"
+    },
+    "json": {
+      "()": "src.errors.logger.json_handler.JSONFormatter",
+      "fmt_keys": {
+        "level": "levelname",
+        "message": "message",
+        "timestamp": "timestamp",
+        "logger": "name",
+        "module": "module",
+        "function": "funcName",
+        "line": "lineno",
+        "thread_name": "threadName"
+      }
+    }
+  },
+  "handlers": {
+    "stdout": {
+      "class": "logging.StreamHandler",
+      "formatter": "simple",
+      "stream": "ext://sys.stdout"
+    },
+    "json": {
+      "class": "src.errors.logger.json_handler.JSONFileHandler",
+      "filename": "painel_esus_log.jsonl",
+      "formatter": "json",
+      "when": "midnight",
+      "interval": 1,
+      "backupCount": 5,
+      "encoding": "utf-8",
+      "mode": "a"
+    },
+    "csv": {
+      "class": "src.errors.logger.csv_handler.CsvFileHandler",
+      "formatter": "simple",
+      "filename": "painel_esus_log.csv",
+      "when": "midnight",
+      "interval": 1,
+      "backupCount": 2
+    }
+  },
+  "loggers": {
+    "root": {
+      "level": "INFO"
+    }
+  },
+  "root": {
+    "handlers": ["stdout"]
+  }
+}
 
-
-with open(config_file, "r", encoding="utf-8") as f_in:
-    config = json.load(f_in)
 logging.config.dictConfig(config)
 
 logger = logging.getLogger("test")
