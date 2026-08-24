@@ -41,7 +41,7 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: pnpm --config.pm-on-fail=ignore install --frozen-lockfile --ignore-scripts
+        run: pnpm install --frozen-lockfile
 
       - name: Build Docusaurus
-        run: pnpm --config.pm-on-fail=ignore build
+        run: pnpm build
