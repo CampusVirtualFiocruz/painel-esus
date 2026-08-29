@@ -3,11 +3,9 @@ import json
 import logging
 import os.path
 import threading
-import time
 
 import customtkinter as ctk
 import pandas as pd
-from customtkinter import CTkProgressBar, IntVar
 from PIL import Image
 
 # from src.errors.logging import logging
