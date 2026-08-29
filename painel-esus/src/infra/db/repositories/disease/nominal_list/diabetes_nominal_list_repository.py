@@ -11,7 +11,6 @@ from typing import Dict
 import duckdb
 import pandas as pd
 from sqlalchemy import or_
-from src.domain.entities.diabetes import Diabetes
 from src.env.conf import getenv
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.equipes import Equipes
@@ -154,7 +153,7 @@ class DiabetesNominalListRepository:
                 columns = mapped_columns[filter["field"]]
                 order_list.append( f'{columns} {direction}')
         else:
-            order_list = 'no_cidadao asc'
+            order_list = ['no_cidadao asc']
 
         if len(order_list)>0:
             order = 'order by '
