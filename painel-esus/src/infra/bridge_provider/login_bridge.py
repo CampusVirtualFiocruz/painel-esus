@@ -11,7 +11,6 @@ from src.data.interfaces.login_repository import (
 )
 from src.domain.entities.user_payload import UserPayload
 from src.env import env
-from src.errors.logging import logging
 from src.infra.db.settings.connection import DBConnectionHandler
 
 from .queries.query_sessao import QUERY_SESSAO
