@@ -211,7 +211,7 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         ).df()
 
         users = users.to_dict(orient="records")
-        total = len(con.sql(oral_health + sql_where).fetchall())
+        total = con.sql(f"SELECT COUNT(*) FROM ({oral_health} {sql_where})").fetchone()[0]
         return {
             "itemsCount": total,
             "itemsPerPage": pagesize,

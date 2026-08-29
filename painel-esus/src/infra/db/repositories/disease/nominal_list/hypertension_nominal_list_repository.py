@@ -164,7 +164,9 @@ class HypertensionNominalListRepository:
         ).df()
 
         users = users.to_dict(orient="records")
-        total = con.sql(pessoas_sql + sql_where).aggregate("count(*)").fetchone()[0]
+        total = con.sql(
+            f"SELECT COUNT(*) FROM ({pessoas_sql} {sql_where}) AS filtered_rows"
+        ).fetchone()[0]
         return {
                 "itemsCount": total,
                 "itemsPerPage": pagesize,
