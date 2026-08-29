@@ -38,7 +38,7 @@ class PregnancyBaserepository():
     def fill_height(self, df):
         columns = df.columns.tolist()
 
-        if False in [i in columns for i in ['nu_altura', 'co_fat_cidadao_pec']]:
+        if not {'nu_altura', 'co_fat_cidadao_pec'}.issubset(columns):
             raise Exception('nu_altura e co_fat_cidadao_pec não presentes.')
 
         height = df.groupby(['co_fat_cidadao_pec'])[
@@ -69,7 +69,7 @@ class PregnancyBaserepository():
         cidadao_pec = 'co_fat_cidadao_pec'
         tempo_dum = 'co_dim_tempo_dum'
 
-        if False in [i in columns for i in [tempo_dum, cidadao_pec]]:
+        if not {tempo_dum, cidadao_pec}.issubset(columns):
             raise Exception(
                 f'{tempo_dum} e {cidadao_pec} não presentes.')
 
