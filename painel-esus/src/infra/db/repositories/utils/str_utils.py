@@ -13,14 +13,14 @@ def mock_word(phrase, gap=2, skip_first=False):
             [
                 words[0],
                 *[
-                    word[:gap] + "".join(["*" for n in word[gap:]])
+                    word[:gap] + "*" * len(word[gap:])
                     for word in words[1:]
                 ],
             ]
         )
     else:
         return " ".join(
-            [word[:gap] + "".join(["*" for n in word[gap:]]) for word in words]
+            [word[:gap] + "*" * len(word[gap:]) for word in words]
         )
 
 def anonymize_data( data:str ) ->str:
