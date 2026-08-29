@@ -144,7 +144,44 @@ class LoginBridgeRepository(LoginRepositoryInterface):
         profiles = list(sorted(profiles, key=lambda x: x["profissao"]))
         return profiles
 
-    def check_credentials(self, username: str, password: str) -> UserPayload:
+    def _create_user_payload(self, profissional):
+        profiles = self.get_profiles(profissional)
+        if len(profiles) > 1:
+            user_raw_data = UserPayload(
+                username=profissional["nome"],
+                cns=profissional["cns"],
+                uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"]["uf"][
+                    "sigla"
+                ],
+                municipio=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
+                    "uf"
+                ]["nome"],
+                profiles=profiles,
+                ubs="waiting for chosing",
+            )
+            return user_raw_data
+        if len(profiles) == 1:
+            user = self.check_role(profissional['lotacoes'][0])
+            equipe = None
+            if profiles[0]["equipe"] is not None:
+                equipe = profiles[0]["equipe"]["id"]
+            user_raw_data = UserPayload(
+                username=profissional["nome"],
+                cns=profissional["cns"],
+                uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
+                    "uf"
+                ]["sigla"],
+                municipio=profissional["lotacoes"][0]["unidadeSaude"][
+                    "endereco"
+                ]["uf"]["nome"],
+                profiles=[profiles[0]],
+                ubs=(profiles[0]["ubs"]["id"] if user is not None else None),
+                equipe=equipe,
+            )
+            return user_raw_data
+        return None
+
+    def _authenticate(self, username: str, password: str):
         session = requests.Session()
         session.verify = False
         url_login = env.get("BRIDGE_LOGIN_URL", "")
@@ -162,20 +199,19 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             "Content-Type": "application/json",
             "Cookie": "JSESSIONID=87J4pWjfQUVaO3b_lndd1DQE-8hJ3RZzcHes0uFb; XSRF-TOKEN=25038984-1945-43e2-a990-f62709f4eddd",
         }
-        # print('iniciando....')
         response = self.get_reponse_body(session, url, headers, payload)
-        # print(response)
         if response.text is None:
-            return None
-        cookie = session.cookies.get_dict()
+            return None, None, None
 
+        cookie = session.cookies.get_dict()
         response_json = response.json()
+
         if (
             "errors" in response_json
             and len(response_json["errors"]) > 0
             and not response_json["data"]
         ):
-            return None
+            return None, None, None
 
         if (
             response_json is not None
@@ -184,48 +220,23 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             and "success" in response_json["data"]["login"]
             and response_json["data"]["login"]["success"]
         ):
-            head = {
-                "Api-Consumer-Id": "PAINEIS_FIOCRUZ",
-                "Content-Type": "application/json",
-            }
-            head.update({"Cookie": urllib.parse.urlencode(cookie)})
-            response = self.post_bridge(url, head, QUERY_SESSAO)
-            data = response.json()
+            return url, cookie, True
+        return None, None, False
 
-            if data["data"]["sessao"]:
-                profissional = data["data"]["sessao"]["profissional"]
-                profiles = self.get_profiles(profissional)
-                if len(profiles) > 1:
-                    user_raw_data = UserPayload(
-                        username=profissional["nome"],
-                        cns=profissional["cns"],
-                        uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"]["uf"][
-                            "sigla"
-                        ],
-                        municipio=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
-                            "uf"
-                        ]["nome"],
-                        profiles=profiles,
-                        ubs="waiting for chosing",
-                    )
-                    return user_raw_data
-                if len(profiles) == 1:
-                    user = self.check_role(profissional['lotacoes'][0])  
-                    equipe = None
-                    if profiles[0]["equipe"] is not None:
-                        equipe = profiles[0]["equipe"]["id"]
-                    user_raw_data = UserPayload(
-                        username=profissional["nome"],
-                        cns=profissional["cns"],
-                        uf=profissional["lotacoes"][0]["unidadeSaude"]["endereco"][
-                            "uf"
-                        ]["sigla"],
-                        municipio=profissional["lotacoes"][0]["unidadeSaude"][
-                            "endereco"
-                        ]["uf"]["nome"],
-                        profiles=[profiles[0]],
-                        ubs=(profiles[0]["ubs"]["id"] if user is not None else None),
-                        equipe=equipe,
-                    )
-                    return user_raw_data
+    def check_credentials(self, username: str, password: str) -> UserPayload:
+        url, cookie, success = self._authenticate(username, password)
+        if not success:
+            return None
+
+        head = {
+            "Api-Consumer-Id": "PAINEIS_FIOCRUZ",
+            "Content-Type": "application/json",
+        }
+        head.update({"Cookie": urllib.parse.urlencode(cookie)})
+        response = self.post_bridge(url, head, QUERY_SESSAO)
+        data = response.json()
+
+        if data["data"]["sessao"]:
+            profissional = data["data"]["sessao"]["profissional"]
+            return self._create_user_payload(profissional)
         return None
