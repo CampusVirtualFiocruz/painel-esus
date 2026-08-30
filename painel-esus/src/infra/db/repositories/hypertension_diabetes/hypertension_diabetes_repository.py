@@ -164,9 +164,10 @@ class HypertensionDiabetesRepository:
             sql_or += " OR ".join(or_conditions)
             where_clause += [f"({sql_or})"]
 
+        offset = max(0, page - 1) * pagesize
+        limit = pagesize
+
         if len(where_clause) > 0:
-            offset = max(0, page - 1) * pagesize
-            limit = pagesize
             sql_where = " AND ".join(where_clause)
             sql_where = f" WHERE {sql_where}"
 
@@ -203,12 +204,14 @@ class HypertensionDiabetesRepository:
         ).df()
 
         users = users.to_dict(orient="records")
-        total = len(con.sql(pessoas_sql + sql_where).fetchall())
+        total = con.sql(
+            f"SELECT COUNT(*) FROM ({pessoas_sql} {sql_where}) AS filtered_rows"
+        ).fetchone()[0]
         return {
             "itemsCount": total,
             "itemsPerPage": pagesize,
             "page": page,
-            "pagesCount": round(total / pagesize),
+            "pagesCount": (total + pagesize - 1) // pagesize if pagesize > 0 else 0,
             "items": users,
         }
 
