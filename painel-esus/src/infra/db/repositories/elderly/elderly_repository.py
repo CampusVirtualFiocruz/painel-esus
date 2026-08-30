@@ -155,7 +155,7 @@ class ElderlyRepository:
 
         return ""
 
-    def _build_order_clause(self, sort: list) -> str:
+    def _build_order_clause(self, sort: list | None) -> str:
         """Constrói a cláusula ORDER BY para a lista nominal."""
         mapped_columns = {
             'name': 'nome',
@@ -167,13 +167,15 @@ class ElderlyRepository:
             'micro_area': 'micro_area'
         }
         order_list = []
-        if len(sort) > 0:
+        if sort:
             for s in sort:
                 filter_obj = json.loads(s)
                 if filter_obj["field"] not in mapped_columns:
                     continue
 
-                direction = filter_obj.get('direction', 'asc')
+                direction = filter_obj.get('direction', 'asc').lower()
+                if direction not in {"asc", "desc"}:
+                    direction = "asc"
                 column = mapped_columns[filter_obj["field"]]
                 order_list.append(f"{column} {direction}")
         else:
@@ -192,7 +194,7 @@ class ElderlyRepository:
         cpf: str = None,
         equipe: int = None,
         query: str = None,
-        sort=[]
+        sort=None,
     ):
         """Retorna lista nominal (items e metadados de paginação).
 
@@ -228,7 +230,7 @@ class ElderlyRepository:
             "itemsCount": total,
             "itemsPerPage": pagesize,
             "page": page,
-            "pagesCount": round(total / pagesize) if pagesize > 0 else 0,
+            "pagesCount": (total + pagesize - 1) // pagesize if pagesize > 0 else 0,
             "items": users,
         }
 
