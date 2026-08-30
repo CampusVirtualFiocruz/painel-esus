@@ -154,7 +154,7 @@ class HypertensionNominalListRepository:
                 columns = mapped_columns[filter["field"]]
                 order_list.append( f'{columns} {direction}')
         else:
-            order_list = ['no_cidadao asc']
+            order_list = ["no_cidadao asc"]
 
         if len(order_list)>0:
             order = 'order by '
