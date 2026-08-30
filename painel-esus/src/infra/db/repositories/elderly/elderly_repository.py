@@ -123,6 +123,66 @@ class ElderlyRepository:
         return result
 
 
+    def _build_where_clause(self, cnes: int = None, query: str = None, equipe: int = None) -> str:
+        """Constrói a cláusula WHERE para a lista nominal."""
+        conditions = []
+        or_conditions = []
+
+        if cnes is not None and cnes:
+            conditions.append(f"codigo_unidade_saude = {cnes}")
+
+        if query is not None and query:
+            or_conditions.extend([
+                f"cpf ilike '%{query}%'",
+                f"nome ilike '%{query}%'",
+                f"cns ilike  '%{query}%'",
+            ])
+        if equipe is not None and equipe:
+            conditions.append(f"codigo_equipe = {equipe}")
+
+        where_clause = []
+
+        if len(conditions) > 0:
+            sql = " AND ".join(conditions)
+            where_clause.append(f"({sql})")
+
+        if len(or_conditions) > 0:
+            sql_or = " OR ".join(or_conditions)
+            where_clause.append(f"({sql_or})")
+
+        if len(where_clause) > 0:
+            return " WHERE " + " AND ".join(where_clause)
+
+        return ""
+
+    def _build_order_clause(self, sort: list) -> str:
+        """Constrói a cláusula ORDER BY para a lista nominal."""
+        mapped_columns = {
+            'name': 'nome',
+            'cpf': 'cpf',
+            'cns': 'cns',
+            'idade': 'idade',
+            'sexo': 'sexo',
+            'equipe': 'nome_equipe',
+            'micro_area': 'micro_area'
+        }
+        order_list = []
+        if len(sort) > 0:
+            for s in sort:
+                filter_obj = json.loads(s)
+                if filter_obj["field"] not in mapped_columns:
+                    continue
+
+                direction = filter_obj.get('direction', 'asc')
+                column = mapped_columns[filter_obj["field"]]
+                order_list.append(f"{column} {direction}")
+        else:
+            order_list = ['nome asc']
+
+        if len(order_list) > 0:
+            return " ORDER BY " + ", ".join(order_list)
+        return ""
+
     def find_filter_nominal(
         self,
         cnes: int,
@@ -145,84 +205,30 @@ class ElderlyRepository:
         """
         page = int(page) if page is not None else 0
         pagesize = int(pagesize) if pagesize is not None else 0
+        offset = max(0, page - 1) * pagesize
+        limit = pagesize
+
         con = duckdb.connect()
         pessoas_sql = get_elderly_base()
-        conditions = []
-        or_conditions = []
 
-        if cnes is not None and cnes:
-            conditions += [f"codigo_unidade_saude = {cnes}"]
-
-        if query is not None and query:
-            or_conditions += [
-                f"cpf ilike '%{query}%'",
-                f"nome ilike '%{query}%'",
-                f"cns ilike  '%{query}%'",
-            ]
-        if equipe is not None and equipe:
-            conditions += [f"codigo_equipe = {equipe}"]
-
-        where_clause = []
-        sql_where, sql, sql_or = "", "", ""
-
-        if len(conditions) > 0:
-            sql += " AND ".join(conditions)
-            where_clause += [f"({sql})"]
-
-        if len(or_conditions) > 0:
-            sql_or += " OR ".join(or_conditions)
-            where_clause += [f"({sql_or})"]
-
-        if len(where_clause) > 0:
-            offset = max(0, page - 1) * pagesize
-            limit = pagesize
-            sql_where = " AND ".join(where_clause)
-            sql_where = f" WHERE {sql_where}"
-        if len(where_clause)>0:
-            offset = max(0, page - 1) * pagesize
-            limit = pagesize
-            sql_where = " AND ".join(where_clause)
-            sql_where = f" WHERE {sql_where}"
-
-        order = ''
-        order_list = []
-        mapped_columns = {
-            'name': 'nome',
-            'cpf':'cpf',
-            'cns': 'cns',
-            'idade': 'idade',
-            'sexo': 'sexo',
-            'equipe': 'nome_equipe',
-            'micro_area': 'micro_area'
-        }
-        if len(sort) > 0:
-            for s in sort:
-                filter = json.loads(s)
-                if filter["field"] not in mapped_columns: continue
-
-                direction = filter['direction'] if 'direction' in filter else'asc'
-                columns = mapped_columns[filter["field"]]
-                order_list.append( f'{columns} {direction}')
-        else:
-            order_list = ['nome asc']
-
-        if len(order_list)>0:
-            order = 'order by '
-            order += ", ".join(order_list)
+        sql_where = self._build_where_clause(cnes, query, equipe)
+        order = self._build_order_clause(sort)
 
         users = con.sql(
             pessoas_sql
             + sql_where
-            + f"  {order} LIMIT {limit} OFFSET {offset} "
+            + f" {order} LIMIT {limit} OFFSET {offset} "
         ).df()
 
         users = users.to_dict(orient="records")
-        total = len(con.sql(pessoas_sql + sql_where).fetchall())
+        total = con.sql(
+            f"SELECT COUNT(*) FROM ({pessoas_sql} {sql_where}) AS filtered_rows"
+        ).fetchone()[0]
         return {
             "itemsCount": total,
             "itemsPerPage": pagesize,
             "page": page,
-            "pagesCount": round(total / pagesize),
+            "pagesCount": round(total / pagesize) if pagesize > 0 else 0,
             "items": users,
         }
 

@@ -3,7 +3,7 @@ import { capitalizeName } from "../../utils/stringUtils";
 import { groupBy } from "../../utils";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/Tooltip";
 
-function parseDate(str: string) {
+export function parseDate(str: string) {
   let dateStr;
   try {
     dateStr = str ? moment.utc(str).format("DD/MM/YYYY") : "";

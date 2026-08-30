@@ -1,5 +1,4 @@
 from src.infra.db.repositories import CADASTRO_PATH
-from src.infra.db.repositories.sqls.parquet.tb_acompanhamento_vinculo import get_pessoas
 
 
 def filter_by_localidade(cnes: int = None, equipe: int = None):

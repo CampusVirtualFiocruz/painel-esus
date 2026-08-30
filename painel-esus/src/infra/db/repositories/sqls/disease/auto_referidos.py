@@ -1,5 +1,3 @@
-import duckdb
-
 from ..disease import DIABETES_PATH, HYPERTENSION_PATH
 
 

@@ -11,7 +11,6 @@ from typing import Dict
 import duckdb
 import pandas as pd
 from sqlalchemy import or_
-from src.domain.entities.diabetes import Diabetes
 from src.env.conf import getenv
 from src.infra.db.entities.diabetes_nominal import DiabetesNominal
 from src.infra.db.entities.equipes import Equipes
@@ -122,14 +121,10 @@ class DiabetesNominalListRepository:
             sql_or += " OR ".join(or_conditions)
             where_clause += [f"({sql_or})"]
 
+        offset = max(0, page - 1) * pagesize
+        limit = pagesize
+
         if len(where_clause) > 0:
-            offset = max(0, page - 1) * pagesize
-            limit = pagesize
-            sql_where = " AND ".join(where_clause)
-            sql_where = f" WHERE {sql_where}"
-        if len(where_clause)>0:
-            offset = max(0, page - 1) * pagesize
-            limit = pagesize
             sql_where = " AND ".join(where_clause)
             sql_where = f" WHERE {sql_where}"
 
@@ -154,7 +149,7 @@ class DiabetesNominalListRepository:
                 columns = mapped_columns[filter["field"]]
                 order_list.append( f'{columns} {direction}')
         else:
-            order_list = 'no_cidadao asc'
+            order_list = ["no_cidadao asc"]
 
         if len(order_list)>0:
             order = 'order by '
@@ -167,11 +162,13 @@ class DiabetesNominalListRepository:
         ).df()
 
         users = users.to_dict(orient="records")
-        total = len(con.sql(pessoas_sql + sql_where).fetchall())
+        total = con.sql(
+            f"SELECT COUNT(*) FROM ({pessoas_sql} {sql_where}) AS filtered_rows"
+        ).fetchone()[0]
         return {
             "itemsCount": total,
             "itemsPerPage": pagesize,
             "page": page,
-            "pagesCount": round(total / pagesize),
+            "pagesCount": round(total / pagesize) if pagesize > 0 else 0,
             "items": list(users),
         }
