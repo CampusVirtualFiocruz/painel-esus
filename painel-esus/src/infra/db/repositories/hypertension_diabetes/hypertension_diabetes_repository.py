@@ -211,7 +211,7 @@ class HypertensionDiabetesRepository:
             "itemsCount": total,
             "itemsPerPage": pagesize,
             "page": page,
-            "pagesCount": round(total / pagesize),
+            "pagesCount": round(total / pagesize) if pagesize > 0 else 0,
             "items": users,
         }
 

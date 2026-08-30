@@ -163,14 +163,10 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
             sql_or += " OR ".join(or_conditions)
             where_clause += [f"({sql_or})"]
 
+        offset = max(0, page - 1) * pagesize
+        limit = pagesize
+
         if len(where_clause) > 0:
-            offset = max(0, page - 1) * pagesize
-            limit = pagesize
-            sql_where = " AND ".join(where_clause)
-            sql_where = f" WHERE {sql_where}"
-        if len(where_clause)>0:
-            offset = max(0, page - 1) * pagesize
-            limit = pagesize
             sql_where = " AND ".join(where_clause)
             sql_where = f" WHERE {sql_where}"
 
@@ -211,12 +207,14 @@ class OralHealthRepository(OralHealthDashboardRepositoryInterface):
         ).df()
 
         users = users.to_dict(orient="records")
-        total = con.sql(f"SELECT COUNT(*) FROM ({oral_health} {sql_where})").fetchone()[0]
+        total = con.sql(
+            f"SELECT COUNT(*) FROM ({oral_health} {sql_where}) AS filtered_rows"
+        ).fetchone()[0]
         return {
             "itemsCount": total,
             "itemsPerPage": pagesize,
             "page": page,
-            "pagesCount": round(total / pagesize),
+            "pagesCount": round(total / pagesize) if pagesize > 0 else 0,
             "items": users,
         }
 
