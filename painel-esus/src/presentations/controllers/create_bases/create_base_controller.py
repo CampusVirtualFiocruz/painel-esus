@@ -3,9 +3,11 @@ import os
 import shutil
 from pathlib import Path
 
+from sqlalchemy import text
 from src.data.use_cases.create_bases.create_bases_usecase import CreateBasesUseCase
 from src.env import env
 from src.errors.logging import logging
+from src.infra.db.settings.connection import DBConnectionHandler
 from src.infra.create_base.polars import (
     CreateAcompCidadaosVinculadosBaseRepository,
     CreateAtendIndivBaseRepository,
@@ -39,6 +41,13 @@ class CreateBasesController:
         input_path = os.path.join(working_directory, "dados") 
 
         if "GENERATE_BASE" not in env or env["GENERATE_BASE"] == "True":
+            # Sem banco, mantem a base anterior: apagar antes deixaria o painel sem dados ate a proxima geracao
+            try:
+                with DBConnectionHandler().get_engine().connect() as conn:
+                    conn.execute(text("select 1"))
+            except Exception as e:
+                logging.error("Banco indisponivel, base atual mantida: %s", type(e).__name__)
+                return
             try:
                 shutil.rmtree(input_path)
             except Exception as e:
