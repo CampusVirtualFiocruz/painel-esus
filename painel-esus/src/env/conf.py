@@ -58,23 +58,6 @@ def is_installed_ok() -> Dict[
     ],
 ]:
     try:
-        print(
-            {
-                "DB_HOST": env["DB_HOST"],
-                "DB_DATABASE": env["DB_DATABASE"],
-                "DB_USER": env["DB_USER"],
-                "DB_PASSWORD": env["DB_PASSWORD"],
-                "DB_PORT": env["DB_PORT"],
-                "CIDADE_IBGE": env["CIDADE_IBGE"],
-                "ADMIN_USERNAME": env["ADMIN_USERNAME"],
-                "ADMIN_PASSWORD": env["ADMIN_PASSWORD"],
-                "ADMIN_EMAIL": env["ADMIN_EMAIL"],
-                "ADMIN_NAME": env["ADMIN_NAME"],
-                "BRIDGE_LOGIN_URL": env["BRIDGE_LOGIN_URL"],
-                "SHARE_DATA": env["SHARE_DATA"],
-                "SHARE_DATA_MONTHS": env["SHARE_DATA_MONTHS"],
-            }
-        )
         return (
             env["DB_HOST"] is not None
             and env["DB_DATABASE"] is not None
