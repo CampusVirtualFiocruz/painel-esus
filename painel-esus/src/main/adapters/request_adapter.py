@@ -33,6 +33,9 @@ def _parametros_seguros(args) -> MultiDict:
                 if isinstance(item, dict) and str(item.get("field", "")).replace("_", "").isalnum() and item.get("direction", "asc") in ("asc", "desc"):
                     seguros.add(chave, json.dumps({"field": item["field"], "direction": item.get("direction", "asc")}))
             else:
+                # Em q, nome e cpf, % e _ seriam curingas do ilike: q=% listaria tudo
+                if chave in ("q", "nome", "cpf"):
+                    valor = valor.replace("%", "").replace("_", "")
                 seguros.add(chave, valor.replace("'", "''"))
     return seguros
 

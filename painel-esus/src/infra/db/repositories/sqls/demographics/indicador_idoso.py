@@ -4,8 +4,8 @@ def get_indicators_idoso(cnes: int = None, equipe: int = None):
         where_clause += f"""            where 
                     pessoas.codigo_unidade_saude = {cnes}
                 """
-        if equipe and equipe is not None:
-            where_clause += f"  and pessoas.codigo_equipe_vinculada = {equipe} "
+    if equipe and equipe is not None:
+        where_clause += (" and " if cnes else " where ") + f"pessoas.codigo_equipe_vinculada = {equipe} "
     return f"""with
     idosos as (
         SELECT

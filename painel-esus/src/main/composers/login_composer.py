@@ -4,7 +4,7 @@ from src.data.use_cases.login import LoginUseCase
 from src.domain.entities.user_payload import UserPayload
 from src.errors import HttpNotFoundError
 from src.errors.logging import logging
-from src.infra.bridge_provider.login_bridge import LoginBridgeRepository
+from src.infra.bridge_provider.login_bridge import LoginBridgeRepository, SessaoAbertaNoPec
 from src.infra.db.repositories.login_adm_repository import LoginAdmRepository
 from src.infra.db.repositories.login_demo_repository import LoginDemoRepository
 from src.infra.db.repositories.login_repository import (
@@ -44,6 +44,8 @@ def login_composer(request: HttpRequest):
                 body = {"data": token, "profiles": response.profiles}
 
                 return HttpResponse(status_code=200, body=body)
+        except SessaoAbertaNoPec:
+            return HttpResponse(status_code=409, body={"data": "Encerre a sessao aberta no e-SUS PEC e tente novamente."})
         except Exception as exc:
             error=True
     if error:

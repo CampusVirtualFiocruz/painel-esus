@@ -93,7 +93,8 @@ class ElderlyAdapter:
         for resp in response:
             if resp[1] is not None:
                 key = str(resp[0]).lower()
-                result["data"][map_[key]]["value"] =  resp[1]
+                if key in map_:
+                    result["data"][map_[key]]["value"] =  resp[1]
 
         return result
 

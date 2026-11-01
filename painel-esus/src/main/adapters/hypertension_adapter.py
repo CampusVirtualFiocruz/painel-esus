@@ -72,8 +72,8 @@ class HypertensionAdapter(BaseDashboardAdapter):
             for idx2, i in enumerate(res):
                 key = columns[idx2]
                 if idx2 < len(res):
-                    result_key = result_map[str(i)]
-                    result[key]['value'][result_key]+=1
+                    if str(i) in result_map:
+                        result[key]['value'][result_map[str(i)]]+=1
         return list(result.values())
 
     def get_imc(self, response):

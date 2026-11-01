@@ -100,8 +100,8 @@ def get_hypertension_base_sql_filter(cnes: int = None, equipe: int = None):
     if cnes is not None:
         where_clause += f"""            where 
                 codigo_unidade_saude = {cnes} """
-        if equipe and equipe is not None:
-            where_clause += f" and codigo_equipe = {equipe} "
+    if equipe and equipe is not None:
+        where_clause += (" and " if cnes else " where ") + f"codigo_equipe = {equipe} "
     sql = get_hypertension_base_sql()
     return f""" select co_fat_cidadao_pec codigo_cidadao,
         co_fat_cidadao_pec codigo_cidadao,
@@ -239,8 +239,8 @@ def get_diabetes_base_sql_filter(cnes: int = None, equipe: int = None):
     if cnes is not None:
         where_clause += f"""            where 
                 codigo_unidade_saude = {cnes} """
-        if equipe and equipe is not None:
-            where_clause += f" and codigo_equipe = {equipe} "
+    if equipe and equipe is not None:
+        where_clause += (" and " if cnes else " where ") + f"codigo_equipe = {equipe} "
     return f""" select 
         co_fat_cidadao_pec codigo_cidadao,
         no_cidadao nome, 
@@ -299,8 +299,8 @@ def get_disease_base_sql(cnes: int = None, equipe: int = None, hypertension = Tr
     if cnes is not None:
         where_clause += f"""            where 
                 codigo_unidade_saude = {cnes} """
-        if equipe and equipe is not None:
-            where_clause += f" and codigo_equipe = {equipe} "
+    if equipe and equipe is not None:
+        where_clause += (" and " if cnes else " where ") + f"codigo_equipe = {equipe} "
 
     if hypertension:
         return f"""select * from read_parquet('{HYPERTENSION_PATH}') {where_clause}"""

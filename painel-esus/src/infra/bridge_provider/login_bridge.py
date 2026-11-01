@@ -20,6 +20,10 @@ from .queries.query_sessao import QUERY_SESSAO
 # from pprint import pprint
 
 
+class SessaoAbertaNoPec(Exception):
+    """A senha confere, mas entrar agora derrubaria a sessao aberta no PEC."""
+
+
 class LoginBridgeRepository(LoginRepositoryInterface):
 
     def get_ubs_id(self, id):
@@ -146,7 +150,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
         session.verify = True
         url_login = env.get("BRIDGE_LOGIN_URL", "")
         url = f"{url_login}/api/graphql"
-        query = "mutation mutation_login { login(input: {username: %s, password: %s, force: true}) { success } }" % (json.dumps(username), json.dumps(password))
+        query = "mutation mutation_login { login(input: {username: %s, password: %s, force: %s}) { success } }" % (json.dumps(username), json.dumps(password), "true" if env.get("PEC_FORCAR_LOGIN") == "True" else "false")
         payload = json.dumps({"query": query, "variables": {}})
         headers = {
             "Api-Consumer-Id": "PAINEIS_FIOCRUZ",
@@ -160,6 +164,8 @@ class LoginBridgeRepository(LoginRepositoryInterface):
         cookie = session.cookies.get_dict()
 
         response_json = response.json()
+        if any("logado em outra" in str(erro.get("message")) for erro in response_json.get("errors") or []):
+            raise SessaoAbertaNoPec("Usuario com sessao aberta no PEC")
         if (
             "errors" in response_json
             and len(response_json["errors"]) > 0
@@ -181,6 +187,11 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             head.update({"Cookie": "; ".join(f"{k}={v}" for k, v in cookie.items())})
             response = self.post_bridge(url, head, QUERY_SESSAO)
             data = response.json()
+            # A sessao so serve para ler as lotacoes; aberta, bloquearia a entrada do usuario no PEC
+            try:
+                self.post_bridge(url, head, json.dumps({"query": "mutation { logout { __typename } }", "variables": {}}))
+            except requests.RequestException as exc:
+                logging.exception(exc)
 
             if data["data"]["sessao"]:
                 profissional = data["data"]["sessao"]["profissional"]
