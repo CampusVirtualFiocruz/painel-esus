@@ -1,4 +1,5 @@
 import os
+import secrets
 
 import typer
 from dotenv import dotenv_values
@@ -44,7 +45,7 @@ def default_values( env_dict):
     env_dict['PASSWORD_SALT'] ='painel'
     env_dict['ARTEFACT'] = 'instalador'
     env_dict['ENV'] = 'instalador'
-    env_dict['SECRET_TOKEN'] = '111111111111111111111'
+    env_dict['SECRET_TOKEN'] = secrets.token_urlsafe(48)
     env_dict['GENERATE_BASE'] = 'True'
     env_dict['CHUNK_SIZE'] = '50000'
     env_dict['POLARS_SKIP_CPU_CHECK'] = 'True'

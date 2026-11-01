@@ -1,4 +1,5 @@
 import os
+import secrets
 from typing import Dict, Literal
 
 from dotenv import dotenv_values, load_dotenv, set_key
@@ -13,6 +14,13 @@ VERSION_PAINEL = "${VERSION}"
 env_path = os.path.abspath(".env")
 # Sem isto o os.getenv do login e do token nao enxerga o .env e cai nos valores padrao, publicos, do codigo
 load_dotenv(env_path, override=False)
+
+# Valor que vinha fixo nos instaladores: e publico e nao pode assinar sessao.
+CHAVES_PUBLICAS = {"111111111111111111111"}
+if os.environ.get("SECRET_TOKEN", "") in CHAVES_PUBLICAS.union({""}):
+    os.environ["SECRET_TOKEN"] = secrets.token_urlsafe(48)
+    if os.path.exists(env_path):
+        set_key(env_path, "SECRET_TOKEN", os.environ["SECRET_TOKEN"])
 
 env = {
         **dotenv_values(env_path),  # load shared development variables
