@@ -113,7 +113,7 @@ class DemographicAdapter(AbstractAdapter):
                 if not key_side:
                     continue
                 if resp[1] in result[key_side]:
-                    result[key_side][resp[1]]["value"][key_gender] = resp[3]
+                    result[key_side][resp[1]]["value"][key_gender] = (result[key_side][resp[1]]["value"][key_gender] or 0) + (resp[3] or 0)
 
         return { resp: list(result[resp].values()) for resp in result.keys() }
 
