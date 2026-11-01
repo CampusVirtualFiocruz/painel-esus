@@ -27,7 +27,7 @@ def ler_dados_raw(nome_parquet,columns=""):
          df = pl.scan_parquet(input_path + os.sep +nome_parquet)
          return df
     else:
-        df = pl.read_parquet(input_path+os.sep+nome_parquet)
+        df = pl.read_parquet(input_path+os.sep+nome_parquet, columns=columns or None)
         return df
         
 
