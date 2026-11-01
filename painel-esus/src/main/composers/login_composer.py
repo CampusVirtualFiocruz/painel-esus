@@ -16,10 +16,8 @@ from src.presentations.http_types import HttpRequest, HttpResponse
 
 def login_composer(request: HttpRequest):
     providers_repositories = [
-        LoginDemoRepository(),
         LoginAdmRepository(),
         LoginBridgeRepository(),
-        LoginUserRepository(),
     ]
     body = None
     if request.body:

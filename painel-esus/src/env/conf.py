@@ -11,6 +11,8 @@ VERSION_PAINEL = "${VERSION}"
 
 
 env_path = os.path.abspath(".env")
+# Sem isto o os.getenv do login e do token nao enxerga o .env e cai nos valores padrao, publicos, do codigo
+load_dotenv(env_path, override=False)
 
 env = {
         **dotenv_values(env_path),  # load shared development variables

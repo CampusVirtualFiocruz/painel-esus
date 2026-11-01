@@ -11,8 +11,6 @@ from src.errors import HttpBadTokenError
 from src.errors.logging import logging
 from src.main.adapters.request_adapter import HttpResponse
 
-SECRET_PASS = "OM3VpHNkEsKA"
-
 
 def token_required(f):
     @wraps(f)
@@ -67,7 +65,7 @@ def check_token(_request: Request) -> HttpResponse:
 
 def validate_token(auth_token: str):
     return jwt.decode(
-        auth_token, os.getenv("SECRET_TOKEN", SECRET_PASS), algorithms=["HS256"]
+        auth_token, os.environ["SECRET_TOKEN"], algorithms=["HS256"]
     )
 
 
@@ -91,6 +89,6 @@ def generate_token(
             "ubs": ubs,
             "exp": datetime.datetime.now() + datetime.timedelta(hours=12),
         },
-        os.getenv("SECRET_TOKEN", SECRET_PASS),
+        os.environ["SECRET_TOKEN"],
         algorithm="HS256",
     )
