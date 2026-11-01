@@ -126,6 +126,7 @@ class ChildrenRepository:
                 nome=nome,
                 cpf=cpf,
                 nome_unidade_saude=nome_unidade_saude,
+                q=q,
                 sort=sort,
             )
             .replace("SELECT *", "SELECT COUNT(*) as total")

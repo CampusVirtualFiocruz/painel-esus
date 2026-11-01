@@ -17,6 +17,7 @@ class AcceptanceTermRepository:
     def save(self, acceptance_term: AcceptanceTerm):
         working_directory = os.getcwd()
         input_path = os.path.join(working_directory, "dados", "settings")
+        os.makedirs(input_path, exist_ok=True)
         file_path = input_path + os.sep + "acceptance_term.parquet"
         if os.path.exists(file_path):
             term_base = pl.read_parquet(file_path)
@@ -30,11 +31,11 @@ class AcceptanceTermRepository:
                     },
                 )
             except HttpNotFoundError:
-                new_record = pl.DataFrame(acceptance_term)
+                new_record = pl.DataFrame([acceptance_term])
                 term_base = pl.concat([term_base, new_record])
                 term_base.write_parquet(file_path)
         else:
-            term_base = pl.DataFrame(acceptance_term)
+            term_base = pl.DataFrame([acceptance_term])
             term_base.write_parquet(file_path)
 
     def find_all(self):
@@ -51,6 +52,9 @@ class AcceptanceTermRepository:
         )
 
     def find_username_ibge_version(self, username: str, ibge: str, version: str):
+        # Antes do primeiro aceite o arquivo ainda nao existe
+        if not os.path.exists(os.path.join(os.getcwd(), "dados", "settings", "acceptance_term.parquet")):
+            return []
         return self.db.fetch_all_dict(
             find_by_username_ibge_version(),
             {

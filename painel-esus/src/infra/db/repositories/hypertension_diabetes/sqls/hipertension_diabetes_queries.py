@@ -327,8 +327,8 @@ def get_diabetes_base_sql_filter(cnes: int = None, equipe: int = None):
     if cnes is not None:
         where_clause += f"""            where 
                 codigo_unidade_saude = {cnes} """
-        if equipe and equipe is not None:
-            where_clause += f" and codigo_equipe = {equipe} "
+    if equipe and equipe is not None:
+        where_clause += (" and " if cnes else " where ") + f"codigo_equipe = {equipe} "
     return f""" select 
         cidadao_pec,
         nome, 
@@ -381,8 +381,8 @@ def get_hypertension_base_sql_filter(cnes: int = None, equipe: int = None):
     if cnes is not None:
         where_clause += f"""            where 
                 codigo_unidade_saude = {cnes} """
-        if equipe and equipe is not None:
-            where_clause += f" and codigo_equipe = {equipe} "
+    if equipe and equipe is not None:
+        where_clause += (" and " if cnes else " where ") + f"codigo_equipe = {equipe} "
     
     return f""" select cidadao_pec,
 nome, 

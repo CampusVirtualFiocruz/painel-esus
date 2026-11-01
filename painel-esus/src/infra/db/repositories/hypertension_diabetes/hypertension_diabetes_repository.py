@@ -135,9 +135,9 @@ class HypertensionDiabetesRepository:
             sql_or += " OR ".join(or_conditions)
             where_clause += [f"({sql_or})"]
 
+        offset = max(0, page - 1) * pagesize
+        limit = pagesize
         if len(where_clause) > 0:
-            offset = max(0, page - 1) * pagesize
-            limit = pagesize
             sql_where = " AND ".join(where_clause)
             sql_where = f" WHERE {sql_where}"
 

@@ -36,8 +36,8 @@ teams = TeamsPath()
 @units_bp.route(
     urls["root"] + "/<cnes>", endpoint="get_units_id", methods=["GET"]
 )
-@cache.cached()
-def units_list():
+@cache.cached(response_filter=lambda r: not (isinstance(r, tuple) and r[1] >= 400))
+def units_list(cnes=None):
     http_response = None
     response = None
     try:
@@ -55,7 +55,7 @@ def units_list():
 
 @teams_bp.route(teams.urls["root"] , endpoint="get_teams", methods=["GET"])
 @teams_bp.route(teams.urls["root"] + "/<cnes>", endpoint="get_teams_id", methods=["GET"])
-@cache.cached()
+@cache.cached(response_filter=lambda r: not (isinstance(r, tuple) and r[1] >= 400))
 def teams_list(cnes=None):
     http_response = None
     response = None

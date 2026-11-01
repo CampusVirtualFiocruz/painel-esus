@@ -1,4 +1,5 @@
 # pylint: disable=R0913, R0915, C0121, W1514, W0622, C0103, W0212, W0612, W0404
+import secrets
 import json
 import logging
 import os.path
@@ -285,7 +286,7 @@ def create_env(
             "RELOAD_BASE_SCHEDULE='4:00'" + "\n",
             "ARTEFACT=" + "web" + "\n",
             "ENV=" + "instalador" + "\n",
-            "SECRET_TOKEN=" + "111111111111111111111" + "\n",
+            "SECRET_TOKEN=" + secrets.token_urlsafe(48) + "\n",
             "GENERATE_BASE=True\n",
             "CHUNK_SIZE=50000\n",
             "POLARS_SKIP_CPU_CHECK=True\n",

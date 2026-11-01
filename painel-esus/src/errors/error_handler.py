@@ -33,7 +33,7 @@ def handle_errors(error: Exception, token=None) -> HttpResponse:
         body={
             "errors": [{
                 "title": "Server Error",
-                "detail": str(error)
+                "detail": "Internal error. Check the server log."
             }]
         }
     )

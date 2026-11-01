@@ -27,22 +27,24 @@ class AbstractGenerateBase(CreateBasesRepositoryInterface):
 
             with self.connection_handler as db:
                 engine = db.get_engine()
-                for chunk_dataframe in pd.read_sql(
-                    sql=text(self.base_sql), 
-                    con=engine, 
-                    chunksize=chunk_size,
-                    dtype=self.dtype,
-                    parse_dates=self.parse_date
-                ):
-                    chunk_dataframe.to_parquet(
-                        path=full_path,
-                        engine='fastparquet',
-                        append=not first_chunk,
-                        compression='snappy'
-                    )
-                    first_chunk = False
+                with engine.connect().execution_options(stream_results=True) as conn:
+                    for chunk_dataframe in pd.read_sql(
+                        sql=text(self.base_sql), 
+                        con=conn, 
+                        chunksize=chunk_size,
+                        dtype=self.dtype,
+                        parse_dates=self.parse_date
+                    ):
+                        chunk_dataframe.to_parquet(
+                            path=full_path,
+                            engine='fastparquet',
+                            append=not first_chunk,
+                            compression='snappy'
+                        )
+                        first_chunk = False
 
         except Exception as e:
             logging.error("BASE: {} \n {}".format(self._base, __name__))
             logging.exception(e)
+            raise
             

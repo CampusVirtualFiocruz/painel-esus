@@ -1,3 +1,4 @@
+from src.main.routes.utils import salvar_excel
 import io
 
 from flask import Blueprint, Response, jsonify, request
@@ -332,7 +333,7 @@ def get_nominal_list_download(cnes=None):
         http_response = request_adapter(request, controller)
 
         buffer = io.BytesIO()
-        http_response.body.to_excel(buffer, index=False)
+        salvar_excel(http_response.body, buffer, index=False)
         buffer.seek(0)
 
         headers = {

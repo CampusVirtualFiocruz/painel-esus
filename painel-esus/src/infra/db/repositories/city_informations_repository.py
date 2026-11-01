@@ -83,8 +83,6 @@ class CityInformationsRepository(CityInformationRepository):
     def get_teams(self, cnes: int = None):
         sql = f""" select 
                     distinct on (codigo_equipe) 
-                    co_fat_cidadao_pec cidadao_pec,
-                    co_cidadao co_cidadao,
                     co_dim_unidade_saude codigo_unidade_saude,
                     nome_unidade_saude nome_unidade_saude,
                     codigo_equipe,
@@ -94,7 +92,7 @@ class CityInformationsRepository(CityInformationRepository):
                 read_parquet('./dados/output/cadastro_db.parquet') """
 
         if cnes is not None:
-            sql += f""" where codigo_equipe={cnes} """
+            sql += f""" where co_dim_unidade_saude={int(cnes)} """
         con = duckdb.connect()
         result = con.sql(sql).df()
         if self.mock_data:

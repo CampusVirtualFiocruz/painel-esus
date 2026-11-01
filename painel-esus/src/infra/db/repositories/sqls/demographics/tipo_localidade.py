@@ -7,8 +7,8 @@ def filter_by_localidade(cnes: int = None, equipe: int = None):
     if cnes is not None:
         where_clause += f""" AND co_dim_unidade_saude = {cnes}
                 """
-        if equipe and equipe is not None:
-            where_clause += f"  and codigo_equipe = {equipe} "
+    if equipe and equipe is not None:
+        where_clause += (" and " if cnes else " where ") + f"codigo_equipe = {equipe} "
 
     return f"""
         SELECT 

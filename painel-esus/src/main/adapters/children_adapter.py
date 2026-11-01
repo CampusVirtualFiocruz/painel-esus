@@ -68,7 +68,8 @@ class ChildrenAdapter:
     def _to_tag_value_from_dict(self, response, dict_label):
         data = dict(dict_label)
         for tag, value in response:
-            data[tag]["value"] = value
+            if tag in data:
+                data[tag]["value"] = value
         return {"data": list(data.values())}
 
     def by_race_children(self, response):

@@ -30,9 +30,12 @@ class CreateIndicadoresEquipeRepository(CreateBasesRepositoryInterface):
             # Log detalhado do erro
             logging.error("Erro ao executar o script equipe.py:")
             logging.error(e.stderr)
+            raise
         except FileNotFoundError as e:
             # Trata o caso onde o interpretador Python não é encontrado
             logging.error(str(e))
+            raise
         except Exception as e:
             # Trata quaisquer outras exceções
             logging.error(f"Ocorreu um erro inesperado: {str(e)}")
+            raise

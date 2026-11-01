@@ -84,17 +84,17 @@ class DemographicAdapter(AbstractAdapter):
         if type(response) == dict and len(response) > 0:
             for item in response.keys():
                 if item not in result:
-                    result["nao_informado"]["value"] = response[item]
+                    result["nao_informado"]["value"] += response[item]
                 else:
                     key = label_map.get(item[0].lower(), "nao_informado")
                     result[item]["value"] = response[item]
         elif type(response) == list and len(response) > 0:
             for item in response:
                 if item[0] is None:
-                    result["nao_informado"]["value"] = int(item[1])
+                    result["nao_informado"]["value"] += int(item[1])
                 else:
                     key = label_map.get(item[0].lower(), "nao_informado")
-                    result[key]["value"] = int(item[1])
+                    result[key]["value"] += int(item[1])
 
         return list(result.values())
 
@@ -109,11 +109,11 @@ class DemographicAdapter(AbstractAdapter):
         if type(response) == list and len(response) > 0:
             for resp in response:
                 key_side = side_map.get(resp[0], None)
-                key_gender = location_map.get(resp[2].lower(), "nao informado")
+                key_gender = location_map.get((resp[2] or "nao informado").lower(), "nao-informado")
                 if not key_side:
                     continue
                 if resp[1] in result[key_side]:
-                    result[key_side][resp[1]]["value"][key_gender] = resp[3]
+                    result[key_side][resp[1]]["value"][key_gender] = (result[key_side][resp[1]]["value"][key_gender] or 0) + (resp[3] or 0)
 
         return { resp: list(result[resp].values()) for resp in result.keys() }
 
@@ -125,5 +125,5 @@ class DemographicAdapter(AbstractAdapter):
                 if k not in result:
                     key = "indeterminado"
 
-                result[key]['value'] = int(response[k])
+                result[key]['value'] += int(response[k])
         return [ k for k in result.values() ]

@@ -23,6 +23,8 @@ class CreateIndicadoresIdososRepository(CreateBasesRepositoryInterface):
         except FileNotFoundError as e:
             # Trata o caso onde o interpretador Python não é encontrado
             logging.error(str(e))
+            raise
         except Exception as e:
             # Trata quaisquer outras exceções
             logging.error(f"Ocorreu um erro inesperado: {str(e)}")
+            raise

@@ -13,6 +13,7 @@ from src.main.composers.settings_composer import (
     test_connection_composer,
 )
 from src.main.server.decorators.settings import is_not_installed
+from src.main.server.decorators.token_required import login_required
 from src.presentations.controllers.settings.settings_controller import (
     SettingsController,
 )
@@ -86,6 +87,7 @@ def save_instalation_settings():
     methods=["GET"],
     endpoint="term-acceptancee",
 )
+@login_required
 def get_term_acceptance():
     return handle_request(get_term_acceptance_settings_composer)
 
@@ -95,6 +97,7 @@ def get_term_acceptance():
     methods=["POST"],
     endpoint="term-acceptance-save",
 )
+@login_required
 def save_term_acceptance():
     return handle_request(save_term_acceptance_settings_composer)
 

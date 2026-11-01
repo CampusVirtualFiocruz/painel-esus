@@ -1,4 +1,5 @@
 import os
+import secrets
 from typing import Dict, Literal
 
 from dotenv import dotenv_values, load_dotenv, set_key
@@ -11,6 +12,15 @@ VERSION_PAINEL = "${VERSION}"
 
 
 env_path = os.path.abspath(".env")
+# Sem isto o os.getenv do login e do token nao enxerga o .env e cai nos valores padrao, publicos, do codigo
+load_dotenv(env_path, override=False)
+
+# Valor que vinha fixo nos instaladores: e publico e nao pode assinar sessao.
+CHAVES_PUBLICAS = {"111111111111111111111"}
+if os.environ.get("SECRET_TOKEN", "") in CHAVES_PUBLICAS.union({""}):
+    os.environ["SECRET_TOKEN"] = secrets.token_urlsafe(48)
+    if os.path.exists(env_path):
+        set_key(env_path, "SECRET_TOKEN", os.environ["SECRET_TOKEN"])
 
 env = {
         **dotenv_values(env_path),  # load shared development variables
@@ -58,23 +68,6 @@ def is_installed_ok() -> Dict[
     ],
 ]:
     try:
-        print(
-            {
-                "DB_HOST": env["DB_HOST"],
-                "DB_DATABASE": env["DB_DATABASE"],
-                "DB_USER": env["DB_USER"],
-                "DB_PASSWORD": env["DB_PASSWORD"],
-                "DB_PORT": env["DB_PORT"],
-                "CIDADE_IBGE": env["CIDADE_IBGE"],
-                "ADMIN_USERNAME": env["ADMIN_USERNAME"],
-                "ADMIN_PASSWORD": env["ADMIN_PASSWORD"],
-                "ADMIN_EMAIL": env["ADMIN_EMAIL"],
-                "ADMIN_NAME": env["ADMIN_NAME"],
-                "BRIDGE_LOGIN_URL": env["BRIDGE_LOGIN_URL"],
-                "SHARE_DATA": env["SHARE_DATA"],
-                "SHARE_DATA_MONTHS": env["SHARE_DATA_MONTHS"],
-            }
-        )
         return (
             env["DB_HOST"] is not None
             and env["DB_DATABASE"] is not None
@@ -112,11 +105,11 @@ def is_installed_ok() -> Dict[
                 "DB_HOST": env.get("DB_HOST", ""),
                 "DB_DATABASE": env.get("DB_DATABASE", ""),
                 "DB_USER": env.get("DB_USER", ""),
-                "DB_PASSWORD": env.get("DB_PASSWORD", ""),
+                "DB_PASSWORD": "",
                 "DB_PORT": env.get("DB_PORT", ""),
                 "CIDADE_IBGE": env.get("CIDADE_IBGE", ""),
                 "ADMIN_USERNAME": env.get("ADMIN_USERNAME", ""),
-                "ADMIN_PASSWORD": env.get("ADMIN_PASSWORD", ""),
+                "ADMIN_PASSWORD": "",
                 "ADMIN_EMAIL": env.get("ADMIN_EMAIL", ""),
                 "ADMIN_NAME": env.get("ADMIN_NAME", ""),
                 "BRIDGE_LOGIN_URL": env.get("BRIDGE_LOGIN_URL", ""),
