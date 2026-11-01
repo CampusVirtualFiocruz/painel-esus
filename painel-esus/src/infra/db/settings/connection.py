@@ -3,6 +3,7 @@ from urllib.parse import quote_plus
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import NullPool
 from src.env.conf import env
 
 
@@ -32,7 +33,7 @@ class DBConnectionHandler:
         self.session = None
 
     def __create_database_engine(self):
-        engine = create_engine(self.__connection_string)
+        engine = create_engine(self.__connection_string, poolclass=NullPool)
         return engine
 
     def get_engine(self):
