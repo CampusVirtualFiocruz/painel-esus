@@ -19,8 +19,10 @@ class CreateIndicadoresCriancasRepository():
         except FileNotFoundError as e:
             # Trata o caso onde o interpretador Python não é encontrado
             logging.error(e)
+            raise
         except Exception as e:
             # Trata quaisquer outras exceções
             error = f"Ocorreu um erro inesperado no script de criança: {str(e)}"
             logging.error(error)
+            raise
             

@@ -89,13 +89,17 @@ class HypertensionAdapter(BaseDashboardAdapter):
                 **imc_mapped,
                 **self.__init(i)
             }
+        vistos = set()
         for res in response:
             key = res[0].replace("_", "-")
             if key not in imc_mapped:
                 key = "nao-informado"
-            imc_mapped[key]['value'] = float(res[1])
-            imc_mapped[key]["data"][0]["value"] = float(res[2])
-            imc_mapped[key]["data"][1]["value"] = float(res[3]) - float(res[2])
+            if key not in vistos:
+                imc_mapped[key]["data"][1]["value"] = 0
+                vistos.add(key)
+            imc_mapped[key]['value'] += float(res[1])
+            imc_mapped[key]["data"][0]["value"] += float(res[2])
+            imc_mapped[key]["data"][1]["value"] += float(res[3]) - float(res[2])
 
         return list(imc_mapped.values())
 

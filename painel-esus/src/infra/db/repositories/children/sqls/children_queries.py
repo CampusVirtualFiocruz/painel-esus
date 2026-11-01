@@ -362,7 +362,7 @@ def sql_get_nominal_list(
 
     limit_offset_clause = ""
     if page_size > 0:
-        offset = (page - 1) * page_size
+        offset = max(0, page - 1) * page_size
         limit_offset_clause = f"LIMIT {page_size} OFFSET {offset}"
 
     return f"""

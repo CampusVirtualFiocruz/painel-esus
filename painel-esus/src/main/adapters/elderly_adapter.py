@@ -29,13 +29,13 @@ class ElderlyAdapter:
             }
 
         for resp in response:
-            if resp[0] is not None and resp[1] is not None:
+            if resp[1] is not None:
                 if str(resp[0]).lower() in idx:
                     key = idx[str(resp[0]).lower()]
-                    result['data'][key]['value'] = resp[1]
+                    result['data'][key]['value'] += resp[1]
                 else:
                     key = len(result['data'])-1
-                    result['data'][key]['value'] = resp[1]
+                    result['data'][key]['value'] += resp[1]
 
         return result
 
@@ -91,7 +91,7 @@ class ElderlyAdapter:
             'indigena': 4,
         }
         for resp in response:
-            if resp[0] is not None and resp[1] is not None:
+            if resp[1] is not None:
                 key = str(resp[0]).lower()
                 result["data"][map_[key]]["value"] =  resp[1]
 
@@ -104,7 +104,7 @@ class ElderlyAdapter:
                 "duas-ou-mais": {"tag": "duas-ou-mais", "value": 0},
         }
         for resp in response:
-            if resp[0] is not None and resp[1] is not None:
+            if resp[1] is not None:
                 key = resp[0].lower().replace(" ","-")
                 result[key]["value"] = resp[1]
 
@@ -116,7 +116,7 @@ class ElderlyAdapter:
             { "tag": "dois-mais-registros", "value": 0},
         ]}
         for resp in response:
-            if resp[0] is not None and resp[1] is not None:
+            if resp[1] is not None:
                 if resp[0] == 0:
                     result['data'][0]['value'] = resp[1]
                 else:
@@ -131,7 +131,7 @@ class ElderlyAdapter:
             "duas-ou-mais": {"tag": "duas-ou-mais", "value": 0},
         }
         for resp in response:
-            if resp[0] is not None and resp[1] is not None:
+            if resp[1] is not None:
                 key = resp[0].lower().replace(" ", "-")
                 result[key]["value"] = resp[1]
 
@@ -143,7 +143,7 @@ class ElderlyAdapter:
             { "tag": "avaliadas", "value": 0},
         ]}
         for resp in response:
-            if resp[0] is not None and resp[1] is not None:
+            if resp[1] is not None:
                 if resp[0] == 0:
                     result['data'][0]['value'] = resp[1]
                 else:
@@ -157,7 +157,7 @@ class ElderlyAdapter:
             { "tag": "vacinadas", "value": 0},
         ]}
         for resp in response:
-            if resp[0] is not None and resp[1] is not None:
+            if resp[1] is not None:
                 if resp[0] == 0:
                     result['data'][0]['value'] = resp[1]
                 else:
@@ -171,7 +171,7 @@ class ElderlyAdapter:
             { "tag": "consultadas", "value": 0},
         ]}
         for resp in response:
-            if resp[0] is not None and resp[1] is not None:
+            if resp[1] is not None:
                 if resp[0] == 0:
                     result['data'][0]['value'] = resp[1]
                 else:

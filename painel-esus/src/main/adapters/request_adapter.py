@@ -13,6 +13,7 @@ def request_adapter(request: FlaskRequest, controller: Callable) -> HttpResponse
     return http_response
 
 
+SEM_ZERO = {"itemsPerPage", "size", "limit"}
 NUMERICOS = {"cnes", "equipe", "page", "itemsPerPage", "size", "limit", "offset"}
 
 
@@ -22,7 +23,7 @@ def _parametros_seguros(args) -> MultiDict:
     for chave, valores in args.lists():
         for valor in valores:
             if chave in NUMERICOS:
-                if valor.strip().isdigit():
+                if valor.strip().isdigit() and not (chave in SEM_ZERO and int(valor) == 0):
                     seguros.add(chave, valor.strip())
             elif chave == "sort[]":
                 try:
