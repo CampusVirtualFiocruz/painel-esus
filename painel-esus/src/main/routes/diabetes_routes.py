@@ -1,4 +1,5 @@
 # pylint: disable=W0613
+from src.main.routes.utils import salvar_excel
 import io
 
 from flask import Blueprint, Response, jsonify, request
@@ -209,7 +210,7 @@ def get_nominal_list_download(cnes=None):
         )
 
         buffer = io.BytesIO()
-        response.to_excel(buffer)
+        salvar_excel(response, buffer)
 
         headers = {
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
@@ -232,4 +233,4 @@ def get_nominal_list_download(cnes=None):
         )
         response = jsonify(http_response.body)
 
-    return response, 200
+    return response, http_response.status_code

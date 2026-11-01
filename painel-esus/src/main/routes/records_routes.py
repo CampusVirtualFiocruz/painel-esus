@@ -1,3 +1,4 @@
+from src.main.routes.utils import salvar_excel
 import io
 
 import src.main.composers.records_composer as composer
@@ -196,7 +197,7 @@ def get_nominal_list(cnes=None):
         http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
-    return response, 200
+    return response, http_response.status_code
 
 
 @records_bp.route(
@@ -216,7 +217,7 @@ def get_nominal_list_download(cnes=None):
         # _validation(request.args.to_dict(), schema)
         response = request_adapter(request, composer.nominal_list_download())
         buffer = io.BytesIO()
-        response.to_excel(buffer)
+        salvar_excel(response, buffer)
 
         headers = {
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
@@ -237,4 +238,4 @@ def get_nominal_list_download(cnes=None):
         http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
-    return response, 200
+    return response, http_response.status_code

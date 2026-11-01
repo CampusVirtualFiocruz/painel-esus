@@ -1,6 +1,7 @@
 # pylint: disable=logging-too-many-args
 # pylint: disable=line-too-long
 # pylint: disable=W0012,R1710, W0611, C0103,W0622
+import json
 import urllib.parse
 
 import requests
@@ -22,7 +23,7 @@ from .queries.query_sessao import QUERY_SESSAO
 class LoginBridgeRepository(LoginRepositoryInterface):
 
     def get_ubs_id(self, id):
-        sql = f"""select co_seq_dim_unidade_saude co_dim_unidade_saude from tb_unidade_saude tus join tb_dim_unidade_saude tdus on tus.nu_cnes = tdus.nu_cnes  where co_seq_unidade_saude = {id};	"""
+        sql = f"""select co_seq_dim_unidade_saude co_dim_unidade_saude from tb_unidade_saude tus join tb_dim_unidade_saude tdus on tus.nu_cnes = tdus.nu_cnes  where co_seq_unidade_saude = {int(id)};	"""
         with DBConnectionHandler().get_engine().connect() as db_con:
             statement = text(sql)
             result = db_con.execute(statement)
@@ -42,7 +43,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             "515105",
             "131210",
             "2516",
-            "2211 ",
+            "2211",
             "2212",
             "2241",
             "2235",
@@ -64,12 +65,8 @@ class LoginBridgeRepository(LoginRepositoryInterface):
             cbo_unidade.append((cbo, unidade_saude["id"]))
 
             with DBConnectionHandler().get_engine().connect() as db_con:
-                cbos_ids = [cbo[0] for cbo in cbo_unidade]
-                list_cbo = ",".join(cbos_ids)
-                list_cbo_value = ",".join([f"'{cbo}%'" for cbo in cbos_list])
-                sql = f"select co_cbo, co_cbo_2002 from tb_cbo where co_cbo in ({list_cbo}) and co_cbo_2002 like any (array[{list_cbo_value}]);"
-                statement = text(sql)
-                result = db_con.execute(statement)
+                statement = text("select co_cbo, co_cbo_2002 from tb_cbo where co_cbo = :cbo and co_cbo_2002 like any (:padroes)")
+                result = db_con.execute(statement, {"cbo": int(cbo), "padroes": [f"{item}%" for item in cbos_list]})
                 for r in result:
                     for i in cbo_unidade:
                         if i[0] == str(r.co_cbo):
@@ -84,7 +81,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
 
     def get_equipe_id(self, id):
         with DBConnectionHandler().get_engine().connect() as db_con:
-            statement = text(f'select tde.co_seq_dim_equipe  from tb_equipe te join tb_dim_equipe tde on te.nu_ine = tde.nu_ine where te.co_seq_equipe = {id}')
+            statement = text(f'select tde.co_seq_dim_equipe  from tb_equipe te join tb_dim_equipe tde on te.nu_ine = tde.nu_ine where te.co_seq_equipe = {int(id)}')
             result = db_con.execute(statement)
             for r in result:
                 return r.co_seq_dim_equipe
@@ -93,7 +90,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
     def get_unit_id(self, id):
         with DBConnectionHandler().get_engine().connect() as db_con:
             statement = text(
-                f"select co_seq_dim_unidade_saude from tb_unidade_saude tus join tb_dim_unidade_saude tdus on tdus.nu_cnes = tus.nu_cnes where tus.co_seq_unidade_saude = {id}"
+                f"select co_seq_dim_unidade_saude from tb_unidade_saude tus join tb_dim_unidade_saude tdus on tdus.nu_cnes = tus.nu_cnes where tus.co_seq_unidade_saude = {int(id)}"
             )
             result = db_con.execute(statement)
             for r in result:
@@ -149,18 +146,11 @@ class LoginBridgeRepository(LoginRepositoryInterface):
         session.verify = True
         url_login = env.get("BRIDGE_LOGIN_URL", "")
         url = f"{url_login}/api/graphql"
-        payload = (
-            '{"query":"mutation mutation_login {\\n  login(input: {username: \\"\
-                '
-            + username
-            + '\\", password: \\"'
-            + password
-            + '\\", force: true}) {\\n    success\\n  }\\n}","variables":{}}'
-        )
+        query = "mutation mutation_login { login(input: {username: %s, password: %s, force: true}) { success } }" % (json.dumps(username), json.dumps(password))
+        payload = json.dumps({"query": query, "variables": {}})
         headers = {
             "Api-Consumer-Id": "PAINEIS_FIOCRUZ",
             "Content-Type": "application/json",
-            "Cookie": "JSESSIONID=87J4pWjfQUVaO3b_lndd1DQE-8hJ3RZzcHes0uFb; XSRF-TOKEN=25038984-1945-43e2-a990-f62709f4eddd",
         }
         # print('iniciando....')
         response = self.get_reponse_body(session, url, headers, payload)
@@ -188,7 +178,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
                 "Api-Consumer-Id": "PAINEIS_FIOCRUZ",
                 "Content-Type": "application/json",
             }
-            head.update({"Cookie": urllib.parse.urlencode(cookie)})
+            head.update({"Cookie": "; ".join(f"{k}={v}" for k, v in cookie.items())})
             response = self.post_bridge(url, head, QUERY_SESSAO)
             data = response.json()
 

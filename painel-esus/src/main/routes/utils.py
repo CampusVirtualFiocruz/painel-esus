@@ -1,6 +1,13 @@
+import pandas as pd
 from flask import jsonify, request
 from src.errors.error_handler import handle_errors
 from src.main.adapters.request_adapter import request_adapter
+
+
+def salvar_excel(dados, buffer, **opcoes):
+    """Texto do cadastro nao pode virar formula nem link ao abrir a planilha."""
+    with pd.ExcelWriter(buffer, engine="xlsxwriter", engine_kwargs={"options": {"strings_to_formulas": False, "strings_to_urls": False}}) as escritor:
+        dados.to_excel(escritor, **opcoes)
 
 
 def convert_cnes(request):

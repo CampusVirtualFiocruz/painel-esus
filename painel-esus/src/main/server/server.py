@@ -6,7 +6,6 @@ import sys
 
 import blueprint_decr
 from flask import Flask, send_from_directory
-from flask_cors import CORS
 from src.env import env as config
 from src.main.routes.admin_settings import (
     AdminSettingsPath,
@@ -51,7 +50,6 @@ else:
     static_folder = os.path.abspath(static_folder)
 
 app = Flask(__name__, static_folder=f"{static_folder}")
-CORS(app)
 
 cache.init_app(app)
 app.json.sort_keys = False
@@ -68,6 +66,14 @@ def register_blueprint(_app, blueprint, decorators_list):
         _app.register_blueprint(
             blueprint[0], url_prefix=blueprint[1], name=f"{blueprint[1]}"
         )
+
+
+@app.after_request
+def cabecalhos_de_seguranca(response):
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+    response.headers.setdefault("Referrer-Policy", "same-origin")
+    return response
 
 
 @app.route("/", defaults={"path": ""})
@@ -87,7 +93,7 @@ city_info = CityInfoPath()
 register_blueprint(
     app,
     (city_informations_bp, city_info.root_path),
-    [cache.cached(timeout=24 * 60 * 60)],
+    [cache.cached(timeout=24 * 60 * 60, response_filter=lambda r: not (isinstance(r, tuple) and r[1] >= 400))],
 )
 
 

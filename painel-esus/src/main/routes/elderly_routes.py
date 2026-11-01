@@ -1,3 +1,4 @@
+from src.main.routes.utils import salvar_excel
 import io
 
 from flask import Blueprint, Response, jsonify, request
@@ -272,7 +273,7 @@ def elderly_get_nominal_list_download(cnes=None):
     try:
         response = request_adapter(request, elderly_get_nominal_list_download_composer())
         buffer = io.BytesIO()
-        response.to_excel(buffer)
+        salvar_excel(response, buffer)
 
         headers = {
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
@@ -293,4 +294,4 @@ def elderly_get_nominal_list_download(cnes=None):
         http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
-    return response, 200
+    return response, http_response.status_code

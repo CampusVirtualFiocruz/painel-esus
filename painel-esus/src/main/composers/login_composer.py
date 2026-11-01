@@ -65,26 +65,41 @@ def set_profile_composer(request: HttpRequest):
     token_parsed = validate_token(token)
     use_case = LoginUseCase(providers_repository)
 
+    # So vale uma lotacao que veio do PEC e esta assinada no token; o corpo apenas indica qual delas
+    lotacoes = token_parsed.get("lotacoes") or token_parsed.get("profiles")
+    if not isinstance(lotacoes, list):
+        return HttpResponse(status_code=403, body={"data": "Profile not allowed"})
+    lotacao = None
+    for item in lotacoes:
+        if not isinstance(item, dict):
+            continue
+        if (
+            item.get("tipo") == body["tipo"]
+            and str(item.get("id")) == str(body["id"])
+            and (item.get("ubs") or {}).get("id") == (body.get("ubs") or {}).get("id")
+            and (item.get("equipe") or {}).get("id") == (body.get("equipe") or {}).get("id")
+        ):
+            lotacao = item
+            break
+    if lotacao is None:
+        return HttpResponse(status_code=403, body={"data": "Profile not allowed"})
+
     request_adapter = {
-        "tipo": body["tipo"],
+        "tipo": lotacao["tipo"],
         "cbo": {
-            "id": body["id"],
-            "cbo2002": body["cbo"],
+            "id": lotacao["id"],
+            "cbo2002": lotacao["cbo"],
         },
         "unidadeSaude": {
-            "id": (
-                body["ubs"]["id"] if "ubs" in body and body["ubs"] is not None else None
-            ),
+            "id": (lotacao.get("ubs") or {}).get("id"),
         },
         "equipe": {
-            "id": (
-                body["equipe"]["id"]
-                if "equipe" in body and body["equipe"] is not None
-                else None
-            ),
+            "id": (lotacao.get("equipe") or {}).get("id"),
         },
     }
     user = use_case.check_role(request_adapter)
+    if user is None:
+        return HttpResponse(status_code=403, body={"data": "Profile not allowed"})
     token = generate_token(
         token_parsed["username"],
         token_parsed["cns"],
@@ -92,7 +107,8 @@ def set_profile_composer(request: HttpRequest):
         token_parsed["municipio"],
         user[0],
         user[1],
-        user[2]
+        user[2],
+        lotacoes
     )
     body = {"data": token}
     return HttpResponse(status_code=200, body=body)

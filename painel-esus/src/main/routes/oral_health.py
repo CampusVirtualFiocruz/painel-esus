@@ -1,5 +1,6 @@
 # pylint: disable=W0613
 # pylint: disable=E0401,C0301,W0612,W0611
+from src.main.routes.utils import salvar_excel
 import io
 
 from flask import Blueprint, Response, jsonify, request
@@ -307,7 +308,7 @@ def oral_health_get_nominal_list_download(cnes=None):
             request, oral_health_get_nominal_list_download_composer()
         )
         buffer = io.BytesIO()
-        response.to_excel(buffer)
+        salvar_excel(response, buffer)
 
         headers = {
             "Content-Disposition": "attachment; filename=lista_nominal.xlsx",
@@ -328,4 +329,4 @@ def oral_health_get_nominal_list_download(cnes=None):
         http_response = handle_errors(exception, extract_token(request.headers.get("Authorization")))
         response = jsonify(http_response.body)
 
-    return response, 200
+    return response, http_response.status_code
