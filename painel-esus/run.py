@@ -41,8 +41,6 @@ if __name__ == "__main__":
     else:
         controller.redirect("http", port)
 
-        app.run(
-            host=host,
-            port=port,
-            debug=False
-        )
+        from waitress import serve
+
+        serve(app, host=host, port=int(port), threads=16)

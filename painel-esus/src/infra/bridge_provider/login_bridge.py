@@ -102,12 +102,12 @@ class LoginBridgeRepository(LoginRepositoryInterface):
 
     def get_reponse_body(self, session, url, headers, payload):
         urllib3.disable_warnings(category=urllib3.exceptions.InsecureRequestWarning)
-        return session.request("POST", url, headers=headers, data=payload, verify=False)
+        return session.request("POST", url, headers=headers, data=payload, verify=True)
 
     def post_bridge(self, url, head, query_sessao):
         urllib3.disable_warnings(category=urllib3.exceptions.InsecureRequestWarning)
         return requests.request(
-            "POST", url, headers=head, data=query_sessao, timeout=30, verify=False
+            "POST", url, headers=head, data=query_sessao, timeout=30, verify=True
         )
 
     def get_profiles(self, response):
@@ -146,7 +146,7 @@ class LoginBridgeRepository(LoginRepositoryInterface):
 
     def check_credentials(self, username: str, password: str) -> UserPayload:
         session = requests.Session()
-        session.verify = False
+        session.verify = True
         url_login = env.get("BRIDGE_LOGIN_URL", "")
         url = f"{url_login}/api/graphql"
         payload = (
